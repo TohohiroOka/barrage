@@ -25,6 +25,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	while (true)
 	{
+		GetLocalTime(&StartTime);
+
 		if (engine->Update()|| winApp->Update()) { break; }
 		engine->Draw();
 

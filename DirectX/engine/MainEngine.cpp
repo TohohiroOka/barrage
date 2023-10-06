@@ -9,6 +9,7 @@
 #include "Texture/Texture.h"
 #include "Object/3d/HeightMap.h"
 #include "WindowApp.h"
+#include "GameHelper.h"
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
@@ -60,6 +61,8 @@ void MainEngine::Initialize()
 
 bool MainEngine::Update()
 {
+	GameHelper::Instance()->Update();
+
 	input->Update();
 	xinput->Update();
 

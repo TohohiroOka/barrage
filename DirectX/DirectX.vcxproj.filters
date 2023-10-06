@@ -262,9 +262,6 @@
     <ClCompile Include="engine\FrameRateKeep.cpp">
       <Filter>Engine\MainEngine</Filter>
     </ClCompile>
-    <ClCompile Include="engine\Singleton.cpp">
-      <Filter>Engine\MainEngine</Filter>
-    </ClCompile>
     <ClCompile Include="engine\WindowApp.cpp">
       <Filter>Engine\MainEngine</Filter>
     </ClCompile>
@@ -285,6 +282,9 @@
     </ClCompile>
     <ClCompile Include="engine\Math\Easing\Easing.cpp">
       <Filter>Engine\Math\Easing</Filter>
+    </ClCompile>
+    <ClCompile Include="game\GameHelper.cpp">
+      <Filter>ゲームシステム</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -148,10 +148,10 @@
     <ClCompile Include="engine\Pipeline\GraphicsPipelineManager.cpp" />
     <ClCompile Include="engine\Pipeline\ShaderManager.cpp" />
     <ClCompile Include="engine\scene\SceneManager.cpp" />
-    <ClCompile Include="engine\Singleton.cpp" />
     <ClCompile Include="engine\Texture\DescriptorHeapManager.cpp" />
     <ClCompile Include="engine\Texture\Texture.cpp" />
     <ClCompile Include="engine\WindowApp.cpp" />
+    <ClCompile Include="game\GameHelper.cpp" />
     <ClCompile Include="game\Player.cpp" />
     <ClCompile Include="game\scene\Scene1.cpp" />
     <ClCompile Include="main.cpp">
