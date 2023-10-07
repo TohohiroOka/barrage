@@ -1,7 +1,8 @@
 #pragma once
 #include "Scene/InterfaceScene.h"
 #include "Math/Vector3.h"
-#include "Player.h"
+#include "player/Player.h"
+#include "game/camera/GameCamera.h"
 
 
 class Scene1 : public InterfaceScene
@@ -27,16 +28,11 @@ public:
 	void Update()override;
 
 	/// <summary>
-	/// 更新
-	/// </summary>
-	void CameraUpdate(const int _cameraNum, Camera* camera) override;
-
-	/// <summary>
 	///	描画
 	/// </summary>
 	/// <param name="_cameraNum">カメラ番号</param>
 	void Draw(const int _cameraNum) override;
-	
+
 	/// <summary>
 	/// ポストエフェクトをかけない描画
 	/// </summary>
@@ -59,15 +55,7 @@ public:
 
 private:
 
-	Camera* camera;
-
-	//カメラ座標
-	XMFLOAT3 cameraPos;
-	//カメラ座標
-	XMFLOAT3 cameraTarget;
-
-	//ターゲット角度
-	XMFLOAT3 cameraRota;
+	std::unique_ptr<GameCamera> camera;
 
 	std::unique_ptr<Sprite> sprite;
 

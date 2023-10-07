@@ -55,10 +55,6 @@ void SceneManager::Initialize()
 {
 	CreatePipeline();
 
-	//カメラの初期化
-	camera = Camera::Create();
-	camera->SetEye({ 0,0,10 });
-
 	//サウンド用
 	audio = std::make_unique<Audio>();
 	//ライト
@@ -155,15 +151,6 @@ void SceneManager::Update()
 
 	//シーン更新
 	scene->Update();
-
-	//シーンでのカメラ更新
-	scene->CameraUpdate(0, camera.get());
-
-	//カメラ更新
-	camera->Update();
-
-	Base3D::SetCamera(camera.get());
-	ParticleManager::SetCamera(camera.get());
 
 	//ライト
 	light->Update();

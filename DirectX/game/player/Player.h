@@ -21,6 +21,8 @@ public:
 private:
 
 	void Move();
+	void Fall();
+	void Jump();
 	void Collider();
 
 public:

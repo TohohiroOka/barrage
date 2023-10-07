@@ -153,8 +153,9 @@
     <ClCompile Include="engine\Texture\DescriptorHeapManager.cpp" />
     <ClCompile Include="engine\Texture\Texture.cpp" />
     <ClCompile Include="engine\WindowApp.cpp" />
+    <ClCompile Include="game\camera\GameCamera.cpp" />
     <ClCompile Include="game\GameHelper.cpp" />
-    <ClCompile Include="game\Player.cpp" />
+    <ClCompile Include="game\player\Player.cpp" />
     <ClCompile Include="game\scene\Scene1.cpp" />
     <ClCompile Include="main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -388,8 +389,9 @@
     <ClInclude Include="engine\Texture\DescriptorHeapManager.h" />
     <ClInclude Include="engine\Texture\Texture.h" />
     <ClInclude Include="engine\WindowApp.h" />
+    <ClInclude Include="game\camera\GameCamera.h" />
     <ClInclude Include="game\GameHelper.h" />
-    <ClInclude Include="game\Player.h" />
+    <ClInclude Include="game\player\Player.h" />
     <ClInclude Include="game\scene\Scene1.h" />
   </ItemGroup>
   <ItemGroup>

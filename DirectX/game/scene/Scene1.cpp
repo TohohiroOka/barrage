@@ -9,13 +9,14 @@
 #include "Object/3d/collider/MeshCollider.h"
 #include "Object/3d/collider/CollisionAttribute.h"
 
+
 using namespace DirectX;
 
 const std::array<XMFLOAT4, 2> COLOR = { XMFLOAT4{ 0.0f,0.0f,0.8f,1.0f } ,{ 0.8f,0.0f,0.0f,1.0f } };
 
 void Scene1::Initialize()
 {
-	camera = nullptr;
+	camera = GameCamera::Create();
 
 	const std::string jimen = "jimen.png";
 	const std::string kabe = "kabe.png";
@@ -28,12 +29,14 @@ void Scene1::Initialize()
 
 	gobject->DeleteCollider();
 
+	Base3D::SetCamera(camera.get());
+
 	// コライダーの追加
 	MeshCollider* collider = new MeshCollider;
 	gobject->SetCollider(collider);
 	collider->ConstructTriangles(gobject->GetModel());
 	collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
-	
+
 	Sprite::LoadTexture("amm", "Resources/amm.jpg");
 	sprite = Sprite::Create("amm");
 	sprite->SetTexSize({ 1059.0f,1500.0f });
@@ -41,12 +44,15 @@ void Scene1::Initialize()
 	sprite->Update();
 
 	player = std::make_unique<Player>();
+	GameCamera::SetPlayer(player.get());
 
-	fbxmodel= FbxModel::Create("boneTest");
+	fbxmodel = FbxModel::Create("boneTest");
 	fbx = Fbx::Create(fbxmodel.get());
-	fbx->SetPosition({500.f,100.0f,500.0f});
+	fbx->SetPosition({ 500.f,100.0f,500.0f });
 	fbx->SetScale({ 15.0f ,15.0f ,15.0f });
 	fbx->SetAnimation(true);
+
+	ParticleManager::SetCamera(camera.get());
 }
 
 void Scene1::Update()
@@ -56,6 +62,9 @@ void Scene1::Update()
 	player->Update();
 	gobject->Update();
 	fbx->Update();
+
+	//カメラ更新
+	camera->Update();
 }
 
 void Scene1::Draw(const int _cameraNum)
@@ -89,53 +98,14 @@ void Scene1::ImguiDraw()
 	ImGui::Begin("debug imgui");
 	ImGui::SetWindowSize(ImVec2(300, 300), ImGuiCond_::ImGuiCond_FirstUseEver);
 
-	ImGui::Text("%f", cameraRota.x);
-	ImGui::Text("%f : %f", sinf(XMConvertToRadians(cameraRota.x)), cosf(XMConvertToRadians(cameraRota.x)));
-	ImGui::Text("%f : %f", sinf(XMConvertToRadians(cameraRota.x + 90)), cosf(XMConvertToRadians(cameraRota.x + 90)));
+	const float cameraRota = camera->GetCameraRota().x;
+
+	ImGui::Text("%f", cameraRota);
+	ImGui::Text("%f : %f", sinf(XMConvertToRadians(cameraRota)), cosf(XMConvertToRadians(cameraRota)));
+	ImGui::Text("%f : %f", sinf(XMConvertToRadians(cameraRota + 90)), cosf(XMConvertToRadians(cameraRota + 90)));
 	ImGui::Text("%f : %f : %f", ppos.x, ppos.y, ppos.z);
 
 	ImGui::End();
-}
-
-void Scene1::CameraUpdate(const int _cameraNum, Camera* _camera)
-{
-	const float camera_sa = 10.0f;
-	const float LR_sa = 163.0f;
-	const float UD_sa = 53.0f;
-
-	//通常カメラ
-	if (_cameraNum == 0) {
-		DirectInput* input = DirectInput::GetInstance();
-		//視界移動
-		const float Tgspeed = 1.0f;
-		if (input->PushKey(DIK_LEFT)) { cameraRota.x -= Tgspeed; }//右入力
-		if (input->PushKey(DIK_RIGHT)) { cameraRota.x += Tgspeed; }//左入力
-		if (input->PushKey(DIK_DOWN)) { cameraRota.y -= Tgspeed; }//下入力
-		if (input->PushKey(DIK_UP)) { cameraRota.y += Tgspeed; }//上入力
-
-		//上下方向の角度制限
-		if (cameraRota.y <= -13) { cameraRota.y = -13; }//下制限
-		if (cameraRota.y >= 13) { cameraRota.y = 13; }//上制限
-
-		//横の制限
-		if (cameraRota.x > 360) { cameraRota.x = 0; }
-		if (cameraRota.x < -360) { cameraRota.x = 0; }
-
-		//カメラ移動
-		float Pspeed = 1.0f;
-		XMFLOAT2 radian = { XMConvertToRadians(cameraRota.x),XMConvertToRadians(cameraRota.y) };
-		XMFLOAT2 radian2 = { XMConvertToRadians(cameraRota.x + 180),XMConvertToRadians(cameraRota.y + 180) };
-
-		Vector3 ppos= player->GetPos();
-
-		const float dist = 15.0f;
-		_camera->SetEye({ ppos.x + sinf(radian2.x) * dist,ppos.y + sinf(radian2.y) * dist,ppos.z + cosf(radian2.x) * dist });
-		_camera->SetTarget({ ppos.x + sinf(radian.x) * dist,ppos.y + sinf(radian.y) * dist,ppos.z + cosf(radian.x) * dist });
-
-		player->SetMoveRota(cameraRota.x);
-
-		camera = _camera;
-	}
 }
 
 void Scene1::FrameReset()

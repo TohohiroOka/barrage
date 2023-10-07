@@ -73,8 +73,6 @@ private://メンバ変数
 	static std::unique_ptr<InterfaceScene> scene;
 	//次シーン
 	static InterfaceScene* nextScene;
-	//Cameraのインスタンス
-	std::unique_ptr<Camera> camera;
 	//オーディオ
 	std::unique_ptr<Audio> audio = nullptr;
 	//ライト

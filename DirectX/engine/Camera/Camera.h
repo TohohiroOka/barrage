@@ -40,7 +40,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	virtual void Update();
 
 	/// <summary>
 	/// カメラのシェイク開始

@@ -113,6 +113,12 @@
     <Filter Include="シェーダーファイル\Fbx">
       <UniqueIdentifier>{57c9ac3d-bf77-49b7-9c94-d1d4cd98aae2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ゲームシステム\Player">
+      <UniqueIdentifier>{e6a2bbb3-2170-401e-9a8c-69ca38a4a35b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ゲームシステム\camera">
+      <UniqueIdentifier>{d9a8eb30-1a15-43ec-b103-ddf0fe16ed1b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -159,9 +165,6 @@
     </ClCompile>
     <ClCompile Include="game\scene\Scene1.cpp">
       <Filter>ゲームシステム\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="game\Player.cpp">
-      <Filter>ゲームシステム</Filter>
     </ClCompile>
     <ClCompile Include="engine\Input\XInputManager.cpp">
       <Filter>Engine\Input</Filter>
@@ -295,6 +298,10 @@
     <ClCompile Include="engine\Object\3d\Fbx.cpp">
       <Filter>Engine\Object\3d</Filter>
     </ClCompile>
+    <ClCompile Include="game\player\Player.cpp">
+      <Filter>ゲームシステム\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="game\camera\GameCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -469,9 +476,6 @@
     <ClInclude Include="game\GameHelper.h">
       <Filter>ゲームシステム</Filter>
     </ClInclude>
-    <ClInclude Include="game\Player.h">
-      <Filter>ゲームシステム</Filter>
-    </ClInclude>
     <ClInclude Include="engine\Input\DirectInput.h">
       <Filter>Engine\Input</Filter>
     </ClInclude>
@@ -627,6 +631,12 @@
     </ClInclude>
     <ClInclude Include="engine\Object\3d\FbxModel.h">
       <Filter>Engine\Object\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\Player.h">
+      <Filter>ゲームシステム\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="game\camera\GameCamera.h">
+      <Filter>ゲームシステム\camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

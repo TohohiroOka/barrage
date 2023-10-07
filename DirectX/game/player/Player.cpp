@@ -26,6 +26,14 @@ void Player::Update()
 {
 	Move();
 	Collider();
+	if (!onGround) {
+		// 落下処理
+		Fall();
+	}
+	else {
+		//ジャンプ
+		Jump();
+	}
 
 	object->Update();
 }
@@ -63,23 +71,28 @@ void Player::Move()
 		moveVec.x -= Pspeed * cosf(XMConvertToRadians(360.0f - moveRota + 90));
 		moveVec.z -= Pspeed * cosf(XMConvertToRadians(360.0f - moveRota));
 	}
+}
 
-	// 落下処理
-	if (!onGround) {
-		// 下向き加速度
-		const float fallAcc = -0.05f;
-		const float fallVYMin = -5.0f;
-		// 加速
-		fallV.m128_f32[1] = max(fallV.m128_f32[1] + fallAcc, fallVYMin);
-		// 移動
-		moveVec.y += fallV.m128_f32[1];
-	}
-	// ジャンプ操作
-	else if (input->TriggerKey(DIK_SPACE)) {
-		onGround = false;
-		const float jumpVYFist = 2.0f;
-		fallV = { 0, jumpVYFist, 0, 0 };
-	}
+void Player::Fall()
+{
+	// 下向き加速度
+	const float fallAcc = -0.05f;
+	const float fallVYMin = -5.0f;
+	// 加速
+	fallV.m128_f32[1] = max(fallV.m128_f32[1] + fallAcc, fallVYMin);
+	// 移動
+	moveVec.y += fallV.m128_f32[1];
+}
+
+void Player::Jump()
+{
+	//スペースキー入力がなければ抜ける
+	if (!DirectInput::GetInstance()->TriggerKey(DIK_SPACE)) { return; }
+
+	onGround = false;
+	const float jumpVYFist = 2.0f;
+	fallV = { 0, jumpVYFist, 0, 0 };
+
 }
 
 void Player::Collider()
@@ -210,7 +223,8 @@ void Player::Collider()
 			pos.x += a.x;
 			pos.y += a.y;
 			pos.z += a.z;
-		} else {
+		}
+		else {
 			pos.x += moveVec.x;
 			pos.y += moveVec.y;
 			pos.z += moveVec.z;

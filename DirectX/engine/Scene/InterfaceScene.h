@@ -44,11 +44,6 @@ public:
 	virtual void Update() = 0;
 
 	/// <summary>
-	/// XV
-	/// </summary>
-	virtual void CameraUpdate(const int _cameraNum, Camera* camera) {};
-
-	/// <summary>
 	/// •`‰æ
 	/// </summary>
 	/// <param name="_cameraNum">ƒJƒƒ‰”Ô†</param>
