@@ -113,6 +113,12 @@
     <Filter Include="シェーダーファイル\Fbx">
       <UniqueIdentifier>{57c9ac3d-bf77-49b7-9c94-d1d4cd98aae2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ゲームシステム\Boss">
+      <UniqueIdentifier>{7c0dc749-9540-4ca9-9b25-0d05b1d2354e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ゲームシステム\Boss\Boss1">
+      <UniqueIdentifier>{037a868b-c421-4646-9264-7587b219eabc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -294,6 +300,18 @@
     </ClCompile>
     <ClCompile Include="engine\Object\3d\Fbx.cpp">
       <Filter>Engine\Object\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\BaseBoss.cpp">
+      <Filter>ゲームシステム\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\Boss1.cpp">
+      <Filter>ゲームシステム\Boss\Boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\BaseAction.cpp">
+      <Filter>ゲームシステム\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\Boss1NearAttack1.cpp">
+      <Filter>ゲームシステム\Boss\Boss1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -627,6 +645,18 @@
     </ClInclude>
     <ClInclude Include="engine\Object\3d\FbxModel.h">
       <Filter>Engine\Object\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\BaseBoss.h">
+      <Filter>ゲームシステム\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\Boss1.h">
+      <Filter>ゲームシステム\Boss\Boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\BaseAction.h">
+      <Filter>ゲームシステム\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\Boss1NearAttack1.h">
+      <Filter>ゲームシステム\Boss\Boss1</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -153,6 +153,10 @@
     <ClCompile Include="engine\Texture\DescriptorHeapManager.cpp" />
     <ClCompile Include="engine\Texture\Texture.cpp" />
     <ClCompile Include="engine\WindowApp.cpp" />
+    <ClCompile Include="game\enemy\BaseAction.cpp" />
+    <ClCompile Include="game\enemy\boss1\Boss1.cpp" />
+    <ClCompile Include="game\enemy\BaseBoss.cpp" />
+    <ClCompile Include="game\enemy\boss1\Boss1NearAttack1.cpp" />
     <ClCompile Include="game\GameHelper.cpp" />
     <ClCompile Include="game\Player.cpp" />
     <ClCompile Include="game\scene\Scene1.cpp" />
@@ -388,6 +392,10 @@
     <ClInclude Include="engine\Texture\DescriptorHeapManager.h" />
     <ClInclude Include="engine\Texture\Texture.h" />
     <ClInclude Include="engine\WindowApp.h" />
+    <ClInclude Include="game\enemy\BaseAction.h" />
+    <ClInclude Include="game\enemy\boss1\Boss1.h" />
+    <ClInclude Include="game\enemy\BaseBoss.h" />
+    <ClInclude Include="game\enemy\boss1\Boss1NearAttack1.h" />
     <ClInclude Include="game\GameHelper.h" />
     <ClInclude Include="game\Player.h" />
     <ClInclude Include="game\scene\Scene1.h" />

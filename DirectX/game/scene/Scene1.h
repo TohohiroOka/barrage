@@ -2,6 +2,7 @@
 #include "Scene/InterfaceScene.h"
 #include "Math/Vector3.h"
 #include "Player.h"
+#include "../game/enemy/boss1/Boss1.h"
 
 
 class Scene1 : public InterfaceScene
@@ -78,7 +79,6 @@ private:
 	//オブジェクト
 	std::shared_ptr<HeightMap> gobject;
 
-	std::unique_ptr<FbxModel>fbxmodel;
-	std::unique_ptr<Fbx> fbx;
+	std::unique_ptr<Boss1>boss;
 
 };

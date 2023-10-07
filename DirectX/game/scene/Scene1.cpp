@@ -42,11 +42,9 @@ void Scene1::Initialize()
 
 	player = std::make_unique<Player>();
 
-	fbxmodel= FbxModel::Create("boneTest");
-	fbx = Fbx::Create(fbxmodel.get());
-	fbx->SetPosition({500.f,100.0f,500.0f});
-	fbx->SetScale({ 15.0f ,15.0f ,15.0f });
-	fbx->SetAnimation(true);
+	boss = std::make_unique<Boss1>();
+	BaseAction::SetBossPtr(boss.get());
+
 }
 
 void Scene1::Update()
@@ -55,7 +53,7 @@ void Scene1::Update()
 
 	player->Update();
 	gobject->Update();
-	fbx->Update();
+	boss->Update();
 }
 
 void Scene1::Draw(const int _cameraNum)
@@ -66,7 +64,7 @@ void Scene1::Draw(const int _cameraNum)
 
 	player->Draw();
 
-	fbx->Draw();
+	boss->Draw();
 }
 
 void Scene1::NonPostEffectDraw(const int _cameraNum)
