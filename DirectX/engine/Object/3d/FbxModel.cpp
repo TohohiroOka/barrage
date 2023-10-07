@@ -627,10 +627,10 @@ void FbxModel::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
 
 	//定数バッファをセット
-	cmdList->SetGraphicsRootConstantBufferView(4, constBuffSkin->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(3, constBuffSkin->GetGPUVirtualAddress());
 
 	//シェーダーリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(2, texture->descriptor->gpu);
+	cmdList->SetGraphicsRootDescriptorTable(4, texture->descriptor->gpu);
 
 	//描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)data->indices.size(), 1, 0, 0, 0);

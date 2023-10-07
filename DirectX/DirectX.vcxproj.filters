@@ -110,6 +110,9 @@
     <Filter Include="Engine\Math\Easing">
       <UniqueIdentifier>{1c55fb7c-d820-4300-b956-a73080500c5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\Fbx">
+      <UniqueIdentifier>{57c9ac3d-bf77-49b7-9c94-d1d4cd98aae2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -286,6 +289,12 @@
     <ClCompile Include="game\GameHelper.cpp">
       <Filter>ゲームシステム</Filter>
     </ClCompile>
+    <ClCompile Include="engine\Object\3d\FbxModel.cpp">
+      <Filter>Engine\Object\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Object\3d\Fbx.cpp">
+      <Filter>Engine\Object\3d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -354,6 +363,12 @@
     <FxCompile Include="Resources\Shaders\FogVS.hlsl">
       <Filter>シェーダーファイル\PostEffect\Fog</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\FbxPS.hlsl">
+      <Filter>シェーダーファイル\Fbx</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\FbxVS.hlsl">
+      <Filter>シェーダーファイル\Fbx</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite.hlsli">
@@ -385,6 +400,9 @@
     </None>
     <None Include="Resources\Shaders\Fog.hlsli">
       <Filter>シェーダーファイル\PostEffect\Fog</Filter>
+    </None>
+    <None Include="Resources\Shaders\Fbx.hlsli">
+      <Filter>シェーダーファイル\Fbx</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -603,6 +621,12 @@
     </ClInclude>
     <ClInclude Include="engine\Math\Easing\Easing.h">
       <Filter>Engine\Math\Easing</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Object\3d\Fbx.h">
+      <Filter>Engine\Object\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Object\3d\FbxModel.h">
+      <Filter>Engine\Object\3d</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

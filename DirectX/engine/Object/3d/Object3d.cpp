@@ -92,7 +92,7 @@ void Object3d::Draw(const DrawMode _drawMode)
 {
 	// nullptrチェック
 	assert(device);
-	assert(Object3d::cmdList);
+	assert(ObjectBase::cmdList);
 
 	// モデルの割り当てがなければ描画しない
 	if (model == nullptr) {

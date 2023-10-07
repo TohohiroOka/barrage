@@ -1,7 +1,6 @@
 #include "Fbx.h"
-#include "Camera.h"
-#include "LightGroup.h"
-#include "SafeDelete.h"
+#include "Camera/Camera.h"
+#include "Light/LightGroup.h"
 
 #include <fstream>
 #include <sstream>
@@ -9,72 +8,13 @@
 #include <vector>
 
 using namespace DirectX;
-using namespace Microsoft::WRL;
-using namespace std;
 
-ID3D12Device* Fbx::device = nullptr;
-Camera* Fbx::camera = nullptr;
-LightGroup* Fbx::lightGroup = nullptr;
-ID3D12GraphicsCommandList* Fbx::cmdList = nullptr;
-std::unique_ptr<GraphicsPipelineManager> Fbx::pipeline = nullptr;
-Texture* Fbx::cubetex = nullptr;
+std::vector<GraphicsPipelineManager::DrawSet> Fbx::pipeline;
 
 Fbx::~Fbx()
 {
 	constBuffB0.Reset();
 	constBuffB1.Reset();
-}
-
-void Fbx::CreateGraphicsPipeline()
-{
-	// 頂点レイアウト
-	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		{ // xyz座標
-			"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		},
-		{ // 法線ベクトル
-			"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		},
-		{ // uv座標
-			"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		},
-		{//ボーン番号
-			"BONEINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		},
-		{//ボーン影響度
-			"BONEWEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		},
-	};
-
-	pipeline = GraphicsPipelineManager::Create("Fbx",
-		GraphicsPipelineManager::OBJECT_KINDS::FBX, inputLayout, _countof(inputLayout));
-}
-
-void Fbx::StaticInitialize(ID3D12Device* device)
-{
-	HRESULT result = S_FALSE;
-
-	// 再初期化チェック
-	assert(!Fbx::device);
-
-	// nullptrチェック
-	assert(device);
-
-	Fbx::device = device;
-
-	CreateGraphicsPipeline();
-
-	FbxModel::StaticInitialize(device);
 }
 
 void Fbx::Initialize()
@@ -144,20 +84,24 @@ void Fbx::Update()
 	matWorld *= matRot; // ワールド行列に回転を反映
 	matWorld *= matTrans; // ワールド行列に平行移動を反映
 
-	const XMMATRIX& matViewProjection = camera->GetView() * camera->GetProjection();
-	const XMFLOAT3& cameraPos = camera->GetEye();
-
 	// 定数バッファ1へデータ転送
 	ConstBufferDataB0* constMap = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap);
-	constMap->color = color;
-	constMap->viewproj = matViewProjection;
+	constMap->color = { 1,1,1,1 };
+	if (camera) {
+		constMap->viewproj = camera->GetView() * camera->GetProjection();
+		constMap->cameraPos = camera->GetEye();
+	} else {
+		constMap->viewproj = XMMatrixIdentity();
+		constMap->cameraPos = {0.0f,0.0f,0.0f };
+	}
 	constMap->world = matWorld;
-	constMap->cameraPos = cameraPos;
 	constMap->isSkinning = model->isSkinning;
 	constMap->isBloom = isBloom;
 	constMap->isToon = isToon;
 	constMap->isOutline = isOutline;
+	constMap->isLight = isLight;
+	constMap->outlineColor = outlineColor;
 	constBuffB0->Unmap(0, nullptr);
 
 	if (isTransferMaterial)
@@ -169,46 +113,29 @@ void Fbx::Update()
 	model->Update();
 }
 
-void Fbx::PreDraw(ID3D12GraphicsCommandList* cmdList)
-{
-	Fbx::cmdList = cmdList;
-
-	//パイプラインステートの設定
-	cmdList->SetPipelineState(pipeline->pipelineState.Get());
-
-	//ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(pipeline->rootSignature.Get());
-
-	//プリミティブ形状の設定コマンド
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
-void Fbx::PostDraw()
-{
-	// コマンドリストを解除
-	Fbx::cmdList = nullptr;
-}
-
-void Fbx::Draw()
+void Fbx::Draw(const DrawMode _drawMode)
 {
 	// nullptrチェック
 	assert(device);
-	assert(Fbx::cmdList);
+	assert(ObjectBase::cmdList);
 
 	// モデルの割り当てがなければ描画しない
 	if (model == nullptr) {
 		return;
 	}
 
-	//定数バッファをセット
+	Update();
+
+	int modeNum = int(_drawMode);
+
+	Base3D::Draw(pipeline[modeNum]);
+
+	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 	cmdList->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
 
-	//キューブマップ描画
-	cmdList->SetGraphicsRootDescriptorTable(5, cubetex->descriptor->gpu);
-
 	// ライトの描画
-	lightGroup->Draw(cmdList, 3);
+	light->Draw(cmdList, 2);
 
 	// モデル描画
 	model->Draw(cmdList);
@@ -230,10 +157,4 @@ void Fbx::TransferMaterial()
 		constMap->alpha = model->GetAlpha();
 		constBuffB1->Unmap(0, nullptr);
 	}
-}
-
-void Fbx::Finalize()
-{
-	FbxModel::Finalize();
-	pipeline.reset();
 }

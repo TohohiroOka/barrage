@@ -133,6 +133,8 @@
     <ClCompile Include="engine\Object\3d\collider\CollisionPrimitive.cpp" />
     <ClCompile Include="engine\Object\3d\collider\MeshCollider.cpp" />
     <ClCompile Include="engine\Object\3d\collider\SphereCollider.cpp" />
+    <ClCompile Include="engine\Object\3d\Fbx.cpp" />
+    <ClCompile Include="engine\Object\3d\FbxModel.cpp" />
     <ClCompile Include="engine\Object\3d\HeightMap.cpp" />
     <ClCompile Include="engine\Object\3d\InstanceObject.cpp" />
     <ClCompile Include="engine\Object\3d\Material.cpp" />
@@ -173,6 +175,18 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\BloomVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\FbxPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\FbxVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
@@ -291,6 +305,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Bloom.hlsli" />
+    <None Include="Resources\Shaders\Fbx.hlsli" />
     <None Include="Resources\Shaders\Fog.hlsli" />
     <None Include="Resources\Shaders\HeightMap.hlsli" />
     <None Include="Resources\Shaders\InstanceObject.hlsli" />
@@ -350,6 +365,8 @@
     <ClInclude Include="engine\Object\3d\collider\QueryCallback.h" />
     <ClInclude Include="engine\Object\3d\collider\RaycastHit.h" />
     <ClInclude Include="engine\Object\3d\collider\SphereCollider.h" />
+    <ClInclude Include="engine\Object\3d\Fbx.h" />
+    <ClInclude Include="engine\Object\3d\FbxModel.h" />
     <ClInclude Include="engine\Object\3d\HeightMap.h" />
     <ClInclude Include="engine\Object\3d\InstanceObject.h" />
     <ClInclude Include="engine\Object\3d\Material.h" />

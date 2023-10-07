@@ -27,6 +27,12 @@
         },
         {
             "shader":{
+                "Name":"Fbx",
+                "Type":["v","p"]
+            }
+        },
+        {
+            "shader":{
                 "Name":"Sprite",
                 "Type":["v","p"]
             }

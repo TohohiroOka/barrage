@@ -23,7 +23,7 @@ void SetLayout(D3D12_INPUT_ELEMENT_DESC* inputLayout,const std::vector<std::stri
 		if (_inputLayoutType[i] == "POSITION")
 		{
 			inputLayout[i] = {
-				"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
+			"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
 				D3D12_APPEND_ALIGNED_ELEMENT,input, 0 };
 		}
 		//法線
@@ -44,14 +44,14 @@ void SetLayout(D3D12_INPUT_ELEMENT_DESC* inputLayout,const std::vector<std::stri
 		else if (_inputLayoutType[i] == "BONEINDICES")
 		{
 			inputLayout[i] = {
-				"BONEINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0,
+			"BONEINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0,
 				D3D12_APPEND_ALIGNED_ELEMENT,input, 0 };
 		}
 		//ボーン影響度
 		else if (_inputLayoutType[i] == "BONEWEIGHTS")
 		{
 			inputLayout[i] = {
-				"BONEWEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
+			"BONEWEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
 				D3D12_APPEND_ALIGNED_ELEMENT,input, 0 };
 		}
 		//スケール

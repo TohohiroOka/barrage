@@ -12,6 +12,7 @@
 #include "Object/3d/HeightMap.h"
 #include "Object/3d/PrimitiveObject3D.h"
 #include "Object/3d/InstanceObject.h"
+#include "Object/3d/Fbx.h"
 
 #include "Pipeline/GraphicsPipelineManager.h"
 

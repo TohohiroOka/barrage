@@ -78,4 +78,7 @@ private:
 	//オブジェクト
 	std::shared_ptr<HeightMap> gobject;
 
+	std::unique_ptr<FbxModel>fbxmodel;
+	std::unique_ptr<Fbx> fbx;
+
 };

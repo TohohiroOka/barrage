@@ -7,7 +7,7 @@
 #include "Pipeline/ComputeShaderManager.h"
 #include "Pipeline/GraphicsPipelineManager.h"
 #include "Texture/Texture.h"
-#include "Object/3d/HeightMap.h"
+#include "Object/3d/FbxModel.h"
 #include "WindowApp.h"
 #include "GameHelper.h"
 
@@ -46,6 +46,7 @@ void MainEngine::Initialize()
 	LightGroup::StaticInitialize(dXCommon->GetDevice());
 	ComputeShaderManager::StaticInitialize(dXCommon->GetDevice());
 	DebugText::GetInstance()->Initialize();
+	FbxModel::StaticInitialize(dXCommon->GetDevice());
 
 	scene = SceneManager::Create();
 

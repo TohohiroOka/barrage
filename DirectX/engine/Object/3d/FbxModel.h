@@ -5,7 +5,7 @@
 #include <d3dx12.h>
 #include <DirectXMath.h>
 #include <map>
-#include "Texture.h"
+#include "Texture/Texture.h"
 
 class FbxModel
 {

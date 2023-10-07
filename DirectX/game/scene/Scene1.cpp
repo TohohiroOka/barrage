@@ -41,6 +41,12 @@ void Scene1::Initialize()
 	sprite->Update();
 
 	player = std::make_unique<Player>();
+
+	fbxmodel= FbxModel::Create("boneTest");
+	fbx = Fbx::Create(fbxmodel.get());
+	fbx->SetPosition({500.f,100.0f,500.0f});
+	fbx->SetScale({ 15.0f ,15.0f ,15.0f });
+	fbx->SetAnimation(true);
 }
 
 void Scene1::Update()
@@ -49,6 +55,7 @@ void Scene1::Update()
 
 	player->Update();
 	gobject->Update();
+	fbx->Update();
 }
 
 void Scene1::Draw(const int _cameraNum)
@@ -58,6 +65,8 @@ void Scene1::Draw(const int _cameraNum)
 	//gobject->ColliderDraw();
 
 	player->Draw();
+
+	fbx->Draw();
 }
 
 void Scene1::NonPostEffectDraw(const int _cameraNum)

@@ -7,8 +7,8 @@ cbuffer cbuff0 : register(b0)
 	uint isBloom;//ブルームの有無
 	uint isToon;//トゥーンの有無
 	uint isOutline;//アウトラインの有無
-    uint isLight;//ライトの有無
-    float3 outlineColor;//アウトラインの色
+	uint isLight;//ライトの有無
+	float3 outlineColor;//アウトラインの色
 };
 
 cbuffer cbuff1 : register(b1)

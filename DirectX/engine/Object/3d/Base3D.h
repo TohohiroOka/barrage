@@ -83,7 +83,7 @@ protected:
 	//アウトラインの有無
 	bool isOutline;
 	//ライティング
-	bool isLight;
+	bool isLight = true;
 	//アウトライン色
 	XMFLOAT3 outlineColor;
 
