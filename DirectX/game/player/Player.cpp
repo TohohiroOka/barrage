@@ -1,4 +1,6 @@
-﻿#include "Player.h"
+﻿//マージ用
+
+#include "Player.h"
 #include "Input/DirectInput.h"
 #include "Input/XInputManager.h"
 #include "Object/2d/DebugText.h"
