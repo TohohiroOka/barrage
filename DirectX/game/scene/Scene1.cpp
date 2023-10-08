@@ -105,6 +105,8 @@ void Scene1::ImguiDraw()
 	ImGui::Text("%f : %f", sinf(XMConvertToRadians(cameraRota + 90)), cosf(XMConvertToRadians(cameraRota + 90)));
 	ImGui::Text("%f : %f : %f", ppos.x, ppos.y, ppos.z);
 
+	ImGui::Text("%d : %d ", player->GetJumpMaxNum(), player->GetJumpCount());
+
 	ImGui::End();
 }
 

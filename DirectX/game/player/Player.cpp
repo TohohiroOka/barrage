@@ -9,6 +9,9 @@
 
 using namespace DirectX;
 
+const float Player::moveSpeedMax = 3.0f;
+const float Player::dashSpeedMax = 6.0f;
+
 Player::Player()
 {
 	model = Model::CreateFromOBJ("NormalCube");
@@ -21,6 +24,8 @@ Player::Player()
 	object->SetCollider(new SphereCollider(XMVECTOR({ 0,radius,0,0 }), radius));
 	object->GetCollider()->SetAttribute(COLLISION_ATTR_ALLIES);
 
+	//連続ジャンプ可能回数設定
+	jumpMaxNum = 2;
 }
 
 void Player::Update()
@@ -30,12 +35,10 @@ void Player::Update()
 		// 落下処理
 		Fall();
 	}
-	else {
-		//ジャンプ
-		Jump();
-	}
 
+	Jump();
 	Collider();
+
 	object->Update();
 }
 
@@ -50,35 +53,35 @@ void Player::Move()
 
 	Vector2 raidan = Vector2(XMConvertToRadians(moveRota), XMConvertToRadians(moveRota + 90));
 
-	float Pspeed = 5.0f;
+	//ダッシュ
+	Dash();
 
 	//キー入力
 	{
 		//右入力
 		if (input->PushKey(DIK_D)) {
-			moveVec.x += Pspeed * cosf(raidan.x);
-			moveVec.z += Pspeed * cosf(raidan.y);
+			moveVec.x += moveSpeed * cosf(raidan.x);
+			moveVec.z += moveSpeed * cosf(raidan.y);
 		}
 		//左入力
 		if (input->PushKey(DIK_A)) {
-			moveVec.x -= Pspeed * cosf(raidan.x);
-			moveVec.z -= Pspeed * cosf(raidan.y);
+			moveVec.x -= moveSpeed * cosf(raidan.x);
+			moveVec.z -= moveSpeed * cosf(raidan.y);
 		}
 		//下入力
 		if (input->PushKey(DIK_W)) {
-			moveVec.x += Pspeed * cosf(XMConvertToRadians(360.0f - moveRota + 90));
-			moveVec.z += Pspeed * cosf(XMConvertToRadians(360.0f - moveRota));
+			moveVec.x += moveSpeed * cosf(XMConvertToRadians(360.0f - moveRota + 90));
+			moveVec.z += moveSpeed * cosf(XMConvertToRadians(360.0f - moveRota));
 		}
 		//上入力
 		if (input->PushKey(DIK_S)) {
-			moveVec.x -= Pspeed * cosf(XMConvertToRadians(360.0f - moveRota + 90));
-			moveVec.z -= Pspeed * cosf(XMConvertToRadians(360.0f - moveRota));
+			moveVec.x -= moveSpeed * cosf(XMConvertToRadians(360.0f - moveRota + 90));
+			moveVec.z -= moveSpeed * cosf(XMConvertToRadians(360.0f - moveRota));
 		}
 	}
 
 	//コントローラー入力
 	{
-
 		//ある程度スティックを傾けないと判定しない
 		const float moveStickIncline = 0.3f;
 		const XMFLOAT2 padIncline = XInputManager::GetInstance()->GetPadLStickIncline();
@@ -88,15 +91,27 @@ void Player::Move()
 		}
 
 		const float stickRadian = XMConvertToRadians(XInputManager::GetInstance()->GetPadLStickAngle() - 90);
-		moveVec.x = cosf(stickRadian) * fabsf(padIncline.x) * Pspeed;
-		moveVec.z = -sinf(stickRadian) * fabsf(padIncline.y) * Pspeed;
+		moveVec.x = cosf(stickRadian) * fabsf(padIncline.x) * moveSpeed;
+		moveVec.z = -sinf(stickRadian) * fabsf(padIncline.y) * moveSpeed;
+	}
+}
+
+void Player::Dash()
+{
+	//ダッシュ入力があった場合に、移動スピードを速くしていく
+	if (DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)) {
+		moveSpeed = dashSpeedMax;
+	}
+	//入力がない場合は、元の移動スピードに戻していく
+	else {
+		moveSpeed = moveSpeedMax;
 	}
 }
 
 void Player::Fall()
 {
 	// 下向き加速度
-	const float fallAcc = -0.1f;
+	const float fallAcc = -0.4f;
 	const float fallVYMin = -10.0f;
 	// 加速
 	fallV.m128_f32[1] = max(fallV.m128_f32[1] + fallAcc, fallVYMin);
@@ -106,13 +121,15 @@ void Player::Fall()
 
 void Player::Jump()
 {
+	//ジャンプ回数が連続ジャンプ可能回数を超えていたら抜ける
+	if (jumpCount >= jumpMaxNum) { return; }
 	//ジャンプ入力がなければ抜ける
-	if (!(DirectInput::GetInstance()->TriggerKey(DIK_SPACE) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_A))) { return; }
+	if (!(DirectInput::GetInstance()->TriggerKey(DIK_SPACE) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
 
 	onGround = false;
-	const float jumpVYFist = 2.0f;
+	const float jumpVYFist = 8.0f;
 	fallV = { 0, jumpVYFist, 0, 0 };
-
+	jumpCount++; //ジャンプ回数を増やす
 }
 
 void Player::Collider()
@@ -259,6 +276,7 @@ void Player::Collider()
 			if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
 				onGround = true;
 				pos.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+				jumpCount = 0; //連続ジャンプ回数をリセット
 			}
 			// 地面がないので落下
 			else {
@@ -272,6 +290,7 @@ void Player::Collider()
 				// 着地
 				onGround = true;
 				pos.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+				jumpCount = 0; //連続ジャンプ回数をリセット
 			}
 		}
 

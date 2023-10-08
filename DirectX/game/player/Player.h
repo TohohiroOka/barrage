@@ -21,17 +21,24 @@ public:
 private:
 
 	void Move();
+	void Dash();
 	void Fall();
 	void Jump();
 	void Collider();
 
 public:
 
-	Vector3 GetPos() { return pos; }
+	const Vector3& GetPos() { return pos; }
+	int GetJumpCount() { return jumpCount; }
+	int GetJumpMaxNum() { return jumpMaxNum; }
 
-	void SetMoveRota(const float _rota) { moveRota = _rota; }
+private: //静的メンバ変数
+	//最大移動スピード
+	static const float moveSpeedMax;
+	//最大ダッシュスピード
+	static const float dashSpeedMax;
 
-private:
+private: //メンバ変数
 
 	std::unique_ptr<Model> model = nullptr;
 	std::unique_ptr<Object3d> object = nullptr;
@@ -44,4 +51,13 @@ private:
 	// 落下ベクトル
 	DirectX::XMVECTOR fallV;
 
+	//移動スピード
+	float moveSpeed = 0.0f;
+
+	//ダッシュしているか
+	bool isDash = false;
+	//ジャンプ可能回数
+	int jumpMaxNum;
+	//ジャンプ回数カウント
+	int jumpCount = 0;
 };
