@@ -1,5 +1,6 @@
 ﻿#include "Player.h"
 #include "Input/DirectInput.h"
+#include "Input/XInputManager.h"
 #include "Object/2d/DebugText.h"
 #include "Object/3d/collider/SphereCollider.h"
 #include "Object/3d/collider/CollisionManager.h"
@@ -25,7 +26,6 @@ Player::Player()
 void Player::Update()
 {
 	Move();
-	Collider();
 	if (!onGround) {
 		// 落下処理
 		Fall();
@@ -35,6 +35,7 @@ void Player::Update()
 		Jump();
 	}
 
+	Collider();
 	object->Update();
 }
 
@@ -49,45 +50,64 @@ void Player::Move()
 
 	Vector2 raidan = Vector2(XMConvertToRadians(moveRota), XMConvertToRadians(moveRota + 90));
 
-	//player移動
 	float Pspeed = 5.0f;
-	//右入力
-	if (input->PushKey(DIK_D)) {
-		moveVec.x += Pspeed * cosf(raidan.x);
-		moveVec.z += Pspeed * cosf(raidan.y);
+
+	//キー入力
+	{
+		//右入力
+		if (input->PushKey(DIK_D)) {
+			moveVec.x += Pspeed * cosf(raidan.x);
+			moveVec.z += Pspeed * cosf(raidan.y);
+		}
+		//左入力
+		if (input->PushKey(DIK_A)) {
+			moveVec.x -= Pspeed * cosf(raidan.x);
+			moveVec.z -= Pspeed * cosf(raidan.y);
+		}
+		//下入力
+		if (input->PushKey(DIK_W)) {
+			moveVec.x += Pspeed * cosf(XMConvertToRadians(360.0f - moveRota + 90));
+			moveVec.z += Pspeed * cosf(XMConvertToRadians(360.0f - moveRota));
+		}
+		//上入力
+		if (input->PushKey(DIK_S)) {
+			moveVec.x -= Pspeed * cosf(XMConvertToRadians(360.0f - moveRota + 90));
+			moveVec.z -= Pspeed * cosf(XMConvertToRadians(360.0f - moveRota));
+		}
 	}
-	//左入力
-	if (input->PushKey(DIK_A)) {
-		moveVec.x -= Pspeed * cosf(raidan.x);
-		moveVec.z -= Pspeed * cosf(raidan.y);
-	}
-	//下入力
-	if (input->PushKey(DIK_W)) {
-		moveVec.x += Pspeed * cosf(XMConvertToRadians(360.0f - moveRota + 90));
-		moveVec.z += Pspeed * cosf(XMConvertToRadians(360.0f - moveRota));
-	}
-	//上入力
-	if (input->PushKey(DIK_S)) {
-		moveVec.x -= Pspeed * cosf(XMConvertToRadians(360.0f - moveRota + 90));
-		moveVec.z -= Pspeed * cosf(XMConvertToRadians(360.0f - moveRota));
+
+	//コントローラー入力
+	{
+
+		//ある程度スティックを傾けないと判定しない
+		const float moveStickIncline = 0.3f;
+		const XMFLOAT2 padIncline = XInputManager::GetInstance()->GetPadLStickIncline();
+		if (!(fabsf(padIncline.x) >= moveStickIncline ||
+			fabsf(padIncline.y) >= moveStickIncline)) {
+			return;
+		}
+
+		const float stickRadian = XMConvertToRadians(XInputManager::GetInstance()->GetPadLStickAngle() - 90);
+		moveVec.x = cosf(stickRadian) * fabsf(padIncline.x) * Pspeed;
+		moveVec.z = -sinf(stickRadian) * fabsf(padIncline.y) * Pspeed;
 	}
 }
 
 void Player::Fall()
 {
 	// 下向き加速度
-	const float fallAcc = -0.05f;
-	const float fallVYMin = -5.0f;
+	const float fallAcc = -0.1f;
+	const float fallVYMin = -10.0f;
 	// 加速
 	fallV.m128_f32[1] = max(fallV.m128_f32[1] + fallAcc, fallVYMin);
 	// 移動
-	moveVec.y += fallV.m128_f32[1];
+	moveVec.y = fallV.m128_f32[1];
 }
 
 void Player::Jump()
 {
-	//スペースキー入力がなければ抜ける
-	if (!DirectInput::GetInstance()->TriggerKey(DIK_SPACE)) { return; }
+	//ジャンプ入力がなければ抜ける
+	if (!(DirectInput::GetInstance()->TriggerKey(DIK_SPACE) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_A))) { return; }
 
 	onGround = false;
 	const float jumpVYFist = 2.0f;
@@ -220,14 +240,10 @@ void Player::Collider()
 			if (abs(a.y) < 0.003f) { a.y = 0.0f; }
 			if (abs(a.z) < 0.003f) { a.z = 0.0f; }
 
-			pos.x += a.x;
-			pos.y += a.y;
-			pos.z += a.z;
+			pos += a;
 		}
 		else {
-			pos.x += moveVec.x;
-			pos.y += moveVec.y;
-			pos.z += moveVec.z;
+			pos += moveVec;
 		}
 
 		// 球の上端から球の下端までのレイキャスト
