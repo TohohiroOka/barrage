@@ -1,7 +1,6 @@
 #pragma once
 #include "../Object/3d/Object3d.h"
 #include "BaseAction.h"
-#include <functional>
 
 class BaseBoss
 {

@@ -35,7 +35,8 @@ void Base3D::UpdateWorldMatrix()
 	// 親オブジェクトがあれば
 	if (parent != nullptr) {
 		//親オブジェクトのワールド行列をかける
-		matWorld *= parent->GetMatWorld();
+		XMMATRIX A= parent->GetMatWorld();
+		matWorld *= A;
 	}
 }
 

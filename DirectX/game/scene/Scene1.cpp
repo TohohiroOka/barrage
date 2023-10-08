@@ -23,7 +23,7 @@ void Scene1::Initialize()
 		{ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, 1.0f, jimen, kabe);
 
 	gobject = HeightMap::Create(gmodel.get());
-	gobject->SetScale({ 15.0f ,15.0f ,15.0f });
+	gobject->SetScale({ 3.0f ,3.0f ,3.0f });
 	gobject->UpdateWorldMatrix();
 
 	gobject->DeleteCollider();
@@ -43,7 +43,6 @@ void Scene1::Initialize()
 	player = std::make_unique<Player>();
 
 	boss = std::make_unique<Boss1>();
-	BaseAction::SetBossPtr(boss.get());
 
 }
 

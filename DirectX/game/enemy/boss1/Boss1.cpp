@@ -9,8 +9,10 @@ Boss1::Boss1()
 	boss = Object3d::Create(model.get());
 	boss->SetParent(center.get());
 
-	boss->SetPosition({150.0f,120.0f,150.0f});
+	//boss->SetPosition({150.0f,120.0f,150.0f});
 	boss->SetScale({ 5.0f,5.0f ,5.0f });
+
+	BaseAction::SetBossPtr(this);
 
 	action = std::make_unique<Boss1NearAttack1>();
 }

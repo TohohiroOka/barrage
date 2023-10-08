@@ -8,6 +8,8 @@
 #include <memory>
 #include <random>
 #include <cstdlib>
+#include "../Math/Vector3.h"
+#include "../Math/Vector2.h"
 
 class GameHelper : public Singleton<GameHelper>
 {
@@ -69,6 +71,33 @@ public:
 	/// <param name="n">取得を終了する桁</param>
 	/// <returns></returns>
 	int GetDigits(int value, int m, int n);
+
+	/// <summary>
+	/// 線形補間float
+	/// </summary>
+	/// <param name="points">制御点の集合</param>
+	/// <param name="startIndex">保管する区間の添字</param>
+	/// <param name="t">時間経過</param>
+	/// <returns></returns>
+	float SplinePosition(const std::vector<float>& points, int startIndex, float t);
+
+	/// <summary>
+	/// 線形補間Vector2
+	/// </summary>
+	/// <param name="points">制御点の集合</param>
+	/// <param name="startIndex">保管する区間の添字</param>
+	/// <param name="t">時間経過</param>
+	/// <returns></returns>
+	Vector2 SplinePosition(const std::vector<Vector2>& points, int startIndex, float t);
+
+	/// <summary>
+	/// 線形補間Vector3
+	/// </summary>
+	/// <param name="points">制御点の集合</param>
+	/// <param name="startIndex">保管する区間の添字</param>
+	/// <param name="t">時間経過</param>
+	/// <returns></returns>
+	Vector3 SplinePosition(const std::vector<Vector3>& points, int startIndex, float t);
 
 	//ゲーム速度を変更する
 	void SetGameSpeed(float _gameSpeed) { gameSpeed = _gameSpeed; }
