@@ -87,3 +87,105 @@ int GameHelper::GetDigits(int value, int m, int n) {
 
 	return result;
 }
+
+float GameHelper::SplinePosition(const std::vector<float>& points, int startIndex, float t)
+{
+	std::array<int, 4> index;
+	if (startIndex < 1) {
+		index[0] = int(points.size()) - 1;
+	} else {
+		index[0] = startIndex - 1;
+	}
+	index[1] = startIndex;
+	if (startIndex >= int(points.size()) - 1) {
+		index[2] = 0;
+		index[3] = 1;
+	} else if (startIndex >= int(points.size()) - 2) {
+		index[2] = startIndex + 1;
+		index[3] = 0;
+	} else {
+		index[2] = startIndex + 1;
+		index[3] = startIndex + 2;
+	}
+
+	//p0~p3‚Ì§Œä“_‚ğæ“¾‚·‚é¦p1~p2‚ğ•âŠÔ‚·‚é
+	float p0 = points[index[0]];
+	float p1 = points[index[1]];
+	float p2 = points[index[2]];
+	float p3 = points[index[3]];
+
+	//Catmull-Rom‚Ì®‚É‚æ‚é•âŠÔ
+	float position = (p1 * 2.0f + (-p0 + p2) * t
+		+ (p0 * 2.0f - p1 * 5.0f + p2 * 4.0f - p3) * t * t
+		+ (-p0 + p1 * 3.0f - p2 * 3.0f + p3) * t * t * t) * 0.5f;
+
+	return position;
+}
+
+Vector2 GameHelper::SplinePosition(const std::vector<Vector2>& points, int startIndex, float t)
+{
+	std::array<int, 4> index;
+	if (startIndex < 1) {
+		index[0] = int(points.size()) - 1;
+	} else {
+		index[0] = startIndex - 1;
+	}
+	index[1] = startIndex;
+	if (startIndex >= int(points.size()) - 1) {
+		index[2] = 0;
+		index[3] = 1;
+	} else if (startIndex >= int(points.size()) - 2) {
+		index[2] = startIndex + 1;
+		index[3] = 0;
+	} else {
+		index[2] = startIndex + 1;
+		index[3] = startIndex + 2;
+	}
+
+	//p0~p3‚Ì§Œä“_‚ğæ“¾‚·‚é¦p1~p2‚ğ•âŠÔ‚·‚é
+	Vector2 p0 = points[index[0]];
+	Vector2 p1 = points[index[1]];
+	Vector2 p2 = points[index[2]];
+	Vector2 p3 = points[index[3]];
+
+	//Catmull-Rom‚Ì®‚É‚æ‚é•âŠÔ
+	Vector2 position = (p1 * 2 + (-p0 + p2) * t
+		+ (p0 * 2 - p1 * 5 + p2 * 4 - p3) * t * t
+		+ (-p0 + p1 * 3 - p2 * 3 + p3) * t * t * t) * 0.5;
+
+	return position;
+}
+
+Vector3 GameHelper::SplinePosition(const std::vector<Vector3>& points, int startIndex, float t)
+{
+	std::array<int, 4> index;
+	if (startIndex < 1) {
+		index[0] = int(points.size()) - 1;
+	} else {
+		index[0] = startIndex - 1;
+	}
+	index[1] = startIndex;
+	if (startIndex >= int(points.size()) - 1) {
+		index[2] = 0;
+		index[3] = 1;
+	} else if (startIndex >= int(points.size()) - 2) {
+		index[2] = startIndex + 1;
+		index[3] = 0;
+	} else {
+		index[2] = startIndex + 1;
+		index[3] = startIndex + 2;
+	}
+
+	//p0~p3‚Ì§Œä“_‚ğæ“¾‚·‚é¦p1~p2‚ğ•âŠÔ‚·‚é
+	Vector3 p0 = points[index[0]];
+	Vector3 p1 = points[index[1]];
+	Vector3 p2 = points[index[2]];
+	Vector3 p3 = points[index[3]];
+
+	//Catmull-Rom‚Ì®‚É‚æ‚é•âŠÔ
+	Vector3 position = (p1 * 2 + (-p0 + p2) * t
+		+ (p0 * 2 - p1 * 5 + p2 * 4 - p3) * t * t
+		+ (-p0 + p1 * 3 - p2 * 3 + p3) * t * t * t) * 0.5;
+
+	return position;
+}

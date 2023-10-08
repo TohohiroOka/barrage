@@ -119,6 +119,12 @@
     <Filter Include="ゲームシステム\camera">
       <UniqueIdentifier>{d9a8eb30-1a15-43ec-b103-ddf0fe16ed1b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ゲームシステム\Enemy">
+      <UniqueIdentifier>{32f6eaef-1272-43d9-852c-dc088e354499}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ゲームシステム\Enemy\Boss1">
+      <UniqueIdentifier>{c7f4887b-6aa9-4a32-bf22-d08f0e24549c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -302,6 +308,18 @@
       <Filter>ゲームシステム\Player</Filter>
     </ClCompile>
     <ClCompile Include="game\camera\GameCamera.cpp" />
+    <ClCompile Include="game\enemy\BaseAction.cpp">
+      <Filter>ゲームシステム\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\BaseBoss.cpp">
+      <Filter>ゲームシステム\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\Boss1NearAttack1.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\Boss1.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -637,6 +655,18 @@
     </ClInclude>
     <ClInclude Include="game\camera\GameCamera.h">
       <Filter>ゲームシステム\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\BaseAction.h">
+      <Filter>ゲームシステム\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\BaseBoss.h">
+      <Filter>ゲームシステム\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\Boss1.h">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\Boss1NearAttack1.h">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

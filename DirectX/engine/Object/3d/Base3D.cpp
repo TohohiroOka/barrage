@@ -34,23 +34,8 @@ void Base3D::UpdateWorldMatrix()
 
 	// 親オブジェクトがあれば
 	if (parent != nullptr) {
-		XMFLOAT3 pPos = parent->GetPosition();
-		XMFLOAT3 pRota = parent->GetRotation();
-		// 親オブジェクトのワールド行列を掛ける
-		matWorld *= XMMatrixTranslation(-pPos.x, -pPos.y, -pPos.z);
-		matWorld *= XMMatrixRotationZ(XMConvertToRadians(pRota.z));
-		matWorld *= XMMatrixRotationZ(XMConvertToRadians(pRota.x));
-		matWorld *= XMMatrixRotationZ(XMConvertToRadians(pRota.y));
-		matWorld *= XMMatrixTranslation(pPos.x, pPos.y, pPos.z);
-
-		//XMFLOAT3 radiun = { asinf(-matWorld.r[2].m128_f32[1]),
-		//	asinf(-matWorld.r[0].m128_f32[2]),asinf(-matWorld.r[1].m128_f32[0]) };
-		//rotation = { XMConvertToDegrees(radiun.x),XMConvertToDegrees(radiun.y) ,XMConvertToDegrees(radiun.z) };
-		//position = { matWorld.r[3].m128_f32[0],matWorld.r[3].m128_f32[1],matWorld.r[3].m128_f32[2] };
-
-		//rotation = { rotation.x + pRota.x,rotation.y + pRota.y, rotation.z + pRota.z };
-
-		//matWorld *= parent->GetMatWorld();
+		//親オブジェクトのワールド行列をかける
+		matWorld *= parent->GetMatWorld();
 	}
 }
 

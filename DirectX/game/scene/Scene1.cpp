@@ -24,7 +24,7 @@ void Scene1::Initialize()
 		{ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, 1.0f, jimen, kabe);
 
 	gobject = HeightMap::Create(gmodel.get());
-	gobject->SetScale({ 15.0f ,15.0f ,15.0f });
+	gobject->SetScale({ 3.0f ,3.0f ,3.0f });
 	gobject->UpdateWorldMatrix();
 
 	gobject->DeleteCollider();
@@ -46,11 +46,7 @@ void Scene1::Initialize()
 	player = std::make_unique<Player>();
 	GameCamera::SetPlayer(player.get());
 
-	fbxmodel = FbxModel::Create("boneTest");
-	fbx = Fbx::Create(fbxmodel.get());
-	fbx->SetPosition({ 500.f,100.0f,500.0f });
-	fbx->SetScale({ 15.0f ,15.0f ,15.0f });
-	fbx->SetAnimation(true);
+	boss = std::make_unique<Boss1>();
 
 	ParticleManager::SetCamera(camera.get());
 }
@@ -61,7 +57,7 @@ void Scene1::Update()
 
 	player->Update();
 	gobject->Update();
-	fbx->Update();
+	boss->Update();
 
 	//ƒJƒƒ‰XV
 	camera->Update();
@@ -75,7 +71,7 @@ void Scene1::Draw(const int _cameraNum)
 
 	player->Draw();
 
-	fbx->Draw();
+	boss->Draw();
 }
 
 void Scene1::NonPostEffectDraw(const int _cameraNum)
