@@ -16,6 +16,7 @@ const std::array<XMFLOAT4, 2> COLOR = { XMFLOAT4{ 0.0f,0.0f,0.8f,1.0f } ,{ 0.8f,
 
 void Scene1::Initialize()
 {
+	debugCamera = DebugCamera::Create({ 300, 40, 0 });
 	camera = GameCamera::Create();
 
 	const std::string jimen = "jimen.png";
@@ -60,7 +61,22 @@ void Scene1::Update()
 	boss->Update();
 
 	//ƒJƒƒ‰XV
-	camera->Update();
+	static bool isNormalCamera = true;
+	if (isNormalCamera) {
+		camera->Update();
+		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
+			isNormalCamera = !isNormalCamera;
+			Base3D::SetCamera(debugCamera.get());
+		}
+	}
+	else {
+		debugCamera->Update();
+		Base3D::SetCamera(debugCamera.get());
+		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
+			isNormalCamera = !isNormalCamera;
+			Base3D::SetCamera(camera.get());
+		}
+	}
 }
 
 void Scene1::Draw(const int _cameraNum)

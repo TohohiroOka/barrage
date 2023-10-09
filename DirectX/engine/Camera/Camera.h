@@ -107,6 +107,12 @@ public: // メンバ関数
 	/// <param name="_back">最奥</param>
 	void SetMatProjection(float _back);
 
+	/// <summary>
+	/// ベクトルによる移動
+	/// </summary>
+	/// <param name="move"></param>
+	void MoveVector(const XMVECTOR& move);
+
 protected: // メンバ変数
 	// ビュー行列
 	XMMATRIX matView = DirectX::XMMatrixIdentity();

@@ -307,7 +307,6 @@
     <ClCompile Include="game\player\Player.cpp">
       <Filter>ゲームシステム\Player</Filter>
     </ClCompile>
-    <ClCompile Include="game\camera\GameCamera.cpp" />
     <ClCompile Include="game\enemy\BaseAction.cpp">
       <Filter>ゲームシステム\Enemy</Filter>
     </ClCompile>
@@ -319,6 +318,12 @@
     </ClCompile>
     <ClCompile Include="game\enemy\boss1\Boss1.cpp">
       <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="game\camera\GameCamera.cpp">
+      <Filter>ゲームシステム\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Camera\DebugCamera.cpp">
+      <Filter>Engine\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -667,6 +672,9 @@
     </ClInclude>
     <ClInclude Include="game\enemy\boss1\Boss1NearAttack1.h">
       <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Camera\DebugCamera.h">
+      <Filter>Engine\Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

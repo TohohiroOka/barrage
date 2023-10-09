@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene/InterfaceScene.h"
 #include "Math/Vector3.h"
+#include "engine/camera/DebugCamera.h"
 #include "player/Player.h"
 #include "game/camera/GameCamera.h"
 #include "../enemy/boss1/Boss1.h"
@@ -54,7 +55,7 @@ public:
 	void FrameReset() override;
 
 private:
-
+	std::unique_ptr<DebugCamera> debugCamera;
 	std::unique_ptr<GameCamera> camera;
 
 	std::unique_ptr<Sprite> sprite;

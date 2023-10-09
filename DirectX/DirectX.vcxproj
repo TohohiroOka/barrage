@@ -99,6 +99,7 @@
   <ItemGroup>
     <ClCompile Include="engine\audio\Audio.cpp" />
     <ClCompile Include="engine\camera\Camera.cpp" />
+    <ClCompile Include="engine\Camera\DebugCamera.cpp" />
     <ClCompile Include="engine\DirectXCommon.cpp" />
     <ClCompile Include="engine\external\imgui\imgui.cpp" />
     <ClCompile Include="engine\external\imgui\imgui_demo.cpp" />
@@ -324,6 +325,7 @@
   <ItemGroup>
     <ClInclude Include="engine\audio\Audio.h" />
     <ClInclude Include="engine\camera\Camera.h" />
+    <ClInclude Include="engine\Camera\DebugCamera.h" />
     <ClInclude Include="engine\DirectXCommon.h" />
     <ClInclude Include="engine\external\imgui\imconfig.h" />
     <ClInclude Include="engine\external\imgui\imgui.h" />
