@@ -2,6 +2,8 @@
 #include "Object/3d/Object3d.h"
 #include "Math/Vector3.h"
 
+class GameCamera;
+
 class Player
 {
 private:
@@ -11,7 +13,7 @@ private:
 
 public:
 
-	Player();
+	Player(GameCamera* gameCamera);
 	~Player(){};
 
 	void Update();
@@ -32,6 +34,8 @@ public:
 	int GetJumpCount() { return jumpCount; }
 	int GetJumpMaxNum() { return jumpMaxNum; }
 
+	void SetMoveRota(float moveRota) { this->moveRota = moveRota; }
+
 private: //静的メンバ変数
 	//最大移動スピード
 	static const float moveSpeedMax;
@@ -39,9 +43,10 @@ private: //静的メンバ変数
 	static const float dashSpeedMax;
 
 private: //メンバ変数
-
 	std::unique_ptr<Model> model = nullptr;
 	std::unique_ptr<Object3d> object = nullptr;
+
+	GameCamera* gameCamera = nullptr;
 
 	Vector3 pos;
 	Vector3 moveVec;

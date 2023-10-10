@@ -22,9 +22,13 @@ public: //メンバ関数
 	~GameCamera() override;
 
 	void Update() override;
+
+	//getter
+	const XMFLOAT3& GetCameraRota() { return cameraRota; }
+
+private: //メンバ関数
 	void Move();
 
-	const XMFLOAT3& GetCameraRota() { return cameraRota; }
 
 private: //静的メンバ変数
 	static Player* player;
@@ -33,5 +37,5 @@ private: //メンバ変数
 	//カメラ座標
 	XMFLOAT3 cameraPos;
 	//ターゲット角度
-	XMFLOAT3 cameraRota;
+	XMFLOAT3 cameraRota = {};
 };

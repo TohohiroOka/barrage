@@ -44,7 +44,7 @@ void Scene1::Initialize()
 	sprite->SetSize({ 1059.0f / 5.0f,1500.0f / 5.0f });
 	sprite->Update();
 
-	player = std::make_unique<Player>();
+	player = std::make_unique<Player>(camera.get());
 	GameCamera::SetPlayer(player.get());
 
 	boss = std::make_unique<Boss1>();

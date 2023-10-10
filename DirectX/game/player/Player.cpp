@@ -6,14 +6,17 @@
 #include "Object/3d/collider/CollisionManager.h"
 #include "Object/3d/collider/CollisionAttribute.h"
 #include "Math/Vector2.h"
+#include "game/camera/GameCamera.h"
 
 using namespace DirectX;
 
-const float Player::moveSpeedMax = 3.0f;
-const float Player::dashSpeedMax = 6.0f;
+const float Player::moveSpeedMax = 1.5f;
+const float Player::dashSpeedMax = 2.0f;
 
-Player::Player()
+Player::Player(GameCamera* gameCamera)
 {
+	this->gameCamera = gameCamera;
+
 	model = Model::CreateFromOBJ("NormalCube");
 	object = Object3d::Create(model.get());
 	pos = { 100.0f,200.0f,100.0f };
@@ -90,10 +93,25 @@ void Player::Move()
 			return;
 		}
 
-		const float stickRadian = XMConvertToRadians(XInputManager::GetInstance()->GetPadLStickAngle() - 90);
-		moveVec.x = cosf(stickRadian) * fabsf(padIncline.x) * moveSpeed;
-		moveVec.z = -sinf(stickRadian) * fabsf(padIncline.y) * moveSpeed;
+		
+		Vector3 vec{};
+		vec.x = XInputManager::GetInstance()->GetPadLStickIncline().x * moveSpeed;
+		vec.z = XInputManager::GetInstance()->GetPadLStickIncline().y * moveSpeed;
+
+		/*const float stickRadian = XMConvertToRadians(XInputManager::GetInstance()->GetPadLStickAngle());
+		Vector3 stickVec{};
+		stickVec.x = vec.x * cosf(stickRadian) - vec.z * sinf(stickRadian);
+		stickVec.z = vec.x * sinf(stickRadian) + vec.z * cosf(stickRadian);*/
+
+		const float cameraRotaRadian = XMConvertToRadians(-gameCamera->GetCameraRota().x);
+		Vector3 cameraVec{};
+		cameraVec.x = vec.x * cosf(cameraRotaRadian) - vec.z * sinf(cameraRotaRadian);
+		cameraVec.z = vec.x * sinf(cameraRotaRadian) + vec.z * cosf(cameraRotaRadian);
+
+		moveVec = cameraVec;
 	}
+
+	
 }
 
 void Player::Dash()
