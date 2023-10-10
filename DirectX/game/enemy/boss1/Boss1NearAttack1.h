@@ -14,13 +14,15 @@ private:
 		attack,
 		afterMove,
 		end,
+		non,
 	};
 
 	struct ObjectInfo {
 		std::unique_ptr<Object3d> object;
 		float timer;
-		int hokanPointNum;//補間番号
 		DirectX::XMFLOAT3 pos;
+		int hokanPointNum;
+		int stateInState;//行動内での処理番号
 	};
 
 public:
@@ -31,7 +33,7 @@ public:
 
 	void Draw() override;
 
-	bool End() override;
+	bool End() override { return isEnd; }
 
 private:
 
@@ -57,5 +59,7 @@ private:
 	float timer;
 	//回転角度
 	float allRota;
+	//行動終了
+	bool isEnd;
 };
 

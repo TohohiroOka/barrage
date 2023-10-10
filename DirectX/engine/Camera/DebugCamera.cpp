@@ -24,6 +24,9 @@ DebugCamera::DebugCamera(const XMFLOAT3& targetPos) :
 	scale.x = 1.0f / (float)WindowApp::GetWindowHeight();
 	scale.y = 1.0f / (float)WindowApp::GetWindowHeight();
 
+	pos = {};
+	oka_moveRota = {};
+
 	UpdateAngle3d({});
 }
 
@@ -33,7 +36,7 @@ DebugCamera::~DebugCamera()
 
 void DebugCamera::Update()
 {
-	MoveCamera();
+	Move1();
 	Camera::Update();
 }
 
@@ -48,6 +51,7 @@ void DebugCamera::ChangeTargetDistance()
 
 	bool dirty = false;
 	XMFLOAT2 angle = {};
+
 
 	//左ボタンが押されていたらカメラを回転させる
 	if (input->PushMouseButton(DirectInput::MOUSE_LEFT)) {
@@ -108,4 +112,68 @@ void DebugCamera::UpdateAngle3d(const XMFLOAT2& angle)
 	eye = { target.x + vTargetEye.m128_f32[0], target.y + vTargetEye.m128_f32[1], target.z + vTargetEye.m128_f32[2] };
 
 	up = { vUp.m128_f32[0], vUp.m128_f32[1], vUp.m128_f32[2] };
+}
+
+void DebugCamera::Move1()
+{
+	using namespace DirectX;
+
+	DirectInput* input = DirectInput::GetInstance();
+
+	const float Tgspeed = 1.0f;
+	if (input->PushKey(DIK_LEFT)) { oka_moveRota.x -= Tgspeed; }//右入力
+	if (input->PushKey(DIK_RIGHT)) { oka_moveRota.x += Tgspeed; }//左入力
+	if (input->PushKey(DIK_DOWN)) { oka_moveRota.y -= Tgspeed; }//下入力
+	if (input->PushKey(DIK_UP)) { oka_moveRota.y += Tgspeed; }//上入力
+
+	//上下方向の角度制限
+	if (oka_moveRota.y <= -40) { oka_moveRota.y = -40; }//下制限
+	if (oka_moveRota.y >= 40) { oka_moveRota.y = 40; }//上制限
+
+	//横の制限
+	if (oka_moveRota.x > 360) { oka_moveRota.x = 0; }
+	if (oka_moveRota.x < -360) { oka_moveRota.x = 0; }
+
+	Vector2 raidan_LR = Vector2(XMConvertToRadians(oka_moveRota.x), XMConvertToRadians(oka_moveRota.x + 90));
+	Vector2 raidan_UD = Vector2(XMConvertToRadians(360.0f - oka_moveRota.x), XMConvertToRadians(360.0f - oka_moveRota.x + 90));
+
+	//player移動
+	float Pspeed = 5.0f;
+	//右入力
+	if (input->PushKey(DIK_D)) {
+		pos.x += Pspeed * cosf(raidan_LR.x);
+		pos.z += Pspeed * cosf(raidan_LR.y);
+	}
+	//左入力
+	if (input->PushKey(DIK_A)) {
+		pos.x -= Pspeed * cosf(raidan_LR.x);
+		pos.z -= Pspeed * cosf(raidan_LR.y);
+	}
+	//前入力
+	if (input->PushKey(DIK_W)) {
+		pos.x += Pspeed * cosf(raidan_UD.y);
+		pos.z += Pspeed * cosf(raidan_UD.x);
+	}
+	//後入力
+	if (input->PushKey(DIK_S)) {
+		pos.x -= Pspeed * cosf(raidan_UD.y);
+		pos.z -= Pspeed * cosf(raidan_UD.x);
+	}
+	//上入力
+	if (input->PushKey(DIK_LSHIFT)) {
+		pos.y += Pspeed;
+	}
+	//下入力
+	if (input->PushKey(DIK_LCONTROL)) {
+		pos.y -= Pspeed;
+	}
+
+	//カメラ移動
+	XMFLOAT2 radian = { XMConvertToRadians(oka_moveRota.x),XMConvertToRadians(oka_moveRota.y) };
+	XMFLOAT2 radian2 = { XMConvertToRadians(oka_moveRota.x + 180),XMConvertToRadians(oka_moveRota.y + 180) };
+
+	const float dist = 15.0f;
+	eye = { pos.x + sinf(radian2.x) * dist,pos.y,pos.z + cosf(radian2.x) * dist };
+	target = { pos.x + sinf(radian.x) * dist,pos.y + sinf(radian.y) * dist,pos.z + cosf(radian.x) * dist };
+
 }

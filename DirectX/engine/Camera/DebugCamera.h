@@ -1,5 +1,7 @@
 #pragma once
 #include "Camera/Camera.h"
+#include "Math/Vector2.h"
+#include "Math/Vector3.h"
 
 /// <summary>
 /// デバッグカメラ
@@ -25,6 +27,8 @@ private: //メンバ関数
 	void ChangeTargetDistance();
 	void UpdateAngle3d(const XMFLOAT2& angle);
 
+	void Move1();
+
 private: //静的メンバ変数
 	static const float eyeTargetDistance;
 
@@ -35,4 +39,9 @@ private: //メンバ変数
 	XMFLOAT2 scale;
 	// 回転行列
 	XMMATRIX matRot = DirectX::XMMatrixIdentity();
+
+	//動き用
+	Vector2 oka_moveRota;
+	Vector3 pos;
+
 };

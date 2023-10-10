@@ -24,6 +24,7 @@ Boss1NearAttack1::Boss1NearAttack1()
 	state = State::start;
 
 	timer = 0.0f;
+	isEnd = false;
 
 	func_.emplace_back([this] {return StartMove(); });
 	func_.emplace_back([this] {return BeforeMove(); });
@@ -35,7 +36,9 @@ Boss1NearAttack1::Boss1NearAttack1()
 void Boss1NearAttack1::Update()
 {
 	//ìÆÇ´
-	func_[int(state)]();
+	if (state != State::non) {
+		func_[int(state)]();
+	}
 
 	for (auto& i : object) {
 		i.object->Update();
@@ -47,11 +50,6 @@ void Boss1NearAttack1::Draw()
 	for (auto& i : object) {
 		i.object->Draw();
 	}
-}
-
-bool Boss1NearAttack1::End()
-{
-	return false;
 }
 
 void Boss1NearAttack1::StartMove()
@@ -116,24 +114,36 @@ void Boss1NearAttack1::BeforeMove()
 
 void Boss1NearAttack1::Attack()
 {
-	const float maxTimer = 500.0f;
+	const float maxTimer = 50.0f;
 	const float rotationNum = 3.0f;
 	
 	//âÒì]
 	allRota = Easing::Lerp(0.0f, 360.0f * rotationNum, timer / maxTimer);
 	boss->GetCenter()->SetRotation({ 0,allRota,0 });
 
-	const std::vector<float> hokanPos = { 0.0f,10.0f,20.0f,10.0f,0.0f,0.0f,0.0f };
-
 	//å¬ÅXÇ…Ç∏ÇÁÇµ
 	for (int i = 0; i < objectNum; i++) {
-		if (timer > i * 2 && object[i].hokanPointNum < 5) {
-			float posx = GameHelper::Instance()->SplinePosition(hokanPos, object[i].hokanPointNum, object[i].timer / (maxTimer / 5.0f));
+		//Ç∏ÇÁÇµ
+		if (timer > i * 2 && object[i].stateInState == 0) {
+			float posx = Easing::Lerp(0.0f, 15.0f + i * 5, object[i].timer / (maxTimer / 5.0f));
 			object[i].object->SetPosition({ object[i].pos.x + posx,object[i].pos.y ,object[i].pos.z });
 			object[i].timer++;
 			if (object[i].timer < maxTimer / 5) { continue; }
 			object[i].timer = 0.0f;
-			object[i].hokanPointNum++;
+			object[i].stateInState++;
+		}
+		//ñﬂÇµ
+		else if (timer > maxTimer - (((objectNum - i) * 2) + (maxTimer / 5.0f)) && object[i].stateInState == 1) {
+			float posx = Easing::Lerp(15.0f + i * 5, 0.0f, object[i].timer / (maxTimer / 5.0f));
+			object[i].object->SetPosition({ object[i].pos.x + posx,object[i].pos.y ,object[i].pos.z });
+			object[i].timer++;
+			if (object[i].timer < maxTimer / 5) { continue; }
+			object[i].timer = 0.0f;
+			object[i].stateInState++;
+		}
+		//Ç∏ÇÍíÜ
+		else if (object[i].stateInState == 1) {
+			object[i].object->SetPosition({ object[i].pos.x + 15.0f + i * 5,object[i].pos.y ,object[i].pos.z });
 		}
 	}
 	timer++;
@@ -142,14 +152,75 @@ void Boss1NearAttack1::Attack()
 	timer = 0.0f;
 	state = State::afterMove;
 	for (auto& i : object) {
+		i.stateInState = 0;
 		i.pos = i.object->GetPosition();
 	}
 }
 
 void Boss1NearAttack1::afterMove()
 {
+	const float maxTimer = 30.0f;
+
+	XMFLOAT3 pos = {};
+	const XMFLOAT3 centerPos = boss->GetCenter()->GetPosition();
+	for (int i = 0; i < objectNum; i++) {
+		pos.x = Easing::Lerp(object[i].pos.x, 0.0f, timer / maxTimer);
+		pos.y = Easing::Lerp(object[i].pos.y, i * dist, timer / maxTimer);
+		pos.z = Easing::Lerp(object[i].pos.z, 0.0f, timer / maxTimer);
+		object[i].object->SetPosition(pos);
+	}
+	timer++;
+
+	if (timer <= maxTimer) { return; }
+	timer = 0.0f;
+	state = State::end;
+	int num = 0;
+	for (auto& i : object) {
+		i.pos = i.object->GetPosition();
+		i.hokanPointNum = num % 9;
+		num++;
+	}
 }
 
 void Boss1NearAttack1::EndMove()
 {
+	const float maxTimer = 100.0f;
+
+	XMFLOAT3 pos = boss->GetCenter()->GetPosition();
+
+	const float maxHokanTimer = 15.0f;
+	const std::vector<float> hokanPos = { 0.0f,10.0f,20.0f,10.0f,0.0,-10.0f,-20.0f,-10.0f,0.0f };
+
+	for (int i = 0; i < objectNum; i++) {
+		//yé≤à⁄ìÆ
+		float posy = Easing::Lerp(object[i].pos.y, -(pos.y - dist * (objectNum - 1 - i)), timer / maxTimer);
+
+		//xé≤à⁄ìÆ
+		float posx = GameHelper::Instance()->SplinePosition(hokanPos, object[i].hokanPointNum, object[i].timer / maxHokanTimer);
+		object[i].timer++;
+
+		object[i].object->SetPosition({ object[i].pos.x + posx,posy,object[i].pos.z });
+
+		//éûä‘Ç…Ç»Ç¡ÇΩÇÁçXêV
+		if (object[i].timer <= maxHokanTimer) { continue; }
+		if (object[i].hokanPointNum < hokanPos.size() - 1) {
+			object[i].hokanPointNum++;
+			object[i].timer = 0.0f;
+		} else {
+			object[i].hokanPointNum = 0;
+			object[i].timer = 0.0f;
+		}
+	}
+
+	timer++;
+
+	if (timer <= maxTimer) { return; }
+	timer = 0.0f;
+	state = State::non;
+	isEnd = true;
+	for (auto& i : object) {
+		i.pos = i.object->GetPosition();
+		i.timer = 0.0f;
+		i.hokanPointNum = 0;
+	}
 }
