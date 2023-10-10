@@ -78,8 +78,6 @@ void GameCamera::UpdateTransform()
 {
 	Rotate();
 	Move();
-
-	player->SetMoveRota(rotation.y);
 }
 
 void GameCamera::Rotate()

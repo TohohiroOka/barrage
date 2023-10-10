@@ -35,7 +35,6 @@ public:
 	int GetJumpMaxNum() { return jumpMaxNum; }
 
 	void SetGameCamera(GameCamera* gameCamera) { this->gameCamera = gameCamera; }
-	void SetMoveRota(float moveRota) { this->moveRota = moveRota; }
 
 private: //静的メンバ変数
 	//最大移動スピード
@@ -51,7 +50,7 @@ private: //メンバ変数
 
 	Vector3 pos;
 	Vector3 moveVec;
-	float moveRota;
+	Vector3 rota;
 
 	bool onGround = true;
 	// 落下ベクトル

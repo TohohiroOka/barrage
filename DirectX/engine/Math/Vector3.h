@@ -13,6 +13,14 @@ public:
 	Vector3 cross(const Vector3& v) const;
 	float angle(const Vector3& v) const;
 
+	/// <summary>
+	/// 方向の角度取得
+	/// </summary>
+	/// <param name="vec">速度ベクトル</param>
+	/// <param name="isMinusYRotaFix">y軸角度が負の数の場合正の数に修正するか</param>
+	/// <returns>方向の角度</returns>
+	static const Vector3 VelocityRotate(const Vector3& vec, const bool isMinusYRotaFix = false);
+
 	//XMVECTOR系の変換関数
 	Vector3 DirectXVector3Transform(const DirectX::XMMATRIX& v) const;
 
