@@ -39,7 +39,7 @@ std::unique_ptr<Camera> Camera::Create(const bool _mode)
 
 void Camera::Update()
 {
-	XMFLOAT3 inoutEye = { ShakeDifference.x + eye.x,ShakeDifference.y + eye.y,ShakeDifference.z + eye.z };
+	Vector3 inoutEye = { ShakeDifference.x + eye.x,ShakeDifference.y + eye.y,ShakeDifference.z + eye.z };
 
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&inoutEye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 }
@@ -72,8 +72,8 @@ void Camera::SetMatProjection(float _back)
 void Camera::MoveVector(const XMVECTOR& move)
 {
 	// 視点と注視点座標を移動し、反映
-	XMFLOAT3 eye_moved = GetEye();
-	XMFLOAT3 target_moved = GetTarget();
+	Vector3 eye_moved = GetEye();
+	Vector3 target_moved = GetTarget();
 
 	eye_moved.x += move.m128_f32[0];
 	eye_moved.y += move.m128_f32[1];

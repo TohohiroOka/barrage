@@ -11,11 +11,10 @@ public: //静的メンバ関数
 	/// インスタンスの生成
 	/// </summary>
 	/// <returns></returns>
-	/// <param name="_mode">true->3D/false->2D</param>
-	static std::unique_ptr<DebugCamera> Create(const XMFLOAT3& targetPos);
+	static std::unique_ptr<DebugCamera> Create(const Vector3& targetPos);
 
 public: //メンバ関数
-	DebugCamera(const XMFLOAT3& targetPos);
+	DebugCamera(const Vector3& targetPos);
 	~DebugCamera() override;
 
 	void Update() override;

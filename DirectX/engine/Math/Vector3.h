@@ -39,7 +39,9 @@ const bool operator<(const Vector3& a, const Vector3& b);
 const bool operator>(const Vector3& a, const Vector3& b);
 const bool operator<=(const Vector3& a, const Vector3& b);
 const bool operator>=(const Vector3& a, const Vector3& b);
-
+const Vector3 MatrixTransformPosition(const Vector3& v, const DirectX::XMMATRIX& m);
+const Vector3 MatrixTransformDirection(const Vector3& v, const DirectX::XMMATRIX& m);
+const Vector3 MatrixTransformWDivision(const Vector3& v, const DirectX::XMMATRIX& m);
 
 //ê¸å`ï‚ä‘
 const Vector3 lerp(const Vector3& start, const Vector3& end, const float time);

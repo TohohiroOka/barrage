@@ -13,7 +13,7 @@ private:
 
 public:
 
-	Player(GameCamera* gameCamera);
+	Player();
 	~Player(){};
 
 	void Update();
@@ -30,10 +30,11 @@ private:
 
 public:
 
-	const Vector3& GetPos() { return pos; }
+	const Vector3& GetPosition() { return pos; }
 	int GetJumpCount() { return jumpCount; }
 	int GetJumpMaxNum() { return jumpMaxNum; }
 
+	void SetGameCamera(GameCamera* gameCamera) { this->gameCamera = gameCamera; }
 	void SetMoveRota(float moveRota) { this->moveRota = moveRota; }
 
 private: //静的メンバ変数

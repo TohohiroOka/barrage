@@ -4,7 +4,7 @@
 
 const float DebugCamera::eyeTargetDistance = 100.0f;
 
-std::unique_ptr<DebugCamera> DebugCamera::Create(const XMFLOAT3& targetPos)
+std::unique_ptr<DebugCamera> DebugCamera::Create(const Vector3& targetPos)
 {
 	// インスタンスを生成
 	DebugCamera* instance = new DebugCamera(targetPos);
@@ -16,7 +16,7 @@ std::unique_ptr<DebugCamera> DebugCamera::Create(const XMFLOAT3& targetPos)
 	return std::unique_ptr<DebugCamera>(instance);
 }
 
-DebugCamera::DebugCamera(const XMFLOAT3& targetPos) :
+DebugCamera::DebugCamera(const Vector3& targetPos) :
 	Camera(true)
 {
 	target = targetPos;

@@ -13,10 +13,8 @@ using namespace DirectX;
 const float Player::moveSpeedMax = 1.5f;
 const float Player::dashSpeedMax = 2.0f;
 
-Player::Player(GameCamera* gameCamera)
+Player::Player()
 {
-	this->gameCamera = gameCamera;
-
 	model = Model::CreateFromOBJ("NormalCube");
 	object = Object3d::Create(model.get());
 	pos = { 100.0f,200.0f,100.0f };
@@ -103,7 +101,7 @@ void Player::Move()
 		stickVec.x = vec.x * cosf(stickRadian) - vec.z * sinf(stickRadian);
 		stickVec.z = vec.x * sinf(stickRadian) + vec.z * cosf(stickRadian);*/
 
-		const float cameraRotaRadian = XMConvertToRadians(-gameCamera->GetCameraRota().x);
+		const float cameraRotaRadian = XMConvertToRadians(-gameCamera->GetCameraRota().y);
 		Vector3 cameraVec{};
 		cameraVec.x = vec.x * cosf(cameraRotaRadian) - vec.z * sinf(cameraRotaRadian);
 		cameraVec.z = vec.x * sinf(cameraRotaRadian) + vec.z * cosf(cameraRotaRadian);
