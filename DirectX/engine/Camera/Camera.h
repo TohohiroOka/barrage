@@ -1,6 +1,7 @@
 #pragma once
 #include <d3dx12.h>
 #include <DirectXMath.h>
+#include "Math/Vector3.h"
 
 /// <summary>
 /// カメラ基本機能
@@ -69,37 +70,37 @@ public: // メンバ関数
 	/// 視点座標の取得
 	/// </summary>
 	/// <returns>座標</returns>
-	inline const XMFLOAT3& GetEye() { return eye; }
+	inline const Vector3& GetEye() { return eye; }
 
 	/// <summary>
 	/// 注視点座標の取得
 	/// </summary>
 	/// <returns>座標</returns>
-	inline const XMFLOAT3& GetTarget() { return target; }
+	inline const Vector3& GetTarget() { return target; }
 
 	/// <summary>
 	/// カメラの傾きの取得
 	/// </summary>
 	/// <returns>上方向ベクトル</returns>
-	inline const XMFLOAT3& GetUp() { return up; }
+	inline const Vector3& GetUp() { return up; }
 
 	/// <summary>
 	/// 視点座標セット
 	/// </summary>
 	/// <param name="eye">視点座標</param>
-	void SetEye(const XMFLOAT3& _eye) { this->eye = _eye; }
+	void SetEye(const Vector3& _eye) { this->eye = _eye; }
 
 	/// <summary>
 	/// 注視点座標セット
 	/// </summary>
 	/// <param name="position">注視点座標</param>
-	void SetTarget(const XMFLOAT3& _target) { this->target = _target; }
+	void SetTarget(const Vector3& _target) { this->target = _target; }
 
 	/// <summary>
 	/// カメラの傾きのセット
 	/// </summary>
 	/// <param name="_up">カメラの傾き</param>
-	void SetUp(const XMFLOAT3& _up) { up = _up; }
+	void SetUp(const Vector3& _up) { up = _up; }
 
 	/// <summary>
 	/// 射影行列の再設定
@@ -119,13 +120,13 @@ protected: // メンバ変数
 	// 射影行列
 	XMMATRIX matProjection = DirectX::XMMatrixIdentity();
 	// 視点座標
-	XMFLOAT3 eye = { 0, 0, -20 };
+	Vector3 eye = { 0, 0, -20 };
 	// 注視点座標
-	XMFLOAT3 target = { 0, 0, 0 };
+	Vector3 target = { 0, 0, 0 };
 	// 上方向ベクトル
-	XMFLOAT3 up = { 0, 1, 0 };
+	Vector3 up = { 0, 1, 0 };
 	// アスペクト比
 	float aspectRatio = 1.0f;
 	//シェイク座標
-	XMFLOAT3 ShakeDifference = {};
+	Vector3 ShakeDifference = {};
 };

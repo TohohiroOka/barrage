@@ -161,6 +161,48 @@ const bool operator>=(const Vector3& a, const Vector3& b) {
 	return (a.x >= b.x) && (a.y >= b.y) && (a.z >= b.z);
 }
 
+const Vector3 MatrixTransformPosition(const Vector3& v, const DirectX::XMMATRIX& m)
+{
+	float w = v.x * m.r[0].m128_f32[3] + v.y * m.r[1].m128_f32[3] + v.z * m.r[2].m128_f32[3] + m.r[3].m128_f32[3];
+
+	Vector3 result{
+		(v.x * m.r[0].m128_f32[0] + v.y * m.r[1].m128_f32[0] + v.z * m.r[2].m128_f32[0] + m.r[3].m128_f32[0]) / w,
+		(v.x * m.r[0].m128_f32[1] + v.y * m.r[1].m128_f32[1] + v.z * m.r[2].m128_f32[1] + m.r[3].m128_f32[1]) / w,
+		(v.x * m.r[0].m128_f32[2] + v.y * m.r[1].m128_f32[2] + v.z * m.r[2].m128_f32[2] + m.r[3].m128_f32[2]) / w,
+	};
+
+	return result;
+}
+
+const Vector3 MatrixTransformDirection(const Vector3& v, const DirectX::XMMATRIX& m)
+{
+	float w = v.x * m.r[0].m128_f32[3] + v.y * m.r[1].m128_f32[3] + v.z * m.r[2].m128_f32[3] + m.r[3].m128_f32[3];
+
+	Vector3 result{
+		(v.x * m.r[0].m128_f32[0] + v.y * m.r[1].m128_f32[0] + v.z * m.r[2].m128_f32[0]) / w,
+		(v.x * m.r[0].m128_f32[1] + v.y * m.r[1].m128_f32[1] + v.z * m.r[2].m128_f32[1]) / w,
+		(v.x * m.r[0].m128_f32[2] + v.y * m.r[1].m128_f32[2] + v.z * m.r[2].m128_f32[2]) / w,
+	};
+
+	return result;
+}
+
+const Vector3 MatrixTransformWDivision(const Vector3& v, const DirectX::XMMATRIX& m)
+{
+	float w = v.x * m.r[0].m128_f32[3] + v.y * m.r[1].m128_f32[3] + v.z * m.r[2].m128_f32[3] + m.r[3].m128_f32[3];
+
+	Vector3 result{
+		(v.x * m.r[0].m128_f32[0] + v.y * m.r[1].m128_f32[0] + v.z * m.r[2].m128_f32[0] + m.r[3].m128_f32[0]) / w,
+		(v.x * m.r[0].m128_f32[1] + v.y * m.r[1].m128_f32[1] + v.z * m.r[2].m128_f32[1] + m.r[3].m128_f32[1]) / w,
+		(v.x * m.r[0].m128_f32[2] + v.y * m.r[1].m128_f32[2] + v.z * m.r[2].m128_f32[2] + m.r[3].m128_f32[2]) / w,
+	};
+
+	result /= result.z;
+
+	return result;
+}
+
+
 //ê¸å`ï‚ä‘
 const Vector3 lerp(const Vector3& start, const Vector3& end, const float time) {
 	return start * (1.0f - time) + end * time;

@@ -16,9 +16,6 @@ const std::array<XMFLOAT4, 2> COLOR = { XMFLOAT4{ 0.0f,0.0f,0.8f,1.0f } ,{ 0.8f,
 
 void Scene1::Initialize()
 {
-	debugCamera = DebugCamera::Create({ 300, 40, 0 });
-	camera = GameCamera::Create();
-
 	const std::string jimen = "jimen.png";
 	const std::string kabe = "kabe.png";
 	gmodel = TerrainModel::Create("heightmap3.bmp", 25.0f,
@@ -30,6 +27,13 @@ void Scene1::Initialize()
 
 	gobject->DeleteCollider();
 
+	player = std::make_unique<Player>();
+
+	GameCamera::SetPlayer(player.get());
+	debugCamera = DebugCamera::Create({ 300, 40, 0 });
+	camera = GameCamera::Create();
+	player->SetGameCamera(camera.get());
+	
 	Base3D::SetCamera(camera.get());
 
 	// コライダーの追加
@@ -43,9 +47,6 @@ void Scene1::Initialize()
 	sprite->SetTexSize({ 1059.0f,1500.0f });
 	sprite->SetSize({ 1059.0f / 5.0f,1500.0f / 5.0f });
 	sprite->Update();
-
-	player = std::make_unique<Player>();
-	GameCamera::SetPlayer(player.get());
 
 	boss = std::make_unique<Boss1>();
 
@@ -105,7 +106,7 @@ void Scene1::Finalize()
 
 void Scene1::ImguiDraw()
 {
-	Vector3 ppos = player->GetPos();
+	Vector3 ppos = player->GetPosition();
 
 	ImGui::Begin("debug imgui");
 	ImGui::SetWindowSize(ImVec2(300, 300), ImGuiCond_::ImGuiCond_FirstUseEver);
