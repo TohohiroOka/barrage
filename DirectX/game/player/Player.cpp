@@ -51,32 +51,39 @@ void Player::Move()
 {
 	DirectInput* input = DirectInput::GetInstance();
 
-	Vector2 raidan = Vector2(XMConvertToRadians(moveRota), XMConvertToRadians(moveRota + 90));
-
 	//ダッシュ
 	Dash();
 
 	//キー入力
 	{
-		//右入力
-		if (input->PushKey(DIK_D)) {
-			moveVec.x += moveSpeed * cosf(raidan.x);
-			moveVec.z += moveSpeed * cosf(raidan.y);
-		}
-		//左入力
-		if (input->PushKey(DIK_A)) {
-			moveVec.x -= moveSpeed * cosf(raidan.x);
-			moveVec.z -= moveSpeed * cosf(raidan.y);
-		}
-		//下入力
-		if (input->PushKey(DIK_W)) {
-			moveVec.x += moveSpeed * cosf(XMConvertToRadians(360.0f - moveRota + 90));
-			moveVec.z += moveSpeed * cosf(XMConvertToRadians(360.0f - moveRota));
-		}
-		//上入力
-		if (input->PushKey(DIK_S)) {
-			moveVec.x -= moveSpeed * cosf(XMConvertToRadians(360.0f - moveRota + 90));
-			moveVec.z -= moveSpeed * cosf(XMConvertToRadians(360.0f - moveRota));
+		if (input->PushKey(DIK_D) || input->PushKey(DIK_A) || input->PushKey(DIK_W) || input->PushKey(DIK_S)) {
+
+			Vector3 moveKeyVec{};
+			if (input->PushKey(DIK_D)) {
+				moveKeyVec.x += moveSpeed;
+			}
+			if (input->PushKey(DIK_A)) {
+				moveKeyVec.x -= moveSpeed;
+			}
+			if (input->PushKey(DIK_W)) {
+				moveKeyVec.z += moveSpeed;
+			}
+			if (input->PushKey(DIK_S)) {
+				moveKeyVec.z -= moveSpeed;
+			}
+
+			//キー入力のベクトルをカメラの傾きで回転させる
+			const float cameraRotaRadian = XMConvertToRadians(-gameCamera->GetCameraRota().y);
+			Vector3 cameraVec{};
+			cameraVec.x = moveKeyVec.x * cosf(cameraRotaRadian) - moveKeyVec.z * sinf(cameraRotaRadian);
+			cameraVec.z = moveKeyVec.x * sinf(cameraRotaRadian) + moveKeyVec.z * cosf(cameraRotaRadian);
+
+			moveVec = cameraVec;
+
+			//進行方向を向くようにする
+			Vector3 moveRotaVelocity = { moveVec.x, 0, moveVec.z };//プレイヤー回転にジャンプは関係ないので、速度Yは0にしておく
+			rota = Vector3::VelocityRotate(moveRotaVelocity);
+			object->SetRotation(rota);
 		}
 	}
 
@@ -90,25 +97,24 @@ void Player::Move()
 			return;
 		}
 
-		
-		Vector3 vec{};
-		vec.x = XInputManager::GetInstance()->GetPadLStickIncline().x * moveSpeed;
-		vec.z = XInputManager::GetInstance()->GetPadLStickIncline().y * moveSpeed;
+		//パッドスティックの方向をベクトル化
+		Vector3 moveStickVec{};
+		moveStickVec.x = XInputManager::GetInstance()->GetPadLStickIncline().x * moveSpeed;
+		moveStickVec.z = XInputManager::GetInstance()->GetPadLStickIncline().y * moveSpeed;
 
-		/*const float stickRadian = XMConvertToRadians(XInputManager::GetInstance()->GetPadLStickAngle());
-		Vector3 stickVec{};
-		stickVec.x = vec.x * cosf(stickRadian) - vec.z * sinf(stickRadian);
-		stickVec.z = vec.x * sinf(stickRadian) + vec.z * cosf(stickRadian);*/
-
+		//パッドスティックのベクトルをカメラの傾きで回転させる
 		const float cameraRotaRadian = XMConvertToRadians(-gameCamera->GetCameraRota().y);
 		Vector3 cameraVec{};
-		cameraVec.x = vec.x * cosf(cameraRotaRadian) - vec.z * sinf(cameraRotaRadian);
-		cameraVec.z = vec.x * sinf(cameraRotaRadian) + vec.z * cosf(cameraRotaRadian);
+		cameraVec.x = moveStickVec.x * cosf(cameraRotaRadian) - moveStickVec.z * sinf(cameraRotaRadian);
+		cameraVec.z = moveStickVec.x * sinf(cameraRotaRadian) + moveStickVec.z * cosf(cameraRotaRadian);
 
 		moveVec = cameraVec;
-	}
 
-	
+		//進行方向を向くようにする
+		Vector3 moveRotaVelocity = { moveVec.x, 0, moveVec.z };//プレイヤー回転にジャンプは関係ないので、速度Yは0にしておく
+		rota = Vector3::VelocityRotate(moveRotaVelocity);
+		object->SetRotation(rota);
+	}
 }
 
 void Player::Dash()
