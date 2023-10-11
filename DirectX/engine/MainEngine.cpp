@@ -136,7 +136,7 @@ void MainEngine::ImguiDraw()
 	ImGui::Begin("debug imgui");
 	ImGui::SetWindowSize(ImVec2(300, 300), ImGuiCond_::ImGuiCond_FirstUseEver);
 
-	ImGui::SliderFloat("slider 1", &t, 0.0f, 1.0f);
+	ImGui::SliderFloat("slider 1", &t, 0.0f, 2.0f);
 	ImGui::End();
 
 	fog->SetStrength(t);

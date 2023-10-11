@@ -9,7 +9,12 @@ Vector3::Vector3()
 
 // ’l‚ğ—p‚¢‚Ä‚Ì‰Šú‰»
 Vector3::Vector3(float x, float y, float z)
-	:DirectX::XMFLOAT3{ x,y,z }
+	:DirectX::XMFLOAT3(x, y, z)
+{
+}
+
+Vector3::Vector3(DirectX::XMFLOAT3 a)
+	:Vector3(a.x, a.y, a.z)
 {
 }
 

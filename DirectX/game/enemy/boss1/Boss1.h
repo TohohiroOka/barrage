@@ -7,8 +7,9 @@ class Boss1 : public BaseBoss
 private:
 
 	enum class Action {
-		start,
-		bulletAttack,
+		move1,
+		nearAttack,
+		size,
 	};
 
 public:
@@ -19,7 +20,7 @@ public:
 
 	void Draw() override;
 
-	void SetAction()override;
+	void SetAction() override;
 
 
 

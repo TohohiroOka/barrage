@@ -57,6 +57,9 @@ private: //メンバ変数
 	// 落下ベクトル
 	DirectX::XMVECTOR fallV;
 
+	//y軸の押し戻し
+	bool returnY;
+
 	//移動スピード
 	float moveSpeed = 0.0f;
 

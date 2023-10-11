@@ -4,6 +4,9 @@
 #include <array>
 #include <functional>
 
+/// <summary>
+/// “ã‚¬•¥‚¢
+/// </summary>
 class Boss1NearAttack1 : public BaseAction
 {
 private:
@@ -33,8 +36,6 @@ public:
 
 	void Draw() override;
 
-	bool End() override { return isEnd; }
-
 private:
 
 	void StartMove();
@@ -59,7 +60,5 @@ private:
 	float timer;
 	//‰ñ“]Šp“x
 	float allRota;
-	//s“®I—¹
-	bool isEnd;
 };
 

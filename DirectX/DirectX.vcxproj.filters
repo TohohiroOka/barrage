@@ -125,6 +125,9 @@
     <Filter Include="ゲームシステム\Enemy\Boss1">
       <UniqueIdentifier>{c7f4887b-6aa9-4a32-bf22-d08f0e24549c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ゲームシステム\Field">
+      <UniqueIdentifier>{16430528-71c7-4bc1-939e-fd1ab160da3a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -324,6 +327,15 @@
     </ClCompile>
     <ClCompile Include="engine\Camera\DebugCamera.cpp">
       <Filter>Engine\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="game\field\Field.cpp">
+      <Filter>ゲームシステム\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\Boss1Move1.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Math\DirectXMathHelper.cpp">
+      <Filter>Engine\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -675,6 +687,15 @@
     </ClInclude>
     <ClInclude Include="engine\Camera\DebugCamera.h">
       <Filter>Engine\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="game\field\Field.h">
+      <Filter>ゲームシステム\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\Boss1Move1.h">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Math\DirectXMathHelper.h">
+      <Filter>Engine\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

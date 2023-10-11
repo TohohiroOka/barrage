@@ -1,5 +1,8 @@
 #include "Boss1.h"
+#include "GameHelper.h"
+
 #include "Boss1NearAttack1.h"
+#include "Boss1Move1.h"
 
 Boss1::Boss1()
 {
@@ -45,8 +48,13 @@ void Boss1::SetAction()
 
 	//行動選択の場合分けを書く
 	//現在はテストのため一つをループする
-	actionNumber = 0;
+	actionNumber = GameHelper::Instance()->RandomInt(int(Action::size) - 1);
 	isAction = true;
 
-	action = std::make_unique<Boss1NearAttack1>();
+	if (actionNumber == int(Action::move1)) {
+		action = std::make_unique<Boss1Move1>(Boss1Move1({ 0.0f,0.0f,50.0f }));
+	}
+	else if (actionNumber == int(Action::nearAttack)) {
+		action = std::make_unique<Boss1NearAttack1>();
+	}
 }

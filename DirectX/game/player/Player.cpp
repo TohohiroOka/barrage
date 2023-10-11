@@ -1,7 +1,6 @@
 ﻿#include "Player.h"
 #include "Input/DirectInput.h"
 #include "Input/XInputManager.h"
-#include "Object/2d/DebugText.h"
 #include "Object/3d/collider/SphereCollider.h"
 #include "Object/3d/collider/CollisionManager.h"
 #include "Object/3d/collider/CollisionAttribute.h"
@@ -191,67 +190,6 @@ void Player::Collider()
 	pos.z += callback.move.m128_f32[2];
 
 	{
-		//	// 球の上端から球の下端までのレイキャスト
-		//	Ray ray;
-		//	ray.start = sphereCollider->center;
-		//	ray.start.m128_f32[1] += sphereCollider->GetRadius();
-		//	ray.dir = { 0.0f,-1.0f,0.0f,0.0f };
-		//	RAYCAST_HIT raycastHit;
-
-		//	// スムーズに坂を下る為の吸着距離
-		//	const float adsDistance = 1.0f;
-
-		//	//下の判定
-		//	{
-		//		// 接地を維持
-		//		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
-		//			float a = (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-		//			position.y -= a;
-		//		}
-		//	}
-		//	//左の判定
-		//	{
-		//		ray.dir = { -1.0f,0.0f,0.0f,0.0f };
-		//		// 接地を維持
-		//		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance))
-		//		{
-		//			float a = (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-		//			position.x -= a;
-		//		}
-		//	}
-		//	//右の判定
-		//	{
-		//		ray.dir = { 1.0f,0.0f,0.0f,0.0f };
-		//		// 接地を維持
-		//		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance))
-		//		{
-		//			float a = (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-		//			position.x += a;
-		//		}
-		//	}
-		//	//前の判定
-		//	{
-		//		ray.dir = { 0.0f,0.0f,-1.0f,0.0f };
-		//		// 接地を維持
-		//		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance))
-		//		{
-		//			float a = (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-		//			position.z -= a;
-		//		}
-		//	}
-		//	//後の判定
-		//	{
-		//		ray.dir = { 0.0f,0.0f,1.0f,0.0f };
-		//		// 接地を維持
-		//		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance))
-		//		{
-		//			float a = (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-		//			position.z += a;
-		//		}
-		//	}
-	}
-
-	{
 		// 球の上端から球の下端までのレイキャスト
 		Segment ray;
 		ray.start = sphereCollider->center;
@@ -266,17 +204,26 @@ void Player::Collider()
 
 		// 接地を維持
 		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, moveVec.length())) {
-			Vector3 a = { (raycastHit.inter.m128_f32[0] - pos.x) * 0.99f,
-							(raycastHit.inter.m128_f32[1] - pos.y) * 0.99f,
-							(raycastHit.inter.m128_f32[2] - pos.z) * 0.99f };
+			XMFLOAT3 hugou={};
+			if (abs(moveVec.x) < 0.0001f) { hugou.x = 0.0f; }else { hugou.x = adsDistance * moveVec.x / abs(moveVec.x); }
+			if (abs(moveVec.y) < 0.0001f) { hugou.y = 0.0f; } else { hugou.y = adsDistance * moveVec.y / abs(moveVec.y); }
+			if (abs(moveVec.z) < 0.0001f) { hugou.z = 0.0f; } else { hugou.z = adsDistance * moveVec.z / abs(moveVec.z); }
+			Vector3 a = { (raycastHit.inter.m128_f32[0] - pos.x - hugou.x),
+							(raycastHit.inter.m128_f32[1] - pos.y - hugou.y),
+							(raycastHit.inter.m128_f32[2] - pos.z - hugou.z) };
 			if (abs(a.x) < 0.003f) { a.x = 0.0f; }
-			if (abs(a.y) < 0.003f) { a.y = 0.0f; }
 			if (abs(a.z) < 0.003f) { a.z = 0.0f; }
+			if (abs(a.y) < 0.003f || returnY) {
+				a.y = 0.0f;
+				onGround = true;
+			}
 
+			returnY = true;
 			pos += a;
 		}
 		else {
 			pos += moveVec;
+			returnY = false;
 		}
 
 		// 球の上端から球の下端までのレイキャスト
@@ -286,11 +233,10 @@ void Player::Collider()
 		nMove.normalize();
 		ray.dir = { 0,-1,0,0 };
 		if (onGround) {
-			// スムーズに坂を下る為の吸着距離
-			const float adsDistance = 0.2f;
 			// 接地を維持
 			if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
 				onGround = true;
+				returnY = false;
 				pos.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
 				jumpCount = 0; //連続ジャンプ回数をリセット
 			}
@@ -305,6 +251,7 @@ void Player::Collider()
 			if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f)) {
 				// 着地
 				onGround = true;
+				returnY = false;
 				pos.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
 				jumpCount = 0; //連続ジャンプ回数をリセット
 			}

@@ -5,6 +5,7 @@
 #include "player/Player.h"
 #include "game/camera/GameCamera.h"
 #include "../enemy/boss1/Boss1.h"
+#include "../field/Field.h"
 
 class Scene1 : public InterfaceScene
 {
@@ -60,12 +61,11 @@ private:
 
 	std::unique_ptr<Sprite> sprite;
 
-	std::shared_ptr<Player> player;
+	std::unique_ptr<Player> player;
 
-	//モデル
-	std::shared_ptr<TerrainModel> gmodel;
-	//オブジェクト
-	std::shared_ptr<HeightMap> gobject;
+	//地形
+	std::unique_ptr<Field> field;
 
+	//ボス
 	std::unique_ptr<Boss1>boss;
 };

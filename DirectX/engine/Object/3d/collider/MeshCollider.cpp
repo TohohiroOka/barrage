@@ -14,14 +14,6 @@ const bool operator!=(const XMINT3& a, const XMINT3& b) {
 	return (a.x != b.x) || (a.y != b.y) || (a.z != b.z);
 }
 
-const bool operator<=(const XMFLOAT3& a, const XMFLOAT3& b) {
-	return (a.x <= b.x) && (a.y <= b.y) && (a.z <= b.z);
-}
-
-const bool operator>=(const XMFLOAT3& a, const XMFLOAT3& b) {
-	return (a.x >= b.x) && (a.y >= b.y) && (a.z >= b.z);
-}
-
 void MeshCollider::MinMax(Model* _model)
 {
 	const std::vector<Mesh*>& meshes = _model->GetMeshes();

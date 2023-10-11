@@ -16,16 +16,8 @@ const std::array<XMFLOAT4, 2> COLOR = { XMFLOAT4{ 0.0f,0.0f,0.8f,1.0f } ,{ 0.8f,
 
 void Scene1::Initialize()
 {
-	const std::string jimen = "jimen.png";
-	const std::string kabe = "kabe.png";
-	gmodel = TerrainModel::Create("heightmap3.bmp", 25.0f,
-		{ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, 1.0f, jimen, kabe);
-
-	gobject = HeightMap::Create(gmodel.get());
-	gobject->SetScale({ 3.0f ,3.0f ,3.0f });
-	gobject->UpdateWorldMatrix();
-
-	gobject->DeleteCollider();
+	//地形生成
+	field = std::make_unique<Field>();
 
 	player = std::make_unique<Player>();
 
@@ -35,12 +27,6 @@ void Scene1::Initialize()
 	player->SetGameCamera(camera.get());
 	
 	Base3D::SetCamera(camera.get());
-
-	// コライダーの追加
-	MeshCollider* collider = new MeshCollider;
-	gobject->SetCollider(collider);
-	collider->ConstructTriangles(gobject->GetModel());
-	collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
 
 	Sprite::LoadTexture("amm", "Resources/amm.jpg");
 	sprite = Sprite::Create("amm");
@@ -58,7 +44,7 @@ void Scene1::Update()
 	DirectInput* input = DirectInput::GetInstance();
 
 	player->Update();
-	gobject->Update();
+	field->Update();
 	boss->Update();
 
 	//カメラ更新
@@ -82,7 +68,7 @@ void Scene1::Update()
 
 void Scene1::Draw(const int _cameraNum)
 {
-	gobject->Draw();
+	field->Draw();
 
 	//gobject->ColliderDraw();
 

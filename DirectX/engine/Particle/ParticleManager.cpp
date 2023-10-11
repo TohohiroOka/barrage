@@ -1,6 +1,7 @@
 #include "ParticleManager.h"
 #include <DirectXTex.h>
 #include"Camera/Camera.h"
+#include "../Math/DirectXMathHelper.h"
 
 using namespace DirectX;
 
@@ -14,17 +15,6 @@ ParticleManager::~ParticleManager()
 {
 	vertBuff.Reset();
 	constBuff.Reset();
-}
-
-//XMFLOAT3“¯m‚Ì‰ÁZˆ—
-const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& _lhs, const DirectX::XMFLOAT3& _rhs)
-{
-	XMFLOAT3 result;
-	result.x = _lhs.x + _rhs.x;
-	result.y = _lhs.y + _rhs.y;
-	result.z = _lhs.z + _rhs.z;
-
-	return result;
 }
 
 void ParticleManager::LoadTexture(const std::string& _keepName, const std::string& _filename, bool _isDelete)

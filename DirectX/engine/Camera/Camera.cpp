@@ -46,8 +46,8 @@ void Camera::Update()
 
 void Camera::StartCameraShake(int _strength)
 {
-	float x = GameHelper::Instance()->Randomfloat(_strength * 2) - float(_strength);
-	float y = GameHelper::Instance()->Randomfloat(_strength * 2) - float(_strength);
+	float x = float(GameHelper::Instance()->RandomInt(_strength * 2)) - float(_strength);
+	float y = float(GameHelper::Instance()->RandomInt(_strength * 2)) - float(_strength);
 
 	ShakeDifference = { x ,y,0.0f };
 }

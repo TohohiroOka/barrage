@@ -133,7 +133,7 @@ void Boss1NearAttack1::Attack()
 			object[i].stateInState++;
 		}
 		//–ß‚µ
-		else if (timer > maxTimer - (((objectNum - i) * 2) + (maxTimer / 5.0f)) && object[i].stateInState == 1) {
+		else if (timer > maxTimer - (maxTimer / 5.0f) && object[i].stateInState == 1) {
 			float posx = Easing::Lerp(15.0f + i * 5, 0.0f, object[i].timer / (maxTimer / 5.0f));
 			object[i].object->SetPosition({ object[i].pos.x + posx,object[i].pos.y ,object[i].pos.z });
 			object[i].timer++;
@@ -193,7 +193,7 @@ void Boss1NearAttack1::EndMove()
 
 	for (int i = 0; i < objectNum; i++) {
 		//yŽ²ˆÚ“®
-		float posy = Easing::Lerp(object[i].pos.y, -(pos.y - dist * (objectNum - 1 - i)), timer / maxTimer);
+		float posy = Easing::Lerp(object[i].pos.y, (pos.y - dist * (objectNum - 1 - i)) - 100.0f, timer / maxTimer);
 
 		//xŽ²ˆÚ“®
 		float posx = GameHelper::Instance()->SplinePosition(hokanPos, object[i].hokanPointNum, object[i].timer / maxHokanTimer);

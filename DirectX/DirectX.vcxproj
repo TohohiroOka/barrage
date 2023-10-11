@@ -115,6 +115,7 @@
     <ClCompile Include="engine\Loader\Csv.cpp" />
     <ClCompile Include="engine\Loader\JsonLoader.cpp" />
     <ClCompile Include="engine\MainEngine.cpp" />
+    <ClCompile Include="engine\Math\DirectXMathHelper.cpp" />
     <ClCompile Include="engine\Math\Easing\Easing.cpp" />
     <ClCompile Include="engine\Math\Matrix4.cpp" />
     <ClCompile Include="engine\Math\Quaternion.cpp" />
@@ -158,7 +159,9 @@
     <ClCompile Include="game\enemy\BaseAction.cpp" />
     <ClCompile Include="game\enemy\BaseBoss.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1.cpp" />
+    <ClCompile Include="game\enemy\boss1\Boss1Move1.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1NearAttack1.cpp" />
+    <ClCompile Include="game\field\Field.cpp" />
     <ClCompile Include="game\GameHelper.cpp" />
     <ClCompile Include="game\player\Player.cpp" />
     <ClCompile Include="game\scene\Scene1.cpp" />
@@ -347,6 +350,7 @@
     <ClInclude Include="engine\Loader\Csv.h" />
     <ClInclude Include="engine\Loader\JsonLoader.h" />
     <ClInclude Include="engine\MainEngine.h" />
+    <ClInclude Include="engine\Math\DirectXMathHelper.h" />
     <ClInclude Include="engine\Math\Easing\Easing.h" />
     <ClInclude Include="engine\Math\Matrix4.h" />
     <ClInclude Include="engine\Math\Quaternion.h" />
@@ -399,7 +403,9 @@
     <ClInclude Include="game\enemy\BaseAction.h" />
     <ClInclude Include="game\enemy\BaseBoss.h" />
     <ClInclude Include="game\enemy\boss1\Boss1.h" />
+    <ClInclude Include="game\enemy\boss1\Boss1Move1.h" />
     <ClInclude Include="game\enemy\boss1\Boss1NearAttack1.h" />
+    <ClInclude Include="game\field\Field.h" />
     <ClInclude Include="game\GameHelper.h" />
     <ClInclude Include="game\player\Player.h" />
     <ClInclude Include="game\scene\Scene1.h" />

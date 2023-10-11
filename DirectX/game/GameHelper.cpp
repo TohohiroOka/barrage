@@ -18,13 +18,13 @@ float GameHelper::GetAngle(const DirectX::XMFLOAT2& _startPoint, const DirectX::
 	return DirectX::XMConvertToDegrees(radian);
 }
 
-float GameHelper::Randomfloat(int _range)
+int GameHelper::RandomInt(int _range)
 {
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
 	std::uniform_int_distribution<> rand100(0, _range);
 
-	return float(rand100(mt));
+	return rand100(mt);
 }
 
 int GameHelper::RandomSign()
@@ -47,7 +47,7 @@ int GameHelper::RandomSign()
 DirectX::XMFLOAT3 GameHelper::GetRandInUniformInCircle()
 {
 	float Range = 1.0f;
-	float Theta = float((Randomfloat(314 * 2) - 314)) / 100.0f;
+	float Theta = float((RandomInt(314 * 2) - 314)) / 100.0f;
 
 	DirectX::XMFLOAT3 result;
 	result.x = Range * cosf(Theta);
@@ -63,8 +63,8 @@ DirectX::XMFLOAT3 GameHelper::GetHalfRandInUniformInCircle()
 
 	while (result.x > 0)
 	{
-		float Range = sqrtf(float(Randomfloat(1)));
-		float Theta = float((Randomfloat(314 * 2) - 314)) / 100.0f;
+		float Range = sqrtf(float(RandomInt(1)));
+		float Theta = float((RandomInt(314 * 2) - 314)) / 100.0f;
 		DirectX::XMFLOAT3 result;
 
 		result.x = Range * cosf(Theta);

@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include "../Math/Vector3.h"
 #include "../Math/Vector2.h"
+#include "../Math/DirectXMathHelper.h"
 
 class GameHelper : public Singleton<GameHelper>
 {
@@ -42,7 +43,7 @@ public:
 	/// </summary>
 	/// <param name="range">範囲</param>
 	/// <returns>乱数</returns>
-	float Randomfloat(int _range);
+	int RandomInt(int _range);
 
 	/// <summary>
 	/// 乱数生成
@@ -117,5 +118,4 @@ public:
 	float gameSpeed = 1;
 	//スロウ処理を何フレーム行うか
 	float slowTimer;
-
 };
