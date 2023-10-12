@@ -16,6 +16,8 @@ const std::array<XMFLOAT4, 2> COLOR = { XMFLOAT4{ 0.0f,0.0f,0.8f,1.0f } ,{ 0.8f,
 
 void Scene1::Initialize()
 {
+	Sprite::LoadTexture("gauge", "Resources/SpriteTexture/gauge.png");
+
 	//地形生成
 	field = std::make_unique<Field>();
 
@@ -28,11 +30,10 @@ void Scene1::Initialize()
 	
 	Base3D::SetCamera(camera.get());
 
-	Sprite::LoadTexture("amm", "Resources/amm.jpg");
-	sprite = Sprite::Create("amm");
+	/*Sprite::LoadTexture("amm", "Resources/amm.jpg");
+	sprite = Sprite::Create("amm", {}, { 1059.0f / 5.0f,1500.0f / 5.0f });
 	sprite->SetTexSize({ 1059.0f,1500.0f });
-	sprite->SetSize({ 1059.0f / 5.0f,1500.0f / 5.0f });
-	sprite->Update();
+	sprite->Update();*/
 
 	boss = std::make_unique<Boss1>();
 
@@ -82,7 +83,7 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 	//スプライト
 	if (_cameraNum == 0) {
 		DebugText::GetInstance()->DrawAll();
-		sprite->Draw();
+		//sprite->Draw();
 	}
 }
 

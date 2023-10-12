@@ -128,6 +128,9 @@
     <Filter Include="ゲームシステム\Field">
       <UniqueIdentifier>{16430528-71c7-4bc1-939e-fd1ab160da3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ゲームシステム\UI">
+      <UniqueIdentifier>{c60c8b4b-3126-44e0-85a6-d0126f10bc22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -336,6 +339,9 @@
     </ClCompile>
     <ClCompile Include="engine\Math\DirectXMathHelper.cpp">
       <Filter>Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="game\ui\Gauge.cpp">
+      <Filter>ゲームシステム\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -696,6 +702,9 @@
     </ClInclude>
     <ClInclude Include="engine\Math\DirectXMathHelper.h">
       <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="game\ui\Gauge.h">
+      <Filter>ゲームシステム\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

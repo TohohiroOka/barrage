@@ -6,6 +6,7 @@
 #include "Object/3d/collider/CollisionAttribute.h"
 #include "Math/Vector2.h"
 #include "game/camera/GameCamera.h"
+#include "engine/Math/Easing/Easing.h"
 
 using namespace DirectX;
 
@@ -26,10 +27,39 @@ Player::Player()
 
 	//連続ジャンプ可能回数設定
 	jumpMaxNum = 2;
+
+	//最大体力をセット
+	maxHP = 100;
+	HP = maxHP;
+	hpGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 20.0f, 50.0f }), 600.0f, maxHP, HP, DirectX::XMFLOAT4({ 0.6f, 0.1f, 0.1f, 1.0f }));
+
+	//最大持久力をセット
+	maxEndurance = 200;
+	endurance = maxEndurance;
+	enduranceGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 20.0f, 90.0f }), 600.0f, maxEndurance, endurance, DirectX::XMFLOAT4({ 0.1f, 0.6f, 0.1f, 1.0f }));
 }
 
 void Player::Update()
 {
+	DirectInput* input = DirectInput::GetInstance();
+	if (input->TriggerKey(DIK_1)) {
+		Damage(20);
+	}
+	if (input->PushKey(DIK_2)) {
+		endurance--;
+		endurance = max(endurance, 0);
+		enduranceGauge->ChangeLength(endurance, false);
+	}
+	if (input->TriggerKey(DIK_3)) {
+		endurance -= 20;
+		endurance = max(endurance, 0);
+		enduranceGauge->ChangeLength(endurance, true);
+	}
+	if (input->TriggerKey(DIK_4)) {
+		Heal(30);
+	}
+
+
 	Move();
 	if (!onGround) {
 		// 落下処理
@@ -39,12 +69,53 @@ void Player::Update()
 	Jump();
 	Collider();
 
+	Attack();
+
+	HealHPMove();
+	EnduranceRecovery();
+
+
 	object->Update();
+
+	hpGauge->Update();
+	enduranceGauge->Update();
 }
 
 void Player::Draw()
 {
 	object->Draw();
+
+	hpGauge->Draw();
+	enduranceGauge->Draw();
+}
+
+void Player::Damage(int damageNum)
+{
+	//HPからダメージ量を引く
+	HP -= damageNum;
+	HP = max(HP, 0);
+
+	hpGauge->ChangeLength(HP, true);
+
+	//回復中なら回復を中断
+	isHeal = false;
+
+	//HPが0以下なら死亡
+	if (!(HP <= 0)) { return; }
+
+	isDead = true;
+}
+
+void Player::Heal(int healNum)
+{
+	//回復前と回復後のHP量を計算
+	healBeforeHP = HP;
+	healAfterHP = HP + healNum;
+	healAfterHP = min(healAfterHP, maxHP);
+
+	//回復状態にする
+	isHeal = true;
+	healTimer = 0;
 }
 
 void Player::Move()
@@ -120,8 +191,9 @@ void Player::Move()
 void Player::Dash()
 {
 	//ダッシュ入力があった場合に、移動スピードを速くしていく
-	if (DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)) {
+	if ((DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)) && endurance > 0) {
 		moveSpeed = dashSpeedMax;
+		UseEndurance(1, 1, false); //持久力を使用
 	}
 	//入力がない場合は、元の移動スピードに戻していく
 	else {
@@ -146,6 +218,11 @@ void Player::Jump()
 	if (jumpCount >= jumpMaxNum) { return; }
 	//ジャンプ入力がなければ抜ける
 	if (!(DirectInput::GetInstance()->TriggerKey(DIK_SPACE) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
+
+	//持久力がジャンプで使用する値以下なら抜ける
+	const int jumpUseEndurance = 30;
+	if (endurance < jumpUseEndurance) { return; }
+	UseEndurance(jumpUseEndurance, 30, true); //持久力を使用
 
 	onGround = false;
 	const float jumpVYFist = 8.0f;
@@ -210,10 +287,13 @@ void Player::Collider()
 
 		// 接地を維持
 		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, moveVec.length())) {
-			XMFLOAT3 hugou={};
-			if (abs(moveVec.x) < 0.0001f) { hugou.x = 0.0f; }else { hugou.x = adsDistance * moveVec.x / abs(moveVec.x); }
-			if (abs(moveVec.y) < 0.0001f) { hugou.y = 0.0f; } else { hugou.y = adsDistance * moveVec.y / abs(moveVec.y); }
-			if (abs(moveVec.z) < 0.0001f) { hugou.z = 0.0f; } else { hugou.z = adsDistance * moveVec.z / abs(moveVec.z); }
+			XMFLOAT3 hugou = {};
+			if (abs(moveVec.x) < 0.0001f) { hugou.x = 0.0f; }
+			else { hugou.x = adsDistance * moveVec.x / abs(moveVec.x); }
+			if (abs(moveVec.y) < 0.0001f) { hugou.y = 0.0f; }
+			else { hugou.y = adsDistance * moveVec.y / abs(moveVec.y); }
+			if (abs(moveVec.z) < 0.0001f) { hugou.z = 0.0f; }
+			else { hugou.z = adsDistance * moveVec.z / abs(moveVec.z); }
 			Vector3 a = { (raycastHit.inter.m128_f32[0] - pos.x - hugou.x),
 							(raycastHit.inter.m128_f32[1] - pos.y - hugou.y),
 							(raycastHit.inter.m128_f32[2] - pos.z - hugou.z) };
@@ -271,4 +351,52 @@ void Player::Collider()
 	//position.x += moveVec[2].x;
 	//position.y += moveVec[2].y;
 	//position.z += moveVec[2].z;
+}
+
+void Player::Attack()
+{
+}
+
+void Player::HealHPMove()
+{
+	if (!isHeal) { return; }
+
+	const float healTime = 10;
+	healTimer++;
+	const float time = healTimer / healTime;
+	HP = (int)Easing::Lerp((float)healBeforeHP, (float)healAfterHP, time);
+	hpGauge->ChangeLength(HP, false);
+
+	if (healTimer >= healTime) {
+		isHeal = false;
+	}
+}
+
+void Player::UseEndurance(const int enduranceUseNum, const int enduranceRecoveryStartTime, bool isDecreaseDiffMode)
+{
+	//持久力を減らす
+	endurance -= enduranceUseNum;
+	endurance = max(endurance, 0);
+	enduranceGauge->ChangeLength(endurance, isDecreaseDiffMode);
+
+	//回復開始までにかかる時間をセット
+	enduranceRecoveryStartTimer = enduranceRecoveryStartTime;
+}
+
+void Player::EnduranceRecovery()
+{
+	//持久力が最大なら抜ける
+	if (endurance >= maxEndurance) { return; }
+
+
+	//タイマーが0になったら持久力を回復していく
+	if (enduranceRecoveryStartTimer <= 0) {
+		endurance++;
+		endurance = min(endurance, maxEndurance);
+		enduranceGauge->ChangeLength(endurance, false);
+	}
+	//それ以外ならタイマー更新
+	else {
+		enduranceRecoveryStartTimer--;
+	}
 }

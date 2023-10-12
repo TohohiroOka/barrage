@@ -21,7 +21,7 @@ public: // サブクラス
 	};
 
 private:
-	
+
 	/// <summary>
 	/// 定数バッファ用データ構造体
 	/// </summary>
@@ -51,7 +51,7 @@ public: // 静的メンバ関数
 	/// </summary>
 	/// <param name="_name">テクスチャ保存名</param>
 	/// <returns>インスタンス</returns>
-	static std::unique_ptr<Sprite> Create(const std::string& _name = "");
+	static std::unique_ptr<Sprite> Create(const std::string& _name, const XMFLOAT2& _position, const XMFLOAT2& _size, const XMFLOAT2& _anchorpoint = { 0, 0 }, const XMFLOAT4& _color = { 1,1,1,1 }, bool _isFlipX = false, bool _isFlipY = false);
 
 	/// <summary>
 	/// シーンごとの解放処理
@@ -82,7 +82,7 @@ public: // メンバ関数
 	/// <param name="_anchorpoint">アンカーポイント</param>
 	/// <param name="_isFlipX">左右反転するか</param>
 	/// <param name="_isFlipY">上下反転するか</param>
-	void Initialize(const std::string& _name, const XMFLOAT2& _anchorpoint,bool _isFlipX = false, bool _isFlipY = false);
+	void Initialize(const std::string& _name, const XMFLOAT2& _position, const XMFLOAT2& _size, const XMFLOAT2& _anchorpoint = { 0, 0 }, const XMFLOAT4& _color = { 1,1,1,1 }, bool _isFlipX = false, bool _isFlipY = false);
 
 	/// <summary>
 	/// 更新

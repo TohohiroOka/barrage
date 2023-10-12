@@ -15,8 +15,7 @@ void DebugText::Initialize()
 	for (int i = 0; i < _countof(spriteDatas); i++)
 	{
 		// スプライトを生成する
-		spriteDatas[i] = Sprite::Create("debugfont");
-		spriteDatas[i]->SetAnchorpoint({ 0, 0 });
+		spriteDatas[i] = Sprite::Create("debugfont", {}, {});
 	}
 }
 

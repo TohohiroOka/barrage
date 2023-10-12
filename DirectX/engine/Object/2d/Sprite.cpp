@@ -38,7 +38,7 @@ void Sprite::LoadTexture(const std::string& _keepName, const std::string& _filen
 	texture[_keepName].isDelete = _isDelete;
 }
 
-std::unique_ptr<Sprite> Sprite::Create(const std::string& _name)
+std::unique_ptr<Sprite> Sprite::Create(const std::string& _name, const XMFLOAT2& _position, const XMFLOAT2& _size, const XMFLOAT2& _anchorpoint, const XMFLOAT4& _color, bool _isFlipX, bool _isFlipY)
 {
 	// Spriteのインスタンスを生成
 	Sprite* instance = new Sprite();
@@ -47,7 +47,7 @@ std::unique_ptr<Sprite> Sprite::Create(const std::string& _name)
 	}
 
 	// 初期化
-	instance->Initialize(_name, { 0.0f,0.0f });
+	instance->Initialize(_name, _position, _size, _anchorpoint, _color, _isFlipX, _isFlipY);
 
 	//更新
 	instance->Update();
@@ -56,10 +56,13 @@ std::unique_ptr<Sprite> Sprite::Create(const std::string& _name)
 	return std::unique_ptr<Sprite>(instance);
 }
 
-void Sprite::Initialize(const std::string& _name, const XMFLOAT2& _anchorpoint, bool _isFlipX, bool _isFlipY)
+void Sprite::Initialize(const std::string& _name, const XMFLOAT2& _position, const XMFLOAT2& _size, const XMFLOAT2& _anchorpoint, const XMFLOAT4& _color, bool _isFlipX, bool _isFlipY)
 {
 	this->name = _name;
+	this->position = _position;
+	this->size = _size;
 	this->anchorpoint = _anchorpoint;
+	this-> color = _color;
 	this->isFlipX = _isFlipX;
 	this->isFlipY = _isFlipY;
 
