@@ -43,7 +43,7 @@ void Player::Update()
 {
 	DirectInput* input = DirectInput::GetInstance();
 	if (input->TriggerKey(DIK_1)) {
-		Damage(20);
+		Damage(20, {});
 	}
 	if (input->PushKey(DIK_2)) {
 		endurance--;
@@ -59,21 +59,24 @@ void Player::Update()
 		Heal(30);
 	}
 
+	if (isKnockback) {
+		Knockback();
+	}
+	else {
+		Move();
 
-	Move();
+		Jump();
+
+		Attack();
+
+		HealHPMove();
+		EnduranceRecovery();
+	}
 	if (!onGround) {
 		// 落下処理
 		Fall();
 	}
-
-	Jump();
 	Collider();
-
-	Attack();
-
-	HealHPMove();
-	EnduranceRecovery();
-
 
 	object->Update();
 
@@ -89,7 +92,7 @@ void Player::Draw()
 	enduranceGauge->Draw();
 }
 
-void Player::Damage(int damageNum)
+void Player::Damage(int damageNum, const Vector3& subjectPos)
 {
 	//HPからダメージ量を引く
 	HP -= damageNum;
@@ -99,6 +102,9 @@ void Player::Damage(int damageNum)
 
 	//回復中なら回復を中断
 	isHeal = false;
+
+	//ノックバック状態にする
+	SetKnockback(subjectPos);
 
 	//HPが0以下なら死亡
 	if (!(HP <= 0)) { return; }
@@ -399,4 +405,22 @@ void Player::EnduranceRecovery()
 	else {
 		enduranceRecoveryStartTimer--;
 	}
+}
+
+void Player::SetKnockback(const Vector3& subjectPos)
+{
+	//攻撃対象と自分のベクトルを算出
+	knockbackVec = pos - subjectPos;
+	knockbackTimer = 0;
+	isKnockback = true;
+}
+
+void Player::Knockback()
+{
+	 moveVec = knockbackVec.normalize() * 10;
+
+	 knockbackTimer++;
+	 if (knockbackTimer >= 60) {
+		 isKnockback = false;
+	 }
 }
