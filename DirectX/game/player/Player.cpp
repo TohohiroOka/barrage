@@ -1,6 +1,7 @@
 ﻿#include "Player.h"
 #include "Input/DirectInput.h"
 #include "Input/XInputManager.h"
+#include "GameHelper.h"
 #include "Object/3d/collider/SphereCollider.h"
 #include "Object/3d/collider/CollisionManager.h"
 #include "Object/3d/collider/CollisionAttribute.h"
@@ -153,7 +154,7 @@ void Player::Move()
 
 			//進行方向を向くようにする
 			Vector3 moveRotaVelocity = { moveVec.x, 0, moveVec.z };//プレイヤー回転にジャンプは関係ないので、速度Yは0にしておく
-			rota = Vector3::VelocityRotate(moveRotaVelocity);
+			rota = GameHelper::Instance()->VelocityRotate(moveRotaVelocity);
 			object->SetRotation(rota);
 		}
 	}
@@ -183,7 +184,7 @@ void Player::Move()
 
 		//進行方向を向くようにする
 		Vector3 moveRotaVelocity = { moveVec.x, 0, moveVec.z };//プレイヤー回転にジャンプは関係ないので、速度Yは0にしておく
-		rota = Vector3::VelocityRotate(moveRotaVelocity);
+		rota = GameHelper::Instance()->VelocityRotate(moveRotaVelocity);
 		object->SetRotation(rota);
 	}
 }

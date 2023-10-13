@@ -189,3 +189,23 @@ Vector3 GameHelper::SplinePosition(const std::vector<Vector3>& points, int start
 
 	return position;
 }
+
+const Vector3 GameHelper::VelocityRotate(const Vector3& vec, const bool isMinusYRotaFix)
+{
+	using namespace DirectX;
+	Vector3 rota = {};
+	rota.y = XMConvertToDegrees(std::atan2(vec.x, vec.z));
+	//Y²Šp“x‚ª•‰‚Ì”‚È‚Ì‚ğC³‚·‚éê‡
+	if (isMinusYRotaFix) {
+		//•‰‚Ì”‚È‚ç‚ÎŠp“xC³
+		if (rota.y <= 0) {
+			rota.y += 360;
+		}
+	}
+	XMMATRIX matRot;
+	matRot = XMMatrixRotationY(XMConvertToRadians(-rota.y));
+	Vector3 distanceVecZ = MatrixTransformDirection(vec, matRot);
+	rota.x = XMConvertToDegrees(std::atan2(-distanceVecZ.y, distanceVecZ.z));
+
+	return rota;
+}
