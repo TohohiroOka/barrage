@@ -52,6 +52,16 @@ void Boss1NearAttack1::Draw()
 	}
 }
 
+void Boss1NearAttack1::GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info)
+{
+	for (auto& i : object) {
+		BaseAction::AttackCollision add;
+		add.pos = i.object->GetPosition();
+		add.radius = maxScale;
+		_info.emplace_back(add);
+	}
+}
+
 void Boss1NearAttack1::StartMove()
 {
 	const float maxTimer = 100.0f;

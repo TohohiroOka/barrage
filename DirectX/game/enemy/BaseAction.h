@@ -1,9 +1,15 @@
 #pragma once
 class BaseBoss;
+#include <vector>
 
 class BaseAction
 {
 public:
+	struct AttackCollision {
+		Vector3 pos;
+		float radius;
+	};
+
 	virtual ~BaseAction(){};
 
 	virtual void Update() = 0;
@@ -13,6 +19,8 @@ public:
 	bool End() { return isEnd; }
 
 	static void SetBossPtr(BaseBoss* _boss) { boss = _boss; }
+
+	virtual void GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info) = 0;
 
 protected:
 
