@@ -36,6 +36,8 @@ public:
 
 	void Draw() override;
 
+	void Boss1NearAttack1::GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info);
+
 private:
 
 	void StartMove();
