@@ -56,7 +56,7 @@ void Boss1NearAttack1::GetAttackCollision(std::vector<BaseAction::AttackCollisio
 {
 	for (auto& i : object) {
 		BaseAction::AttackCollision add;
-		add.pos = i.object->GetPosition();
+		add.pos = i.object->GetWorldPosition();
 		add.radius = maxScale;
 		_info.emplace_back(add);
 	}

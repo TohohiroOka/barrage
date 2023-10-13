@@ -21,6 +21,7 @@ public:
 
 	Object3d* GetCenter() { return center.get(); }
 	void SetMoveVec(const Vector3& _moveVec) { moveVec = _moveVec; }
+	BaseAction* GetBaseAction() { return action.get(); }
 
 protected:
 

@@ -55,6 +55,8 @@ public:
 	/// </summary>
 	void FrameReset() override;
 
+	void CollisionCheck();
+
 private:
 	std::unique_ptr<DebugCamera> debugCamera;
 	std::unique_ptr<GameCamera> camera;

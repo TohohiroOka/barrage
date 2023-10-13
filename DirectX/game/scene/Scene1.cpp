@@ -27,7 +27,7 @@ void Scene1::Initialize()
 	debugCamera = DebugCamera::Create({ 300, 40, 0 });
 	camera = GameCamera::Create();
 	player->SetGameCamera(camera.get());
-	
+
 	Base3D::SetCamera(camera.get());
 
 	/*Sprite::LoadTexture("amm", "Resources/amm.jpg");
@@ -47,6 +47,8 @@ void Scene1::Update()
 	player->Update();
 	field->Update();
 	boss->Update();
+
+	CollisionCheck();
 
 	//カメラ更新
 	static bool isNormalCamera = true;
@@ -112,4 +114,28 @@ void Scene1::ImguiDraw()
 
 void Scene1::FrameReset()
 {
+}
+
+void Scene1::CollisionCheck()
+{
+
+	//プレイヤーと敵の攻撃の衝突判定
+	{
+		Sphere playerSphere;
+		playerSphere.center = { player->GetPosition().x, player->GetPosition().y,player->GetPosition().z, 1.0f };
+		playerSphere.radius = player->GetObject3d()->GetScale().x;
+
+		std::vector<BaseAction::AttackCollision> bossAttackDatas;
+		boss->GetBaseAction()->GetAttackCollision(bossAttackDatas);
+
+		for (auto& i : bossAttackDatas) {
+			Sphere attackSphere;
+			attackSphere.center = { i.pos.x, i.pos.y, i.pos.z, 1.0f };
+			attackSphere.radius = i.radius;
+			if (Collision::CheckSphere2Sphere(playerSphere, attackSphere)) {
+				player->Damage(10);
+				return;
+			}
+		}
+	}
 }
