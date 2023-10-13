@@ -1,6 +1,8 @@
 #pragma once
-class BaseBoss;
 #include <vector>
+#include "Math/Vector3.h"
+
+class BaseBoss;
 
 class BaseAction
 {

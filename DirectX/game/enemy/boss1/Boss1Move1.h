@@ -15,6 +15,9 @@ public:
 
 	void Draw() {};
 
+	void GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info) override {};
+
+
 private:
 
 	//開始地点
