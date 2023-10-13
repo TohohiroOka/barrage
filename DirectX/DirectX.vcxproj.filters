@@ -337,6 +337,9 @@
     <ClCompile Include="engine\Math\DirectXMathHelper.cpp">
       <Filter>Engine\Math</Filter>
     </ClCompile>
+    <ClCompile Include="game\enemy\PredictionLine.cpp">
+      <Filter>ゲームシステム\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -359,12 +362,6 @@
     </FxCompile>
     <FxCompile Include="Resources\Shaders\ParticleVS.hlsl">
       <Filter>シェーダーファイル\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shaders\PrimitiveObject3DPS.hlsl">
-      <Filter>シェーダーファイル\PrimitiveObject3D</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shaders\PrimitiveObject3DVS.hlsl">
-      <Filter>シェーダーファイル\PrimitiveObject3D</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\PostEffectPS.hlsl">
       <Filter>シェーダーファイル\PostEffect\PostEffect</Filter>
@@ -411,6 +408,12 @@
     <FxCompile Include="Resources\Shaders\FbxVS.hlsl">
       <Filter>シェーダーファイル\Fbx</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\PrimitiveObject3DPS.hlsl">
+      <Filter>シェーダーファイル\PrimitiveObject3D</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PrimitiveObject3DVS.hlsl">
+      <Filter>シェーダーファイル\PrimitiveObject3D</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite.hlsli">
@@ -421,9 +424,6 @@
     </None>
     <None Include="Resources\Shaders\Particle.hlsli">
       <Filter>シェーダーファイル\Particle</Filter>
-    </None>
-    <None Include="Resources\Shaders\PrimitiveObject3D.hlsli">
-      <Filter>シェーダーファイル\PrimitiveObject3D</Filter>
     </None>
     <None Include="Resources\Shaders\PostEffect.hlsli">
       <Filter>シェーダーファイル\PostEffect\PostEffect</Filter>
@@ -445,6 +445,9 @@
     </None>
     <None Include="Resources\Shaders\Fbx.hlsli">
       <Filter>シェーダーファイル\Fbx</Filter>
+    </None>
+    <None Include="Resources\Shaders\PrimitiveObject3D.hlsli">
+      <Filter>シェーダーファイル\PrimitiveObject3D</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -696,6 +699,9 @@
     </ClInclude>
     <ClInclude Include="engine\Math\DirectXMathHelper.h">
       <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\PredictionLine.h">
+      <Filter>ゲームシステム\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

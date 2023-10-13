@@ -100,6 +100,14 @@ public:
 	/// <returns></returns>
 	Vector3 SplinePosition(const std::vector<Vector3>& points, int startIndex, float t);
 
+	/// <summary>
+	/// 方向の角度取得
+	/// </summary>
+	/// <param name="vec">速度ベクトル</param>
+	/// <param name="isMinusYRotaFix">y軸角度が負の数の場合正の数に修正するか</param>
+	/// <returns>方向の角度</returns>
+	static const Vector3 VelocityRotate(const Vector3& vec, const bool isMinusYRotaFix = false);
+
 	//ゲーム速度を変更する
 	void SetGameSpeed(float _gameSpeed) { gameSpeed = _gameSpeed; }
 

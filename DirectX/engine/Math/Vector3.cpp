@@ -66,25 +66,6 @@ float Vector3::angle(const Vector3& v) const
 	return DirectX::XMConvertToDegrees(radian);
 }
 
-const Vector3 Vector3::VelocityRotate(const Vector3& vec, const bool isMinusYRotaFix)
-{
-	Vector3 rota = {};
-	rota.y = XMConvertToDegrees(std::atan2(vec.x, vec.z));
-	//Y²Šp“x‚ª•‰‚Ì”‚È‚Ì‚ğC³‚·‚éê‡
-	if (isMinusYRotaFix) {
-		//•‰‚Ì”‚È‚ç‚ÎŠp“xC³
-		if (rota.y <= 0) {
-			rota.y += 360;
-		}
-	}
-	XMMATRIX matRot;
-	matRot = XMMatrixRotationY(XMConvertToRadians(-rota.y));
-	Vector3 distanceVecZ = MatrixTransformDirection(vec, matRot);
-	rota.x = XMConvertToDegrees(std::atan2(-distanceVecZ.y, distanceVecZ.z));
-
-	return rota;
-}
-
 Vector3 Vector3::DirectXVector3Transform(const DirectX::XMMATRIX& v) const
 {
 	DirectX::XMVECTOR XMv = { this->x,this->y,this->z };

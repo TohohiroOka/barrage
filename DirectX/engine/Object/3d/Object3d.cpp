@@ -68,7 +68,7 @@ void Object3d::Update()
 	CONST_BUFFER_DATA_B0* constMap = nullptr;
 	HRESULT result = constBuffB0->Map(0, nullptr, (void**)&constMap);//マッピング
 	if (SUCCEEDED(result)) {
-		constMap->baseColor = baseColor;
+		constMap->baseColor = color;
 		if (camera)
 		{
 			constMap->viewproj = camera->GetView() * camera->GetProjection();

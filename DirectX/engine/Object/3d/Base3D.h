@@ -75,6 +75,8 @@ protected:
 	XMFLOAT3 position = { 0,0,0 };
 	// 親オブジェクト
 	Base3D* parent = nullptr;
+	//色
+	XMFLOAT4 color = { 1,1,1,1 };
 
 	//ブルームの有無
 	bool isBloom;
@@ -108,5 +110,6 @@ public:
 	void SetLight(bool _isLight) { isLight = _isLight; }
 	void SetOutline(bool _isOutline) { isOutline = _isOutline; }
 	void SetOutlineColor(const XMFLOAT3& _outlineColor) { outlineColor = _outlineColor; }
+	void SetColor(const XMFLOAT4& _color) { color = _color; }
 
 };
