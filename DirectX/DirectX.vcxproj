@@ -165,6 +165,7 @@
     <ClCompile Include="game\field\Field.cpp" />
     <ClCompile Include="game\GameHelper.cpp" />
     <ClCompile Include="game\player\Player.cpp" />
+    <ClCompile Include="game\player\PlayerSwordAttack1.cpp" />
     <ClCompile Include="game\scene\Scene1.cpp" />
     <ClCompile Include="game\ui\Gauge.cpp" />
     <ClCompile Include="main.cpp">
@@ -410,7 +411,9 @@
     <ClInclude Include="game\enemy\PredictionLine.h" />
     <ClInclude Include="game\field\Field.h" />
     <ClInclude Include="game\GameHelper.h" />
+    <ClInclude Include="game\player\BasePlayerAttack.h" />
     <ClInclude Include="game\player\Player.h" />
+    <ClInclude Include="game\player\PlayerSwordAttack1.h" />
     <ClInclude Include="game\scene\Scene1.h" />
     <ClInclude Include="game\ui\Gauge.h" />
   </ItemGroup>

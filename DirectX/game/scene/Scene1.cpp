@@ -118,8 +118,7 @@ void Scene1::FrameReset()
 
 void Scene1::CollisionCheck()
 {
-
-	//ƒvƒŒƒCƒ„[‚Æ“G‚ÌUŒ‚‚ÌÕ“Ë”»’è
+#pragma region ƒvƒŒƒCƒ„[‚Æ“G‚ÌUŒ‚‚ÌÕ“Ë”»’è
 	{
 		Sphere playerSphere;
 		playerSphere.center = { player->GetPosition().x, player->GetPosition().y,player->GetPosition().z, 1.0f };
@@ -134,8 +133,29 @@ void Scene1::CollisionCheck()
 			attackSphere.radius = i.radius;
 			if (Collision::CheckSphere2Sphere(playerSphere, attackSphere)) {
 				player->Damage(10);
-				return;
+				break;
 			}
 		}
 	}
+#pragma endregion
+
+#pragma region ƒvƒŒƒCƒ„[‚ÌUŒ‚‚Æ“G‚ÌÕ“Ë”»’è
+	{
+		//ƒvƒŒƒCƒ„[‚ÌUŒ‚‚ª‚ ‚é && UŒ‚‚ª”»’è‚ð—LŒø‚É‚µ‚Ä‚¢‚½‚ç”»’è‚ðŽæ‚é
+		if (player->GetAttackAction()) {
+			if (player->GetAttackAction()->GetisCollisionValid()) {
+				Sphere enemySphere;
+				enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
+				enemySphere.radius = boss->GetCenter()->GetScale().x;
+
+				Sphere attackSphere;
+				attackSphere.center = player->GetAttackAction()->GetAttackCollisionData().center;
+				attackSphere.radius = player->GetAttackAction()->GetAttackCollisionData().radius;
+				if (Collision::CheckSphere2Sphere(enemySphere, attackSphere)) {
+					boss->Damage(player->GetAttackAction()->GetAttackCollisionData().power);
+				}
+			}
+		}
+	}
+#pragma endregion
 }

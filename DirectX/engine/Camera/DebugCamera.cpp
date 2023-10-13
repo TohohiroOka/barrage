@@ -21,7 +21,7 @@ DebugCamera::DebugCamera(const Vector3& targetPos) :
 {
 	target = targetPos;
 
-	scale.x = 1.0f / (float)WindowApp::GetWindowHeight();
+	scale.x = 1.0f / (float)WindowApp::GetWindowWidth();
 	scale.y = 1.0f / (float)WindowApp::GetWindowHeight();
 
 	pos = {};

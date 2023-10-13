@@ -6,6 +6,8 @@
 
 Boss1::Boss1()
 {
+	maxHP = 1000;
+
 	BaseBoss::Initialize();
 
 	model = Model::CreateFromOBJ("NormalCube");
@@ -38,6 +40,8 @@ void Boss1::Draw()
 	action->Draw();
 
 	boss->Draw();
+
+	hpGauge->Draw();
 }
 
 void Boss1::SetAction()

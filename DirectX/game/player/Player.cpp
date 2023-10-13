@@ -8,6 +8,7 @@
 #include "Math/Vector2.h"
 #include "game/camera/GameCamera.h"
 #include "engine/Math/Easing/Easing.h"
+#include "PlayerSwordAttack1.h"
 
 using namespace DirectX;
 
@@ -80,6 +81,15 @@ void Player::Update()
 
 	hpGauge->Update();
 	enduranceGauge->Update();
+
+	if (attackAction) {
+		attackAction->Update();
+		//攻撃の行動が終了したら解放
+		if (attackAction->GetIsAttackActionEnd()) {
+			attackAction.release();
+			isAttack = false;
+		}
+	}
 }
 
 void Player::Draw()
@@ -88,6 +98,10 @@ void Player::Draw()
 
 	hpGauge->Draw();
 	enduranceGauge->Draw();
+
+	if (attackAction) {
+		attackAction->Draw();
+	}
 }
 
 void Player::Damage(int damageNum)
@@ -356,6 +370,14 @@ void Player::Collider()
 
 void Player::Attack()
 {
+	//既に攻撃中なら抜ける
+	if (isAttack) { return; }
+
+	//入力で攻撃をセット
+	if (DirectInput::GetInstance()->TriggerKey(DIK_Q) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_RB)) {
+		attackAction = std::make_unique<PlayerSwordAttack1>(object.get());
+		isAttack = true;
+	}
 }
 
 void Player::HealHPMove()

@@ -1,5 +1,7 @@
 #include "Gauge.h"
 
+const float Gauge::thickness = 16.0f;
+
 Gauge::Gauge(const DirectX::XMFLOAT2& position, float length, int maxGaugeNum, int gaugeNum, const DirectX::XMFLOAT4& color)
 {
 	this->length = length;
@@ -7,11 +9,12 @@ Gauge::Gauge(const DirectX::XMFLOAT2& position, float length, int maxGaugeNum, i
 	this->gaugeNum = gaugeNum;
 
 	const std::string textureName = "gauge";
+	
 	const DirectX::XMFLOAT4 frameColor = { 0.1f, 0.1f, 0.1f, 1.0f };
-	gaugeFrame = Sprite::Create(textureName, position, { length, 32 }, { 0, 0.5f }, frameColor);
-	gaugeBar = Sprite::Create(textureName, position, { length, 32 }, { 0, 0.5f }, color);
+	gaugeFrame = Sprite::Create(textureName, position, { length, thickness }, { 0, 0.5f }, frameColor);
+	gaugeBar = Sprite::Create(textureName, position, { length, thickness }, { 0, 0.5f }, color);
 	const DirectX::XMFLOAT4 decreaseDiffColor = { 0.6f, 0.6f, 0.1f, 1.0f };
-	gaugeDecreaseDiff = Sprite::Create(textureName, position, { 0, 32 }, { 0, 0.5f }, decreaseDiffColor);
+	gaugeDecreaseDiff = Sprite::Create(textureName, position, { 0, thickness }, { 0, 0.5f }, decreaseDiffColor);
 }
 
 Gauge::~Gauge()
@@ -50,7 +53,7 @@ void Gauge::ChangeLength(int newGaugeNum, bool isDecreaseDiffMode)
 
 	//ゲージ量を更新してバーの長さを変更
 	const float newGaugeLength = (float)newGaugeNum / maxGaugeNum * length;
-	gaugeBar->SetSize({ newGaugeLength, 32 });
+	gaugeBar->SetSize({ newGaugeLength, thickness });
 
 	//減少量バーの長さを変更
 	if (this->isDecreaseDiffMode) {
@@ -65,7 +68,7 @@ void Gauge::ChangeLength(int newGaugeNum, bool isDecreaseDiffMode)
 		//減少中のバーの長さをセット
 		const float decreaseLengthNum = (float)decreaseNum / maxGaugeNum * length + beforeDecreaseLengthSurplus;
 		gaugeDecreaseDiff->SetPosition({ gaugeBar->GetPosition().x + gaugeBar->GetSize().x, gaugeBar->GetPosition().y });
-		gaugeDecreaseDiff->SetSize({ decreaseLengthNum, 32 });
+		gaugeDecreaseDiff->SetSize({ decreaseLengthNum, thickness });
 	}
 
 	//変更前のゲージ量を更新

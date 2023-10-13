@@ -2,6 +2,7 @@
 #include "Object/3d/Object3d.h"
 #include "Math/Vector3.h"
 #include "game/ui/Gauge.h"
+#include "BasePlayerAttack.h"
 
 class GameCamera;
 
@@ -40,6 +41,7 @@ public:
 	int GetJumpCount() { return jumpCount; }
 	int GetJumpMaxNum() { return jumpMaxNum; }
 	Object3d* GetObject3d() { return object.get(); }
+	BasePlayerAttack* GetAttackAction() { return attackAction.get(); }
 
 	void SetGameCamera(GameCamera* gameCamera) { this->gameCamera = gameCamera; }
 
@@ -79,6 +81,8 @@ private: //メンバ変数
 
 	//攻撃中か
 	bool isAttack = false;
+	//攻撃行動
+	std::unique_ptr<BasePlayerAttack> attackAction;
 
 	//ノックバック中か
 

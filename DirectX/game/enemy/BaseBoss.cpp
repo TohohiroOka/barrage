@@ -2,11 +2,16 @@
 #include "Object/3d/collider/SphereCollider.h"
 #include "Object/3d/collider/CollisionManager.h"
 #include "Object/3d/collider/CollisionAttribute.h"
+#include "WindowApp.h"
 
 void BaseBoss::Initialize()
 {
 	center = Object3d::Create();
 	center->SetPosition({ 400.0f,10.0f,400.0f });
+
+	HP = maxHP;
+	const float length = 1200;
+	hpGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ WindowApp::GetWindowWidth() / 2 - length / 2, 650.0f }), length, maxHP, HP, DirectX::XMFLOAT4({ 0.5f, 0.1f, 0.1f, 1.0f }));
 }
 
 void BaseBoss::Update()
@@ -14,6 +19,17 @@ void BaseBoss::Update()
 	Collider();
 
 	center->Update();
+
+	hpGauge->Update();
+}
+
+void BaseBoss::Damage(int damageNum)
+{
+	//HP‚©‚çƒ_ƒ[ƒW—Ê‚ðˆø‚­
+	HP -= damageNum;
+	HP = max(HP, 0);
+
+	hpGauge->ChangeLength(HP, true);
 }
 
 void BaseBoss::Collider()

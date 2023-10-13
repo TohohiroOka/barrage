@@ -35,7 +35,11 @@ private: //メンバ関数
 	/// </summary>
 	void ChangeDecreaseDiffLength();
 
-private:
+private: //静的メンバ変数
+	//太さ
+	static const float thickness;
+
+private: //メンバ変数
 	std::unique_ptr<Sprite> gaugeFrame;
 	std::unique_ptr<Sprite> gaugeBar;
 	std::unique_ptr<Sprite> gaugeDecreaseDiff;

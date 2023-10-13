@@ -346,6 +346,9 @@
     <ClCompile Include="game\enemy\PredictionLine.cpp">
       <Filter>ゲームシステム\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="game\player\PlayerSwordAttack1.cpp">
+      <Filter>ゲームシステム\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -711,6 +714,12 @@
     </ClInclude>
     <ClInclude Include="game\enemy\PredictionLine.h">
       <Filter>ゲームシステム\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\BasePlayerAttack.h">
+      <Filter>ゲームシステム\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerSwordAttack1.h">
+      <Filter>ゲームシステム\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

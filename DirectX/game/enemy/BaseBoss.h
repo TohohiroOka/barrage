@@ -2,6 +2,7 @@
 #include "../Object/3d/Object3d.h"
 #include "BaseAction.h"
 #include "Math/Vector3.h"
+#include "ui/Gauge.h"
 
 class BaseBoss
 {
@@ -17,6 +18,8 @@ public:
 
 	virtual void SetAction() = 0;
 
+	virtual void Damage(int damageNum);
+
 	void Collider();
 
 	Object3d* GetCenter() { return center.get(); }
@@ -31,6 +34,12 @@ protected:
 	//ˆÚ“®‹——£
 	Vector3 moveVec;
 
+	//Å‘å‘Ì—Í
+	int maxHP;
+	//‘Ì—Í
+	int HP;
+	//‘Ì—ÍƒQ[ƒW
+	std::unique_ptr<Gauge> hpGauge;
 
 	//s“®
 	std::unique_ptr<BaseAction> action;
