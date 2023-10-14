@@ -24,13 +24,23 @@ public: //メンバ関数
 	/// </summary>
 	virtual void Draw() = 0;
 
+	/// <summary>
+	/// 次の攻撃に遷移
+	/// </summary>
+	virtual bool NextAttack(int endurance) = 0;
+
 	//getter
+	int GetUseEndranceNum() { return useEnduranceNum; }
 	AttackCollisionData GetAttackCollisionData() { return attackCollisionData; }
 	bool GetisCollisionValid() { return isCollisionValid; }
 	bool GetIsNextAttackInput() { return isNextAttackInput; }
 	bool GetIsAttackActionEnd() { return isAttackActionEnd; }
 
 protected: //メンバ変数
+	//連続攻撃回数
+	int attackNum = 0;
+	//使用する持久力
+	int useEnduranceNum;
 	//コリジョンデータ
 	AttackCollisionData attackCollisionData;
 	//衝突判定が有効か

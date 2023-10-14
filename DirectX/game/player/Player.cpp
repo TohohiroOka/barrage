@@ -370,13 +370,26 @@ void Player::Collider()
 
 void Player::Attack()
 {
-	//既に攻撃中なら抜ける
-	if (isAttack) { return; }
+	if (!isAttack) {
+		//入力で攻撃をセット
+		if (DirectInput::GetInstance()->TriggerKey(DIK_Q) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_RB)) {
+			attackAction = std::make_unique<PlayerSwordAttack1>(object.get());
+			if (!attackAction->NextAttack(endurance)) { return; }
 
-	//入力で攻撃をセット
-	if (DirectInput::GetInstance()->TriggerKey(DIK_Q) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_RB)) {
-		attackAction = std::make_unique<PlayerSwordAttack1>(object.get());
-		isAttack = true;
+			UseEndurance(attackAction->GetUseEndranceNum(), 30, true);
+			isAttack = true;
+		}
+	}
+	else {
+		//次の攻撃を入力可能なら
+		if (attackAction->GetIsNextAttackInput()) {
+			//入力で攻撃をセット
+			if (DirectInput::GetInstance()->TriggerKey(DIK_Q) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_RB)) {
+				if (!attackAction->NextAttack(endurance)) { return; }
+
+				UseEndurance(attackAction->GetUseEndranceNum(), 30, true);
+			}
+		}
 	}
 }
 
