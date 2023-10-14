@@ -39,22 +39,53 @@ std::unique_ptr<Camera> Camera::Create(const bool _mode)
 
 void Camera::Update()
 {
-	Vector3 inoutEye = { ShakeDifference.x + eye.x,ShakeDifference.y + eye.y,ShakeDifference.z + eye.z };
+	//シェイク状態ならカメラをシェイクさせる
+	if (isShake) {
+		Shake();
+	}
 
-	matView = XMMatrixLookAtLH(XMLoadFloat3(&inoutEye), XMLoadFloat3(&target), XMLoadFloat3(&up));
+	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 }
 
-void Camera::StartCameraShake(int _strength)
+void Camera::ShakeStart(const float _shakePower, const float _shakeTime)
 {
-	float x = float(GameHelper::Instance()->RandomInt(_strength * 2)) - float(_strength);
-	float y = float(GameHelper::Instance()->RandomInt(_strength * 2)) - float(_strength);
-
-	ShakeDifference = { x ,y,0.0f };
+	//シェイクタイマーをリセット
+	shakeTimer = 0;
+	//シェイクする時間をセット
+	this->shakeTime = _shakeTime;
+	//シェイク最大の強さをセット
+	this->maxShakePower = _shakePower;
+	//シェイク状態にする
+	isShake = true;
 }
 
-void Camera::EndCameraShake()
+void Camera::Shake()
 {
-	ShakeDifference = { 0.0f,0.0f,0.0f };
+	//タイマーをカウント
+	shakeTimer++;
+	const float time = shakeTimer / shakeTime;
+
+	//シェイクする値を計算
+	const float randShake = maxShakePower * (1 - time);
+	Vector3 shake{};
+
+	//ゼロ除算を避けるために0の場合はランダムを生成しない
+	if (!((int)randShake == 0)) {
+		shake.x = (float)GameHelper::Instance()->RandomInt((int)randShake) - randShake / 2;
+		shake.y = (float)GameHelper::Instance()->RandomInt((int)randShake) - randShake / 2;
+	}
+
+	//値が大きいので割り算して小さくする
+	const float div = 100;
+	shake /= div;
+
+	//カメラにシェイクの値を加算
+	eye += shake;
+
+	//シェイクが完了したらシェイク状態を解除
+	if (shakeTimer >= shakeTime) {
+		isShake = false;
+	}
 }
 
 void Camera::SetMatProjection(float _back)

@@ -104,7 +104,7 @@ void Player::Damage(int damageNum, const Vector3& subjectPos)
 	isHeal = false;
 
 	//ノックバック状態にする
-	SetKnockback(subjectPos);
+	SetKnockback(subjectPos, damageNum);
 
 	//HPが0以下なら死亡
 	if (!(HP <= 0)) { return; }
@@ -407,20 +407,28 @@ void Player::EnduranceRecovery()
 	}
 }
 
-void Player::SetKnockback(const Vector3& subjectPos)
+void Player::SetKnockback(const Vector3& subjectPos, int power)
 {
 	//攻撃対象と自分のベクトルを算出
 	knockbackVec = pos - subjectPos;
-	knockbackTimer = 0;
+	knockbackVec.y = 0;
+
+	//ノックバックの強さをセット(仮で食らったダメージ量 / 10)
+	knockbackPower = (float)power / 10;
+
 	isKnockback = true;
 }
 
 void Player::Knockback()
 {
-	 moveVec = knockbackVec.normalize() * 10;
+	//ノックバック
+	moveVec = knockbackVec.normalize() * knockbackPower;
+	
+	//ノックバックを弱くしていく
+	knockbackPower -= 0.05f;
 
-	 knockbackTimer++;
-	 if (knockbackTimer >= 60) {
-		 isKnockback = false;
-	 }
+	//ノックバックによる移動がなくなったらノックバック状態終了
+	if (knockbackPower < 0) {
+		isKnockback = false;
+	}
 }

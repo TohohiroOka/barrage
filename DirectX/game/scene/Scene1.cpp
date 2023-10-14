@@ -134,6 +134,7 @@ void Scene1::CollisionCheck()
 			attackSphere.radius = i.radius;
 			if (Collision::CheckSphere2Sphere(playerSphere, attackSphere)) {
 				player->Damage(10, i.pos);
+				camera->ShakeStart(10, 10);
 				return;
 			}
 		}
