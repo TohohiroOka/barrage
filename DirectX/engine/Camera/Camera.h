@@ -44,15 +44,16 @@ public: // メンバ関数
 	virtual void Update();
 
 	/// <summary>
-	/// カメラのシェイク開始
+	/// シェイク開始
 	/// </summary>
-	/// <param name="_strength">シェイクの強さ</param>
-	void StartCameraShake(int _strength);
+	/// <param name="shakePower">シェイクの強さ</param>
+	/// <param name="shakeTime">シェイクする時間</param>
+	void ShakeStart(const float _shakePower = 20, const float _shakeTime = 30);
 
 	/// <summary>
-	/// カメラのシェイク終了
+	/// シェイク
 	/// </summary>
-	void EndCameraShake();
+	void Shake();
 
 	/// <summary>
 	/// ビュー行列の取得
@@ -127,6 +128,12 @@ protected: // メンバ変数
 	Vector3 up = { 0, 1, 0 };
 	// アスペクト比
 	float aspectRatio = 1.0f;
-	//シェイク座標
-	Vector3 ShakeDifference = {};
+	//シェイクするか
+	bool isShake = false;
+	//カメラシェイク用タイマー
+	int32_t shakeTimer = 0;
+	//シェイクする時間
+	float shakeTime = 0;
+	//シェイク最大の強さ
+	float maxShakePower = 0;
 };

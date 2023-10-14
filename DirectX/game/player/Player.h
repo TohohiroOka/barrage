@@ -20,7 +20,7 @@ public:
 
 	void Update();
 	void Draw();
-	void Damage(int damageNum);
+	void Damage(int damageNum, const Vector3& subjectPos);
 	void Heal(int healNum);
 
 private:
@@ -34,6 +34,8 @@ private:
 	void HealHPMove();
 	void UseEndurance(const int enduranceUseNum, const int enduranceRecoveryStartTime, bool isDecreaseDiffMode);
 	void EnduranceRecovery();
+	void SetKnockback(const Vector3& subjectPos, int power);
+	void Knockback();
 
 public:
 
@@ -85,6 +87,12 @@ private: //メンバ変数
 	std::unique_ptr<BasePlayerAttack> attackAction;
 
 	//ノックバック中か
+	bool isKnockback = false;
+	//ノックバックベクトル
+	Vector3 knockbackVec;
+	//ノックバックの強さ
+	float knockbackPower;
+
 
 	//回復中か
 	bool isHeal = false;
