@@ -12,7 +12,7 @@
 
 using namespace DirectX;
 
-const float Player::moveSpeedMax = 1.5f;
+const float Player::moveSpeedMax = 1.0f;
 const float Player::dashSpeedMax = 2.0f;
 
 Player::Player()
@@ -64,6 +64,9 @@ void Player::Update()
 	if (isKnockback) {
 		Knockback();
 	}
+	else if (isBlink) {
+		Blink();
+	}
 	else {
 		Move();
 
@@ -71,14 +74,17 @@ void Player::Update()
 
 		Attack();
 
-		HealHPMove();
-		EnduranceRecovery();
+		BlinkStart();
 	}
-	if (!onGround) {
-		// 落下処理
+
+	if (!isBlink) {
 		Fall();
 	}
+
 	Collider();
+
+	HealHPMove();
+	EnduranceRecovery();
 
 	object->Update();
 
@@ -117,9 +123,11 @@ void Player::Damage(int damageNum, const Vector3& subjectPos)
 
 	//回復中なら回復を中断
 	isHeal = false;
+	//ブリンク中なら中断
+	isBlink = false;
 
 	//ノックバック状態にする
-	SetKnockback(subjectPos, damageNum);
+	KnockbackStart(subjectPos, damageNum);
 
 	//HPが0以下なら死亡
 	if (!(HP <= 0)) { return; }
@@ -211,19 +219,36 @@ void Player::Move()
 
 void Player::Dash()
 {
-	//ダッシュ入力があった場合に、移動スピードを速くしていく
-	if ((DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)) && endurance > 0) {
-		moveSpeed = dashSpeedMax;
-		UseEndurance(1, 1, false); //持久力を使用
-	}
-	//入力がない場合は、元の移動スピードに戻していく
-	else {
+	//地面にいない場合は、変更を受け付けないで抜ける
+	if (!onGround) { return; }
+
+	if (!isDash) {
 		moveSpeed = moveSpeedMax;
+
+		//地面にいてダッシュ入力があった場合にダッシュ状態にする
+		if ((DirectInput::GetInstance()->TriggerKey(DIK_Z) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B)) && endurance > 0) {
+			isDash = true;
+		}
+	}
+	else {
+		moveSpeed = dashSpeedMax;
+
+		//入力中はダッシュ状態を維持
+		if ((DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)) && endurance > 0) {
+			UseEndurance(1, 1, false); //持久力を使用
+		}
+		//入力が途切れたときにダッシュを終了する
+		else if (onGround) {
+			isDash = false;
+		}
 	}
 }
 
 void Player::Fall()
 {
+	//地面に接地していたら抜ける
+	if (onGround) { return; }
+
 	// 下向き加速度
 	const float fallAcc = -0.4f;
 	const float fallVYMin = -10.0f;
@@ -249,6 +274,49 @@ void Player::Jump()
 	const float jumpVYFist = 8.0f;
 	fallV = { 0, jumpVYFist, 0, 0 };
 	jumpCount++; //ジャンプ回数を増やす
+}
+
+void Player::BlinkStart()
+{
+	//ブリンク開始可能でなければ抜ける
+	if (!isBlinkStart) { return; }
+	//ジャンプ中でなければ抜ける
+	if (!(jumpCount >= 1)) { return; }
+	//ブリンク入力がなければ抜ける
+	if (!(DirectInput::GetInstance()->TriggerKey(DIK_Z) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B))) { return; }
+	//持久力がブリンクで使用する値以下なら抜ける
+	const int blinkUseEndurance = 30;
+	if (endurance < blinkUseEndurance) { return; }
+	UseEndurance(blinkUseEndurance, 30, true); //持久力を使用
+
+	//ブリンクするベクトルを求める(現在向いている方向)
+	const float rotaRadian = XMConvertToRadians(rota.y - 90);
+	blinkVec.x = cosf(rotaRadian);
+	blinkVec.z = -sinf(rotaRadian);
+
+	//落下速度を0にする
+	fallV.m128_f32[1] = 0;
+
+	blinkTimer = 0;
+	isBlink = true;
+	isBlinkStart = false;
+}
+
+void Player::Blink()
+{
+	//タイマー更新
+	const float blinkTime = 20;
+	blinkTimer++;
+	const float time = blinkTimer / blinkTime;
+
+	const float power = Easing::OutCirc(20, 1, time);
+
+	moveVec = blinkVec.normalize() * power;
+
+	//タイマーが指定した時間になったらブリンク終了
+	if (blinkTimer >= blinkTime) {
+		isBlink = false;
+	}
 }
 
 void Player::Collider()
@@ -346,6 +414,7 @@ void Player::Collider()
 				returnY = false;
 				pos.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
 				jumpCount = 0; //連続ジャンプ回数をリセット
+				isBlinkStart = true; //ブリンク開始可能にする
 			}
 			// 地面がないので落下
 			else {
@@ -361,6 +430,7 @@ void Player::Collider()
 				returnY = false;
 				pos.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
 				jumpCount = 0; //連続ジャンプ回数をリセット
+				isBlinkStart = true; //ブリンク開始可能にする
 			}
 		}
 
@@ -443,7 +513,7 @@ void Player::EnduranceRecovery()
 	}
 }
 
-void Player::SetKnockback(const Vector3& subjectPos, int power)
+void Player::KnockbackStart(const Vector3& subjectPos, int power)
 {
 	//攻撃対象と自分のベクトルを算出
 	knockbackVec = pos - subjectPos;
@@ -459,7 +529,7 @@ void Player::Knockback()
 {
 	//ノックバック
 	moveVec = knockbackVec.normalize() * knockbackPower;
-	
+
 	//ノックバックを弱くしていく
 	knockbackPower -= 0.05f;
 

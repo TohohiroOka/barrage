@@ -29,12 +29,14 @@ private:
 	void Dash();
 	void Fall();
 	void Jump();
+	void BlinkStart();
+	void Blink();
 	void Collider();
 	void Attack();
 	void HealHPMove();
 	void UseEndurance(const int enduranceUseNum, const int enduranceRecoveryStartTime, bool isDecreaseDiffMode);
 	void EnduranceRecovery();
-	void SetKnockback(const Vector3& subjectPos, int power);
+	void KnockbackStart(const Vector3& subjectPos, int power);
 	void Knockback();
 
 public:
@@ -80,6 +82,15 @@ private: //メンバ変数
 	int jumpMaxNum;
 	//ジャンプ回数カウント
 	int jumpCount = 0;
+
+	//ブリンク中か
+	bool isBlink = false;
+	//ブリンクベクトル
+	Vector3 blinkVec;
+	//ブリンク用タイマー
+	int blinkTimer = 0;
+	//ブリンク開始可能か
+	bool isBlinkStart = true;
 
 	//攻撃中か
 	bool isAttack = false;
