@@ -107,6 +107,15 @@ void Player::Draw()
 	}
 }
 
+void Player::DrawLightView()
+{
+	object->DrawLightView();
+
+	if (attackAction) {
+		attackAction->DrawLightView();
+	}
+}
+
 void Player::Damage(int damageNum, const Vector3& subjectPos)
 {
 	//HPからダメージ量を引く

@@ -28,7 +28,12 @@ void Scene1::Initialize()
 	camera = GameCamera::Create();
 	player->SetGameCamera(camera.get());
 
+	//影用光源カメラ初期化
+	lightCamera.reset(new LightCamera({ -300, 100, -300 }));
+	lightCamera->SetProjectionNum({ 100, 200 }, { -600, -200 });
+
 	Base3D::SetCamera(camera.get());
+	Base3D::SetLightCamera(lightCamera.get());
 
 	/*Sprite::LoadTexture("amm", "Resources/amm.jpg");
 	sprite = Sprite::Create("amm", {}, { 1059.0f / 5.0f,1500.0f / 5.0f });
@@ -51,22 +56,23 @@ void Scene1::Update()
 	CollisionCheck();
 
 	//カメラ更新
-	static bool isNormalCamera = true;
+	/*static bool isNormalCamera = true;
 	if (isNormalCamera) {
 		camera->Update();
 		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
 			isNormalCamera = !isNormalCamera;
-			Base3D::SetCamera(debugCamera.get());
+			Base3D::SetCamera(lightCamera.get());
 		}
 	}
 	else {
-		debugCamera->Update();
-		Base3D::SetCamera(debugCamera.get());
+		lightCamera->Update();
+		Base3D::SetCamera(lightCamera.get());
 		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
 			isNormalCamera = !isNormalCamera;
 			Base3D::SetCamera(camera.get());
 		}
-	}
+	}*/camera->Update();
+	lightCamera->Update();
 }
 
 void Scene1::Draw(const int _cameraNum)
@@ -78,6 +84,11 @@ void Scene1::Draw(const int _cameraNum)
 	player->Draw();
 
 	boss->Draw();
+}
+
+void Scene1::DrawLightView(const int _cameraNum)
+{
+	player->DrawLightView();
 }
 
 void Scene1::NonPostEffectDraw(const int _cameraNum)

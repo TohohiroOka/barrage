@@ -8,6 +8,7 @@
 #include "Object/2d/PostEffect/Outline.h"
 #include "Object/2d/PostEffect/Fog.h"
 #include "Object/2d/PostEffect/Depth.h"
+#include "Object/3d/ShadowMap.h"
 #include "FrameRateKeep.h"
 
 #include <sstream>
@@ -71,6 +72,8 @@ private:
 	std::unique_ptr<Fog> fog;
 	//ポストエフェクトで使用する深度
 	std::unique_ptr<Depth> depth;
+	//シャドウマップ
+	std::unique_ptr<ShadowMap> shadowMap;
 	//Fps固定用クラスのインスタンス
 	std::unique_ptr<FrameRateKeep> fps = nullptr;
 	//数字表示デバッグ用

@@ -11,7 +11,7 @@
                 "DrawMode": "3D",
                 "DrawType": "TRIANGLE_LIST",
                 "TextureNum": 1,
-                "Rootparams": 4
+                "Rootparams": 3
                 }
         },
         {
@@ -24,7 +24,7 @@
                 "DrawMode": "3D",
                 "DrawType": "TRIANGLE_LIST",
                 "TextureNum": 1,
-                "Rootparams": 4
+                "Rootparams": 3
                 }
         }
     ]

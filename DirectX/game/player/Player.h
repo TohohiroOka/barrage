@@ -20,6 +20,7 @@ public:
 
 	void Update();
 	void Draw();
+	void DrawLightView();
 	void Damage(int damageNum, const Vector3& subjectPos);
 	void Heal(int healNum);
 

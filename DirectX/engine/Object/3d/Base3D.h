@@ -5,6 +5,7 @@
 
 class BaseCollider;
 class Camera;
+class LightCamera;
 class LightGroup;
 
 class Base3D : public ObjectBase
@@ -16,6 +17,12 @@ public:
 	/// </summary>
 	/// <param name="_camera">カメラ</param>
 	static void SetCamera(Camera* _camera) { Base3D::camera = _camera; }
+
+	/// <summary>
+	/// 影用光源カメラのセット
+	/// </summary>
+	/// <param name="_lightCamera">光源カメラ</param>
+	static void SetLightCamera(LightCamera* _lightCamera) { Base3D::lightCamera = _lightCamera; }
 
 	/// <summary>
 	/// ライトグループのセット
@@ -54,6 +61,8 @@ public:
 protected:
 	//カメラ
 	static Camera* camera;
+	//影用光源カメラ
+	static LightCamera* lightCamera;
 	//ライト
 	static LightGroup* light;
 
@@ -78,6 +87,8 @@ protected:
 	//色
 	XMFLOAT4 color = { 1,1,1,1 };
 
+	//影の有無
+	bool isShadowMap = false;
 	//ブルームの有無
 	bool isBloom;
 	//トゥーンの有無
@@ -105,6 +116,7 @@ public:
 	void SetScale(const XMFLOAT3& _scale) { scale = _scale; }
 	void SetCollider(BaseCollider* _collider);
 	void SetMatWorld(const XMMATRIX& _matWorld) { matWorld = _matWorld; }
+	void SetShadowMap(bool _isShadowMap) { isShadowMap = _isShadowMap; }
 	void SetBloom(bool _isBloom) { isBloom = _isBloom; }
 	void SetToon(bool _isToon) { isToon = _isToon; }
 	void SetLight(bool _isLight) { isLight = _isLight; }

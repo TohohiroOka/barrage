@@ -23,6 +23,7 @@ MainEngine::~MainEngine()
 	//Fbx::Finalize();
 	ParticleManager::Finalize();
 	postEffect->Finalize();
+	shadowMap->Finalize();
 	ComputeShaderManager::Finalize();
 	DescriptorHeapManager::Finalize();
 }
@@ -51,6 +52,9 @@ void MainEngine::Initialize()
 	scene = SceneManager::Create();
 
 	postEffect = PostEffect::Create();
+
+	ShadowMap::ShadowMapCommon(dXCommon->GetDevice(), dXCommon->GetCmdList());
+	shadowMap = ShadowMap::Create();
 
 	bloom = Bloom::Create();
 	outline = Outline::Create();
@@ -81,6 +85,10 @@ void MainEngine::Draw()
 	//•`‰æ
 	DescriptorHeapManager::PreDraw(dXCommon->GetCmdList());
 	ObjectBase::SetCmdList(dXCommon->GetCmdList());
+
+	shadowMap->DrawScenePrev();
+	scene->DrawLightView(dXCommon->GetCmdList());
+	shadowMap->DrawSceneRear();
 
 	postEffect->PreDrawScene();
 	scene->Draw(dXCommon->GetCmdList());

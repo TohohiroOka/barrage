@@ -50,6 +50,12 @@ public:
 	virtual void Draw(const int _cameraNum) {};
 
 	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="_cameraNum">カメラ番号</param>
+	virtual void DrawLightView(const int _cameraNum) {};
+
+	/// <summary>
 	/// ポストエフェクトをかけない描画
 	/// </summary>
 	virtual void NonPostEffectDraw(const int _cameraNum){};

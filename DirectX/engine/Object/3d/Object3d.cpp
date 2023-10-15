@@ -1,5 +1,6 @@
 ﻿#include "Object3d.h"
 #include "Camera/Camera.h"
+#include "Camera/LightCamera.h"
 #include "Light/LightGroup.h"
 
 #include <fstream>
@@ -10,6 +11,7 @@
 using namespace DirectX;
 
 std::vector<GraphicsPipelineManager::DrawSet> Object3d::pipeline;
+std::vector<GraphicsPipelineManager::DrawSet> Object3d::lightviewPipeline;
 
 std::unique_ptr<Object3d> Object3d::Create(Model* _model)
 {
@@ -47,6 +49,16 @@ void Object3d::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&constBuffB0));
 	if (FAILED(result)) { assert(0); }
+
+	//定数バッファの生成
+	result = device->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),//アップロード可能
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(CONST_BUFFER_DATA_LIGHTVIEW_B0) + 0xff) & ~0xff),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuffLightViewB0));
+	if (FAILED(result)) { assert(0); }
 }
 
 Object3d::Object3d()
@@ -78,6 +90,16 @@ void Object3d::Update()
 			constMap->viewproj = XMMatrixIdentity();
 			constMap->cameraPos = { 0,0,0 };
 		}
+		if (lightCamera)
+		{
+			constMap->lightViewproj = lightCamera->GetView() * lightCamera->GetProjection();
+		}
+		else
+		{
+			constMap->lightViewproj = XMMatrixIdentity();
+		}
+
+		constMap->isShadowMap = isShadowMap;
 		constMap->world = matWorld;
 		constMap->isBloom = isBloom;
 		constMap->isToon = isToon;
@@ -85,6 +107,24 @@ void Object3d::Update()
 		constMap->isLight = isLight;
 		constMap->outlineColor = outlineColor;
 		constBuffB0->Unmap(0, nullptr);
+	}
+
+	//定数バッファへのデータ転送(光源カメラ視点)
+	CONST_BUFFER_DATA_LIGHTVIEW_B0* constMapLightView = nullptr;
+	if (SUCCEEDED(constBuffLightViewB0->Map(0, nullptr, (void**)&constMapLightView))) {
+		if (lightCamera)
+		{
+			constMapLightView->viewproj = lightCamera->GetView() * lightCamera->GetProjection();;
+			constMapLightView->cameraPos = lightCamera->GetEye();
+		}
+		else
+		{
+			constMapLightView->viewproj = XMMatrixIdentity();
+			constMapLightView->cameraPos = { 0,0,0 };
+		}
+
+		constMapLightView->world = matWorld;
+		constBuffLightViewB0->Unmap(0, nullptr);
 	}
 }
 
@@ -107,6 +147,33 @@ void Object3d::Draw(const DrawMode _drawMode)
 
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+
+	// ライトの描画
+	light->Draw(cmdList, 2);
+
+	// モデル描画
+	model->Draw(cmdList);
+}
+
+void Object3d::DrawLightView(const DrawMode _drawMode)
+{
+	// nullptrチェック
+	assert(device);
+	assert(ObjectBase::cmdList);
+
+	// モデルの割り当てがなければ描画しない
+	if (model == nullptr) {
+		return;
+	}
+
+	Update();
+
+	int modeNum = int(_drawMode);
+
+	Base3D::Draw(pipeline[modeNum]);
+
+	// 定数バッファビューをセット
+	cmdList->SetGraphicsRootConstantBufferView(0, constBuffLightViewB0->GetGPUVirtualAddress());
 
 	// ライトの描画
 	light->Draw(cmdList, 2);

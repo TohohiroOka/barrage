@@ -36,6 +36,11 @@ public: //ƒƒ“ƒoŠÖ”
 	void Draw() override;
 
 	/// <summary>
+	/// ŒõŒ¹‹“_‚Å‚Ì•`‰æ
+	/// </summary>
+	void DrawLightView() override;
+
+	/// <summary>
 	/// Ÿ‚ÌUŒ‚‚É‘JˆÚ
 	/// </summary>
 	bool NextAttack(int endurance) override;
