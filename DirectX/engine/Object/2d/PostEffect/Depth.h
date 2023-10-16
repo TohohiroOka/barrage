@@ -16,13 +16,13 @@ public: //静的メンバ関数
 	/// シャドウマップ生成
 	/// </summary>
 	/// <returns>シャドウマップ</returns>
-	static std::unique_ptr<Depth> Create();
+	static std::unique_ptr<Depth> Create(const std::array<UINT, 2>& _texSize = { 0,0 });
 
 public: //メンバ関数
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	bool Initialize();
+	bool Initialize(const std::array<UINT, 2>& _texSize);
 
 	/// <summary>
 	/// シーン描画前処理
@@ -44,6 +44,8 @@ private: //メンバ変数
 	std::unique_ptr<Texture> texture;
 	//DSV用デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeapDSV;
+	//テクスチャサイズ
+	std::array<UINT, 2> texSize;
 
 };
 

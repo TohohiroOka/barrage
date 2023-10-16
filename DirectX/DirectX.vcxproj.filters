@@ -131,9 +131,6 @@
     <Filter Include="ゲームシステム\UI">
       <UniqueIdentifier>{c60c8b4b-3126-44e0-85a6-d0126f10bc22}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Object\3d\shadowMap">
-      <UniqueIdentifier>{fbf081b2-4d20-41aa-90f3-036a242d77af}</UniqueIdentifier>
-    </Filter>
     <Filter Include="シェーダーファイル\ObjLightView">
       <UniqueIdentifier>{f6415680-dd3a-496c-b831-d4f1ac64895f}</UniqueIdentifier>
     </Filter>
@@ -357,9 +354,6 @@
     </ClCompile>
     <ClCompile Include="engine\Camera\LightCamera.cpp">
       <Filter>Engine\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\Object\3d\ShadowMap.cpp">
-      <Filter>Engine\Object\3d\shadowMap</Filter>
     </ClCompile>
     <ClCompile Include="game\field\ShadowGround.cpp">
       <Filter>ゲームシステム\Field</Filter>
@@ -747,9 +741,6 @@
     </ClInclude>
     <ClInclude Include="engine\Camera\LightCamera.h">
       <Filter>Engine\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Object\3d\ShadowMap.h">
-      <Filter>Engine\Object\3d\shadowMap</Filter>
     </ClInclude>
     <ClInclude Include="game\field\ShadowGround.h">
       <Filter>ゲームシステム\Field</Filter>

@@ -149,12 +149,11 @@ void Object3d::Draw(const DrawMode _drawMode)
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 
-	//DescHeapSRV::SetGraphicsRootDescriptorTable(3, shadowMapTexture.texNumber);
+	cmdList->SetGraphicsRootDescriptorTable(4, lightDepthTexture->descriptor->gpu);
 
 	// ライトの描画
 	light->Draw(cmdList, 2);
 
-	cmdList->SetGraphicsRootDescriptorTable(4, lightDepthTexture->descriptor->gpu);
 	// モデル描画
 	model->Draw(cmdList);
 }

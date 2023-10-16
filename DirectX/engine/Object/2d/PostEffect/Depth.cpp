@@ -3,7 +3,7 @@
 
 using namespace DirectX;
 
-std::unique_ptr<Depth> Depth::Create()
+std::unique_ptr<Depth> Depth::Create(const std::array<UINT, 2>& _texSize)
 {
 	//インスタンスを生成
 	Depth* instance = new Depth();
@@ -12,7 +12,7 @@ std::unique_ptr<Depth> Depth::Create()
 	}
 
 	// 初期化
-	if (!instance->Initialize()) {
+	if (!instance->Initialize(_texSize)) {
 		delete instance;
 		assert(0);
 		return nullptr;
@@ -22,7 +22,7 @@ std::unique_ptr<Depth> Depth::Create()
 	return std::unique_ptr<Depth>(instance);
 }
 
-bool Depth::Initialize()
+bool Depth::Initialize(const std::array<UINT, 2>& _texSize)
 {
 	HRESULT result;
 
@@ -36,7 +36,11 @@ bool Depth::Initialize()
 		IID_PPV_ARGS(&constBuff));
 	assert(SUCCEEDED(result));
 
-	std::array<UINT, 2> texSize = texSize = { WindowApp::GetWindowWidth(),WindowApp::GetWindowHeight() };
+	if (_texSize[0] <= 0) {
+		texSize = { WindowApp::GetWindowWidth(),WindowApp::GetWindowHeight() };
+	} else {
+		texSize= _texSize;
+	}
 	// テクスチャ用バッファの生成
 	texture = std::make_unique<Texture>();
 
@@ -103,11 +107,9 @@ void Depth::PreDrawScene()
 	//レンダーターゲットをセット
 	cmdList->OMSetRenderTargets(0, nullptr, false, &dsvH);
 
-	std::array<float, 2> texSize = { float(WindowApp::GetWindowWidth()),float(WindowApp::GetWindowHeight()) };
-
 	//ビューポートの設定
 	cmdList->RSSetViewports(1, &CD3DX12_VIEWPORT(0.0f, 0.0f,
-		texSize[0], texSize[1]));
+		FLOAT(texSize[0]), FLOAT(texSize[1])));
 	//シザリング矩形の設定
 	cmdList->RSSetScissorRects(1, &CD3DX12_RECT(0, 0,
 		LONG(texSize[0]), LONG(texSize[1])));

@@ -73,7 +73,7 @@ private:
 	//ポストエフェクトで使用する深度
 	std::unique_ptr<Depth> depth;
 	//シャドウマップ
-	std::unique_ptr<ShadowMap> shadowMap;
+	std::unique_ptr<Depth> shadowMap;
 	//Fps固定用クラスのインスタンス
 	std::unique_ptr<FrameRateKeep> fps = nullptr;
 	//数字表示デバッグ用

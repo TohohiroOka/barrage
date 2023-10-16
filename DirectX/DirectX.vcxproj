@@ -145,7 +145,6 @@
     <ClCompile Include="engine\Object\3d\Model.cpp" />
     <ClCompile Include="engine\Object\3d\Object3d.cpp" />
     <ClCompile Include="engine\Object\3d\PrimitiveObject3D.cpp" />
-    <ClCompile Include="engine\Object\3d\ShadowMap.cpp" />
     <ClCompile Include="engine\Object\3d\TerrainModel.cpp" />
     <ClCompile Include="engine\Object\ObjectBase.cpp" />
     <ClCompile Include="engine\particle\Emitter.cpp" />
@@ -405,7 +404,6 @@
     <ClInclude Include="engine\Object\3d\Model.h" />
     <ClInclude Include="engine\Object\3d\Object3d.h" />
     <ClInclude Include="engine\Object\3d\PrimitiveObject3D.h" />
-    <ClInclude Include="engine\Object\3d\ShadowMap.h" />
     <ClInclude Include="engine\Object\3d\TerrainModel.h" />
     <ClInclude Include="engine\Object\ObjectBase.h" />
     <ClInclude Include="engine\particle\Emitter.h" />

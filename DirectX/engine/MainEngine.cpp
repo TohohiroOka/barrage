@@ -48,15 +48,13 @@ void MainEngine::Initialize()
 	ComputeShaderManager::StaticInitialize(dXCommon->GetDevice());
 	DebugText::GetInstance()->Initialize();
 	FbxModel::StaticInitialize(dXCommon->GetDevice());
-
+	
 	scene = SceneManager::Create();
 
 	postEffect = PostEffect::Create();
 
-	ShadowMap::ShadowMapCommon(dXCommon->GetDevice(), dXCommon->GetCmdList());
-	shadowMap = ShadowMap::Create();
-
-	Object3d::SetLightDepthTexture(shadowMap->GetTexture());
+	shadowMap = Depth::Create({ 4096 ,4096 });
+	Object3d::SetLightDepthTexture(shadowMap->GetTex());
 
 	bloom = Bloom::Create();
 	outline = Outline::Create();
@@ -88,9 +86,9 @@ void MainEngine::Draw()
 	DescriptorHeapManager::PreDraw(dXCommon->GetCmdList());
 	ObjectBase::SetCmdList(dXCommon->GetCmdList());
 
-	shadowMap->DrawScenePrev();
+	shadowMap->PreDrawScene();
 	scene->DrawLightView(dXCommon->GetCmdList());
-	shadowMap->DrawSceneRear();
+	shadowMap->PostDrawScene();
 
 	postEffect->PreDrawScene();
 	scene->Draw(dXCommon->GetCmdList());
