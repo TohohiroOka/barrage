@@ -28,9 +28,11 @@ void Scene1::Initialize()
 	camera = GameCamera::Create();
 	player->SetGameCamera(camera.get());
 
+	ground = std::make_unique<ShadowGround>();
+
 	//‰e—pŒõŒ¹ƒJƒƒ‰‰Šú‰»
-	lightCamera.reset(new LightCamera({ -300, 100, -300 }));
-	lightCamera->SetProjectionNum({ 100, 200 }, { -600, -200 });
+	lightCamera.reset(new LightCamera({ -30, 10, -30 }));
+	lightCamera->SetProjectionNum({ 50, 100 }, { -300, -100 });
 
 	Base3D::SetCamera(camera.get());
 	Base3D::SetLightCamera(lightCamera.get());
@@ -52,6 +54,7 @@ void Scene1::Update()
 	player->Update();
 	field->Update();
 	boss->Update();
+	ground->Update();
 
 	CollisionCheck();
 
@@ -77,18 +80,19 @@ void Scene1::Update()
 
 void Scene1::Draw(const int _cameraNum)
 {
-	field->Draw();
+	//field->Draw();
 
 	//gobject->ColliderDraw();
 
 	player->Draw();
-
+	ground->Draw();
 	boss->Draw();
 }
 
 void Scene1::DrawLightView(const int _cameraNum)
 {
 	player->DrawLightView();
+	ground->DrawLightView();
 }
 
 void Scene1::NonPostEffectDraw(const int _cameraNum)

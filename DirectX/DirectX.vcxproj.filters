@@ -361,6 +361,9 @@
     <ClCompile Include="engine\Object\3d\ShadowMap.cpp">
       <Filter>Engine\Object\3d\shadowMap</Filter>
     </ClCompile>
+    <ClCompile Include="game\field\ShadowGround.cpp">
+      <Filter>ゲームシステム\Field</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -747,6 +750,9 @@
     </ClInclude>
     <ClInclude Include="engine\Object\3d\ShadowMap.h">
       <Filter>Engine\Object\3d\shadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="game\field\ShadowGround.h">
+      <Filter>ゲームシステム\Field</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

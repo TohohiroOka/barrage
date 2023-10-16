@@ -12,6 +12,7 @@ using namespace DirectX;
 
 std::vector<GraphicsPipelineManager::DrawSet> Object3d::pipeline;
 std::vector<GraphicsPipelineManager::DrawSet> Object3d::lightviewPipeline;
+Texture* Object3d::lightDepthTexture;
 
 std::unique_ptr<Object3d> Object3d::Create(Model* _model)
 {
@@ -148,14 +149,17 @@ void Object3d::Draw(const DrawMode _drawMode)
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 
+	//DescHeapSRV::SetGraphicsRootDescriptorTable(3, shadowMapTexture.texNumber);
+
 	// ライトの描画
 	light->Draw(cmdList, 2);
 
+	cmdList->SetGraphicsRootDescriptorTable(4, lightDepthTexture->descriptor->gpu);
 	// モデル描画
 	model->Draw(cmdList);
 }
 
-void Object3d::DrawLightView(const DrawMode _drawMode)
+void Object3d::DrawLightView()
 {
 	// nullptrチェック
 	assert(device);
@@ -166,11 +170,7 @@ void Object3d::DrawLightView(const DrawMode _drawMode)
 		return;
 	}
 
-	Update();
-
-	int modeNum = int(_drawMode);
-
-	Base3D::Draw(pipeline[modeNum]);
+	Base3D::Draw(lightviewPipeline[0]);
 
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffLightViewB0->GetGPUVirtualAddress());

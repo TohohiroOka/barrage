@@ -26,7 +26,7 @@ Player::Player()
 	float radius = 0.6f;
 	object->SetCollider(new SphereCollider(XMVECTOR({ 0,radius,0,0 }), radius));
 	object->GetCollider()->SetAttribute(COLLISION_ATTR_ALLIES);
-
+	object->SetShadowMap(true);
 	//連続ジャンプ可能回数設定
 	jumpMaxNum = 2;
 

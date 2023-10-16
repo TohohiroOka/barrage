@@ -56,6 +56,8 @@ void MainEngine::Initialize()
 	ShadowMap::ShadowMapCommon(dXCommon->GetDevice(), dXCommon->GetCmdList());
 	shadowMap = ShadowMap::Create();
 
+	Object3d::SetLightDepthTexture(shadowMap->GetTexture());
+
 	bloom = Bloom::Create();
 	outline = Outline::Create();
 	fog = Fog::Create();

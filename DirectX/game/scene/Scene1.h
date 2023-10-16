@@ -7,6 +7,7 @@
 #include "engine/Camera/LightCamera.h"
 #include "../enemy/boss1/Boss1.h"
 #include "../field/Field.h"
+#include "../field/ShadowGround.h"
 
 class Scene1 : public InterfaceScene
 {
@@ -78,4 +79,6 @@ private:
 
 	//É{ÉX
 	std::unique_ptr<Boss1>boss;
+
+	std::unique_ptr<ShadowGround> ground;
 };

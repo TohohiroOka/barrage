@@ -1,7 +1,7 @@
 #include "Object3D.hlsli"
 
 Texture2D<float4> tex : register(t0);  // 0番スロットに設定されたテクスチャ
-Texture2D<float4> shadowMap : register(t1);	//1番スロットに設定されたテクスチャ
+Texture2D<float4> shadowMapTex : register(t1); //1番スロットに設定されたテクスチャ
 SamplerState smp : register(s0);      // 0番スロットに設定されたサンプラー
 
 /// <summary>
@@ -159,7 +159,7 @@ PSOutput main(VSOutput input) : SV_TARGET
 		//uv座標で0～1なら影判定をする
         if (shadowTexUV.x >= 0 && shadowTexUV.x <= 1.0f && shadowTexUV.y >= 0 && shadowTexUV.y <= 1.0f)
         {
-            if (shadowMap.Sample(smp, shadowTexUV).x + 0.0005f < input.shadowpos.z * w)
+            if (shadowMapTex.Sample(smp, shadowTexUV).x + 0.0005f < input.shadowpos.z * w)
             {
                 shadow *= 0.5f;
             }
