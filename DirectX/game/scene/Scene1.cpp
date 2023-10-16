@@ -28,7 +28,14 @@ void Scene1::Initialize()
 	camera = GameCamera::Create();
 	player->SetGameCamera(camera.get());
 
+	ground = std::make_unique<ShadowGround>();
+
+	//‰e—pŒõŒ¹ƒJƒƒ‰‰Šú‰»
+	lightCamera.reset(new LightCamera({ -30, 10, -30 }));
+	lightCamera->SetProjectionNum({ 50, 100 }, { -300, -100 });
+
 	Base3D::SetCamera(camera.get());
+	Base3D::SetLightCamera(lightCamera.get());
 
 	/*Sprite::LoadTexture("amm", "Resources/amm.jpg");
 	sprite = Sprite::Create("amm", {}, { 1059.0f / 5.0f,1500.0f / 5.0f });
@@ -57,10 +64,10 @@ void Scene1::Update()
 {
 	DirectInput* input = DirectInput::GetInstance();
 
-	//player->Update();
-	//field->Update();
-	//boss->Update();
-	fbx->Update(rate);
+	player->Update();
+	field->Update();
+	boss->Update();
+	ground->Update();
 
 	//CollisionCheck();
 
@@ -69,17 +76,18 @@ void Scene1::Update()
 		camera->Update();
 		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
 			isNormalCamera = !isNormalCamera;
-			Base3D::SetCamera(debugCamera.get());
+			Base3D::SetCamera(lightCamera.get());
 		}
 	}
 	else {
-		debugCamera->Update();
-		Base3D::SetCamera(debugCamera.get());
+		lightCamera->Update();
+		Base3D::SetCamera(lightCamera.get());
 		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
 			isNormalCamera = !isNormalCamera;
 			Base3D::SetCamera(camera.get());
 		}
-	}
+	}*/camera->Update();
+	lightCamera->Update();
 }
 
 void Scene1::Draw(const int _cameraNum)
@@ -88,11 +96,15 @@ void Scene1::Draw(const int _cameraNum)
 
 	//gobject->ColliderDraw();
 
-	//player->Draw();
+	player->Draw();
+	ground->Draw();
+	boss->Draw();
+}
 
-	//boss->Draw();
-
-	fbx->Draw();
+void Scene1::DrawLightView(const int _cameraNum)
+{
+	player->DrawLightView();
+	ground->DrawLightView();
 }
 
 void Scene1::NonPostEffectDraw(const int _cameraNum)

@@ -45,6 +45,12 @@ public://メンバ関数
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="cmdList">コマンドリスト</param>
+	void DrawLightView(ID3D12GraphicsCommandList* cmdList);
+
+	/// <summary>
 	/// ポストエフェクトをかけない描画
 	/// </summary>
 	void NonPostEffectDraw();

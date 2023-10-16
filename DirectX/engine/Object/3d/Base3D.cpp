@@ -2,11 +2,13 @@
 #include "Object/3d/collider/BaseCollider.h"
 #include "Object/3d/collider/CollisionManager.h"
 #include "Camera/Camera.h"
+#include "Camera/LightCamera.h"
 #include "Light/LightGroup.h"
 
 using namespace DirectX;
 
 Camera* Base3D::camera = nullptr;
+LightCamera* Base3D::lightCamera = nullptr;
 LightGroup* Base3D::light = nullptr;
 
 void Base3D::Update()

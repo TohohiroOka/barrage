@@ -131,6 +131,9 @@
     <Filter Include="ゲームシステム\UI">
       <UniqueIdentifier>{c60c8b4b-3126-44e0-85a6-d0126f10bc22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\ObjLightView">
+      <UniqueIdentifier>{f6415680-dd3a-496c-b831-d4f1ac64895f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -349,6 +352,12 @@
     <ClCompile Include="game\player\PlayerSwordAttack1.cpp">
       <Filter>ゲームシステム\Player</Filter>
     </ClCompile>
+    <ClCompile Include="engine\Camera\LightCamera.cpp">
+      <Filter>Engine\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="game\field\ShadowGround.cpp">
+      <Filter>ゲームシステム\Field</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -423,6 +432,12 @@
     <FxCompile Include="Resources\Shaders\PrimitiveObject3DVS.hlsl">
       <Filter>シェーダーファイル\PrimitiveObject3D</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\ObjLightViewPS.hlsl">
+      <Filter>シェーダーファイル\ObjLightView</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ObjLightViewVS.hlsl">
+      <Filter>シェーダーファイル\ObjLightView</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite.hlsli">
@@ -457,6 +472,9 @@
     </None>
     <None Include="Resources\Shaders\PrimitiveObject3D.hlsli">
       <Filter>シェーダーファイル\PrimitiveObject3D</Filter>
+    </None>
+    <None Include="Resources\Shaders\ObjLightView.hlsli">
+      <Filter>シェーダーファイル\ObjLightView</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -720,6 +738,12 @@
     </ClInclude>
     <ClInclude Include="game\player\PlayerSwordAttack1.h">
       <Filter>ゲームシステム\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Camera\LightCamera.h">
+      <Filter>Engine\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="game\field\ShadowGround.h">
+      <Filter>ゲームシステム\Field</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

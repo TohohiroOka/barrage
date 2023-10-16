@@ -1,33 +1,61 @@
-#include "Depth.h"
-#include "WindowApp.h"
+#include "ShadowMap.h"
+#include <d3dx12.h>
+#include <d3dcompiler.h>
+
+#pragma comment(lib, "d3dcompiler.lib")
 
 using namespace DirectX;
 
-std::unique_ptr<Depth> Depth::Create(const std::array<UINT, 2>& _texSize)
+ID3D12Device* ShadowMap::dev = nullptr;
+ID3D12GraphicsCommandList* ShadowMap::cmdList = nullptr;
+
+std::unique_ptr<ShadowMap> ShadowMap::Create()
 {
 	//インスタンスを生成
-	Depth* instance = new Depth();
+	ShadowMap* instance = new ShadowMap();
 	if (instance == nullptr) {
 		return nullptr;
 	}
 
 	// 初期化
-	if (!instance->Initialize(_texSize)) {
+	if (!instance->Initialize()) {
 		delete instance;
 		assert(0);
 		return nullptr;
 	}
 
-	//ユニークポインタを返す
-	return std::unique_ptr<Depth>(instance);
+	return std::unique_ptr<ShadowMap>(instance);
 }
 
-bool Depth::Initialize(const std::array<UINT, 2>& _texSize)
+void ShadowMap::ShadowMapCommon(ID3D12Device* dev, ID3D12GraphicsCommandList* cmdList)
+{
+	//nullptrチェック
+	assert(dev);
+	assert(cmdList);
+
+	ShadowMap::dev = dev;
+	ShadowMap::cmdList = cmdList;
+}
+
+bool ShadowMap::Initialize()
 {
 	HRESULT result;
 
+	//SRV設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};	//設定構造体
+	srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;	//2Dテクスチャ
+	srvDesc.Texture2D.MipLevels = 1;
+
+	//デスクリプタヒープにSRV作成
+	texture = std::make_unique<Texture>();
+	texture->descriptor = std::make_unique<DescriptorHeapManager>();
+	texture->descriptor->CreateSRV(texture->texBuffer, srvDesc);
+	//DescHeapSRV::CreateShaderResourceView(srvDesc, texture);
+
 	//定数バッファの生成
-	result = device->CreateCommittedResource(
+	result = dev->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
 		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferData) * 0xff) & ~0xff),
@@ -36,26 +64,18 @@ bool Depth::Initialize(const std::array<UINT, 2>& _texSize)
 		IID_PPV_ARGS(&constBuff));
 	assert(SUCCEEDED(result));
 
-	if (_texSize[0] <= 0) {
-		texSize = { WindowApp::GetWindowWidth(),WindowApp::GetWindowHeight() };
-	} else {
-		texSize= _texSize;
-	}
-	// テクスチャ用バッファの生成
-	texture = std::make_unique<Texture>();
-
 	//深度バッファリソース設定
 	CD3DX12_RESOURCE_DESC depthResDesc =
 		CD3DX12_RESOURCE_DESC::Tex2D(
 			DXGI_FORMAT_D32_FLOAT,
-			texSize[0],
-			texSize[1],
+			shadowMapTexSize,
+			shadowMapTexSize,
 			1, 0,
 			1, 0,
 			D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
 		);
 	//深度バッファの生成
-	result = device->CreateCommittedResource(
+	result = dev->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE,
 		&depthResDesc,
@@ -70,31 +90,26 @@ bool Depth::Initialize(const std::array<UINT, 2>& _texSize)
 	DescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 	DescHeapDesc.NumDescriptors = 1;
 	//DSV用デスクリプタヒープを生成
-	result = device->CreateDescriptorHeap(&DescHeapDesc, IID_PPV_ARGS(&descHeapDSV));
+	result = dev->CreateDescriptorHeap(&DescHeapDesc, IID_PPV_ARGS(&descHeapDSV));
 	assert(SUCCEEDED(result));
 
 	//デスクリプタヒープにDSV作成
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	device->CreateDepthStencilView(texture->texBuffer.Get(),
+	dev->CreateDepthStencilView(texture->texBuffer.Get(),
 		&dsvDesc,
 		descHeapDSV->GetCPUDescriptorHandleForHeapStart());
-
-	//SRV設定
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};	//設定構造体
-	srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;	//2Dテクスチャ
-	srvDesc.Texture2D.MipLevels = 1;
-
-	texture->descriptor = std::make_unique<DescriptorHeapManager>();
-	texture->descriptor->CreateSRV(texture->texBuffer, srvDesc);
 
 	return true;
 }
 
-void Depth::PreDrawScene()
+void ShadowMap::Finalize()
+{
+	descHeapDSV.Reset();
+}
+
+void ShadowMap::DrawScenePrev()
 {
 	//リソースバリアを変更(シェーダリソース→描画可能)
 	cmdList->ResourceBarrier(1,
@@ -109,17 +124,17 @@ void Depth::PreDrawScene()
 
 	//ビューポートの設定
 	cmdList->RSSetViewports(1, &CD3DX12_VIEWPORT(0.0f, 0.0f,
-		FLOAT(texSize[0]), FLOAT(texSize[1])));
+		shadowMapTexSize, shadowMapTexSize));
 	//シザリング矩形の設定
 	cmdList->RSSetScissorRects(1, &CD3DX12_RECT(0, 0,
-		LONG(texSize[0]), LONG(texSize[1])));
+		shadowMapTexSize, shadowMapTexSize));
 
 	//深度バッファのクリア
 	cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0,
 		nullptr);
 }
 
-void Depth::PostDrawScene()
+void ShadowMap::DrawSceneRear()
 {
 	//リソースバリアを変更(描画可能→シェーダリソース)
 	cmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(texture->texBuffer.Get(),

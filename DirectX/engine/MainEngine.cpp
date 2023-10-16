@@ -23,6 +23,7 @@ MainEngine::~MainEngine()
 	//Fbx::Finalize();
 	ParticleManager::Finalize();
 	postEffect->Finalize();
+	shadowMap->Finalize();
 	ComputeShaderManager::Finalize();
 	DescriptorHeapManager::Finalize();
 }
@@ -47,10 +48,13 @@ void MainEngine::Initialize()
 	ComputeShaderManager::StaticInitialize(dXCommon->GetDevice());
 	DebugText::GetInstance()->Initialize();
 	FbxModel::StaticInitialize(dXCommon->GetDevice());
-
+	
 	scene = SceneManager::Create();
 
 	postEffect = PostEffect::Create();
+
+	shadowMap = Depth::Create({ 4096 ,4096 });
+	Object3d::SetLightDepthTexture(shadowMap->GetTex());
 
 	bloom = Bloom::Create();
 	outline = Outline::Create();
@@ -81,6 +85,10 @@ void MainEngine::Draw()
 	//•`‰æ
 	DescriptorHeapManager::PreDraw(dXCommon->GetCmdList());
 	ObjectBase::SetCmdList(dXCommon->GetCmdList());
+
+	shadowMap->PreDrawScene();
+	scene->DrawLightView(dXCommon->GetCmdList());
+	shadowMap->PostDrawScene();
 
 	postEffect->PreDrawScene();
 	scene->Draw(dXCommon->GetCmdList());

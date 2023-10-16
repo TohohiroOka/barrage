@@ -100,6 +100,7 @@
     <ClCompile Include="engine\audio\Audio.cpp" />
     <ClCompile Include="engine\camera\Camera.cpp" />
     <ClCompile Include="engine\Camera\DebugCamera.cpp" />
+    <ClCompile Include="engine\Camera\LightCamera.cpp" />
     <ClCompile Include="engine\DirectXCommon.cpp" />
     <ClCompile Include="engine\external\imgui\imgui.cpp" />
     <ClCompile Include="engine\external\imgui\imgui_demo.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="game\enemy\boss1\Boss1NearAttack1.cpp" />
     <ClCompile Include="game\enemy\PredictionLine.cpp" />
     <ClCompile Include="game\field\Field.cpp" />
+    <ClCompile Include="game\field\ShadowGround.cpp" />
     <ClCompile Include="game\GameHelper.cpp" />
     <ClCompile Include="game\player\Player.cpp" />
     <ClCompile Include="game\player\PlayerSwordAttack1.cpp" />
@@ -236,6 +238,18 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\InstanceObjectVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ObjLightViewPS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ObjLightViewVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
@@ -321,6 +335,7 @@
     <None Include="Resources\Shaders\Fog.hlsli" />
     <None Include="Resources\Shaders\HeightMap.hlsli" />
     <None Include="Resources\Shaders\InstanceObject.hlsli" />
+    <None Include="Resources\Shaders\ObjLightView.hlsli" />
     <None Include="Resources\Shaders\Outline.hlsli" />
     <None Include="Resources\Shaders\Object3D.hlsli" />
     <None Include="Resources\Shaders\Particle.hlsli" />
@@ -332,6 +347,7 @@
     <ClInclude Include="engine\audio\Audio.h" />
     <ClInclude Include="engine\camera\Camera.h" />
     <ClInclude Include="engine\Camera\DebugCamera.h" />
+    <ClInclude Include="engine\Camera\LightCamera.h" />
     <ClInclude Include="engine\DirectXCommon.h" />
     <ClInclude Include="engine\external\imgui\imconfig.h" />
     <ClInclude Include="engine\external\imgui\imgui.h" />
@@ -410,6 +426,7 @@
     <ClInclude Include="game\enemy\boss1\Boss1NearAttack1.h" />
     <ClInclude Include="game\enemy\PredictionLine.h" />
     <ClInclude Include="game\field\Field.h" />
+    <ClInclude Include="game\field\ShadowGround.h" />
     <ClInclude Include="game\GameHelper.h" />
     <ClInclude Include="game\player\BasePlayerAttack.h" />
     <ClInclude Include="game\player\Player.h" />

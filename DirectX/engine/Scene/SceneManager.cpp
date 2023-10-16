@@ -78,6 +78,10 @@ void SceneManager::CreatePipeline()
 		std::vector<GraphicsPipelineManager::DrawSet> addDrawSet{};
 		SetPipeline("Object3D", addDrawSet);
 		Object3d::SetPipeline(addDrawSet);
+
+		std::vector<GraphicsPipelineManager::DrawSet> lightAddDrawSet{};
+		SetPipeline("ObjLightView", lightAddDrawSet);
+		Object3d::SetLightviewPipeline(lightAddDrawSet);
 	}
 	//InstanceObject
 	{
@@ -165,6 +169,13 @@ void SceneManager::Draw(ID3D12GraphicsCommandList* cmdList)
 	scene->SetCmdList(cmdList);
 
 	scene->Draw(0);
+}
+
+void SceneManager::DrawLightView(ID3D12GraphicsCommandList* cmdList)
+{
+	scene->SetCmdList(cmdList);
+
+	scene->DrawLightView(0);
 }
 
 void SceneManager::NonPostEffectDraw()

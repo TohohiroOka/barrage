@@ -9,6 +9,12 @@
         },
         {
             "shader":{
+                "Name":"ObjLightView",
+                "Type":["v","p"]
+            }
+        },
+        {
+            "shader":{
                 "Name":"InstanceObject",
                 "Type":["v","p"]
             }

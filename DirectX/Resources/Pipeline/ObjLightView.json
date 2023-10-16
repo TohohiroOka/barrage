@@ -1,0 +1,18 @@
+{
+    "name": "scene",
+    "pipelines":[
+        {
+            "pipeline":{
+                "Name": "ObjLightView",
+                "ShaderType": ["v","p"],
+                "InputLayoutType": ["POSITION","NORMAL","TEXCOORD_2D"],
+                "RtvNum": 3,
+                "BlendMode": "ALPHA",
+                "DrawMode": "3D",
+                "DrawType": "TRIANGLE_LIST",
+                "TextureNum": 1,
+                "Rootparams": 3
+                }
+        }
+    ]
+}

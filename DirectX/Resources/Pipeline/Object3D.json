@@ -10,7 +10,7 @@
                 "BlendMode": "ALPHA",
                 "DrawMode": "3D",
                 "DrawType": "TRIANGLE_LIST",
-                "TextureNum": 1,
+                "TextureNum": 2,
                 "Rootparams": 3
                 }
         },
@@ -23,7 +23,7 @@
                 "BlendMode": "ADD",
                 "DrawMode": "3D",
                 "DrawType": "TRIANGLE_LIST",
-                "TextureNum": 1,
+                "TextureNum": 2,
                 "Rootparams": 3
                 }
         }
