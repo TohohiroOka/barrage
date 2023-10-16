@@ -58,6 +58,8 @@ public:
 	void CollisionCheck();
 
 private:
+	bool isNormalCamera = false;
+
 	std::unique_ptr<DebugCamera> debugCamera;
 	std::unique_ptr<GameCamera> camera;
 
@@ -70,4 +72,11 @@ private:
 
 	//É{ÉX
 	std::unique_ptr<Boss1>boss;
+
+	std::unique_ptr<FbxModel> fbxModel1;
+	std::unique_ptr<FbxModel> fbxModel2;
+	std::unique_ptr<Fbx> fbx;
+
+	bool isBlend;
+	float rate;
 };

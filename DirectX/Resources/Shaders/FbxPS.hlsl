@@ -169,7 +169,7 @@ PSOutput main(VSOutput input) : SV_TARGET
 	// シェーディングによる色で描画
     PSOutput output;
     float4 mainColor = shadecolor * texcolor * color;
-    output.target0 = float4(1,1,1,1);
+    output.target0 = float4(mainColor.rgb, color.w);
     output.target1 = bloom;
     output.target2 = float4(outlineColor, 1.0f) * isOutline;
 

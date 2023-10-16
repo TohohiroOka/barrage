@@ -6,6 +6,8 @@
 #include <DirectXMath.h>
 #include <map>
 #include "Texture/Texture.h"
+#include <vector>
+#include <map>
 
 class FbxModel
 {
@@ -22,9 +24,7 @@ private: // エイリアス
 public://固定値
 
 	//ボーンの最大値
-	static const int MAX_BONES = 32;
-	//テクスチャ最大登録数
-	static const int textureNum = 256;
+	static const int MAX_BONES = 128;
 
 private://構造体宣言
 
@@ -40,13 +40,45 @@ private://構造体宣言
 		float boneWhight[MAX_BONE_INDICES];
 	};
 
+	//マテリアル用
+	struct Material
+	{
+		std::string name;//マテリアル名
+		XMFLOAT3 ambient = {};//アンビエント影響度
+		XMFLOAT3 diffuse = {};//ディフューズ影響度
+		float alpha = 0;//アルファ
+		XMFLOAT3 baseColor = { 1,1,1 };//ベースカラ―
+		float metalness = 0.0f;//金属度(0 or 1)
+		float specular = 0.5f;//鏡面反射度
+		float roughness = 0.0f;//粗さ
+	};
+
+	//ボーン
+	struct Bone
+	{
+		//名前
+		std::string name;
+
+		//初期姿勢行列
+		XMMATRIX invInitialPose;
+
+		//クラスター
+		FbxCluster* fbxCluster;
+
+		//コンストラクタ
+		Bone(const std::string& name)
+		{
+			this->name = name;
+		}
+	};
+
 	//ノード
 	struct Node
 	{
 		//名前
 		std::string name;
 		//ローカルスケール
-		XMVECTOR scaling = { 1.0f,1.0f,1.0f,0.0f };
+		DirectX::XMVECTOR scaling = { 1.0f,1.0f,1.0f,0.0f };
 		//ローカル回転
 		XMVECTOR rotation = { 0.0f,0.0f,0.0f,0.0f };
 		//ローカル移動
@@ -59,36 +91,21 @@ private://構造体宣言
 		Node* parent = nullptr;
 	};
 
-	//ボーン
-	struct Bone
-	{
-		//名前
-		std::string name;
-
-		//初期姿勢行列
-		DirectX::XMMATRIX invInitialPose;
-
-		//クラスター
-		FbxCluster* fbxCluster;
-
-		//コンストラクタ
-		Bone(const std::string& name)
-		{
-			this->name = name;
-		}
-	};
-
-	//マテリアル用
-	struct Material
-	{
-		std::string name;//マテリアル名
-		XMFLOAT3 ambient = {};//アンビエント影響度
-		XMFLOAT3 diffuse = {};//ディフューズ影響度
-		float alpha = 0;//アルファ
-		XMFLOAT3 baseColor = { 1,1,1 };//ベースカラ―
-		float metalness = 0.0f;//金属度(0 or 1)
-		float specular = 0.5f;//鏡面反射度
-		float roughness = 0.0f;//粗さ
+	struct BuffData {
+		Material material;
+		std::vector<Vertex> vertices;
+		std::vector<unsigned short>indices;
+		std::vector<Bone> bones;
+		//テクスチャパス
+		std::string texName;
+		//頂点バッファ
+		ComPtr<ID3D12Resource> vertBuff = nullptr;
+		//頂点バッファビュー
+		D3D12_VERTEX_BUFFER_VIEW vbView;
+		//インデックスバッファ
+		ComPtr<ID3D12Resource> indexBuff = nullptr;
+		//インデックスバッファビュー
+		D3D12_INDEX_BUFFER_VIEW ibView;
 	};
 
 	//スキン用定数バッファデータ
@@ -110,12 +127,9 @@ private://構造体宣言
 	//Fbxデータ
 	struct Data
 	{
-		Material material;
-		std::vector<Vertex> vertices;
-		std::vector<unsigned short>indices;
 		std::vector<Node> nodes;
+		std::vector<BuffData> buffData;
 		Node* meshNode;
-		std::vector<Bone> bones;
 		FbxUpdate fbxUpdate;
 	};
 
@@ -169,7 +183,7 @@ private://メンバ関数
 	/// <summary>
 	/// 生成
 	/// </summary>
-	void Initialize();
+	void Initialize(const int _createNum);
 
 	/// <summary>
 	/// //行列の変換
@@ -215,6 +229,14 @@ public:
 	void Update();
 
 	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="_motionBlend">blend用モデル</param>
+	/// <param name="_rate1">現在のモデルの比率</param>
+	/// <param name="_rate2">ブレンドするモデルの比率</param>
+	void Update(FbxModel* _motionBlend, const float _rate1, const float _rate2);
+
+	/// <summary>
 	/// 描画
 	/// </summary>
 	/// <param name="cmdList">描画コマンドリスト</param
@@ -241,64 +263,62 @@ public://メンバ変数
 
 	//モデル名
 	std::string name;
-	//テクスチャ情報
-	std::unique_ptr<Texture> texture = nullptr;
-	//定数バッファ
+	//テクスチャパス
+	std::map<std::string,std::unique_ptr<Texture>> texture;
+	//定数Texture
 	ComPtr<ID3D12Resource> constBuffSkin = nullptr;
-	//頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff = nullptr;
-	//頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView;
-	//インデックスバッファ
-	ComPtr<ID3D12Resource> indexBuff = nullptr;
-	//インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView;
 	//アニメーション可能か
 	bool isAnimation = false;
 	//スキニングを行うか
 	bool isSkinning = true;
+	//要素数
+	int elementsNum;
+	//motionblend用
+	std::vector<ConstBufferDataSkin> skinData;
 
 public:
 
-	/// <summary>
-	/// アンビエント影響度の取得
-	/// </summary>
-	/// <returns>アンビエント</returns>
-	XMFLOAT3& GetAmbient() { return data->material.ambient; }
+	XMMATRIX GetSkinData(const int _number, const int _bonesNumber) { return skinData[_number].bones[_bonesNumber]; }
 
-	/// <summary>
-	/// ディフューズ影響度の取得
-	/// </summary>
-	/// <returns>ディフューズ</returns>
-	XMFLOAT3& GetDiffuse() { return data->material.diffuse; }
+	///// <summary>
+	///// アンビエント影響度の取得
+	///// </summary>
+	///// <returns>アンビエント</returns>
+	//XMFLOAT3& GetAmbient() { return data->material.ambient; }
 
-	/// <summary>
-	/// アルファの取得
-	/// </summary>
-	/// <returns>アルファ</returns>
-	float& GetAlpha() { return data->material.alpha; }
+	///// <summary>
+	///// ディフューズ影響度の取得
+	///// </summary>
+	///// <returns>ディフューズ</returns>
+	//XMFLOAT3& GetDiffuse() { return data->material.diffuse; }
 
-	/// <summary>
-	/// ベースカラ―の取得
-	/// </summary>
-	/// <returns>ベースカラ―</returns>
-	XMFLOAT3& GetBaseColor() { return data->material.baseColor; }
+	///// <summary>
+	///// アルファの取得
+	///// </summary>
+	///// <returns>アルファ</returns>
+	//float& GetAlpha() { return data->material.alpha; }
 
-	/// <summary>
-	/// 金属度の取得
-	/// </summary>
-	/// <returns>金属度(0 or 1)</returns>
-	float& GetMetalness() { return data->material.metalness; }
+	///// <summary>
+	///// ベースカラ―の取得
+	///// </summary>
+	///// <returns>ベースカラ―</returns>
+	//XMFLOAT3& GetBaseColor() { return data->material.baseColor; }
 
-	/// <summary>
-	/// 鏡面反射度の取得
-	/// </summary>
-	/// <returns>鏡面反射度</returns>
-	float& GetSpecular() { return data->material.specular; }
+	///// <summary>
+	///// 金属度の取得
+	///// </summary>
+	///// <returns>金属度(0 or 1)</returns>
+	//float& GetMetalness() { return data->material.metalness; }
 
-	/// <summary>
-	/// 粗さの取得
-	/// </summary>
-	/// <returns>粗さ</returns>
-	float& GetRoughness() { return data->material.roughness; }
+	///// <summary>
+	///// 鏡面反射度の取得
+	///// </summary>
+	///// <returns>鏡面反射度</returns>
+	//float& GetSpecular() { return data->material.specular; }
+
+	///// <summary>
+	///// 粗さの取得
+	///// </summary>
+	///// <returns>粗さ</returns>
+	//float& GetRoughness() { return data->material.roughness; }
 };

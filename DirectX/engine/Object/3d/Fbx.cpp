@@ -54,18 +54,18 @@ std::unique_ptr<Fbx> Fbx::Create(FbxModel* model)
 		instance->SetModel(model);
 	}
 
-	//マテリアル情報の取得
-	instance->baseColor = model->GetBaseColor();
-	instance->metalness = model->GetMetalness();
-	instance->specular = model->GetSpecular();
-	instance->roughness = model->GetRoughness();
+	////マテリアル情報の取得
+	//instance->baseColor = model->GetBaseColor();
+	//instance->metalness = model->GetMetalness();
+	//instance->specular = model->GetSpecular();
+	//instance->roughness = model->GetRoughness();
 
 	instance->TransferMaterial();
 
 	return std::unique_ptr<Fbx>(instance);
 }
 
-void Fbx::Update()
+void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 {
 	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;
@@ -110,7 +110,11 @@ void Fbx::Update()
 		isTransferMaterial = false;
 	}
 
-	model->Update();
+	if (_motionBlendRate1 >= 2.0f) {
+		model->Update();
+	} else {
+		model->Update(motionBlendModel, _motionBlendRate1, _motionBlendRate2);
+	}
 }
 
 void Fbx::Draw(const DrawMode _drawMode)
@@ -123,8 +127,6 @@ void Fbx::Draw(const DrawMode _drawMode)
 	if (model == nullptr) {
 		return;
 	}
-
-	Update();
 
 	int modeNum = int(_drawMode);
 
@@ -148,13 +150,13 @@ void Fbx::TransferMaterial()
 	HRESULT result = constBuffB1->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result))
 	{
-		constMap->baseColor = baseColor;
-		constMap->ambient = model->GetAmbient();
-		constMap->diffuse = model->GetDiffuse();
-		constMap->metalness = metalness;
-		constMap->specular = specular;
-		constMap->roughness = roughness;
-		constMap->alpha = model->GetAlpha();
+		constMap->baseColor = { 1,1,1 };
+		constMap->ambient = { 0.5f ,0.5f ,0.5f };
+		constMap->diffuse = { 0.5f ,0.5f ,0.5f };
+		constMap->metalness = 0.5f;
+		constMap->specular = 0.5f;
+		constMap->roughness = 0.5f;
+		constMap->alpha = 1.0f;
 		constBuffB1->Unmap(0, nullptr);
 	}
 }

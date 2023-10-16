@@ -15,8 +15,10 @@ const std::string FbxModel::baseDirectory = "Resources/Fbx/";
 FbxModel::~FbxModel()
 {
 	constBuffSkin.Reset();
-	vertBuff.Reset();
-	indexBuff.Reset();
+	for (auto& i : data->buffData) {
+		i.vertBuff.Reset();
+		i.indexBuff.Reset();
+	}
 }
 
 void FbxModel::StaticInitialize(ID3D12Device* device)
@@ -56,7 +58,7 @@ void FbxModel::LoadMaterial(FbxNode* fbxNode)
 		if (material)
 		{
 			//マテリアル名
-			data->material.name = material->GetName();
+			data->buffData[elementsNum].material.name = material->GetName();
 
 			//ベースカラー
 			const FbxProperty propBaseColor = FbxSurfaceMaterialUtils::GetProperty("baseColor", material);
@@ -65,9 +67,9 @@ void FbxModel::LoadMaterial(FbxNode* fbxNode)
 				//プロパティ値読み取り
 				FbxDouble3 baseColor = propBaseColor.Get<FbxDouble3>();
 				//書き込み
-				data->material.baseColor.x = (float)baseColor.Buffer()[0];
-				data->material.baseColor.y = (float)baseColor.Buffer()[1];
-				data->material.baseColor.z = (float)baseColor.Buffer()[2];
+				data->buffData[elementsNum].material.baseColor.x = (float)baseColor.Buffer()[0];
+				data->buffData[elementsNum].material.baseColor.y = (float)baseColor.Buffer()[1];
+				data->buffData[elementsNum].material.baseColor.z = (float)baseColor.Buffer()[2];
 			}
 
 			//金属度
@@ -75,7 +77,7 @@ void FbxModel::LoadMaterial(FbxNode* fbxNode)
 			if (propMetalness.IsValid())
 			{
 				//書き込み
-				data->material.metalness = propMetalness.Get<float>();
+				data->buffData[elementsNum].material.metalness = propMetalness.Get<float>();
 			}
 
 			//鏡面反射度
@@ -83,7 +85,7 @@ void FbxModel::LoadMaterial(FbxNode* fbxNode)
 			if (propSpecular.IsValid())
 			{
 				//書き込み
-				data->material.specular = propSpecular.Get<float>();
+				data->buffData[elementsNum].material.specular = propSpecular.Get<float>();
 			}
 
 			//粗さ
@@ -91,7 +93,7 @@ void FbxModel::LoadMaterial(FbxNode* fbxNode)
 			if (propRoughness.IsValid())
 			{
 				//書き込み
-				data->material.roughness = propRoughness.Get<float>();
+				data->buffData[elementsNum].material.roughness = propRoughness.Get<float>();
 			}
 
 			//マテリアルデータ
@@ -101,15 +103,15 @@ void FbxModel::LoadMaterial(FbxNode* fbxNode)
 
 				//環境光係数
 				FbxPropertyT<FbxDouble3> ambient = lambert->Ambient;
-				data->material.ambient.x = (float)ambient.Get()[0];
-				data->material.ambient.y = (float)ambient.Get()[1];
-				data->material.ambient.z = (float)ambient.Get()[2];
+				data->buffData[elementsNum].material.ambient.x = (float)ambient.Get()[0];
+				data->buffData[elementsNum].material.ambient.y = (float)ambient.Get()[1];
+				data->buffData[elementsNum].material.ambient.z = (float)ambient.Get()[2];
 
 				//環境光係数
 				FbxPropertyT<FbxDouble3> diffuse = lambert->Diffuse;
-				data->material.diffuse.x = (float)diffuse.Get()[0];
-				data->material.diffuse.y = (float)diffuse.Get()[1];
-				data->material.diffuse.z = (float)diffuse.Get()[2];
+				data->buffData[elementsNum].material.diffuse.x = (float)diffuse.Get()[0];
+				data->buffData[elementsNum].material.diffuse.y = (float)diffuse.Get()[1];
+				data->buffData[elementsNum].material.diffuse.z = (float)diffuse.Get()[2];
 			}
 
 			//ディフューズテクスチャ
@@ -127,7 +129,11 @@ void FbxModel::LoadMaterial(FbxNode* fbxNode)
 					std::string fileName = ExtractFileName(path_str);
 
 					//テクスチャ読み込み
-					texture = Texture::Create(baseDirectory + name + '/' + fileName);
+					const std::string texName= baseDirectory + name + '/' + fileName;
+					if (!texture[texName]) {
+						texture[texName] = Texture::Create(texName);
+					}
+					data->buffData[elementsNum].texName = texName;
 					textureLoaded = true;
 				}
 			}
@@ -136,7 +142,7 @@ void FbxModel::LoadMaterial(FbxNode* fbxNode)
 		//textureが無い場合白にする
 		if (!textureLoaded)
 		{
-			texture = Texture::Create(defaultTexture);
+			data->buffData[elementsNum].texName = defaultTexture;
 		}
 	}
 }
@@ -157,6 +163,8 @@ void FbxModel::CollectMesh(FbxNode* fbxNode)
 
 	//スキニング情報の読み取り
 	CollectSkin(fbxMesh);
+
+	elementsNum++;
 }
 
 void FbxModel::CollectVertices(FbxMesh* fbxMesh)
@@ -168,14 +176,14 @@ void FbxModel::CollectVertices(FbxMesh* fbxMesh)
 	FbxVector4* vertex = fbxMesh->GetControlPoints();
 
 	//配列のサイズ変更
-	data->vertices.resize(controlPointCount);
+	data->buffData[elementsNum].vertices.resize(controlPointCount);
 
 	//頂点をコピー
 	for (int i = 0; i < controlPointCount; i++)
 	{
-		data->vertices[i].pos.x = (float)vertex[i][0];
-		data->vertices[i].pos.y = (float)vertex[i][1];
-		data->vertices[i].pos.z = (float)vertex[i][2];
+		data->buffData[elementsNum].vertices[i].pos.x = (float)vertex[i][0];
+		data->buffData[elementsNum].vertices[i].pos.y = (float)vertex[i][1];
+		data->buffData[elementsNum].vertices[i].pos.z = (float)vertex[i][2];
 	}
 }
 
@@ -210,9 +218,9 @@ void FbxModel::CollectMeshFaces(FbxMesh* fbxMesh)
 			//法線読み込み
 			if (fbxMesh->GetPolygonVertexNormal(i, j, normal))
 			{
-				data->vertices[index].normal.x = (float)normal[0];
-				data->vertices[index].normal.y = (float)normal[1];
-				data->vertices[index].normal.z = (float)normal[2];
+				data->buffData[elementsNum].vertices[index].normal.x = (float)normal[0];
+				data->buffData[elementsNum].vertices[index].normal.y = (float)normal[1];
+				data->buffData[elementsNum].vertices[index].normal.z = (float)normal[2];
 			}
 
 			//テクスチャuv読み込み
@@ -223,28 +231,28 @@ void FbxModel::CollectMeshFaces(FbxMesh* fbxMesh)
 
 				if (fbxMesh->GetPolygonVertexUV(i, j, uvNames[0], uvs, LUnmappedUV))
 				{
-					data->vertices[index].uv.x = (float)uvs[0];
-					data->vertices[index].uv.y = (float)uvs[1];
+					data->buffData[elementsNum].vertices[index].uv.x = (float)uvs[0];
+					data->buffData[elementsNum].vertices[index].uv.y = 1 - (float)uvs[1];
 				}
 			}
 
 			//3頂点までのインデックス追加
 			if (j < 3)
 			{
-				data->indices.push_back(index);
+				data->buffData[elementsNum].indices.push_back(index);
 			}
 			//4頂点目がある場合
 			else
 			{
 				//仮格納
-				int index2 = data->indices[data->indices.size() - 1];
+				int index2 = data->buffData[elementsNum].indices[data->buffData[elementsNum].indices.size() - 1];
 				int index3 = index;
-				int index0 = data->indices[data->indices.size() - 3];
+				int index0 = data->buffData[elementsNum].indices[data->buffData[elementsNum].indices.size() - 3];
 
 				//本格納
-				data->indices.push_back(index2);
-				data->indices.push_back(index3);
-				data->indices.push_back(index0);
+				data->buffData[elementsNum].indices.push_back(index2);
+				data->buffData[elementsNum].indices.push_back(index3);
+				data->buffData[elementsNum].indices.push_back(index0);
 			}
 		}
 	}
@@ -264,7 +272,7 @@ void FbxModel::CollectSkin(FbxMesh* fbxMesh)
 	}
 
 	//ボーン配列の参照
-	std::vector<Bone>& bones = data->bones;
+	std::vector<Bone>& bones = data->buffData[elementsNum].bones;
 
 	//ボーンの数
 	int clusterCount = fbxSkin->GetClusterCount();
@@ -308,7 +316,7 @@ void FbxModel::CollectSkin(FbxMesh* fbxMesh)
 	};
 
 	//保存用配列
-	std::vector<std::list<WeightSet>> weightLists(data->vertices.size());
+	std::vector<std::list<WeightSet>> weightLists(data->buffData[elementsNum].vertices.size());
 
 	//全てのボーンについて
 	for (int i = 0; i < clusterCount; i++)
@@ -336,7 +344,7 @@ void FbxModel::CollectSkin(FbxMesh* fbxMesh)
 	}
 
 	//頂点配列書き換え用の参照
-	auto& vertices = data->vertices;
+	auto& vertices = data->buffData[elementsNum].vertices;
 
 	//各頂点について処理
 	for (int i = 0; i < vertices.size(); i++)
@@ -429,7 +437,7 @@ void FbxModel::LoadNode(FbxNode* fbxNode, Node* parent)
 		{
 			//仮変数に入れたものをコンテナの一番後ろにセット
 			data->meshNode = &virtualNode;
-
+			data->buffData.emplace_back();
 			CollectMesh(fbxNode);
 		}
 	}
@@ -445,6 +453,10 @@ void FbxModel::LoadAnimation(FbxScene* fbxScene)
 {
 	//0番目のアニメーション取得
 	FbxAnimStack* animstick = fbxScene->GetSrcObject<FbxAnimStack>(0);
+
+	//アニメーションが無ければスキップ
+	if (!animstick) { return; }
+
 	//アニメーションの名前取得
 	const char* anumstackkname = animstick->GetName();
 	//アニメーションの時間情報
@@ -465,6 +477,8 @@ void FbxModel::LoadAnimation(FbxScene* fbxScene)
 
 void FbxModel::LoadFbx(const std::string modelName)
 {
+	elementsNum = 0;
+
 	//名前の登録
 	name = modelName;
 	// モデルと同じ名前のフォルダから読み込む
@@ -496,14 +510,19 @@ void FbxModel::LoadFbx(const std::string modelName)
 	LoadAnimation(fbxScene);
 
 	data->fbxUpdate.fbxScene = fbxScene;
+
+	texture[defaultTexture] = Texture::Create(defaultTexture);
+
+	//モーションブレンド用の配列
+	skinData.resize(data->buffData.size());
 }
 
-void FbxModel::Initialize()
+void FbxModel::Initialize(const int _createNum)
 {
 	HRESULT result = S_FALSE;
 
-	UINT sizeVB = static_cast<UINT>(sizeof(Vertex) * data->vertices.size());
-	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * data->indices.size());
+	UINT sizeVB = static_cast<UINT>(sizeof(Vertex) * data->buffData[_createNum].vertices.size());
+	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * data->buffData[_createNum].indices.size());
 
 	//頂点バッファ生成
 	result = device->CreateCommittedResource(
@@ -512,7 +531,7 @@ void FbxModel::Initialize()
 		&CD3DX12_RESOURCE_DESC::Buffer(sizeVB),
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&vertBuff));
+		IID_PPV_ARGS(&data->buffData[_createNum].vertBuff));
 	assert(SUCCEEDED(result));
 
 	//インデックスバッファ生成
@@ -522,30 +541,30 @@ void FbxModel::Initialize()
 		&CD3DX12_RESOURCE_DESC::Buffer(sizeIB), // リソース設定
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&indexBuff));
+		IID_PPV_ARGS(&data->buffData[_createNum].indexBuff));
 	assert(SUCCEEDED(result));
 
 	//頂点バッファへのデータ転送
 	Vertex* vertMap = nullptr;
-	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
-	std::copy(data->vertices.begin(), data->vertices.end(), vertMap);
-	vertBuff->Unmap(0, nullptr);
+	result = data->buffData[_createNum].vertBuff->Map(0, nullptr, (void**)&vertMap);
+	std::copy(data->buffData[_createNum].vertices.begin(), data->buffData[_createNum].vertices.end(), vertMap);
+	data->buffData[_createNum].vertBuff->Unmap(0, nullptr);
 
 	//インデックスバッファへのデータ転送
 	unsigned short* indexMap = nullptr;
-	result = indexBuff->Map(0, nullptr, (void**)&indexMap);
-	std::copy(data->indices.begin(), data->indices.end(), indexMap);
-	indexBuff->Unmap(0, nullptr);
+	result = data->buffData[_createNum].indexBuff->Map(0, nullptr, (void**)&indexMap);
+	std::copy(data->buffData[_createNum].indices.begin(), data->buffData[_createNum].indices.end(), indexMap);
+	data->buffData[_createNum].indexBuff->Unmap(0, nullptr);
 
 	//頂点バッファビューの生成
-	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-	vbView.SizeInBytes = sizeVB;
-	vbView.StrideInBytes = sizeof(data->vertices[0]);
+	data->buffData[_createNum].vbView.BufferLocation = data->buffData[_createNum].vertBuff->GetGPUVirtualAddress();
+	data->buffData[_createNum].vbView.SizeInBytes = sizeVB;
+	data->buffData[_createNum].vbView.StrideInBytes = sizeof(data->buffData[_createNum].vertices[0]);
 
 	//インデックスバッファビューの作成
-	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
-	ibView.Format = DXGI_FORMAT_R16_UINT;
-	ibView.SizeInBytes = sizeIB;
+	data->buffData[_createNum].ibView.BufferLocation = data->buffData[_createNum].indexBuff->GetGPUVirtualAddress();
+	data->buffData[_createNum].ibView.Format = DXGI_FORMAT_R16_UINT;
+	data->buffData[_createNum].ibView.SizeInBytes = sizeIB;
 
 	//定数バッファSkinの生成
 	result = device->CreateCommittedResource(
@@ -569,7 +588,10 @@ std::unique_ptr<FbxModel> FbxModel::Create(const std::string fileName)
 	instance->LoadFbx(fileName);
 
 	//Fbxの初期設定
-	instance->Initialize();
+	const int nodeNum = int(instance->data->buffData.size());
+	for (int i = 0; i < nodeNum; i++) {
+		instance->Initialize(i);
+	}
 
 	return std::unique_ptr<FbxModel>(instance);
 }
@@ -589,51 +611,114 @@ void FbxModel::Update()
 		}
 	}
 
-	//ボーン配列取得
-	std::vector<Bone>& bones = data->bones;
-
-	// 定数バッファSkinへデータ転送
-	ConstBufferDataSkin* constMapSkin = nullptr;
-	result = constBuffSkin->Map(0, nullptr, (void**)&constMapSkin);
-	if (isSkinning)
+	for (int buffNum = 0; buffNum < data->buffData.size(); buffNum++)
 	{
-		for (int i = 0; i < bones.size(); i++)
+		//ボーン配列取得
+		std::vector<Bone>& bones = data->buffData[buffNum].bones;
+
+		// 定数バッファSkinへデータ転送
+		ConstBufferDataSkin* constMapSkin = nullptr;
+		result = constBuffSkin->Map(0, nullptr, (void**)&constMapSkin);
+		if (isSkinning)
 		{
-			//今の姿勢行列
-			XMMATRIX matCurrentPose;
-			//現在の姿勢を取得
-			FbxAMatrix fbxCurrentPose =
-				bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(data->fbxUpdate.nowTime);
-			//XMMATRIXに変換
-			ConvertMatrixFormFbx(&matCurrentPose, fbxCurrentPose);
-			//合成してスキニング行列に保存
-			constMapSkin->bones[i] = bones[i].invInitialPose * matCurrentPose;
+			for (int i = 0; i < bones.size(); i++)
+			{
+				//今の姿勢行列
+				XMMATRIX matCurrentPose;
+				//現在の姿勢を取得
+				FbxAMatrix fbxCurrentPose =
+					bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(data->fbxUpdate.nowTime);
+				//XMMATRIXに変換
+				ConvertMatrixFormFbx(&matCurrentPose, fbxCurrentPose);
+				//合成してスキニング行列に保存
+				skinData[buffNum].bones[i] = bones[i].invInitialPose * matCurrentPose;
+				constMapSkin->bones[i] = skinData[buffNum].bones[i];
+			}
+		}
+		//スキニングをしない場合初期化値を送る
+		else
+		{
+			skinData[buffNum].bones[0] = XMMatrixIdentity();
+			constMapSkin->bones[0] = skinData[buffNum].bones[0];
+		}
+		constBuffSkin->Unmap(0, nullptr);
+	}
+}
+
+void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _rate2)
+{
+	HRESULT result;
+
+	_motionBlend->Update();
+
+	//アニメーション
+	if (data->fbxUpdate.isAnimation && isAnimation)
+	{
+		data->fbxUpdate.nowTime += frameTime;
+		//最後まで行ったら先頭に戻す
+		if (data->fbxUpdate.nowTime > data->fbxUpdate.stopTime)
+		{
+			data->fbxUpdate.nowTime = data->fbxUpdate.startTime;
 		}
 	}
-	//スキニングをしない場合初期化値を送る
-	else
+
+	for (int buffNum = 0; buffNum < data->buffData.size(); buffNum++)
 	{
-		constMapSkin->bones[0] = XMMatrixIdentity();
+		//ボーン配列取得
+		std::vector<Bone>& bones = data->buffData[buffNum].bones;
+
+		// 定数バッファSkinへデータ転送
+		ConstBufferDataSkin* constMapSkin = nullptr;
+		result = constBuffSkin->Map(0, nullptr, (void**)&constMapSkin);
+		if (isSkinning)
+		{
+			for (int i = 0; i < bones.size(); i++)
+			{
+				//今の姿勢行列
+				XMMATRIX matCurrentPose;
+				//現在の姿勢を取得
+				FbxAMatrix fbxCurrentPose =
+					bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(data->fbxUpdate.nowTime);
+				//XMMATRIXに変換
+				ConvertMatrixFormFbx(&matCurrentPose, fbxCurrentPose);
+				//合成してスキニング行列に保存
+				XMMATRIX motionBlendSkin = _motionBlend->GetSkinData(buffNum, i);
+				XMMATRIX anime1= bones[i].invInitialPose * matCurrentPose;
+				skinData[buffNum].bones[i] = anime1 * _rate1 + motionBlendSkin * _rate2;
+				constMapSkin->bones[i] = skinData[buffNum].bones[i];
+			}
+		}
+		//スキニングをしない場合初期化値を送る
+		else
+		{
+			skinData[buffNum].bones[0] = XMMatrixIdentity();
+			constMapSkin->bones[0] = skinData[buffNum].bones[0];
+		}
+		constBuffSkin->Unmap(0, nullptr);
 	}
-	constBuffSkin->Unmap(0, nullptr);
 }
 
 void FbxModel::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	//頂点バッファの設定
-	cmdList->IASetIndexBuffer(&ibView);
+	int num = 0;
+	for (auto& i : data->buffData) {
+		//頂点バッファの設定
+		cmdList->IASetIndexBuffer(&i.ibView);
 
-	//頂点バッファをセット
-	cmdList->IASetVertexBuffers(0, 1, &vbView);
+		//頂点バッファをセット
+		cmdList->IASetVertexBuffers(0, 1, &i.vbView);
 
-	//定数バッファをセット
-	cmdList->SetGraphicsRootConstantBufferView(3, constBuffSkin->GetGPUVirtualAddress());
+		//定数バッファをセット
+		cmdList->SetGraphicsRootConstantBufferView(3, constBuffSkin->GetGPUVirtualAddress());
 
-	//シェーダーリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(4, texture->descriptor->gpu);
+		//シェーダーリソースビューをセット
+		cmdList->SetGraphicsRootDescriptorTable(4, texture[i.texName]->descriptor->gpu);
 
-	//描画コマンド
-	cmdList->DrawIndexedInstanced((UINT)data->indices.size(), 1, 0, 0, 0);
+		//描画コマンド
+		cmdList->DrawIndexedInstanced((UINT)i.indices.size(), 1, 0, 0, 0);
+
+		num++;
+	}
 }
 
 void FbxModel::Finalize()
