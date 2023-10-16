@@ -19,7 +19,7 @@ void Scene1::Initialize()
 	Sprite::LoadTexture("gauge", "Resources/SpriteTexture/gauge.png");
 
 	//ínå`ê∂ê¨
-	//field = std::make_unique<Field>();
+	field = std::make_unique<Field>();
 
 	player = std::make_unique<Player>();
 
@@ -42,7 +42,7 @@ void Scene1::Initialize()
 	sprite->SetTexSize({ 1059.0f,1500.0f });
 	sprite->Update();*/
 
-	//boss = std::make_unique<Boss1>();
+	boss = std::make_unique<Boss1>();
 
 	ParticleManager::SetCamera(camera.get());
 
@@ -76,23 +76,24 @@ void Scene1::Update()
 		camera->Update();
 		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
 			isNormalCamera = !isNormalCamera;
-			Base3D::SetCamera(lightCamera.get());
+			Base3D::SetCamera(debugCamera.get());
 		}
 	}
 	else {
-		lightCamera->Update();
-		Base3D::SetCamera(lightCamera.get());
+		debugCamera->Update();
+		Base3D::SetCamera(debugCamera.get());
 		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
 			isNormalCamera = !isNormalCamera;
 			Base3D::SetCamera(camera.get());
 		}
-	}*/camera->Update();
+	}
+	camera->Update();
 	lightCamera->Update();
 }
 
 void Scene1::Draw(const int _cameraNum)
 {
-	//field->Draw();
+	field->Draw();
 
 	//gobject->ColliderDraw();
 
