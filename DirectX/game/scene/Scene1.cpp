@@ -19,7 +19,7 @@ void Scene1::Initialize()
 	Sprite::LoadTexture("gauge", "Resources/SpriteTexture/gauge.png");
 
 	//地形生成
-	field = std::make_unique<Field>();
+	//field = std::make_unique<Field>();
 
 	player = std::make_unique<Player>();
 
@@ -35,23 +35,36 @@ void Scene1::Initialize()
 	sprite->SetTexSize({ 1059.0f,1500.0f });
 	sprite->Update();*/
 
-	boss = std::make_unique<Boss1>();
+	//boss = std::make_unique<Boss1>();
 
 	ParticleManager::SetCamera(camera.get());
+
+	fbxModel1 = FbxModel::Create("uma_j");
+	fbxModel2 = FbxModel::Create("uma4");
+	fbxModel1->isAnimation = true;
+	fbxModel2->isAnimation = true;
+	//fbxModel->SetIsBoneDraw(true);
+	fbx = Fbx::Create(fbxModel1.get());
+	fbx->SetMotionBlendModel(fbxModel2.get());
+	fbx->SetScale({ 10.0f,10.0f ,10.0f });
+	fbx->SetLight(true);
+	fbx->SetAnimation(true);
+
+	isBlend = false;
 }
 
 void Scene1::Update()
 {
 	DirectInput* input = DirectInput::GetInstance();
 
-	player->Update();
-	field->Update();
-	boss->Update();
+	//player->Update();
+	//field->Update();
+	//boss->Update();
+	fbx->Update(rate);
 
-	CollisionCheck();
+	//CollisionCheck();
 
 	//カメラ更新
-	static bool isNormalCamera = true;
 	if (isNormalCamera) {
 		camera->Update();
 		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
@@ -71,13 +84,15 @@ void Scene1::Update()
 
 void Scene1::Draw(const int _cameraNum)
 {
-	field->Draw();
+	//field->Draw();
 
 	//gobject->ColliderDraw();
 
-	player->Draw();
+	//player->Draw();
 
-	boss->Draw();
+	//boss->Draw();
+
+	fbx->Draw();
 }
 
 void Scene1::NonPostEffectDraw(const int _cameraNum)
@@ -96,18 +111,25 @@ void Scene1::Finalize()
 void Scene1::ImguiDraw()
 {
 	Vector3 ppos = player->GetPosition();
+	XMFLOAT3 cameraPos = {};
+	XMFLOAT3 cameraTarget = {};
+	if (isNormalCamera) {
+		cameraPos = camera->GetEye();
+		cameraTarget = camera->GetTarget();
+	} else {
+		cameraPos = debugCamera->GetEye();
+		cameraTarget = debugCamera->GetTarget();
+	}
 
 	ImGui::Begin("debug imgui");
 	ImGui::SetWindowSize(ImVec2(300, 300), ImGuiCond_::ImGuiCond_FirstUseEver);
-
-	const float cameraRota = camera->GetCameraRota().x;
-
-	ImGui::Text("%f", cameraRota);
-	ImGui::Text("%f : %f", sinf(XMConvertToRadians(cameraRota)), cosf(XMConvertToRadians(cameraRota)));
-	ImGui::Text("%f : %f", sinf(XMConvertToRadians(cameraRota + 90)), cosf(XMConvertToRadians(cameraRota + 90)));
-	ImGui::Text("%f : %f : %f", ppos.x, ppos.y, ppos.z);
-
+	
+	ImGui::Text("Camera Pos    [ %f : %f : %f ]", cameraPos.x, cameraPos.y, cameraPos.z);
+	ImGui::Text("Camera Target [ %f : %f : %f ]", cameraTarget.x, cameraTarget.y, cameraTarget.z);
+	ImGui::Text("Player Pos    [ %f : %f : %f ]", ppos.x, ppos.y, ppos.z);
 	ImGui::Text("%d : %d ", player->GetJumpMaxNum(), player->GetJumpCount());
+	ImGui::Checkbox("motion blend", &isBlend);
+	ImGui::SliderFloat("blend rate", &rate, 0.0f, 1.0f);
 
 	ImGui::End();
 }

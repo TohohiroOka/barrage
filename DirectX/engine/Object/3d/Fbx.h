@@ -62,12 +62,6 @@ public://静的メンバ関数
 	~Fbx();
 
 	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name="device">デバイス</param>
-	static void StaticInitialize(ID3D12Device* device);
-
-	/// <summary>
 	/// インスタンスの生成
 	/// </summary>
 	/// <param name="model">モデル</param
@@ -83,7 +77,9 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	/// <param name="_motionBlendRate1">現在のモデルの比率</param>
+	/// <param name="_motionBlendRate2">ブレンドするモデルの比率</param>
+	void Update(const float _motionBlendRate1 = 2.0f, const float _motionBlendRate2 = 2.0f);
 
 	/// <summary>
 	/// 描画
@@ -102,6 +98,8 @@ private://メンバ変数
 
 	//モデル
 	FbxModel* model = nullptr;
+	//motionblend用
+	FbxModel* motionBlendModel = nullptr;
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBuffB0;
 	// 定数バッファ
@@ -126,6 +124,7 @@ public:
 	float GetSpecular() { return specular; }
 	float GetRoughness() { return roughness; }
 	void SetModel(FbxModel* model) { this->model = model; }
+	void SetMotionBlendModel(FbxModel* _model) { motionBlendModel = _model; }
 	void SetAnimation(bool isAnimation) { model->isAnimation = isAnimation; }
 	void SetBaseColor(const XMFLOAT3& baseColor) { 
 		this->baseColor = baseColor;
