@@ -16,6 +16,8 @@ public:
 
 	virtual void Draw() = 0;
 
+	virtual void FrameReset() = 0;
+
 	virtual void SetAction() = 0;
 
 	virtual void Damage(int damageNum);
@@ -25,9 +27,13 @@ public:
 	Object3d* GetCenter() { return center.get(); }
 	void SetMoveVec(const Vector3& _moveVec) { moveVec = _moveVec; }
 	BaseAction* GetBaseAction() { return action.get(); }
+	void SetTargetPos(const Vector3& _targetPos) { targetPos = _targetPos; }
+	Vector3 GetTargetPos() { return targetPos; }
 
 protected:
 
+	//ターゲット座標
+	Vector3 targetPos;
 	//中心点（描画無し）
 	std::unique_ptr<Object3d> center;
 

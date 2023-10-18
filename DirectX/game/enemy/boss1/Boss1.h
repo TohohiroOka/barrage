@@ -9,6 +9,7 @@ private:
 	enum class Action {
 		move1,
 		nearAttack,
+		bullet1,
 		size,
 	};
 
@@ -20,9 +21,9 @@ public:
 
 	void Draw() override;
 
+	void FrameReset() override;
+
 	void SetAction() override;
-
-
 
 private:
 	std::unique_ptr<Model> model;

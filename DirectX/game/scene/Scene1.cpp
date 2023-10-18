@@ -16,6 +16,7 @@ const std::array<XMFLOAT4, 2> COLOR = { XMFLOAT4{ 0.0f,0.0f,0.8f,1.0f } ,{ 0.8f,
 
 void Scene1::Initialize()
 {
+	worldTimer = 0;
 	Sprite::LoadTexture("gauge", "Resources/SpriteTexture/gauge.png");
 
 	//地形生成
@@ -64,8 +65,17 @@ void Scene1::Update()
 {
 	DirectInput* input = DirectInput::GetInstance();
 
+	worldTimer++;
+	//セーフティ
+	if (worldTimer > 1000) {
+		worldTimer = 0;
+	}
+
 	player->Update();
 	field->Update();
+	if (int(worldTimer) % 5 == 0) {
+		boss->SetTargetPos(player->GetPosition());
+	}
 	boss->Update();
 	ground->Update();
 
@@ -149,6 +159,7 @@ void Scene1::ImguiDraw()
 
 void Scene1::FrameReset()
 {
+	boss->FrameReset();
 }
 
 void Scene1::CollisionCheck()

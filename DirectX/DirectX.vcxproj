@@ -159,7 +159,9 @@
     <ClCompile Include="game\camera\GameCamera.cpp" />
     <ClCompile Include="game\enemy\BaseAction.cpp" />
     <ClCompile Include="game\enemy\BaseBoss.cpp" />
+    <ClCompile Include="game\enemy\BaseBullet.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1.cpp" />
+    <ClCompile Include="game\enemy\boss1\Boss1Bullet1.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1Move1.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1NearAttack1.cpp" />
     <ClCompile Include="game\enemy\PredictionLine.cpp" />
@@ -421,7 +423,9 @@
     <ClInclude Include="game\camera\GameCamera.h" />
     <ClInclude Include="game\enemy\BaseAction.h" />
     <ClInclude Include="game\enemy\BaseBoss.h" />
+    <ClInclude Include="game\enemy\BaseBullet.h" />
     <ClInclude Include="game\enemy\boss1\Boss1.h" />
+    <ClInclude Include="game\enemy\boss1\Boss1Bullet1.h" />
     <ClInclude Include="game\enemy\boss1\Boss1Move1.h" />
     <ClInclude Include="game\enemy\boss1\Boss1NearAttack1.h" />
     <ClInclude Include="game\enemy\PredictionLine.h" />

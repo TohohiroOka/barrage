@@ -67,6 +67,7 @@ public:
 
 private:
 	bool isNormalCamera = false;
+	float worldTimer;
 
 	std::unique_ptr<DebugCamera> debugCamera;
 	std::unique_ptr<GameCamera> camera;

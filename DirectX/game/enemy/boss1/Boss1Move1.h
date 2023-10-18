@@ -13,7 +13,9 @@ public:
 
 	void Update() override;
 
-	void Draw() {};
+	void Draw() override {};
+
+	void FrameReset() override {};
 
 	void GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info) override {};
 

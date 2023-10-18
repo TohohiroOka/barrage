@@ -3,6 +3,7 @@
 
 #include "Boss1NearAttack1.h"
 #include "Boss1Move1.h"
+#include "Boss1Bullet1.h"
 
 Boss1::Boss1()
 {
@@ -19,7 +20,7 @@ Boss1::Boss1()
 
 	BaseAction::SetBossPtr(this);
 
-	action = std::make_unique<Boss1NearAttack1>();
+	action = std::make_unique<Boss1Bullet1>();
 }
 
 void Boss1::Update()
@@ -44,6 +45,11 @@ void Boss1::Draw()
 	hpGauge->Draw();
 }
 
+void Boss1::FrameReset()
+{
+	action->FrameReset();
+}
+
 void Boss1::SetAction()
 {
 	//èâä˙âª
@@ -60,5 +66,7 @@ void Boss1::SetAction()
 	}
 	else if (actionNumber == int(Action::nearAttack)) {
 		action = std::make_unique<Boss1NearAttack1>();
+	} else if (actionNumber == int(Action::bullet1)) {
+		action = std::make_unique<Boss1Bullet1>();
 	}
 }

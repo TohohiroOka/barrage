@@ -36,7 +36,9 @@ public:
 
 	void Draw() override;
 
-	void Boss1NearAttack1::GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info);
+	void FrameReset() override {};
+
+	void GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info) override;
 
 private:
 

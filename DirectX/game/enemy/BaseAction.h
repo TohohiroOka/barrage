@@ -18,6 +18,8 @@ public:
 
 	virtual void Draw() = 0;
 
+	virtual void FrameReset() = 0;
+
 	bool End() { return isEnd; }
 
 	static void SetBossPtr(BaseBoss* _boss) { boss = _boss; }
