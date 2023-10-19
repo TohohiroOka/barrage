@@ -29,6 +29,8 @@ private:
 	void Move();
 	void Dash();
 	void Fall();
+	void AvoidStart();
+	void Avoid();
 	void Jump();
 	void BlinkStart();
 	void Blink();
@@ -56,6 +58,11 @@ private: //静的メンバ変数
 	static const float moveSpeedMax;
 	//最大ダッシュスピード
 	static const float dashSpeedMax;
+	//各行動で使用する持久力
+	static const int dashUseEndurance = 1;
+	static const int avoidUseEndurance = 10;
+	static const int jumpUseEndurance = 30;
+	static const int blinkUseEndurance = 30;
 
 private: //メンバ変数
 	std::unique_ptr<Model> model = nullptr;
@@ -67,7 +74,7 @@ private: //メンバ変数
 	Vector3 moveVec;
 	Vector3 rota;
 
-	bool onGround = true;
+	bool onGround = false;
 	// 落下ベクトル
 	DirectX::XMVECTOR fallV;
 
@@ -76,9 +83,23 @@ private: //メンバ変数
 
 	//移動スピード
 	float moveSpeed = 0.0f;
+	//移動入力があるか
+	bool isMoveKey = false;
+	bool isMovePad = false;
 
 	//ダッシュしているか
 	bool isDash = false;
+	bool isDashStart = true;
+
+	//回避中か
+	bool isAvoid = false;
+	//回避ベクトル
+	Vector3 avoidVec;
+	//回避用タイマー
+	int avoidTimer = 0;
+	//回避開始可能か
+	bool isAvoidStart = true;
+
 	//ジャンプ可能回数
 	int jumpMaxNum;
 	//ジャンプ回数カウント

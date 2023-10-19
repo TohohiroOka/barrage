@@ -79,7 +79,7 @@ void Scene1::Update()
 	boss->Update();
 	ground->Update();
 
-	//CollisionCheck();
+	CollisionCheck();
 
 	//ƒJƒƒ‰XV
 	if (isNormalCamera) {
@@ -193,11 +193,11 @@ void Scene1::CollisionCheck()
 			if (player->GetAttackAction()->GetisCollisionValid()) {
 				Sphere enemySphere;
 				enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
-				enemySphere.radius = boss->GetCenter()->GetScale().x;
+				enemySphere.radius = boss->GetCenter()->GetScale().x * 2;
 
 				Sphere attackSphere;
 				attackSphere.center = player->GetAttackAction()->GetAttackCollisionData().center;
-				attackSphere.radius = player->GetAttackAction()->GetAttackCollisionData().radius;
+				attackSphere.radius = player->GetAttackAction()->GetAttackCollisionData().radius * 2;
 				if (Collision::CheckSphere2Sphere(enemySphere, attackSphere)) {
 					boss->Damage(player->GetAttackAction()->GetAttackCollisionData().power);
 				}

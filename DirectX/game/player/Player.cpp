@@ -43,23 +43,9 @@ Player::Player()
 
 void Player::Update()
 {
-	DirectInput* input = DirectInput::GetInstance();
-	if (input->TriggerKey(DIK_1)) {
-		Damage(20, {});
-	}
-	if (input->PushKey(DIK_2)) {
-		endurance--;
-		endurance = max(endurance, 0);
-		enduranceGauge->ChangeLength(endurance, false);
-	}
-	if (input->TriggerKey(DIK_3)) {
-		endurance -= 20;
-		endurance = max(endurance, 0);
-		enduranceGauge->ChangeLength(endurance, true);
-	}
-	if (input->TriggerKey(DIK_4)) {
-		Heal(30);
-	}
+	//毎フレーム戻しておく
+	isMoveKey = false;
+	isMovePad = false;
 
 	if (isKnockback) {
 		Knockback();
@@ -67,13 +53,14 @@ void Player::Update()
 	else if (isBlink) {
 		Blink();
 	}
+	else if (isAvoid) {
+		Avoid();
+	}
 	else {
 		Move();
-
 		Jump();
-
 		Attack();
-
+		AvoidStart();
 		BlinkStart();
 	}
 
@@ -160,12 +147,20 @@ void Player::Move()
 {
 	DirectInput* input = DirectInput::GetInstance();
 
+	//移動キー入力を判定
+	isMoveKey = (input->PushKey(DIK_D) || input->PushKey(DIK_A) || input->PushKey(DIK_W) || input->PushKey(DIK_S));
+
+	//ある程度スティックを傾けないと移動パッド入力判定しない
+	const float moveStickIncline = 0.3f;
+	const XMFLOAT2 padIncline = XInputManager::GetInstance()->GetPadLStickIncline();
+	isMovePad = (fabsf(padIncline.x) >= moveStickIncline || fabsf(padIncline.y) >= moveStickIncline);
+
 	//ダッシュ
 	Dash();
 
 	//キー入力
 	{
-		if (input->PushKey(DIK_D) || input->PushKey(DIK_A) || input->PushKey(DIK_W) || input->PushKey(DIK_S)) {
+		if (isMoveKey) {
 
 			Vector3 moveKeyVec{};
 			if (input->PushKey(DIK_D)) {
@@ -198,13 +193,7 @@ void Player::Move()
 
 	//コントローラー入力
 	{
-		//ある程度スティックを傾けないと判定しない
-		const float moveStickIncline = 0.3f;
-		const XMFLOAT2 padIncline = XInputManager::GetInstance()->GetPadLStickIncline();
-		if (!(fabsf(padIncline.x) >= moveStickIncline ||
-			fabsf(padIncline.y) >= moveStickIncline)) {
-			return;
-		}
+		if (!isMovePad) { return; }
 
 		//パッドスティックの方向をベクトル化
 		Vector3 moveStickVec{};
@@ -234,20 +223,26 @@ void Player::Dash()
 	if (!isDash) {
 		moveSpeed = moveSpeedMax;
 
-		//地面にいてダッシュ入力があった場合にダッシュ状態にする
-		if ((DirectInput::GetInstance()->TriggerKey(DIK_Z) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B)) && endurance > 0) {
+		//ダッシュ開始可能で地面接地しているかつ、ダッシュ入力があって移動した場合にダッシュ状態にする
+		if (isDashStart && (isMoveKey || isMovePad) && (DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)) && endurance > 0) {
 			isDash = true;
+			isDashStart = false;
+		}
+		
+		//ダッシュ開始不能時は、ダッシュボタン入力を一度離すことで可能になる
+		if ((!isDashStart) && (!(DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)))) {
+			isDashStart = true;
 		}
 	}
 	else {
 		moveSpeed = dashSpeedMax;
 
-		//入力中はダッシュ状態を維持
-		if ((DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)) && endurance > 0) {
-			UseEndurance(1, 1, false); //持久力を使用
+		//移動 & 入力中はダッシュ状態を維持
+		if ((isMoveKey || isMovePad) && (DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)) && endurance > 0) {
+			UseEndurance(dashUseEndurance, 1, false); //持久力を使用
 		}
 		//入力が途切れたときにダッシュを終了する
-		else if (onGround) {
+		else {
 			isDash = false;
 		}
 	}
@@ -267,15 +262,54 @@ void Player::Fall()
 	moveVec.y = fallV.m128_f32[1];
 }
 
+void Player::AvoidStart()
+{
+	//地面にいない場合は抜ける
+	if (!onGround) { return; }
+	//移動中に回避入力がなければ抜ける
+	if (!((isMoveKey || isMovePad) && (DirectInput::GetInstance()->TriggerKey(DIK_Z) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B)))) { return; }
+	//持久力が回避で使用する値以下なら抜ける	
+	if (endurance < avoidUseEndurance) { return; }
+	UseEndurance(avoidUseEndurance, 30, true); //持久力を使用
+
+	//回避するベクトルを求める(現在向いている方向)
+	const float rotaRadian = XMConvertToRadians(rota.y - 90);
+	avoidVec.x = cosf(rotaRadian);
+	avoidVec.z = -sinf(rotaRadian);
+
+	avoidTimer = 0;
+	isAvoid = true;
+	isDash = false;
+	isDashStart = true;
+}
+
+void Player::Avoid()
+{
+	//タイマー更新
+	const float avoidTime = 20;
+	avoidTimer++;
+	const float time = avoidTimer / avoidTime;
+
+	const float power = Easing::OutCirc(10, 1, time);
+
+	moveVec = avoidVec.normalize() * power;
+
+	rota.x = Easing::OutCubic(0, 360, time);
+	object->SetRotation(rota);
+
+	//タイマーが指定した時間になったら回避終了
+	if (avoidTimer >= avoidTime) {
+		isAvoid = false;
+	}
+}
+
 void Player::Jump()
 {
 	//ジャンプ回数が連続ジャンプ可能回数を超えていたら抜ける
 	if (jumpCount >= jumpMaxNum) { return; }
 	//ジャンプ入力がなければ抜ける
 	if (!(DirectInput::GetInstance()->TriggerKey(DIK_SPACE) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
-
 	//持久力がジャンプで使用する値以下なら抜ける
-	const int jumpUseEndurance = 30;
 	if (endurance < jumpUseEndurance) { return; }
 	UseEndurance(jumpUseEndurance, 30, true); //持久力を使用
 
@@ -293,8 +327,7 @@ void Player::BlinkStart()
 	if (!(jumpCount >= 1)) { return; }
 	//ブリンク入力がなければ抜ける
 	if (!(DirectInput::GetInstance()->TriggerKey(DIK_Z) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B))) { return; }
-	//持久力がブリンクで使用する値以下なら抜ける
-	const int blinkUseEndurance = 30;
+	//持久力がブリンクで使用する値以下なら抜ける	
 	if (endurance < blinkUseEndurance) { return; }
 	UseEndurance(blinkUseEndurance, 30, true); //持久力を使用
 

@@ -66,7 +66,7 @@ public:
 	void CollisionCheck();
 
 private:
-	bool isNormalCamera = false;
+	bool isNormalCamera = true;
 	float worldTimer;
 
 	std::unique_ptr<DebugCamera> debugCamera;
