@@ -4,6 +4,7 @@
 #include "Boss1NearAttack1.h"
 #include "Boss1Move1.h"
 #include "Boss1Bullet1.h"
+#include "Boss1Bullet2.h"
 
 Boss1::Boss1()
 {
@@ -20,7 +21,7 @@ Boss1::Boss1()
 
 	BaseAction::SetBossPtr(this);
 
-	action = std::make_unique<Boss1Bullet1>();
+	action = std::make_unique<Boss1Bullet2>();
 }
 
 void Boss1::Update()
@@ -63,10 +64,11 @@ void Boss1::SetAction()
 
 	if (actionNumber == int(Action::move1)) {
 		action = std::make_unique<Boss1Move1>(Boss1Move1({ 0.0f,0.0f,50.0f }));
-	}
-	else if (actionNumber == int(Action::nearAttack)) {
+	}else if (actionNumber == int(Action::nearAttack)) {
 		action = std::make_unique<Boss1NearAttack1>();
 	} else if (actionNumber == int(Action::bullet1)) {
 		action = std::make_unique<Boss1Bullet1>();
+	} else if (actionNumber == int(Action::bullet2)) {
+		action = std::make_unique<Boss1Bullet2>();
 	}
 }

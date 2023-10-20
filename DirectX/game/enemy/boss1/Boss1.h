@@ -10,6 +10,7 @@ private:
 		move1,
 		nearAttack,
 		bullet1,
+		bullet2,
 		size,
 	};
 

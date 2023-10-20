@@ -1,44 +1,32 @@
 #pragma once
+#include "BaseAction.h"
 #include "Object/3d/InstanceObject.h"
-#include "PredictionLine.h"
+#include "../game/enemy/PredictionLine.h"
 #include "Math/Vector3.h"
+#include <forward_list>
 
-/// <summary>
-/// 弾一個の情報
-/// </summary>
-class BaseBullet
+class BaseBullet : public BaseAction
 {
 public:
 
-	BaseBullet(const Vector3& _pos, const Vector3& _scale, const Vector3& _rota, const Vector3& _moveVec);
-	~BaseBullet() {};
-
-	void Update();
-
-	void Draw();
-
-	static void StaticDraw();
-
-	static void FrameReset();
-
-	static void Reset();
-
-	static void CreateInstance(Model* _model);
-
-	bool GetIsAlive() { return isAlive; }
-
-private:
+	virtual ~BaseBullet() {};
 	
-	static std::unique_ptr<InstanceObject> instanceObject;
+	virtual void Update() override;
 
-	static std::unique_ptr<PredictionLine> predictionLine;
+	void Draw() override;
 
-	bool isAlive;
-	Vector3 pos;
-	Vector3 scale;
-	Vector3 rota;
-	Vector3 moveVec;
+	void FrameReset() override;
 
-	//出現時間
+	virtual void GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info) override{};
+
+protected:
+	//弾描画用
+	std::unique_ptr<InstanceObject> instanceObject;
+	//弾道描画用
+	std::unique_ptr<PredictionLine> predictionLine;
+
+	//タイマー
 	float timer;
+	//モデル
+	std::unique_ptr<Model> model;
 };
