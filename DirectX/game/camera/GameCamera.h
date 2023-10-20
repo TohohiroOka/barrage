@@ -57,7 +57,12 @@ private: //メンバ関数
 	/// <summary>
 	/// 回転を更新
 	/// </summary>
-	void Rotate();
+	void UpdateRotate();
+
+	/// <summary>
+	/// ロックオン時の回転を更新
+	/// </summary>
+	void UpdateLockonRotate();
 
 	/// <summary>
 	/// 座標を更新
@@ -89,4 +94,8 @@ private: //メンバ変数
 	bool isLockon = false;
 	//ロックオンターゲットを検出するか
 	bool isLockonStart = false;
+	//ロックオン開始時にロックオン回転角にイージングする時間タイマー
+	int lockonChangeRotaTimer = 0;
+	//イージング用変数
+	Vector3 easeBeforeRota;
 };

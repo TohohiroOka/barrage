@@ -3,6 +3,7 @@
 #include "Input/XInputManager.h"
 #include "WindowApp.h"
 #include "GameHelper.h"
+#include "Math/Easing/Easing.h"
 
 using namespace DirectX;
 
@@ -55,6 +56,9 @@ void GameCamera::Lockon(Base3D* lockonTarget)
 
 	this->lockonTarget = lockonTarget;
 
+	easeBeforeRota = rotation;
+	lockonChangeRotaTimer = 0;
+	
 	isLockon = true;
 }
 
@@ -90,16 +94,15 @@ void GameCamera::UpdateEyeTarget()
 void GameCamera::UpdateTransform()
 {
 	if (!isLockon) {
-		Rotate();
+		UpdateRotate();
 	}
 	else {
-		//ロックオンしたターゲットの方向を向くようにする
-		rotation.y = -GameHelper::Instance()->GetAngle({ lockonTarget->GetPosition().x, lockonTarget->GetPosition().z }, { player->GetPosition().x, player->GetPosition().z }) - 90;
+		UpdateLockonRotate();
 	}
 	UpdatePosition();
 }
 
-void GameCamera::Rotate()
+void GameCamera::UpdateRotate()
 {
 	DirectInput* input = DirectInput::GetInstance();
 	//視界移動
@@ -134,6 +137,41 @@ void GameCamera::Rotate()
 	if (rotation.y < 0) { rotation.y += 360; }
 }
 
+void GameCamera::UpdateLockonRotate()
+{
+	//回転角変更にかかる時間
+	const float changeRotaTime = 15;
+	
+	//プレイヤーとロックオンターゲットの角度を取得(0～360に調整)
+	float lockonRotate = -GameHelper::Instance()->GetAngle({ lockonTarget->GetPosition().x, lockonTarget->GetPosition().z }, { player->GetPosition().x, player->GetPosition().z }) - 90;
+	while (lockonRotate < 0 || lockonRotate > 360) {
+		//横回転の回転角を0～360以内に収まるようにする
+		if (lockonRotate > 360) { lockonRotate -= 360; }
+		else if (lockonRotate < 0) { lockonRotate += 360; }
+	}
+
+	//イージングで動かす場合
+	if (lockonChangeRotaTimer <= changeRotaTime) {
+		lockonChangeRotaTimer++;
+
+		//回転をなるべく短くするために元角度を調整(例：350→10 より -10→10の方が近い)
+		float adjustRota = easeBeforeRota.y;
+		if (adjustRota > lockonRotate) {
+			if (adjustRota - lockonRotate > 180) {
+				adjustRota -= 360;
+			}
+		}
+
+		//ロックオンしたターゲットの方向をイージングで向くようにする
+		const float time = lockonChangeRotaTimer / changeRotaTime;
+		rotation.y = Easing::OutCubic(adjustRota, lockonRotate, time);
+	}
+	else {
+		//ロックオンしたターゲットの方向を向く
+		rotation.y = lockonRotate;
+	}
+}
+
 void GameCamera::UpdatePosition()
 {
 	//X,Y回転角をラジアンに直す
@@ -141,14 +179,14 @@ void GameCamera::UpdatePosition()
 	const float angleY = XMConvertToRadians(rotation.y);
 	//アンダーフローする可能性があるので、小数点を切り捨てる
 	const float divNum = 1000;
-	const float roundAngleX = floorf(angleX * divNum) / divNum;
-	const float roundAngleY = floorf(angleY * divNum) / divNum;
+	const float floorAngleX = floorf(angleX * divNum) / divNum;
+	const float floorAngleY = floorf(angleY * divNum) / divNum;
 
 	//X,Yラジアンを使用し、sin,cosを算出
-	const float sinfAngleY = sinf(roundAngleY);
-	const float cosfAngleY = cosf(roundAngleY);
-	const float sinfAngleX = sinf(roundAngleX);
-	const float cosfAngleX = cosf(roundAngleX);
+	const float sinfAngleY = sinf(floorAngleY);
+	const float cosfAngleY = cosf(floorAngleY);
+	const float sinfAngleX = sinf(floorAngleX);
+	const float cosfAngleX = cosf(floorAngleX);
 
 	//計算結果を割り当てて座標をセット
 	//Y座標はX回転角のsinを使用
@@ -165,7 +203,7 @@ void GameCamera::LockonInput()
 	isLockonStart = false;
 
 	//ロックオン入力がなければ抜ける
-	if (!(XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_LEFT_STICK_PUSH))) { return; }
+	if (!(DirectInput::GetInstance()->TriggerKey(DIK_F1) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_LEFT_STICK_PUSH))) { return; }
 
 	//ロックオンしていない場合はロックオンターゲットを検出する状態にする
 	if (!isLockon) {
