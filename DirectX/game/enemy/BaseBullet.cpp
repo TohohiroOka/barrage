@@ -8,12 +8,23 @@ void BaseBullet::Update()
 
 void BaseBullet::Draw()
 {
-	instanceObject->Draw();
-	predictionLine->Draw();
+	for (auto& i : instanceObject) {
+		if (i->GetInstanceDrawNum() == 0) { continue; }
+		i->Draw();
+	}
+
+	if (predictionLine) {
+		predictionLine->Draw();
+	}
 }
 
 void BaseBullet::FrameReset()
 {
-	instanceObject->FrameReset();
-	predictionLine->FrameReset();
+	for (auto& i : instanceObject) {
+		if (i->GetInstanceDrawNum() == 0) { continue; }
+		i->FrameReset();
+	}
+	if (predictionLine) {
+		predictionLine->FrameReset();
+	}
 }

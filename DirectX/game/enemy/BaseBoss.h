@@ -29,6 +29,7 @@ public:
 	BaseAction* GetBaseAction() { return action.get(); }
 	void SetTargetPos(const Vector3& _targetPos) { targetPos = _targetPos; }
 	Vector3 GetTargetPos() { return targetPos; }
+	float GetLength() { return (targetPos - Vector3(center->GetPosition())).length(); }
 
 protected:
 
@@ -53,5 +54,8 @@ protected:
 	bool isAction;
 	//アクションの番号
 	int actionNumber;
+	//移動行動を行ったか
+	bool isMove;
+
 };
 

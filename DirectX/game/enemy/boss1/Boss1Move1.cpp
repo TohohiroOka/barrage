@@ -15,9 +15,9 @@ void Boss1Move1::Update()
 	Vector3 pos = Vector3(boss->GetCenter()->GetPosition());
 	const float maxTimer = 50.0f;
 	const float rate = timer / maxTimer;
-	pos.x = Easing::InBack(startPos.x, endPos.x, rate) - pos.x;
-	pos.y = Easing::InBack(startPos.y, endPos.y, rate) - pos.y;
-	pos.z = Easing::InBack(startPos.z, endPos.z, rate) - pos.z;
+	pos.x = Easing::OutCubic(startPos.x, endPos.x, rate) - pos.x;
+	pos.y = Easing::OutCubic(startPos.y, endPos.y, rate) - pos.y;
+	pos.z = Easing::OutCubic(startPos.z, endPos.z, rate) - pos.z;
 
 	boss->SetMoveVec(pos);
 

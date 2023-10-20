@@ -10,13 +10,17 @@ Field::Field()
 	const std::string kabe = "kabe.png";
 
 	//地面
+	wallModel = Model::CreateFromOBJ("plane");
+
 	float groundScale = 2.0f;
-	groundModel = TerrainModel::Create("heightmap3.bmp", 30.0f,
-		{ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, 1.0f, jimen, kabe);
-	groundObject = HeightMap::Create(groundModel.get());
-	groundObject->SetScale({ groundScale ,groundScale ,groundScale });
+	groundObject = Object3d::Create(wallModel.get());
+	groundObject->SetPosition({ 255.0f,1.0f,255.0f });
+	groundObject->SetScale({ 255.0f,255.0f,255.0f });
+	groundObject->SetColor({ 0.3f,0.3f ,0.3f,1.0f });
 	groundObject->UpdateWorldMatrix();
 	groundObject->DeleteCollider();
+	//シャドウマップで影を付ける
+	groundObject->SetShadowMap(true);
 	// コライダーの追加
 	MeshCollider* collider = new MeshCollider;
 	groundObject->SetCollider(collider);
@@ -34,7 +38,6 @@ Field::Field()
 	outsideObject->UpdateWorldMatrix();
 
 	//壁
-	wallModel=Model::CreateFromOBJ("plane");
 	float distPos = 255.0f;
 	float distPosY = distPos / 1.9f;
 	const std::array<DirectX::XMFLOAT3, 4> pos = { DirectX::XMFLOAT3{distPos,distPosY,0.0f},{distPos,distPosY,distPos * 2.0f} ,{distPos * 2.0f,distPosY,distPos},{0.0f,distPosY,distPos} };

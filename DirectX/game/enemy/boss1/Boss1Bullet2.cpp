@@ -7,7 +7,9 @@
 Boss1Bullet2::Boss1Bullet2()
 {
 	model = Model::CreateFromOBJ("bullet");
-	instanceObject = InstanceObject::Create(model.get());
+	for (auto& i : instanceObject) {
+		i = InstanceObject::Create(model.get());
+	}
 	predictionLine = std::make_unique<PredictionLine>();
 }
 
@@ -59,9 +61,9 @@ void Boss1Bullet2::AddBullet(bool _easing)
 	Vector3 targetPos = boss->GetTargetPos();
 
 	//Žû‘©”ÍˆÍ
-	float randomX = float(GameHelper::Instance()->RandomInt(300) - 150) / 10.0f;
-	float randomY = float(GameHelper::Instance()->RandomInt(300) - 150) / 10.0f;
-	float randomZ = float(GameHelper::Instance()->RandomInt(300) - 150) / 10.0f;
+	float randomX = float(RandomInt(300) - 150) / 10.0f;
+	float randomY = float(RandomInt(300) - 150) / 10.0f;
+	float randomZ = float(RandomInt(300) - 150) / 10.0f;
 
 	bossPos += {0.0f, 30.0f, 0.0f};
 	targetPos += {randomX, randomY, randomZ};
@@ -115,8 +117,10 @@ void Boss1Bullet2::BulletUpdate(BulletInfo& _bullet)
 		return;
 	}
 
-	if (!instanceObject->GetInstanceDrawCheck()) { return; }
-	instanceObject->DrawInstance(_bullet.nowPos, { 1.0f ,1.0f ,1.0f }, { 0.0f ,0.0f ,0.0f }, { 1,1,1,1 });
+	for (auto& i : instanceObject) {
+		if (!i->GetInstanceDrawCheck()) { continue; }
+		i->DrawInstance(_bullet.nowPos, { 1.0f ,1.0f ,1.0f }, { 0.0f ,0.0f ,0.0f }, { 1,1,1,1 });
+	}
 
 	//’e“¹ƒZƒbƒg
 	if (_bullet.timer < 10.0f) {

@@ -70,9 +70,9 @@ void Camera::Shake()
 	Vector3 shake{};
 
 	//ƒ[ƒœZ‚ğ”ğ‚¯‚é‚½‚ß‚É0‚Ìê‡‚Íƒ‰ƒ“ƒ_ƒ€‚ğ¶¬‚µ‚È‚¢
-	if (!((int)randShake == 0)) {
-		shake.x = (float)GameHelper::Instance()->RandomInt((int)randShake) - randShake / 2;
-		shake.y = (float)GameHelper::Instance()->RandomInt((int)randShake) - randShake / 2;
+	if (!(randShake == 0)) {
+		shake.x = RandomFloat(randShake) - randShake / 2.0f;
+		shake.y = RandomFloat(randShake) - randShake / 2.0f;
 	}
 
 	//’l‚ª‘å‚«‚¢‚Ì‚ÅŠ„‚èZ‚µ‚Ä¬‚³‚­‚·‚é

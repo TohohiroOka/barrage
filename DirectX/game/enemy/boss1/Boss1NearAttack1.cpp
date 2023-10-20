@@ -72,7 +72,7 @@ void Boss1NearAttack1::StartMove()
 	const std::vector<float> hokanPos = { 0.0f,10.0f,20.0f,10.0f,0.0,-10.0f,-20.0f,-10.0f,0.0f };
 
 	for (auto& i : object) {
-		float posx = GameHelper::Instance()->SplinePosition(hokanPos, i.hokanPointNum, i.timer / maxHokanTimer);
+		float posx = SplinePosition(hokanPos, i.hokanPointNum, i.timer / maxHokanTimer);
 		i.timer++;
 
 		i.object->SetPosition({ i.pos.x + posx,i.pos.y + posy,i.pos.z });
@@ -206,7 +206,7 @@ void Boss1NearAttack1::EndMove()
 		float posy = Easing::Lerp(object[i].pos.y, (pos.y - dist * (objectNum - 1 - i)) - 100.0f, timer / maxTimer);
 
 		//xŽ²ˆÚ“®
-		float posx = GameHelper::Instance()->SplinePosition(hokanPos, object[i].hokanPointNum, object[i].timer / maxHokanTimer);
+		float posx = SplinePosition(hokanPos, object[i].hokanPointNum, object[i].timer / maxHokanTimer);
 		object[i].timer++;
 
 		object[i].object->SetPosition({ object[i].pos.x + posx,posy,object[i].pos.z });

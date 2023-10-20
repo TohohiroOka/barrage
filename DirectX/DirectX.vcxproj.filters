@@ -355,9 +355,6 @@
     <ClCompile Include="engine\Camera\LightCamera.cpp">
       <Filter>Engine\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="game\field\ShadowGround.cpp">
-      <Filter>ゲームシステム\Field</Filter>
-    </ClCompile>
     <ClCompile Include="game\enemy\boss1\Boss1Bullet1.cpp">
       <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClCompile>
@@ -366,6 +363,9 @@
     </ClCompile>
     <ClCompile Include="game\enemy\BaseBullet.cpp">
       <Filter>ゲームシステム\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\Boss1Bullet3.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -751,9 +751,6 @@
     <ClInclude Include="engine\Camera\LightCamera.h">
       <Filter>Engine\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="game\field\ShadowGround.h">
-      <Filter>ゲームシステム\Field</Filter>
-    </ClInclude>
     <ClInclude Include="game\enemy\boss1\Boss1Bullet1.h">
       <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClInclude>
@@ -762,6 +759,9 @@
     </ClInclude>
     <ClInclude Include="game\enemy\BaseBullet.h">
       <Filter>ゲームシステム\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\Boss1Bullet3.h">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

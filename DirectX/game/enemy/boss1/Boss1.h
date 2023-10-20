@@ -5,12 +5,29 @@
 class Boss1 : public BaseBoss
 {
 private:
-
-	enum class Action {
+	
+	//‰“‹——£s“®
+	enum class LongAction {
 		move1,
-		nearAttack,
+		middle,//ˆÚ“®‚ÆUŒ‚‚ÌŠÔ
 		bullet1,
 		bullet2,
+		size,
+	};
+
+	//’†‹——£s“®
+	enum class MediumAction {
+		move1,
+		middle,//ˆÚ“®‚ÆUŒ‚‚ÌŠÔ
+		bullet3,
+		size,
+	};
+
+	//‹ß‹——£s“®
+	enum class ShortAction {
+		move1,
+		middle,//ˆÚ“®‚ÆUŒ‚‚ÌŠÔ
+		attack1,
 		size,
 	};
 
@@ -28,7 +45,9 @@ public:
 
 private:
 	std::unique_ptr<Model> model;
-	std::unique_ptr<Object3d> boss;
+	static const int partsNum = 8;
+	static const std::array<Vector3, partsNum> partsDist;
+	std::array<std::unique_ptr<Object3d>, partsNum> boss;
 
 };
 

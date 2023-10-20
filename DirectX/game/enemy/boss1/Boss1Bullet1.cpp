@@ -5,7 +5,9 @@
 Boss1Bullet1::Boss1Bullet1()
 {
 	model = Model::CreateFromOBJ("bullet");
-	instanceObject = InstanceObject::Create(model.get());
+	for (auto& i : instanceObject) {
+		i = InstanceObject::Create(model.get());
+	}
 	predictionLine = std::make_unique<PredictionLine>();
 }
 
@@ -56,8 +58,8 @@ void Boss1Bullet1::AddBullet()
 	Vector3 targetPos = boss->GetTargetPos();
 
 	//Žû‘©”ÍˆÍ
-	float randomX = float(GameHelper::Instance()->RandomInt(300) - 150) / 10.0f;
-	float randomZ = float(GameHelper::Instance()->RandomInt(300) - 150) / 10.0f;
+	float randomX = float(RandomInt(300) - 150) / 10.0f;
+	float randomZ = float(RandomInt(300) - 150) / 10.0f;
 
 	bossPos += {0.0f, 30.0f, 0.0f};
 	targetPos += {randomX, 0.0f, randomZ};
@@ -80,7 +82,7 @@ void Boss1Bullet1::BulletUpdate(BulletInfo& _bullet)
 
 	const float dist = 10;
 	if (_bullet.pos.x < -dist || _bullet.pos.x > 510.0f + dist ||
-		_bullet.pos.y < -dist || _bullet.pos.y > 255 + dist ||
+		_bullet.pos.y < -dist || _bullet.pos.y > 255.0f + dist ||
 		_bullet.pos.z < -dist || _bullet.pos.z > 510.0f + dist) {
 		_bullet.isAlive = false;
 		return;
@@ -88,9 +90,10 @@ void Boss1Bullet1::BulletUpdate(BulletInfo& _bullet)
 
 	_bullet.timer++;
 
-	if (!instanceObject->GetInstanceDrawCheck()) { return; }
-	instanceObject->DrawInstance(_bullet.pos, { 1.0f ,1.0f ,1.0f }, { 0.0f ,0.0f ,0.0f }, { 1,1,1,1 });
-
+	for (auto& i : instanceObject) {
+		if (!i->GetInstanceDrawCheck()) { continue; }
+		i->DrawInstance(_bullet.pos, { 1.0f ,1.0f ,1.0f }, { 0.0f ,0.0f ,0.0f }, { 1,1,1,1 });
+	}
 	if (_bullet.timer >= 10.0f) {
 		_bullet.predictionLinePoint += _bullet.moveVec;
 	}

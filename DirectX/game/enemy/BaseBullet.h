@@ -20,8 +20,9 @@ public:
 	virtual void GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info) override{};
 
 protected:
+	static const int instanceNum = 5;
 	//’e•`‰æ—p
-	std::unique_ptr<InstanceObject> instanceObject;
+	std::array<std::unique_ptr<InstanceObject>, instanceNum> instanceObject;
 	//’e“¹•`‰æ—p
 	std::unique_ptr<PredictionLine> predictionLine;
 

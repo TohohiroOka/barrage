@@ -186,7 +186,7 @@ void Player::Move()
 
 			//進行方向を向くようにする
 			Vector3 moveRotaVelocity = { moveVec.x, 0, moveVec.z };//プレイヤー回転にジャンプは関係ないので、速度Yは0にしておく
-			rota = GameHelper::Instance()->VelocityRotate(moveRotaVelocity);
+			rota = VelocityRotate(moveRotaVelocity);
 			object->SetRotation(rota);
 		}
 	}
@@ -210,7 +210,7 @@ void Player::Move()
 
 		//進行方向を向くようにする
 		Vector3 moveRotaVelocity = { moveVec.x, 0, moveVec.z };//プレイヤー回転にジャンプは関係ないので、速度Yは0にしておく
-		rota = GameHelper::Instance()->VelocityRotate(moveRotaVelocity);
+		rota = VelocityRotate(moveRotaVelocity);
 		object->SetRotation(rota);
 	}
 }

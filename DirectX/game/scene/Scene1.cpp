@@ -28,8 +28,6 @@ void Scene1::Initialize()
 	camera = GameCamera::Create();
 	player->SetGameCamera(camera.get());
 
-	ground = std::make_unique<ShadowGround>();
-
 	//‰e—pŒõŒ¹ƒJƒƒ‰‰Šú‰»
 	lightCamera.reset(new LightCamera({ -30, 10, -30 }));
 	lightCamera->SetProjectionNum({ 50, 100 }, { -300, -100 });
@@ -68,7 +66,6 @@ void Scene1::Update()
 	field->Update();
 	boss->SetTargetPos(player->GetPosition());
 	boss->Update();
-	ground->Update();
 
 	CollisionCheck();
 
@@ -99,14 +96,13 @@ void Scene1::Draw(const int _cameraNum)
 	//gobject->ColliderDraw();
 
 	player->Draw();
-	ground->Draw();
 	boss->Draw();
 }
 
 void Scene1::DrawLightView(const int _cameraNum)
 {
 	player->DrawLightView();
-	ground->DrawLightView();
+	field->Draw();
 }
 
 void Scene1::NonPostEffectDraw(const int _cameraNum)
@@ -138,10 +134,12 @@ void Scene1::ImguiDraw()
 	ImGui::Begin("debug imgui");
 	ImGui::SetWindowSize(ImVec2(300, 300), ImGuiCond_::ImGuiCond_FirstUseEver);
 	
-	ImGui::Text("Camera Pos    [ %f : %f : %f ]", cameraPos.x, cameraPos.y, cameraPos.z);
-	ImGui::Text("Camera Target [ %f : %f : %f ]", cameraTarget.x, cameraTarget.y, cameraTarget.z);
-	ImGui::Text("Player Pos    [ %f : %f : %f ]", ppos.x, ppos.y, ppos.z);
+	ImGui::Text("Camera Pos         [ %f : %f : %f ]", cameraPos.x, cameraPos.y, cameraPos.z);
+	ImGui::Text("Camera Target      [ %f : %f : %f ]", cameraTarget.x, cameraTarget.y, cameraTarget.z);
+	ImGui::Text("Player Pos         [ %f : %f : %f ]", ppos.x, ppos.y, ppos.z);
+	ImGui::Text("Player Boss Length [ %f ]", boss->GetLength());
 	ImGui::Text("%d : %d ", player->GetJumpMaxNum(), player->GetJumpCount());
+
 	ImGui::Checkbox("motion blend", &isBlend);
 	ImGui::SliderFloat("blend rate", &rate, 0.0f, 1.0f);
 

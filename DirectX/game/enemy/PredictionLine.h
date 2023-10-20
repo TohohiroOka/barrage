@@ -18,6 +18,7 @@ private:
 
 	//ƒ‚ƒfƒ‹
 	std::unique_ptr<Model> model;
-	std::unique_ptr<InstanceObject> object;
+	static const int objectNum = 10;
+	std::array<std::unique_ptr<InstanceObject>, objectNum> object;
 };
 
