@@ -88,8 +88,8 @@ void Scene1::Update()
 			Base3D::SetCamera(camera.get());
 		}
 	}
-	camera->Update();
-	lightCamera->Update();
+	//camera->Update();
+	//lightCamera->Update();
 }
 
 void Scene1::Draw(const int _cameraNum)
@@ -130,17 +130,20 @@ void Scene1::ImguiDraw()
 	if (isNormalCamera) {
 		cameraPos = camera->GetEye();
 		cameraTarget = camera->GetTarget();
-	} else {
+	}
+	else {
 		cameraPos = debugCamera->GetEye();
 		cameraTarget = debugCamera->GetTarget();
 	}
 
 	ImGui::Begin("debug imgui");
 	ImGui::SetWindowSize(ImVec2(300, 300), ImGuiCond_::ImGuiCond_FirstUseEver);
-	
+
 	ImGui::Text("Camera Pos    [ %f : %f : %f ]", cameraPos.x, cameraPos.y, cameraPos.z);
 	ImGui::Text("Camera Target [ %f : %f : %f ]", cameraTarget.x, cameraTarget.y, cameraTarget.z);
 	ImGui::Text("Player Pos    [ %f : %f : %f ]", ppos.x, ppos.y, ppos.z);
+	if (camera->GetisLockon()) { ImGui::Text("lockon  true"); }
+	else { ImGui::Text("lockon  false"); }
 	ImGui::Text("%d : %d ", player->GetJumpMaxNum(), player->GetJumpCount());
 	ImGui::Checkbox("motion blend", &isBlend);
 	ImGui::SliderFloat("blend rate", &rate, 0.0f, 1.0f);
@@ -192,6 +195,25 @@ void Scene1::CollisionCheck()
 				if (Collision::CheckSphere2Sphere(enemySphere, attackSphere)) {
 					boss->Damage(player->GetAttackAction()->GetAttackCollisionData().power);
 				}
+			}
+		}
+	}
+#pragma endregion
+
+#pragma region カメラのロックオンターゲット設定
+	{
+		//カメラがロックオンターゲットを検出している場合のみ判定
+		if (camera->GetisLockonStart()) {
+			//敵座標
+			XMFLOAT2 pos = boss->GetCenter()->GetScreenPosition();
+
+			//敵のスクリーン座標が検出対象範囲内なら処理
+			const float targetScreenDistance = 100;
+			const bool isInsideTargetScreen = (pos.x <= WindowApp::GetWindowWidth() - targetScreenDistance && pos.x >= targetScreenDistance &&
+				pos.y <= WindowApp::GetWindowHeight() - targetScreenDistance && pos.y >= targetScreenDistance);
+			if (isInsideTargetScreen) {
+				//ロックオン対象を確定させる
+				camera->Lockon(boss->GetCenter());
 			}
 		}
 	}

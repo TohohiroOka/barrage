@@ -20,10 +20,22 @@ public: //メンバ関数
 	GameCamera();
 	~GameCamera() override;
 
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override;
+
+	/// <summary>
+	/// ロックオン
+	/// </summary>
+	/// <param name="lockonTarget">ロックオンターゲットオブジェクト</param>
+	void Lockon(Base3D* lockonTarget);
 
 	//getter
 	const XMFLOAT3& GetCameraRota() { return rotation; }
+	Base3D* GetLockonTarget() { return lockonTarget; }
+	bool GetisLockon() { return isLockon; }
+	bool GetisLockonStart() { return isLockonStart; }
 
 private: //メンバ関数
 	/// <summary>
@@ -37,13 +49,25 @@ private: //メンバ関数
 	/// </summary>
 	void UpdateEyeTarget();
 
-
+	/// <summary>
+	/// トランスフォーム更新
+	/// </summary>
 	void UpdateTransform();
 
-
+	/// <summary>
+	/// 回転を更新
+	/// </summary>
 	void Rotate();
 
-	void Move();
+	/// <summary>
+	/// 座標を更新
+	/// </summary>
+	void UpdatePosition();
+
+	/// <summary>
+	/// ロックオン入力の挙動
+	/// </summary>
+	void LockonInput();
 
 private: //静的メンバ変数
 	static Player* player;
@@ -58,4 +82,11 @@ private: //メンバ変数
 	float targetDistance;
 	//ワールド変換行列
 	XMMATRIX matWorld = {};
+
+	//ロックオンターゲット
+	Base3D* lockonTarget = nullptr;
+	//ロックオン状態か
+	bool isLockon = false;
+	//ロックオンターゲットを検出するか
+	bool isLockonStart = false;
 };

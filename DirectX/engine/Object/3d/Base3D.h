@@ -109,6 +109,7 @@ public:
 	const XMMATRIX& GetMatRot() { return matRot; }
 	const XMMATRIX& GetMatWorld() { return matWorld; }
 	const XMFLOAT3 GetWorldPosition();
+	const XMFLOAT2 GetScreenPosition();
 	bool GetBloom() { return isBloom; }
 	void SetParent(Base3D* _parent) { parent = _parent; }
 	void SetPosition(const XMFLOAT3& _position) { position = _position; }

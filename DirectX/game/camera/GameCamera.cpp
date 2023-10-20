@@ -33,6 +33,10 @@ GameCamera::~GameCamera()
 
 void GameCamera::Update()
 {
+	//ロックオン入力を受け付ける
+	LockonInput();
+
+	//トランスフォーム更新
 	UpdateTransform();
 
 	//カメラ座標回転角を反映して更新
@@ -43,6 +47,15 @@ void GameCamera::Update()
 	//視点、注視点を更新
 	UpdateEyeTarget();
 	Camera::Update();
+}
+
+void GameCamera::Lockon(Base3D* lockonTarget)
+{
+	if (!lockonTarget) { return; }
+
+	this->lockonTarget = lockonTarget;
+
+	isLockon = true;
 }
 
 void GameCamera::UpdateMatWorld(const XMMATRIX& matTrans)
@@ -76,8 +89,14 @@ void GameCamera::UpdateEyeTarget()
 
 void GameCamera::UpdateTransform()
 {
-	Rotate();
-	Move();
+	if (!isLockon) {
+		Rotate();
+	}
+	else {
+		//ロックオンしたターゲットの方向を向くようにする
+		rotation.y = -GameHelper::Instance()->GetAngle({ lockonTarget->GetPosition().x, lockonTarget->GetPosition().z }, { player->GetPosition().x, player->GetPosition().z }) - 90;
+	}
+	UpdatePosition();
 }
 
 void GameCamera::Rotate()
@@ -115,7 +134,7 @@ void GameCamera::Rotate()
 	if (rotation.y < 0) { rotation.y += 360; }
 }
 
-void GameCamera::Move()
+void GameCamera::UpdatePosition()
 {
 	//X,Y回転角をラジアンに直す
 	const float angleX = XMConvertToRadians(rotation.x);
@@ -138,4 +157,23 @@ void GameCamera::Move()
 	position.x = (-sinfAngleY * cosfAngleX) * targetDistance + targetPos.x;
 	position.y = sinfAngleX * targetDistance + targetPos.y;
 	position.z = (-cosfAngleY * cosfAngleX) * targetDistance + targetPos.z;
+}
+
+void GameCamera::LockonInput()
+{
+	//ロックオンターゲット検出フラグを毎フレーム戻しておく
+	isLockonStart = false;
+
+	//ロックオン入力がなければ抜ける
+	if (!(XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_LEFT_STICK_PUSH))) { return; }
+
+	//ロックオンしていない場合はロックオンターゲットを検出する状態にする
+	if (!isLockon) {
+		isLockonStart = true;
+	}
+	//ロックオン中ならロックオンを解除する
+	else {
+		lockonTarget = nullptr;
+		isLockon = false;
+	}
 }
