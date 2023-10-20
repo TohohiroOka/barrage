@@ -59,7 +59,7 @@ void Boss1::SetAction()
 
 	//行動選択の場合分けを書く
 	//現在はテストのため一つをループする
-	actionNumber = int(Action::bullet2);//GameHelper::Instance()->RandomInt(int(Action::size) - 1);
+	actionNumber = GameHelper::Instance()->RandomInt(int(Action::size) - 1);
 	isAction = true;
 
 	if (actionNumber == int(Action::move1)) {
