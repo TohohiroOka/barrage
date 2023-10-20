@@ -4,6 +4,7 @@
 #include "Boss1NearAttack1.h"
 #include "Boss1Move1.h"
 #include "Boss1Bullet1.h"
+#include "Boss1Bullet2.h"
 
 Boss1::Boss1()
 {
@@ -20,7 +21,7 @@ Boss1::Boss1()
 
 	BaseAction::SetBossPtr(this);
 
-	action = std::make_unique<Boss1Bullet1>();
+	action = std::make_unique<Boss1Bullet2>();
 }
 
 void Boss1::Update()
@@ -58,15 +59,16 @@ void Boss1::SetAction()
 
 	//行動選択の場合分けを書く
 	//現在はテストのため一つをループする
-	actionNumber = GameHelper::Instance()->RandomInt(int(Action::size) - 1);
+	actionNumber = int(Action::bullet2);//GameHelper::Instance()->RandomInt(int(Action::size) - 1);
 	isAction = true;
 
 	if (actionNumber == int(Action::move1)) {
 		action = std::make_unique<Boss1Move1>(Boss1Move1({ 0.0f,0.0f,50.0f }));
-	}
-	else if (actionNumber == int(Action::nearAttack)) {
+	}else if (actionNumber == int(Action::nearAttack)) {
 		action = std::make_unique<Boss1NearAttack1>();
 	} else if (actionNumber == int(Action::bullet1)) {
 		action = std::make_unique<Boss1Bullet1>();
+	} else if (actionNumber == int(Action::bullet2)) {
+		action = std::make_unique<Boss1Bullet2>();
 	}
 }

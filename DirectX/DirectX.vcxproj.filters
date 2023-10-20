@@ -358,11 +358,14 @@
     <ClCompile Include="game\field\ShadowGround.cpp">
       <Filter>ゲームシステム\Field</Filter>
     </ClCompile>
-    <ClCompile Include="game\enemy\BaseBullet.cpp">
-      <Filter>ゲームシステム\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="game\enemy\boss1\Boss1Bullet1.cpp">
       <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\Boss1Bullet2.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\BaseBullet.cpp">
+      <Filter>ゲームシステム\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -751,11 +754,14 @@
     <ClInclude Include="game\field\ShadowGround.h">
       <Filter>ゲームシステム\Field</Filter>
     </ClInclude>
-    <ClInclude Include="game\enemy\BaseBullet.h">
-      <Filter>ゲームシステム\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="game\enemy\boss1\Boss1Bullet1.h">
       <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\Boss1Bullet2.h">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\BaseBullet.h">
+      <Filter>ゲームシステム\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

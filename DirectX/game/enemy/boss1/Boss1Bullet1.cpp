@@ -5,12 +5,8 @@
 Boss1Bullet1::Boss1Bullet1()
 {
 	model = Model::CreateFromOBJ("bullet");
-	BaseBullet::CreateInstance(model.get());
-}
-
-Boss1Bullet1::~Boss1Bullet1()
-{
-	BaseBullet::Reset();
+	instanceObject = InstanceObject::Create(model.get());
+	predictionLine = std::make_unique<PredictionLine>();
 }
 
 void Boss1Bullet1::Update()
@@ -18,48 +14,40 @@ void Boss1Bullet1::Update()
 	const float maxTimer = 100.0f;
 
 	if (int(timer) % 5 == 0 && timer < maxTimer) {
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 1; i++) {
 			AddBullet();
 		}
 	}
 
+	//更新処理
+	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
+		it != bullet.end(); it++) {
+		BulletUpdate(*it);
+	}
+
 	//falseなら消す
-	bullet.remove_if([](BaseBullet& x) {
-		return !x.GetIsAlive();
+	bullet.remove_if([](BulletInfo& x) {
+		return !x.isAlive;
 		}
 	);
 
-	//更新処理
-	for (std::forward_list<BaseBullet>::iterator it = bullet.begin();
-		it != bullet.end(); it++) {
-		it->Update();
-	}
-
-	timer++;
-
 	//終了
 	if (std::distance(bullet.begin(), bullet.end()) <= 0) {
-		isEnd=true;
-	}
-}
-
-void Boss1Bullet1::Draw()
-{
-	for (std::forward_list<BaseBullet>::iterator it = bullet.begin();
-		it != bullet.end(); it++) {
-		it->Draw();
+		isEnd = true;
 	}
 
-	BaseBullet::StaticDraw();
-}
-
-void Boss1Bullet1::FrameReset()
-{
-	BaseBullet::FrameReset();
+	BaseBullet::Update();
 }
 
 void Boss1Bullet1::GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info)
 {
+	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
+		it != bullet.end(); it++) {
+		BaseAction::AttackCollision add;
+		add.pos = it->pos;
+		add.radius = 1.0f;
+		_info.emplace_back(add);
+	}
 }
 
 void Boss1Bullet1::AddBullet()
@@ -67,6 +55,7 @@ void Boss1Bullet1::AddBullet()
 	Vector3 bossPos = boss->GetCenter()->GetPosition();
 	Vector3 targetPos = boss->GetTargetPos();
 
+	//収束範囲
 	float randomX = float(GameHelper::Instance()->RandomInt(300) - 150) / 10.0f;
 	float randomZ = float(GameHelper::Instance()->RandomInt(300) - 150) / 10.0f;
 
@@ -75,5 +64,35 @@ void Boss1Bullet1::AddBullet()
 	Vector3 vec = targetPos - bossPos;
 	Vector3 normalVec = vec.normalize();
 
-	bullet.emplace_front(BaseBullet(bossPos, { 1.0f,1.0f ,1.0f }, { 0.0f,0.0f ,0.0f }, normalVec * 20.0f));
+	//一つ追加
+	bullet.emplace_front();
+	BulletInfo& add = bullet.front();
+	add.isAlive = true;
+	add.pos = bossPos;
+	add.moveVec = normalVec * 20.0f;
+	add.timer = 0.0f;
+	add.predictionLinePoint = bossPos;
+}
+
+void Boss1Bullet1::BulletUpdate(BulletInfo& _bullet)
+{
+	_bullet.pos += _bullet.moveVec;
+
+	const float dist = 10;
+	if (_bullet.pos.x < -dist || _bullet.pos.x > 510.0f + dist ||
+		_bullet.pos.y < -dist || _bullet.pos.y > 255 + dist ||
+		_bullet.pos.z < -dist || _bullet.pos.z > 510.0f + dist) {
+		_bullet.isAlive = false;
+		return;
+	}
+
+	_bullet.timer++;
+
+	if (!instanceObject->GetInstanceDrawCheck()) { return; }
+	instanceObject->DrawInstance(_bullet.pos, { 1.0f ,1.0f ,1.0f }, { 0.0f ,0.0f ,0.0f }, { 1,1,1,1 });
+
+	if (_bullet.timer >= 10.0f) {
+		_bullet.predictionLinePoint += _bullet.moveVec;
+	}
+	predictionLine->Update(_bullet.pos, _bullet.predictionLinePoint, 1.0f, { 1.0f,1.0f,1.0f,0.5f });
 }

@@ -72,6 +72,9 @@ InstanceObject::~InstanceObject()
 void InstanceObject::DrawInstance(const XMFLOAT3& _pos, const XMFLOAT3& _scale,
 	const XMFLOAT3& _rotation, const XMFLOAT4& _color)
 {
+	//最大値以上は描画しない
+	if (instanceDrawNum >= draw_max_num) { return; }
+
 	//ワールド行列変換
 	XMMATRIX matWorld = XMMatrixIdentity();
 	XMMATRIX matScale = XMMatrixScaling(_scale.x, _scale.y, _scale.z);

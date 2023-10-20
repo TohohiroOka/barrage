@@ -1,35 +1,36 @@
 #pragma once
 #include "../BaseBullet.h"
 
-/// <summary>
-/// プレイヤー対しまっすぐ進む弾（乱数により少し散らばる）
-/// </summary>
-class Boss1Bullet1 : public BaseBullet
+class Boss1Bullet2 : public BaseBullet
 {
 public:
 
 	struct BulletInfo {
 		bool isAlive;//出現しているか
-		Vector3 pos;//座標
-		Vector3 moveVec;//移動方向
+		bool easing;
+		Vector3 nowPos;//座標
+		Vector3 beforePos;
+		Vector3 afterPos;
+		bool isSetVec;
+		Vector3 moveVec;
 		float timer;//出現時間
-		Vector3 predictionLinePoint;
+		std::vector<Vector3> predictionLinePoint;
 	};
 
 public:
-	Boss1Bullet1();
-	~Boss1Bullet1() {};
+	Boss1Bullet2();
+	~Boss1Bullet2() {};
 
 	void Update() override;
 
 	void GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info) override;
 
-	void AddBullet();
+	void AddBullet(bool _easing);
 
 	void BulletUpdate(BulletInfo& _bullet);
 
 private:
 
 	std::forward_list<BulletInfo> bullet;
-};
 
+};
