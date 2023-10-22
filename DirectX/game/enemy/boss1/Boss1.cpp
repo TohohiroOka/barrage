@@ -3,6 +3,7 @@
 
 #include "Boss1NearAttack1.h"
 #include "Boss1Move1.h"
+#include "Boss1Move2.h"
 #include "Boss1Bullet1.h"
 #include "Boss1Bullet2.h"
 #include "Boss1Bullet3.h"
@@ -34,7 +35,7 @@ Boss1::Boss1()
 
 	BaseAction::SetBossPtr(this);
 
-	action = std::make_unique<Boss1Move1>(Boss1Move1({ 0.0f,0.0f,50.0f }));
+	action = std::make_unique<Boss1Move1>();
 	//action = std::make_unique<Boss1Bullet3>();
 }
 
@@ -75,8 +76,8 @@ void Boss1::SetAction()
 	Vector3 pos = center->GetPosition();
 	Vector3 dist = targetPos - pos;
 
-	action = std::make_unique<Boss1Bullet3>();
-	return;
+	//action = std::make_unique<Boss1Bullet3>();
+	//return;
 
 	//プレイヤーが遠距離にいる
 	if (dist.length() > 300.0f) {
@@ -97,7 +98,7 @@ void Boss1::SetAction()
 			isMove = true;
 			actionNumber = RandomInt(0, int(LongAction::middle) - 1);
 			if (actionNumber == int(LongAction::move1)) {
-				action = std::make_unique<Boss1Move1>(Boss1Move1({ 0.0f,0.0f,50.0f }));
+				action = std::make_unique<Boss1Move1>();
 			}
 		}
 	}
@@ -118,7 +119,7 @@ void Boss1::SetAction()
 			isMove = true;
 			actionNumber =RandomInt(0, int(MediumAction::middle) - 1);
 			if (actionNumber == int(MediumAction::move1)) {
-				action = std::make_unique<Boss1Move1>(Boss1Move1({ 0.0f,0.0f,50.0f }));
+				action = std::make_unique<Boss1Move1>();
 			}
 		}
 	}
@@ -129,18 +130,35 @@ void Boss1::SetAction()
 		//攻撃行動
 		if (isMove || actionRand) {
 			isMove = false;
-			actionNumber = RandomInt(int(ShortAction::middle) + 1, int(ShortAction::size) - 1);
+			actionNumber = RandomInt(int(ShortAction::middle) + 1, int(ShortAction::others) - 1);
 			if (actionNumber == int(ShortAction::attack1)) {
 				action = std::make_unique<Boss1NearAttack1>();
 			}
 		}
 		//移動行動
 		else {
-			isMove = true;
-			actionNumber = RandomInt(0, int(ShortAction::middle) - 1);
-			if (actionNumber == int(ShortAction::move1)) {
-				action = std::make_unique<Boss1Move1>(Boss1Move1({ 0.0f,0.0f,50.0f }));
-			}
+			SetShortMoveAction();
 		}
 	}
+}
+
+void Boss1::SetShortMoveAction()
+{
+	isMove = true;
+
+	//壁との距離が近かった場合の動き
+	const float l_size = GameHelper::Instance()->GetStageSize();
+	const float l_specifiedValue = 20.0f;
+	if (targetPos.x >= l_size - l_specifiedValue || targetPos.z >= l_size - l_specifiedValue ||
+		targetPos.x <= l_specifiedValue || targetPos.z <= l_specifiedValue) {
+		action = std::make_unique<Boss1Move2>();
+		return;
+	}
+
+	//その他の移動
+	actionNumber = RandomInt(0, int(ShortAction::middle) - 1);
+	if (actionNumber == int(ShortAction::move1)) {
+		action = std::make_unique<Boss1Move1>();
+	}
+
 }

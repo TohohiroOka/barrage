@@ -8,7 +8,7 @@
 #include "Object/3d/collider/Collision.h"
 #include "Object/3d/collider/MeshCollider.h"
 #include "Object/3d/collider/CollisionAttribute.h"
-
+#include "GameHelper.h"
 
 using namespace DirectX;
 
@@ -56,11 +56,15 @@ void Scene1::Initialize()
 	fbx->SetAnimation(true);
 
 	isBlend = false;
+
+	stop = false;
 }
 
 void Scene1::Update()
 {
 	DirectInput* input = DirectInput::GetInstance();
+
+	GameHelper::Instance()->SetStop(stop);
 
 	player->Update();
 	field->Update();
@@ -140,8 +144,8 @@ void Scene1::ImguiDraw()
 	ImGui::Text("Player Boss Length [ %f ]", boss->GetLength());
 	ImGui::Text("%d : %d ", player->GetJumpMaxNum(), player->GetJumpCount());
 
-	ImGui::Checkbox("motion blend", &isBlend);
 	ImGui::SliderFloat("blend rate", &rate, 0.0f, 1.0f);
+	ImGui::Checkbox("stop", &stop);
 
 	ImGui::End();
 }

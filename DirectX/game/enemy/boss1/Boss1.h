@@ -28,6 +28,8 @@ private:
 		move1,
 		middle,//ˆÚ“®‚ÆUŒ‚‚ÌŠÔ
 		attack1,
+		others,
+		move2,
 		size,
 	};
 
@@ -42,6 +44,8 @@ public:
 	void FrameReset() override;
 
 	void SetAction() override;
+
+	void SetShortMoveAction();
 
 private:
 	std::unique_ptr<Model> model;

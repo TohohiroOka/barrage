@@ -12,10 +12,10 @@ Field::Field()
 	//地面
 	wallModel = Model::CreateFromOBJ("plane");
 
-	float groundScale = 2.0f;
+	const float scale = GameHelper::Instance()->GetStageSize();
 	groundObject = Object3d::Create(wallModel.get());
 	groundObject->SetPosition({ 255.0f,1.0f,255.0f });
-	groundObject->SetScale({ 255.0f,255.0f,255.0f });
+	groundObject->SetScale({ scale,scale,scale });
 	groundObject->SetColor({ 0.3f,0.3f ,0.3f,1.0f });
 	groundObject->UpdateWorldMatrix();
 	groundObject->DeleteCollider();
@@ -33,19 +33,19 @@ Field::Field()
 		{ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, 1.0f, kabe, kabe);
 	outsideObject = HeightMap::Create(outsideModel.get());
 	outsideObject->SetScale({ outsideScale ,outsideScale ,outsideScale });
-	float outPos = (outsideScale * 256.0f / 2.0f) - groundScale * 256.0f / 2.0f;
+	float outPos = (outsideScale * scale / 2.0f) - scale / 2.0f;
 	outsideObject->SetPosition({ -outPos,0.0f,-outPos });
 	outsideObject->UpdateWorldMatrix();
 
 	//壁
-	float distPos = 255.0f;
+	const float distPos = scale - 1.0f;
 	float distPosY = distPos / 1.9f;
 	const std::array<DirectX::XMFLOAT3, 4> pos = { DirectX::XMFLOAT3{distPos,distPosY,0.0f},{distPos,distPosY,distPos * 2.0f} ,{distPos * 2.0f,distPosY,distPos},{0.0f,distPosY,distPos} };
 	const std::array<DirectX::XMFLOAT3, 4> rota = { DirectX::XMFLOAT3{90.0f,0.0f,0.0f},{-90.0f,0.0f,0.0f} ,{0.0f,0.0f,90.0f} ,{0.0f,0.0f,-90.0f} };
 	for (int i = 0; i < 4; i++) {
 		wallObject[i] = Object3d::Create(wallModel.get());
 		wallObject[i]->SetRotation(rota[i]);
-		wallObject[i]->SetScale({ 270.0f ,270.0f / 2.0f ,270.0f });
+		wallObject[i]->SetScale({ scale + 14.0f ,scale + 14.0f / 2.0f ,scale + 14.0f });
 		wallObject[i]->SetPosition(pos[i]);
 
 		// コライダーの追加

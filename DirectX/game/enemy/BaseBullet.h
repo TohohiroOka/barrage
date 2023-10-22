@@ -3,6 +3,8 @@
 #include "Object/3d/InstanceObject.h"
 #include "../game/enemy/PredictionLine.h"
 #include "Math/Vector3.h"
+#include "../Math/Timer.h"
+
 #include <forward_list>
 
 class BaseBullet : public BaseAction
@@ -27,7 +29,7 @@ protected:
 	std::unique_ptr<PredictionLine> predictionLine;
 
 	//タイマー
-	float timer;
+	std::unique_ptr<Engine::Timer> timer;
 	//モデル
 	std::unique_ptr<Model> model;
 };

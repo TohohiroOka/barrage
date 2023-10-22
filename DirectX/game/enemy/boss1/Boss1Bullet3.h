@@ -13,7 +13,7 @@ public:
 		Vector3 pos;//À•W
 		Vector3 moveVec;//ˆÚ“®•ûŒü
 		float acceleration;
-		float timer;//oŒ»ŠÔ
+		std::unique_ptr<Engine::Timer> timer;//oŒ»ŠÔ
 		Vector3 predictionLinePoint;
 	};
 

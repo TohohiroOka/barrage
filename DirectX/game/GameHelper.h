@@ -22,9 +22,6 @@ public:
 
 	void Update();
 
-	//ゲーム速度を変更する
-	void SetGameSpeed(float _gameSpeed) { gameSpeed = _gameSpeed; }
-
 	/// <summary>
 	/// スロウ
 	/// </summary>
@@ -35,11 +32,29 @@ public:
 		slowTimer = _timer;
 	}
 
-	const float mapSize = 255.0f * 10;
+	//ゲームストップ
+	void SetStop(bool _stop) {
+		if (_stop) {
+			gameSpeed = 0.0f;
+			slowTimer = -1;
+		} else {
+			gameSpeed = 1.0f;
+			slowTimer = 0;
+		}
+	}
+
+	//ゲーム速度を変更する
+	void SetGameSpeed(float _gameSpeed) { gameSpeed = _gameSpeed; }
+	float GetGameSpeed() { return gameSpeed; }
+	float GetStageSize() { return stageSize; }
+
 	//ゲーム速度
 	float gameSpeed = 1;
 	//スロウ処理を何フレーム行うか
 	float slowTimer;
+
+	//ステージの大きさ
+	const float stageSize=256;
 };
 
 /// <summary>

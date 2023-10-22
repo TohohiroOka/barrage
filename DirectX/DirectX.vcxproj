@@ -166,6 +166,7 @@
     <ClCompile Include="game\enemy\boss1\Boss1Bullet3.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1Move1.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1NearAttack1.cpp" />
+    <ClCompile Include="game\enemy\boss1\Boss1Move2.cpp" />
     <ClCompile Include="game\enemy\PredictionLine.cpp" />
     <ClCompile Include="game\field\Field.cpp" />
     <ClCompile Include="game\GameHelper.cpp" />
@@ -376,6 +377,7 @@
     <ClInclude Include="engine\Math\Easing\Easing.h" />
     <ClInclude Include="engine\Math\Matrix4.h" />
     <ClInclude Include="engine\Math\Quaternion.h" />
+    <ClInclude Include="engine\Math\Timer.h" />
     <ClInclude Include="engine\Math\Vector2.h" />
     <ClInclude Include="engine\Math\Vector3.h" />
     <ClInclude Include="engine\Object\2d\DebugText.h" />
@@ -431,6 +433,7 @@
     <ClInclude Include="game\enemy\boss1\Boss1Bullet3.h" />
     <ClInclude Include="game\enemy\boss1\Boss1Move1.h" />
     <ClInclude Include="game\enemy\boss1\Boss1NearAttack1.h" />
+    <ClInclude Include="game\enemy\boss1\Boss1Move2.h" />
     <ClInclude Include="game\enemy\PredictionLine.h" />
     <ClInclude Include="game\field\Field.h" />
     <ClInclude Include="game\GameHelper.h" />

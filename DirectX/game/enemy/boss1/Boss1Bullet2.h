@@ -1,6 +1,9 @@
 #pragma once
 #include "../BaseBullet.h"
 
+/// <summary>
+/// 外側に出てからプレイヤーに追従する
+/// </summary>
 class Boss1Bullet2 : public BaseBullet
 {
 public:
@@ -13,7 +16,7 @@ public:
 		Vector3 afterPos;
 		bool isSetVec;
 		Vector3 moveVec;
-		float timer;//出現時間
+		std::unique_ptr<Engine::Timer> timer;//出現時間
 		std::vector<Vector3> predictionLinePoint;
 	};
 

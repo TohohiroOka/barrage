@@ -1,6 +1,7 @@
 #pragma once
 #include "../game/enemy/BaseAction.h"
 #include "Object/3d/Object3d.h"
+#include "../Math/Timer.h"
 #include <array>
 #include <functional>
 
@@ -22,7 +23,7 @@ private:
 
 	struct ObjectInfo {
 		std::unique_ptr<Object3d> object;
-		float timer;
+		std::unique_ptr<Engine::Timer> timer;
 		DirectX::XMFLOAT3 pos;
 		int hokanPointNum;
 		int stateInState;//行動内での処理番号
@@ -61,7 +62,7 @@ private:
 	//状態
 	State state;
 	//全体タイマー
-	float timer;
+	std::unique_ptr<Engine::Timer> timer;
 	//回転角度
 	float allRota;
 };

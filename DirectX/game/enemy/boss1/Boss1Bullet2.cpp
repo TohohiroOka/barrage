@@ -11,13 +11,14 @@ Boss1Bullet2::Boss1Bullet2()
 		i = InstanceObject::Create(model.get());
 	}
 	predictionLine = std::make_unique<PredictionLine>();
+	timer = std::make_unique<Engine::Timer>();
 }
 
 void Boss1Bullet2::Update()
 {
 	const float maxTimer = 100.0f;
 
-	if (int(timer) % 5 == 0 && timer < maxTimer) {
+	if (*timer.get() % 5 == 0 && *timer.get() < maxTimer) {
 		for (int i = 0; i < 4; i++) {
 			bool easing = (i % 2) == 0;
 			AddBullet(easing);
@@ -41,7 +42,7 @@ void Boss1Bullet2::Update()
 		isEnd = true;
 	}
 
-	timer++;
+	timer->Update();
 }
 
 void Boss1Bullet2::GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info)
@@ -77,7 +78,7 @@ void Boss1Bullet2::AddBullet(bool _easing)
 	add.beforePos= bossPos;
 	add.afterPos = targetPos;
 	add.moveVec = {};
-	add.timer = 0.0f;
+	add.timer=std::make_unique<Engine::Timer>();
 	add.predictionLinePoint.emplace_back(bossPos);
 }
 
@@ -86,27 +87,28 @@ void Boss1Bullet2::BulletUpdate(BulletInfo& _bullet)
 	const float maxTimer = 20.0f;
 	//イージング移動
 	if (!_bullet.isSetVec) {
+		const float l_reto = *_bullet.timer.get() / maxTimer;
 		if (_bullet.easing) {
-			_bullet.nowPos.x = Easing::OutCirc(_bullet.beforePos.x, _bullet.afterPos.x, _bullet.timer / maxTimer);
-			_bullet.nowPos.y = Easing::Lerp(_bullet.beforePos.y, _bullet.afterPos.y, _bullet.timer / maxTimer);
-			_bullet.nowPos.z = Easing::InCirc(_bullet.beforePos.z, _bullet.afterPos.z, _bullet.timer / maxTimer);
+			_bullet.nowPos.x = Easing::OutCirc(_bullet.beforePos.x, _bullet.afterPos.x, l_reto);
+			_bullet.nowPos.y = Easing::Lerp(_bullet.beforePos.y, _bullet.afterPos.y, l_reto);
+			_bullet.nowPos.z = Easing::InCirc(_bullet.beforePos.z, _bullet.afterPos.z, l_reto);
 		} else {
-			_bullet.nowPos.x = Easing::InCirc(_bullet.beforePos.x, _bullet.afterPos.x, _bullet.timer / maxTimer);
-			_bullet.nowPos.y = Easing::Lerp(_bullet.beforePos.y, _bullet.afterPos.y, _bullet.timer / maxTimer);
-			_bullet.nowPos.z = Easing::OutCirc(_bullet.beforePos.z, _bullet.afterPos.z, _bullet.timer / maxTimer);
+			_bullet.nowPos.x = Easing::InCirc(_bullet.beforePos.x, _bullet.afterPos.x, l_reto);
+			_bullet.nowPos.y = Easing::Lerp(_bullet.beforePos.y, _bullet.afterPos.y, l_reto);
+			_bullet.nowPos.z = Easing::OutCirc(_bullet.beforePos.z, _bullet.afterPos.z, l_reto);
 		}
 		//移動を変更
-		if (_bullet.timer > maxTimer - 5.0f) {
+		if (*_bullet.timer.get() > maxTimer - 5.0f) {
 			_bullet.moveVec = _bullet.afterPos - _bullet.nowPos;
 			_bullet.moveVec = _bullet.moveVec.normalize() * 10.0f;
 			_bullet.isSetVec = true;
 		}
 
-		_bullet.timer++;
+		_bullet.timer->Update();
 	}
 	//イージング途中のベクトル方向に壁に当たるまで移動
 	else {
-		_bullet.nowPos += _bullet.moveVec;
+		_bullet.nowPos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
 	}
 
 	const float dist = 10;
@@ -123,7 +125,7 @@ void Boss1Bullet2::BulletUpdate(BulletInfo& _bullet)
 	}
 
 	//弾道セット
-	if (_bullet.timer < 10.0f) {
+	if (_bullet.predictionLinePoint.size() < 10) {
 		_bullet.predictionLinePoint.insert(_bullet.predictionLinePoint.begin(), _bullet.nowPos);
 	} else {
 		for (int i = 1; i < 10; i++) {

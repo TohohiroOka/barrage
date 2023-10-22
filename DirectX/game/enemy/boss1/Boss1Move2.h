@@ -1,16 +1,25 @@
 #pragma once
-#include "../game/enemy/BaseAction.h"
+#include "../BaseAction.h"
 #include <DirectXMath.h>
 #include "../Math/Timer.h"
+#include <functional>
 
 /// <summary>
-/// 直線移動（イージングあり）
+/// 壁際の時に中央寄りに移動する
 /// </summary>
-class Boss1Move1 : public BaseAction
+class Boss1Move2 : public BaseAction
 {
+private:
+
+	enum class State {
+		up,
+		side,
+		size,
+	};
+
 public:
-	Boss1Move1(const DirectX::XMFLOAT3& _pos = {});
-	~Boss1Move1() {};
+	Boss1Move2();
+	~Boss1Move2() {};
 
 	void Update() override;
 
@@ -20,6 +29,10 @@ public:
 
 	void GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info) override {};
 
+	void UpMove();
+
+	void SideMove();
+
 private:
 
 	//開始地点
@@ -28,5 +41,8 @@ private:
 	DirectX::XMFLOAT3 endPos;
 	//イージングタイマー
 	std::unique_ptr<Engine::Timer> timer;
-};
+	//現在の動き
+	State state;
+	std::vector<std::function<void()>> func_;
 
+};

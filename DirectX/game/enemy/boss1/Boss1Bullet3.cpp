@@ -10,6 +10,7 @@ Boss1Bullet3::Boss1Bullet3()
 		i = InstanceObject::Create(model.get());
 	}
 	AddBullet();
+	timer = std::make_unique<Engine::Timer>();
 }
 
 void Boss1Bullet3::Update()
@@ -68,7 +69,7 @@ void Boss1Bullet3::AddBullet()
 				};
 				add.moveVec = add.moveVec.normalize();
 				add.moveVec.y = float(y-1) * 0.1f;
-				add.timer = 0.0f;
+				add.timer = std::make_unique<Engine::Timer>();
 			}
 		}
 	}
@@ -77,14 +78,14 @@ void Boss1Bullet3::AddBullet()
 void Boss1Bullet3::BulletUpdate(BulletInfo& _bullet)
 {
 	const float maxTime = 40.0f;
-	if (_bullet.timer <= maxTime) {
-		_bullet.acceleration = Easing::OutCirc(10.0f, 0.0f, _bullet.timer / maxTime);
-		_bullet.pos += _bullet.moveVec * _bullet.acceleration;
-	} else if (_bullet.timer <= maxTime + maxTime + 1) {
-		_bullet.acceleration = Easing::OutCirc(0.0f, -5.0f, (_bullet.timer - maxTime) / maxTime);
-		_bullet.pos += Vector3{_bullet.moveVec.x, 0.0f, _bullet.moveVec.z} *_bullet.acceleration;
+	if (*_bullet.timer.get() <= maxTime) {
+		_bullet.acceleration = Easing::OutCirc(10.0f, 0.0f, *_bullet.timer.get() / maxTime);
+		_bullet.pos += _bullet.moveVec * _bullet.acceleration * GameHelper::Instance()->GetGameSpeed();
+	} else if (*_bullet.timer.get() <= maxTime + maxTime + 1) {
+		_bullet.acceleration = Easing::OutCirc(0.0f, -5.0f, (*_bullet.timer.get() - maxTime) / maxTime);
+		_bullet.pos += Vector3{_bullet.moveVec.x, 0.0f, _bullet.moveVec.z} *_bullet.acceleration* GameHelper::Instance()->GetGameSpeed();
 	} else {
-		_bullet.pos += Vector3{_bullet.moveVec.x, 0.0f, _bullet.moveVec.z} *_bullet.acceleration;
+		_bullet.pos += Vector3{_bullet.moveVec.x, 0.0f, _bullet.moveVec.z} *_bullet.acceleration* GameHelper::Instance()->GetGameSpeed();
 	}
 
 	const float dist = 10;
@@ -95,7 +96,7 @@ void Boss1Bullet3::BulletUpdate(BulletInfo& _bullet)
 		return;
 	}
 
-	_bullet.timer++;
+	_bullet.timer->Update();
 
 	for (auto& i : instanceObject) {
 		if (!i->GetInstanceDrawCheck()) { continue; }

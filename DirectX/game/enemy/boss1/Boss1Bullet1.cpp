@@ -9,13 +9,14 @@ Boss1Bullet1::Boss1Bullet1()
 		i = InstanceObject::Create(model.get());
 	}
 	predictionLine = std::make_unique<PredictionLine>();
+	timer = std::make_unique<Engine::Timer>();
 }
 
 void Boss1Bullet1::Update()
 {
-	const float maxTimer = 100.0f;
+	const float l_maxTimer = 100.0f;
 
-	if (int(timer) % 5 == 0 && timer < maxTimer) {
+	if (*timer.get() % 5 == 0 && *timer.get() < l_maxTimer) {
 		for (int i = 0; i < 1; i++) {
 			AddBullet();
 		}
@@ -72,13 +73,13 @@ void Boss1Bullet1::AddBullet()
 	add.isAlive = true;
 	add.pos = bossPos;
 	add.moveVec = normalVec * 20.0f;
-	add.timer = 0.0f;
+	add.timer=std::make_unique<Engine::Timer>();
 	add.predictionLinePoint = bossPos;
 }
 
 void Boss1Bullet1::BulletUpdate(BulletInfo& _bullet)
 {
-	_bullet.pos += _bullet.moveVec;
+	_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
 
 	const float dist = 10;
 	if (_bullet.pos.x < -dist || _bullet.pos.x > 510.0f + dist ||
@@ -88,13 +89,13 @@ void Boss1Bullet1::BulletUpdate(BulletInfo& _bullet)
 		return;
 	}
 
-	_bullet.timer++;
+	_bullet.timer->Update();
 
 	for (auto& i : instanceObject) {
 		if (!i->GetInstanceDrawCheck()) { continue; }
 		i->DrawInstance(_bullet.pos, { 1.0f ,1.0f ,1.0f }, { 0.0f ,0.0f ,0.0f }, { 1,1,1,1 });
 	}
-	if (_bullet.timer >= 10.0f) {
+	if (*_bullet.timer.get() > 10.0f) {
 		_bullet.predictionLinePoint += _bullet.moveVec;
 	}
 	predictionLine->Update(_bullet.pos, _bullet.predictionLinePoint, 1.0f, { 1.0f,1.0f,1.0f,0.5f });

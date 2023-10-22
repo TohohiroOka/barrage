@@ -3,7 +3,7 @@
 void BaseBullet::Update()
 {
 	//タイマー加算
-	timer++;
+	timer->Update();
 }
 
 void BaseBullet::Draw()

@@ -7,7 +7,7 @@
 void BaseBoss::Initialize()
 {
 	center = Object3d::Create();
-	center->SetPosition({ 400.0f,10.0f,400.0f });
+	center->SetPosition({ 40.0f,10.0f,20.0f });
 
 	HP = maxHP;
 	const float length = 1200;

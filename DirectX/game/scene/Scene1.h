@@ -87,4 +87,6 @@ private:
 
 	bool isBlend;
 	float rate;
+
+	bool stop;
 };

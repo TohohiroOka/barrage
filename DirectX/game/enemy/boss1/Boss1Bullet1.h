@@ -12,7 +12,7 @@ public:
 		bool isAlive;//出現しているか
 		Vector3 pos;//座標
 		Vector3 moveVec;//移動方向
-		float timer;//出現時間
+		std::unique_ptr<Engine::Timer> timer;//出現時間
 		Vector3 predictionLinePoint;
 	};
 
