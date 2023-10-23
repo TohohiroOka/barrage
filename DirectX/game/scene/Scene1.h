@@ -65,7 +65,7 @@ public:
 	void CollisionCheck();
 
 private:
-	bool isNormalCamera = false;
+	bool isNormalCamera = true;
 
 	std::unique_ptr<DebugCamera> debugCamera;
 	std::unique_ptr<GameCamera> camera;

@@ -174,6 +174,16 @@ bool XInputManager::TriggerButton(const PUD_BUTTON& _button)
 		(controllers.lastState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) == false)
 	{
 		check = true;
+	} else if (_button == PUD_BUTTON::PAD_LEFT_STICK_PUSH &&
+		controllers.state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB &&
+		(controllers.lastState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) == false)
+	{
+		check = true;
+	} else if (_button == PUD_BUTTON::PAD_RIGHT_STICK_PUSH &&
+		controllers.state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB &&
+		(controllers.lastState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) == false)
+	{
+		check = true;
 	}
 	return check;
 }
