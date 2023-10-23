@@ -89,7 +89,7 @@ void Scene1::Update()
 		}
 	}
 	//camera->Update();
-	//lightCamera->Update();
+	lightCamera->Update();
 }
 
 void Scene1::Draw(const int _cameraNum)

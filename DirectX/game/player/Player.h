@@ -45,6 +45,7 @@ private:
 public:
 
 	const Vector3& GetPosition() { return pos; }
+	const Vector3& GetMoveVec(){ return moveVec; }
 	int GetJumpCount() { return jumpCount; }
 	int GetJumpMaxNum() { return jumpMaxNum; }
 	Object3d* GetObject3d() { return object.get(); }

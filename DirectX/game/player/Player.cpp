@@ -44,6 +44,7 @@ Player::Player()
 void Player::Update()
 {
 	//毎フレーム戻しておく
+	moveVec = { 0.0f,0.0f,0.0f };
 	isMoveKey = false;
 	isMovePad = false;
 
@@ -476,14 +477,8 @@ void Player::Collider()
 			}
 		}
 
-		moveVec = { 0.0f,0.0f,0.0f };
-
 		object->SetPosition(pos);
 	}
-
-	//position.x += moveVec[2].x;
-	//position.y += moveVec[2].y;
-	//position.z += moveVec[2].z;
 }
 
 void Player::Attack()

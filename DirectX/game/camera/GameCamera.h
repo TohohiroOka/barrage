@@ -70,21 +70,28 @@ private: //メンバ関数
 	void UpdatePosition();
 
 	/// <summary>
+	/// カメラのブレを考慮する為のターゲットから離す距離を更新
+	/// </summary>
+	void UpdateTartgetDistance();
+
+	/// <summary>
 	/// ロックオン入力の挙動
 	/// </summary>
 	void LockonInput();
 
 private: //静的メンバ変数
 	static Player* player;
-	static const float baseDistance;
+	static const float baseRotateCenterDistance;
 
 private: //メンバ変数
 	//カメラ座標
 	Vector3 position;
-	//ターゲット角度
+	//カメラ角度
 	Vector3 rotation;
-	//ターゲットとの距離
-	float targetDistance;
+	//カメラのブレを考慮する為のターゲットから離す距離
+	Vector3 targetDistance;
+	//回転でのターゲット中心点との距離
+	float rotateCenterDistance;
 	//ワールド変換行列
 	XMMATRIX matWorld = {};
 

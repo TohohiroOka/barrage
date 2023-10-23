@@ -8,7 +8,7 @@
 using namespace DirectX;
 
 Player* GameCamera::player = nullptr;
-const float GameCamera::baseDistance = 25.0f;
+const float GameCamera::baseRotateCenterDistance = 20.0f;
 
 std::unique_ptr<GameCamera> GameCamera::Create()
 {
@@ -25,7 +25,7 @@ std::unique_ptr<GameCamera> GameCamera::Create()
 GameCamera::GameCamera() :
 	Camera(true)
 {
-	targetDistance = baseDistance;
+	rotateCenterDistance = baseRotateCenterDistance;
 }
 
 GameCamera::~GameCamera()
@@ -58,7 +58,7 @@ void GameCamera::Lockon(Base3D* lockonTarget)
 
 	easeBeforeRota = rotation;
 	lockonChangeRotaTimer = 0;
-	
+
 	isLockon = true;
 }
 
@@ -141,7 +141,7 @@ void GameCamera::UpdateLockonRotate()
 {
 	//‰ñ“]Šp•ÏX‚É‚©‚©‚éŽžŠÔ
 	const float changeRotaTime = 15;
-	
+
 	//ƒvƒŒƒCƒ„[‚ÆƒƒbƒNƒIƒ“ƒ^[ƒQƒbƒg‚ÌŠp“x‚ðŽæ“¾(0`360‚É’²®)
 	float lockonRotate = -GameHelper::Instance()->GetAngle({ lockonTarget->GetPosition().x, lockonTarget->GetPosition().z }, { player->GetPosition().x, player->GetPosition().z }) - 90;
 	while (lockonRotate < 0 || lockonRotate > 360) {
@@ -191,10 +191,107 @@ void GameCamera::UpdatePosition()
 	//ŒvŽZŒ‹‰Ê‚ðŠ„‚è“–‚Ä‚ÄÀ•W‚ðƒZƒbƒg
 	//YÀ•W‚ÍX‰ñ“]Šp‚Ìsin‚ðŽg—p
 	//X,ZÀ•W‚ÍY‰ñ“]Šp‚Ìsin,cos‚ÅŒvŽZ‚µAX‰ñ“]Šp(YÀ•W)‚Ìcos‚ðæŽZ‚µ‚ÄŽZo
-	Vector3 targetPos = player->GetPosition();
-	position.x = (-sinfAngleY * cosfAngleX) * targetDistance + targetPos.x;
-	position.y = sinfAngleX * targetDistance + targetPos.y;
-	position.z = (-cosfAngleY * cosfAngleX) * targetDistance + targetPos.z;
+	UpdateTartgetDistance();
+	Vector3 centerPos = player->GetPosition() - targetDistance;
+	position.x = (-sinfAngleY * cosfAngleX) * rotateCenterDistance + centerPos.x;
+	position.y = sinfAngleX * rotateCenterDistance + centerPos.y;
+	position.z = (-cosfAngleY * cosfAngleX) * rotateCenterDistance + centerPos.z;
+}
+
+void GameCamera::UpdateTartgetDistance()
+{
+	const float moveSpeed = 0.5f;
+	const float baseMoveMax = 4.0f;
+	if (player->GetMoveVec().x > 0) {
+		if (targetDistance.x <= baseMoveMax * player->GetMoveVec().x) {
+			targetDistance.x += moveSpeed;
+			targetDistance.x = min(targetDistance.x, baseMoveMax * player->GetMoveVec().x);
+		}
+		else {
+			targetDistance.x -= moveSpeed;
+			//targetDistance.x = min(targetDistance.x, baseMoveMax * player->GetMoveVec().x);
+		}
+	}
+	else if (player->GetMoveVec().x < 0) {
+		if (targetDistance.x >= baseMoveMax * player->GetMoveVec().x) {
+			targetDistance.x -= moveSpeed;
+			targetDistance.x = max(targetDistance.x, baseMoveMax * player->GetMoveVec().x);
+		}
+		else {
+			targetDistance.x += moveSpeed;
+			//targetDistance.x = min(targetDistance.x, baseMoveMax * player->GetMoveVec().x);
+		}
+	}
+	else {
+		if (targetDistance.x > 0) {
+			targetDistance.x -= moveSpeed;
+			targetDistance.x = max(targetDistance.x, 0);
+		}
+		else if (targetDistance.x < 0) {
+			targetDistance.x += moveSpeed;
+			targetDistance.x = min(targetDistance.x, 0);
+		}
+	}
+
+
+
+	if (player->GetMoveVec().z > 0) {
+		if (targetDistance.z <= baseMoveMax * player->GetMoveVec().z) {
+			targetDistance.z += moveSpeed;
+			targetDistance.z = min(targetDistance.z, baseMoveMax * player->GetMoveVec().z);
+		}
+		else {
+			targetDistance.z -= moveSpeed;
+			//targetDistance.z = min(targetDistance.z, baseMoveMax * player->GetMoveVec().z);
+		}
+	}
+	else if (player->GetMoveVec().z < 0) {
+		if (targetDistance.z >= baseMoveMax * player->GetMoveVec().z) {
+			targetDistance.z -= moveSpeed;
+			targetDistance.z = max(targetDistance.z, baseMoveMax * player->GetMoveVec().z);
+		}
+		else {
+			targetDistance.z += moveSpeed;
+			//targetDistance.z = min(targetDistance.z, baseMoveMax * player->GetMoveVec().z);
+		}
+	}
+	else {
+		if (targetDistance.z > 0) {
+			targetDistance.z -= moveSpeed;
+			targetDistance.z = max(targetDistance.z, 0);
+		}
+		else if (targetDistance.z < 0) {
+			targetDistance.z += moveSpeed;
+			targetDistance.z = min(targetDistance.z, 0);
+		}
+	}
+
+	if (DirectInput::GetInstance()->PushKey(DIK_1)) {
+		targetDistance.x -= 0.1f;
+	}
+	if (DirectInput::GetInstance()->PushKey(DIK_2)) {
+		targetDistance.x += 0.1f;
+	}
+	if (DirectInput::GetInstance()->PushKey(DIK_3)) {
+		targetDistance.y += 0.1f;
+	}
+	if (DirectInput::GetInstance()->PushKey(DIK_4)) {
+		targetDistance.y -= 0.1f;
+	}
+	if (DirectInput::GetInstance()->PushKey(DIK_5)) {
+		targetDistance.z += 0.1f;
+	}
+	if (DirectInput::GetInstance()->PushKey(DIK_6)) {
+		targetDistance.z -= 0.1f;
+	}
+
+
+	if (DirectInput::GetInstance()->PushKey(DIK_C)) {
+		rotateCenterDistance -= 0.1f;
+	}
+	if (DirectInput::GetInstance()->PushKey(DIK_V)) {
+		rotateCenterDistance += 0.1f;
+	}
 }
 
 void GameCamera::LockonInput()
