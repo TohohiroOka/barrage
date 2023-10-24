@@ -58,7 +58,7 @@ void GameCamera::Lockon(Base3D* lockonTarget)
 
 	easeBeforeRota = rotation;
 	lockonChangeRotaTimer = 0;
-	
+
 	isLockon = true;
 }
 
@@ -141,7 +141,7 @@ void GameCamera::UpdateLockonRotate()
 {
 	//回転角変更にかかる時間
 	const float changeRotaTime = 15;
-	
+
 	//プレイヤーとロックオンターゲットの角度を取得(0～360に調整)
 	float lockonRotate = -GetAngle({ lockonTarget->GetPosition().x, lockonTarget->GetPosition().z }, { player->GetPosition().x, player->GetPosition().z }) - 90;
 	while (lockonRotate < 0 || lockonRotate > 360) {
@@ -159,6 +159,11 @@ void GameCamera::UpdateLockonRotate()
 		if (adjustRota > lockonRotate) {
 			if (adjustRota - lockonRotate > 180) {
 				adjustRota -= 360;
+			}
+		}
+		else if (adjustRota < lockonRotate) {
+			if (lockonRotate - adjustRota > 180) {
+				adjustRota += 360;
 			}
 		}
 

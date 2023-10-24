@@ -12,21 +12,20 @@
 
 using namespace DirectX;
 
-const float Player::moveSpeedMax = 1.0f;
-const float Player::dashSpeedMax = 2.0f;
+const XMFLOAT3 Player::moveMinPos = { 0,0,0 };
+const XMFLOAT3 Player::moveMaxPos = { 510,0,510 };
+const float Player::jumpPower = 7.0f;
+const float Player::moveSpeedMax = 1.25f;
+const float Player::dashSpeedMax = 2.5f;
 
 Player::Player()
 {
 	model = Model::CreateFromOBJ("NormalCube");
 	object = Object3d::Create(model.get());
-	pos = { 100.0f,200.0f,100.0f };
-	moveVec = { 0.0f,0.0f,0.0f };
-
-	// コライダーの追加
-	float radius = 0.6f;
-	object->SetCollider(new SphereCollider(XMVECTOR({ 0,radius,0,0 }), radius));
-	object->GetCollider()->SetAttribute(COLLISION_ATTR_ALLIES);
 	object->SetShadowMap(true);
+
+
+	pos = { 100.0f,200.0f,100.0f };
 	//連続ジャンプ可能回数設定
 	jumpMaxNum = 2;
 
@@ -68,12 +67,11 @@ void Player::Update()
 		Fall();
 	}
 
-	Collider();
-
 	HealHPMove();
 	EnduranceRecovery();
 
-	object->Update();
+	//更新した座標などを反映し、オブジェクト更新
+	ObjectUpdate();
 
 	hpGauge->Update();
 	enduranceGauge->Update();
@@ -143,6 +141,34 @@ void Player::Heal(int healNum)
 	healTimer = 0;
 }
 
+void Player::ObjectUpdate()
+{
+	//速度を加算して座標更新
+	pos += velocity;
+
+	//壁判定
+	pos.x = max(pos.x, moveMinPos.x);
+	pos.x = min(pos.x, moveMaxPos.x);
+	pos.z = max(pos.z, moveMinPos.z);
+	pos.z = min(pos.z, moveMaxPos.z);
+
+	//地面に接地判定
+	if (pos.y <= object->GetScale().y * 2) {
+		pos.y = object->GetScale().y * 2;
+		if (!onGround) {
+			onGround = true;
+			fallSpeed = 0;
+			jumpCount = 0;
+			isBlinkStart = true; //ブリンク開始可能にする
+		}
+	}
+	//最終的な座標をセット
+	object->SetPosition(pos);
+
+	//オブジェクト更新
+	object->Update();
+}
+
 void Player::Move()
 {
 	DirectInput* input = DirectInput::GetInstance();
@@ -158,61 +184,58 @@ void Player::Move()
 	//ダッシュ
 	Dash();
 
-	//キー入力
-	{
-		if (isMoveKey) {
+	//入力
+	const float moveAccel = 0.1f;
+	if (isMoveKey || isMovePad) {
+		moveSpeed += moveAccel;
+		if (isDash) { moveSpeed = min(moveSpeed, dashSpeedMax); }
+		else { moveSpeed = min(moveSpeed, moveSpeedMax); }
 
-			Vector3 moveKeyVec{};
+		Vector3 inputMoveVec{};
+
+		if (isMoveKey) {
 			if (input->PushKey(DIK_D)) {
-				moveKeyVec.x += moveSpeed;
+				inputMoveVec.x = 1;
+				inputMoveVec.z = 0;
 			}
 			if (input->PushKey(DIK_A)) {
-				moveKeyVec.x -= moveSpeed;
+				inputMoveVec.x = -1;
+				inputMoveVec.z = 0;
 			}
 			if (input->PushKey(DIK_W)) {
-				moveKeyVec.z += moveSpeed;
+				inputMoveVec.x = 0;
+				inputMoveVec.z = 1;
 			}
 			if (input->PushKey(DIK_S)) {
-				moveKeyVec.z -= moveSpeed;
+				inputMoveVec.x = 0;
+				inputMoveVec.z = -1;
 			}
-
-			//キー入力のベクトルをカメラの傾きで回転させる
-			const float cameraRotaRadian = XMConvertToRadians(-gameCamera->GetCameraRota().y);
-			Vector3 cameraVec{};
-			cameraVec.x = moveKeyVec.x * cosf(cameraRotaRadian) - moveKeyVec.z * sinf(cameraRotaRadian);
-			cameraVec.z = moveKeyVec.x * sinf(cameraRotaRadian) + moveKeyVec.z * cosf(cameraRotaRadian);
-
-			moveVec = cameraVec;
-
-			//進行方向を向くようにする
-			Vector3 moveRotaVelocity = { moveVec.x, 0, moveVec.z };//プレイヤー回転にジャンプは関係ないので、速度Yは0にしておく
-			rota = VelocityRotate(moveRotaVelocity);
-			object->SetRotation(rota);
 		}
-	}
+		if (isMovePad) {
+			//パッドスティックの方向をベクトル化
+			inputMoveVec.x = XInputManager::GetInstance()->GetPadLStickIncline().x;
+			inputMoveVec.z = XInputManager::GetInstance()->GetPadLStickIncline().y;
+		}
 
-	//コントローラー入力
-	{
-		if (!isMovePad) { return; }
-
-		//パッドスティックの方向をベクトル化
-		Vector3 moveStickVec{};
-		moveStickVec.x = XInputManager::GetInstance()->GetPadLStickIncline().x * moveSpeed;
-		moveStickVec.z = XInputManager::GetInstance()->GetPadLStickIncline().y * moveSpeed;
-
-		//パッドスティックのベクトルをカメラの傾きで回転させる
+		//ベクトルをカメラの傾きで回転させる
+		inputMoveVec.normalize();
 		const float cameraRotaRadian = XMConvertToRadians(-gameCamera->GetCameraRota().y);
-		Vector3 cameraVec{};
-		cameraVec.x = moveStickVec.x * cosf(cameraRotaRadian) - moveStickVec.z * sinf(cameraRotaRadian);
-		cameraVec.z = moveStickVec.x * sinf(cameraRotaRadian) + moveStickVec.z * cosf(cameraRotaRadian);
-
-		moveVec = cameraVec;
+		moveVec.x = inputMoveVec.x * cosf(cameraRotaRadian) - inputMoveVec.z * sinf(cameraRotaRadian);
+		moveVec.z = inputMoveVec.x * sinf(cameraRotaRadian) + inputMoveVec.z * cosf(cameraRotaRadian);
 
 		//進行方向を向くようにする
 		Vector3 moveRotaVelocity = { moveVec.x, 0, moveVec.z };//プレイヤー回転にジャンプは関係ないので、速度Yは0にしておく
 		rota = VelocityRotate(moveRotaVelocity);
 		object->SetRotation(rota);
 	}
+	else {
+		moveSpeed -= moveAccel;
+		moveSpeed = max(moveSpeed, 0);
+	}
+
+	//速度をセット
+	velocity.x = moveVec.x * moveSpeed;
+	velocity.z = moveVec.z * moveSpeed;
 }
 
 void Player::Dash()
@@ -221,22 +244,18 @@ void Player::Dash()
 	if (!onGround) { return; }
 
 	if (!isDash) {
-		moveSpeed = moveSpeedMax;
-
 		//ダッシュ開始可能で地面接地しているかつ、ダッシュ入力があって移動した場合にダッシュ状態にする
 		if (isDashStart && (isMoveKey || isMovePad) && (DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)) && endurance > 0) {
 			isDash = true;
 			isDashStart = false;
 		}
-		
+
 		//ダッシュ開始不能時は、ダッシュボタン入力を一度離すことで可能になる
 		if ((!isDashStart) && (!(DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)))) {
 			isDashStart = true;
 		}
 	}
 	else {
-		moveSpeed = dashSpeedMax;
-
 		//移動 & 入力中はダッシュ状態を維持
 		if ((isMoveKey || isMovePad) && (DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)) && endurance > 0) {
 			UseEndurance(dashUseEndurance, 1, false); //持久力を使用
@@ -254,12 +273,22 @@ void Player::Fall()
 	if (onGround) { return; }
 
 	// 下向き加速度
-	const float fallAcc = -0.4f;
-	const float fallVYMin = -10.0f;
+	float fallAcc = -0.08f;
+
+	//ジャンプ中で入力をし続けている場合は落下速度を減少させる
+	if (jumpCount >= 1 && isInputJump && (DirectInput::GetInstance()->PushKey(DIK_SPACE) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_A))) {
+		fallAcc /= 3.5f;
+	}
+	else {
+		isInputJump = false;
+	}
+
 	// 加速
-	fallV.m128_f32[1] = max(fallV.m128_f32[1] + fallAcc, fallVYMin);
-	// 移動
-	moveVec.y = fallV.m128_f32[1];
+	fallSpeed += fallAcc;
+	velocity.y += fallSpeed;
+
+	const float fallSppedMax = -10.0f;
+	velocity.y = max(velocity.y, fallSppedMax);
 }
 
 void Player::AvoidStart()
@@ -292,7 +321,7 @@ void Player::Avoid()
 
 	const float power = Easing::OutCirc(10, 1, time);
 
-	moveVec = avoidVec.normalize() * power;
+	velocity = avoidVec.normalize() * power;
 
 	rota.x = Easing::OutCubic(0, 360, time);
 	object->SetRotation(rota);
@@ -314,8 +343,9 @@ void Player::Jump()
 	UseEndurance(jumpUseEndurance, 30, true); //持久力を使用
 
 	onGround = false;
-	const float jumpVYFist = 8.0f;
-	fallV = { 0, jumpVYFist, 0, 0 };
+	isInputJump = true;
+	velocity.y = jumpPower;
+	fallSpeed = 0;
 	jumpCount++; //ジャンプ回数を増やす
 }
 
@@ -337,7 +367,7 @@ void Player::BlinkStart()
 	blinkVec.z = -sinf(rotaRadian);
 
 	//落下速度を0にする
-	fallV.m128_f32[1] = 0;
+	velocity.y = 0;
 
 	blinkTimer = 0;
 	isBlink = true;
@@ -353,137 +383,12 @@ void Player::Blink()
 
 	const float power = Easing::OutCirc(20, 1, time);
 
-	moveVec = blinkVec.normalize() * power;
+	velocity = blinkVec.normalize() * power;
 
 	//タイマーが指定した時間になったらブリンク終了
 	if (blinkTimer >= blinkTime) {
 		isBlink = false;
 	}
-}
-
-void Player::Collider()
-{
-	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(object->GetCollider());
-	assert(sphereCollider);
-
-	// クエリーコールバッククラス
-	class PlayerQueryCallback : public QueryCallback
-	{
-	public:
-		PlayerQueryCallback(Sphere* sphere) : sphere(sphere) {};
-
-		// 衝突時コールバック関数
-		bool OnQueryHit(const QUERY_HIT& info) {
-
-			const XMVECTOR up = { 0,1,0,0 };
-
-			XMVECTOR rejectDir = XMVector3Normalize(info.reject);
-			float cos = XMVector3Dot(rejectDir, up).m128_f32[0];
-
-			// 地面判定しきい値
-			const float threshold = cosf(XMConvertToRadians(90.0f));
-
-			if (-threshold < cos && cos < threshold) {
-				sphere->center += info.reject;
-				move += info.reject;
-			}
-
-			return true;
-		}
-
-		Sphere* sphere = nullptr;
-		DirectX::XMVECTOR move = {};
-	};
-	PlayerQueryCallback callback(sphereCollider);
-
-	// 球と地形の交差を全検索
-	CollisionManager::GetInstance()->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
-	// 交差による排斥分動かす
-	pos.x += callback.move.m128_f32[0];
-	pos.y += callback.move.m128_f32[1];
-	pos.z += callback.move.m128_f32[2];
-
-	{
-		// 球の上端から球の下端までのレイキャスト
-		Segment ray;
-		ray.start = sphereCollider->center;
-		ray.end = { pos.x + moveVec.x,pos.y + moveVec.y,pos.z + moveVec.z };
-		Vector3 nMove = moveVec;
-		nMove.normalize();
-		ray.dir = { nMove.x, nMove.y,nMove.z,0.0f };
-		RAYCAST_HIT raycastHit;
-
-		// スムーズに坂を下る為の吸着距離
-		const float adsDistance = 0.2f;
-
-		// 接地を維持
-		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, moveVec.length())) {
-			XMFLOAT3 hugou = {};
-			if (abs(moveVec.x) < 0.0001f) { hugou.x = 0.0f; }
-			else { hugou.x = adsDistance * moveVec.x / abs(moveVec.x); }
-			if (abs(moveVec.y) < 0.0001f) { hugou.y = 0.0f; }
-			else { hugou.y = adsDistance * moveVec.y / abs(moveVec.y); }
-			if (abs(moveVec.z) < 0.0001f) { hugou.z = 0.0f; }
-			else { hugou.z = adsDistance * moveVec.z / abs(moveVec.z); }
-			Vector3 a = { (raycastHit.inter.m128_f32[0] - pos.x - hugou.x),
-							(raycastHit.inter.m128_f32[1] - pos.y - hugou.y),
-							(raycastHit.inter.m128_f32[2] - pos.z - hugou.z) };
-			if (abs(a.x) < 0.003f) { a.x = 0.0f; }
-			if (abs(a.z) < 0.003f) { a.z = 0.0f; }
-			if (abs(a.y) < 0.003f || returnY) {
-				a.y = 0.0f;
-				onGround = true;
-			}
-
-			returnY = true;
-			pos += a;
-		}
-		else {
-			pos += moveVec;
-			returnY = false;
-		}
-
-		// 球の上端から球の下端までのレイキャスト
-		ray.start = sphereCollider->center;
-		ray.end = { pos.x,pos.y + moveVec.y,pos.z };
-		nMove = moveVec;
-		nMove.normalize();
-		ray.dir = { 0,-1,0,0 };
-		if (onGround) {
-			// 接地を維持
-			if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
-				onGround = true;
-				returnY = false;
-				pos.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-				jumpCount = 0; //連続ジャンプ回数をリセット
-				isBlinkStart = true; //ブリンク開始可能にする
-			}
-			// 地面がないので落下
-			else {
-				onGround = false;
-				fallV = {};
-			}
-		}
-		// 落下状態
-		else if (fallV.m128_f32[1] <= 0.0f) {
-			if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f)) {
-				// 着地
-				onGround = true;
-				returnY = false;
-				pos.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-				jumpCount = 0; //連続ジャンプ回数をリセット
-				isBlinkStart = true; //ブリンク開始可能にする
-			}
-		}
-
-		moveVec = { 0.0f,0.0f,0.0f };
-
-		object->SetPosition(pos);
-	}
-
-	//position.x += moveVec[2].x;
-	//position.y += moveVec[2].y;
-	//position.z += moveVec[2].z;
 }
 
 void Player::Attack()
@@ -564,13 +469,16 @@ void Player::KnockbackStart(const Vector3& subjectPos, int power)
 	//ノックバックの強さをセット(仮で食らったダメージ量 / 10)
 	knockbackPower = (float)power / 10;
 
+	//移動スピードを0にしておく
+	moveSpeed = 0;
+
 	isKnockback = true;
 }
 
 void Player::Knockback()
 {
 	//ノックバック
-	moveVec = knockbackVec.normalize() * knockbackPower;
+	velocity = knockbackVec.normalize() * knockbackPower;
 
 	//ノックバックを弱くしていく
 	knockbackPower -= 0.05f;

@@ -11,12 +11,13 @@ class Player
 private:
 
 	using XMFLOAT2 = DirectX::XMFLOAT2;
+	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMVECTOR = DirectX::XMVECTOR;
 
 public:
 
 	Player();
-	~Player(){};
+	~Player() {};
 
 	void Update();
 	void Draw();
@@ -25,7 +26,7 @@ public:
 	void Heal(int healNum);
 
 private:
-
+	void ObjectUpdate();
 	void Move();
 	void Dash();
 	void Fall();
@@ -34,7 +35,6 @@ private:
 	void Jump();
 	void BlinkStart();
 	void Blink();
-	void Collider();
 	void Attack();
 	void HealHPMove();
 	void UseEndurance(const int enduranceUseNum, const int enduranceRecoveryStartTime, bool isDecreaseDiffMode);
@@ -45,6 +45,7 @@ private:
 public:
 
 	const Vector3& GetPosition() { return pos; }
+	const Vector3& GetVelocity() { return velocity; }
 	int GetJumpCount() { return jumpCount; }
 	int GetJumpMaxNum() { return jumpMaxNum; }
 	Object3d* GetObject3d() { return object.get(); }
@@ -54,10 +55,15 @@ public:
 
 
 private: //静的メンバ変数
+	//移動制限
+	static const XMFLOAT3 moveMinPos;
+	static const XMFLOAT3 moveMaxPos;
 	//最大移動スピード
 	static const float moveSpeedMax;
 	//最大ダッシュスピード
 	static const float dashSpeedMax;
+	//ジャンプ力
+	static const float jumpPower;
 	//各行動で使用する持久力
 	static const int dashUseEndurance = 1;
 	static const int avoidUseEndurance = 10;
@@ -71,18 +77,16 @@ private: //メンバ変数
 	GameCamera* gameCamera = nullptr;
 
 	Vector3 pos;
-	Vector3 moveVec;
+	Vector3 velocity;
 	Vector3 rota;
 
 	bool onGround = false;
 	// 落下ベクトル
-	DirectX::XMVECTOR fallV;
-
-	//y軸の押し戻し
-	bool returnY;
+	float fallSpeed = 0;;
 
 	//移動スピード
 	float moveSpeed = 0.0f;
+	Vector3 moveVec;
 	//移動入力があるか
 	bool isMoveKey = false;
 	bool isMovePad = false;
@@ -104,6 +108,8 @@ private: //メンバ変数
 	int jumpMaxNum;
 	//ジャンプ回数カウント
 	int jumpCount = 0;
+	//ジャンプ力調整用、ボタン長押し中か
+	bool isInputJump = false;
 
 	//ブリンク中か
 	bool isBlink = false;

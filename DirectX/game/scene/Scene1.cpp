@@ -29,8 +29,8 @@ void Scene1::Initialize()
 	player->SetGameCamera(camera.get());
 
 	//‰e—pŒõŒ¹ƒJƒƒ‰‰Šú‰»
-	lightCamera.reset(new LightCamera({ -50, 20, -50 }));
-	lightCamera->SetProjectionNum({ 360, 300 }, { -360, -100 });
+	lightCamera.reset(new LightCamera({ -50, 70, -50 }));
+	lightCamera->SetProjectionNum({ 380, 550 }, { -380, -50 });
 
 	Base3D::SetCamera(camera.get());
 	Base3D::SetLightCamera(lightCamera.get());
