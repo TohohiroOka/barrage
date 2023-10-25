@@ -370,6 +370,12 @@
     <ClCompile Include="game\enemy\boss1\Boss1Move2.cpp">
       <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClCompile>
+    <ClCompile Include="game\scene\TitleScene.cpp">
+      <Filter>ゲームシステム\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="game\ui\GameOver.cpp">
+      <Filter>ゲームシステム\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -771,6 +777,12 @@
     </ClInclude>
     <ClInclude Include="engine\Math\Timer.h">
       <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="game\scene\TitleScene.h">
+      <Filter>ゲームシステム\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\ui\GameOver.h">
+      <Filter>ゲームシステム\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,15 +1,12 @@
 #pragma once
 #include "Scene/InterfaceScene.h"
-#include "Math/Vector3.h"
 #include "engine/camera/DebugCamera.h"
-#include "player/Player.h"
-#include "game/camera/GameCamera.h"
 #include "engine/Camera/LightCamera.h"
-#include "../enemy/boss1/Boss1.h"
 #include "../field/Field.h"
-#include "game/ui/GameOver.h"
 
-class Scene1 : public InterfaceScene
+#include <memory>
+
+class TitleScene : public InterfaceScene
 {
 private:// エイリアス
 	using XMFLOAT2 = DirectX::XMFLOAT2;
@@ -66,31 +63,13 @@ public:
 	void CollisionCheck();
 
 private:
-	bool isNormalCamera = true;
-
-	std::unique_ptr<DebugCamera> debugCamera;
-	std::unique_ptr<GameCamera> camera;
-	std::unique_ptr<LightCamera> lightCamera;
-
-	std::unique_ptr<Sprite> sprite;
-
-	std::unique_ptr<Player> player;
 
 	//地形
 	std::unique_ptr<Field> field;
-
-	//ボス
-	std::unique_ptr<Boss1>boss;
-
-	std::unique_ptr<FbxModel> fbxModel1;
-	std::unique_ptr<FbxModel> fbxModel2;
-	std::unique_ptr<Fbx> fbx;
-
-	//ゲームオーバーUI
-	GameOver gameoverUi;
-
-	bool isBlend;
-	float rate;
-
-	bool stop;
+	//カメラ
+	std::unique_ptr<DebugCamera> debugCamera;
+	std::unique_ptr<LightCamera> lightCamera;
+	//スプライト
+	std::unique_ptr<Sprite> titleLogoSprite;
 };
+
