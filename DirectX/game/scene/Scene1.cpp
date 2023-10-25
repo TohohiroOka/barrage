@@ -9,6 +9,7 @@
 #include "Object/3d/collider/MeshCollider.h"
 #include "Object/3d/collider/CollisionAttribute.h"
 #include "GameHelper.h"
+#include "scene/TitleScene.h"
 
 using namespace DirectX;
 
@@ -58,6 +59,8 @@ void Scene1::Initialize()
 	isBlend = false;
 
 	stop = false;
+
+	gameoverUi.Initialize();
 }
 
 void Scene1::Update()
@@ -91,6 +94,18 @@ void Scene1::Update()
 	}
 	//camera->Update();
 	lightCamera->Update();
+
+	//デバッグ用シーン切り替え
+	if (DirectInput::GetInstance()->ReleaseKey(DIK_1)) {
+		TitleScene* titleScene = new TitleScene;
+		SceneManager::SetNextScene(titleScene);
+	}
+
+	gameoverUi.Update();
+	//体力0でゲームオーバー表示
+	//デバッグ用ゲームオーバー表示
+	if (DirectInput::GetInstance()->TriggerKey(DIK_F4)) { gameoverUi.ResetGameOverUI(); }
+	if (DirectInput::GetInstance()->TriggerKey(DIK_4)) { gameoverUi.StartGameOverUI(); }
 }
 
 void Scene1::Draw(const int _cameraNum)
@@ -116,6 +131,8 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 		DebugText::GetInstance()->DrawAll();
 		//sprite->Draw();
 	}
+
+	gameoverUi.Draw();
 }
 
 void Scene1::Finalize()
