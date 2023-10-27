@@ -4,10 +4,9 @@
 #include <d3d12.h>
 #include <d3dx12.h>
 #include <DirectXMath.h>
-#include <map>
 #include "Texture/Texture.h"
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 class FbxModel
 {
@@ -264,7 +263,7 @@ public://メンバ変数
 	//モデル名
 	std::string name;
 	//テクスチャパス
-	std::map<std::string,std::unique_ptr<Texture>> texture;
+	std::unordered_map<std::string,std::unique_ptr<Texture>> texture;
 	//定数Texture
 	ComPtr<ID3D12Resource> constBuffSkin = nullptr;
 	//アニメーション可能か
@@ -275,10 +274,13 @@ public://メンバ変数
 	int elementsNum;
 	//motionblend用
 	std::vector<ConstBufferDataSkin> skinData;
+	//ボーン描画用の行列
+	std::unordered_map<std::string, XMMATRIX> boneMatWorld;
 
 public:
 
 	XMMATRIX GetSkinData(const int _number, const int _bonesNumber) { return skinData[_number].bones[_bonesNumber]; }
+	XMMATRIX GetBornMatWorld(const std::string _boneName) { return boneMatWorld[_boneName]; }
 
 	///// <summary>
 	///// アンビエント影響度の取得

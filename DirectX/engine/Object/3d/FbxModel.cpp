@@ -515,6 +515,16 @@ void FbxModel::LoadFbx(const std::string modelName)
 
 	//モーションブレンド用の配列
 	skinData.resize(data->buffData.size());
+
+	for (int buffNum = 0; buffNum < data->buffData.size(); buffNum++)
+	{
+		//ボーン配列取得
+		std::vector<Bone>& bones = data->buffData[buffNum].bones;
+		for (int i = 0; i < bones.size(); i++)
+		{
+			boneMatWorld[bones[i].name] = XMMatrixIdentity();
+		}
+	}
 }
 
 void FbxModel::Initialize(const int _createNum)
@@ -633,6 +643,8 @@ void FbxModel::Update()
 				//合成してスキニング行列に保存
 				skinData[buffNum].bones[i] = bones[i].invInitialPose * matCurrentPose;
 				constMapSkin->bones[i] = skinData[buffNum].bones[i];
+
+				boneMatWorld[bones[i].name] = matCurrentPose;
 			}
 		}
 		//スキニングをしない場合初期化値を送る
@@ -686,6 +698,8 @@ void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _r
 				XMMATRIX anime1= bones[i].invInitialPose * matCurrentPose;
 				skinData[buffNum].bones[i] = anime1 * _rate1 + motionBlendSkin * _rate2;
 				constMapSkin->bones[i] = skinData[buffNum].bones[i];
+
+				boneMatWorld[bones[i].name] = matCurrentPose * _rate1 + _motionBlend->GetBornMatWorld(bones[i].name) * _rate2;
 			}
 		}
 		//スキニングをしない場合初期化値を送る

@@ -1,6 +1,7 @@
 #pragma once
 #include "FbxModel.h"
 #include "Base3D.h"
+#include "InstanceObject.h"
 
 class Camera;
 class LightGroup;
@@ -48,6 +49,12 @@ private://構造体宣言
 		//float pad[3];//パディング
 	};
 
+	struct BoneObjectInfo {
+		std::string boneName;
+		XMMATRIX matWorld;
+		std::string instanceName;
+	};
+
 public://静的メンバ関数
 
 	/// <summary>
@@ -87,9 +94,26 @@ public:
 	void Draw(const DrawMode _drawMode = DrawMode::alpha);
 
 	/// <summary>
+	/// 描画
+	/// </summary>
+	void BoneDraw(const DrawMode _drawMode = DrawMode::alpha);
+
+	/// <summary>
 	/// マテリアル情報を定数バッファに送る
 	/// </summary>
 	void TransferMaterial();
+
+	/// <summary>
+	/// bone用モデルセット
+	/// </summary>
+	/// <param name="_boneName">ボーン名</param>
+	/// <param name="_modelName">モデル名</param>
+	/// <param name="_model">モデル</param>
+	/// <param name="_matWorld">ワールド行列</param>
+	void SetBoneObject(const std::string& _boneName, const std::string& _modelName,
+		Model* _model = nullptr, const XMMATRIX& _matWorld = DirectX::XMMatrixIdentity());
+
+	void FrameReset();
 
 private://メンバ変数
 
@@ -114,6 +138,9 @@ private://メンバ変数
 	float specular = 0.5f;
 	//粗さ
 	float roughness = 0.0f;
+
+	std::vector<BoneObjectInfo> boneObjectInfo;
+	std::unordered_map<std::string, std::unique_ptr<InstanceObject>> boneObject;
 
 public:
 

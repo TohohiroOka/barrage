@@ -143,6 +143,17 @@ void Fbx::Draw(const DrawMode _drawMode)
 	model->Draw(cmdList);
 }
 
+void Fbx::BoneDraw(const DrawMode _drawMode)
+{
+	for (auto& i : boneObjectInfo) {
+		boneObject[i.instanceName]->DrawInstance(i.matWorld * model->GetBornMatWorld(i.boneName), { 1,1,1,1 });
+	}
+
+	for (auto& i : boneObject) {
+		i.second->Draw();
+	}
+}
+
 void Fbx::TransferMaterial()
 {
 	// 定数バッファへデータ転送
@@ -158,5 +169,27 @@ void Fbx::TransferMaterial()
 		constMap->roughness = 0.5f;
 		constMap->alpha = 1.0f;
 		constBuffB1->Unmap(0, nullptr);
+	}
+}
+
+void Fbx::SetBoneObject(const std::string& _boneName, const std::string& _modelName,
+	Model* _model, const XMMATRIX& _matWorld)
+{
+	int modelNuber = 0;
+	if (!boneObject[_modelName]) {
+		boneObject[_modelName] = InstanceObject::Create(_model);
+	}
+
+	BoneObjectInfo add;
+	add.boneName = _boneName;
+	add.instanceName = _modelName;
+	add.matWorld = _matWorld;
+	boneObjectInfo.emplace_back(add);
+}
+
+void Fbx::FrameReset()
+{
+	for (auto& i = boneObject.begin(); i != boneObject.end(); i++) {
+		i->second->FrameReset();
 	}
 }

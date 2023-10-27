@@ -84,6 +84,8 @@ private:
 
 	std::unique_ptr<FbxModel> fbxModel1;
 	std::unique_ptr<FbxModel> fbxModel2;
+	std::unique_ptr<Model> objmodel1;
+	std::unique_ptr<Model> objmodel2;
 	std::unique_ptr<Fbx> fbx;
 
 	//ゲームオーバーUI
