@@ -376,6 +376,9 @@
     <ClCompile Include="game\ui\GameOver.cpp">
       <Filter>ゲームシステム\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="game\enemy\BaseBossModel.cpp">
+      <Filter>ゲームシステム\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -783,6 +786,9 @@
     </ClInclude>
     <ClInclude Include="game\ui\GameOver.h">
       <Filter>ゲームシステム\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\BaseBossModel.h">
+      <Filter>ゲームシステム\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -47,71 +47,17 @@ void Scene1::Initialize()
 
 	fbxModel1 = FbxModel::Create("uma_j");
 	fbxModel2 = FbxModel::Create("uma4");
-	objmodel1 = Model::CreateFromOBJ("NormalCube");
-	objmodel2 = Model::CreateFromOBJ("cone");
 	fbxModel1->isAnimation = true;
 	fbxModel2->isAnimation = true;
 	//fbxModel->SetIsBoneDraw(true);
 	fbx = Fbx::Create(fbxModel1.get());
 	fbx->SetMotionBlendModel(fbxModel2.get());
-	fbx->SetScale({ 1.0f,1.0f ,1.0f });
+	fbx->SetScale({ 10.0f,10.0f ,10.0f });
 	fbx->SetLight(true);
 	fbx->SetAnimation(true);
 
-	std::array<std::string,9> bone = {
-		//胴（上から）
-		"mixamorig:HeadTop_End","mixamorig:Head","mixamorig:Spine1","mixamorig:Spine","mixamorig:Hips",
-		//右手（外から）
-		"mixamorig:LeftShoulder",
-		//左手（外から）
-		"mixamorig:RightShoulder",
-		//右足
-		"mixamorig:LeftUpLeg",
-		//左足
-		"mixamorig:RightUpLeg"
-	};
-
-	std::array<std::string, 4> boneT = {
-		//足先
-		"mixamorig:RightLeg","mixamorig:LeftLeg","mixamorig:LeftForeArm","mixamorig:RightForeArm"
-	};
-
-	for (int i = 0; i < bone.size(); i++) {
-		fbx->SetBoneObject(bone[i],"normal", objmodel1.get());
-	}
-	for (int i = 0; i < 4; i++) {
-		DirectX::XMMATRIX world = XMMatrixIdentity();
-		if (i ==2) {
-			// スケール、回転、平行移動行列の計算
-			DirectX::XMMATRIX matScale = XMMatrixScaling(1.0f, 2.0f, 1.0f);
-			DirectX::XMMATRIX matRot = XMMatrixIdentity();
-			matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
-			matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
-			matRot *= XMMatrixRotationY(XMConvertToRadians(-90.0f));
-			DirectX::XMMATRIX matTrans = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
-
-			world = XMMatrixIdentity(); // 変形をリセット
-			world *= matScale; // ワールド行列にスケーリングを反映
-			world *= matRot; // ワールド行列に回転を反映
-			world *= matTrans; // ワールド行列に平行移動を反映
-		} else if(i == 3) {
-			// スケール、回転、平行移動行列の計算
-			DirectX::XMMATRIX matScale = XMMatrixScaling(1.0f, 2.0f, 1.0f);
-			DirectX::XMMATRIX matRot = XMMatrixIdentity();
-			matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
-			matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
-			matRot *= XMMatrixRotationY(XMConvertToRadians(90.0f));
-			DirectX::XMMATRIX matTrans = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
-
-			world = XMMatrixIdentity(); // 変形をリセット
-			world *= matScale; // ワールド行列にスケーリングを反映
-			world *= matRot; // ワールド行列に回転を反映
-			world *= matTrans; // ワールド行列に平行移動を反映
-		}
-		fbx->SetBoneObject(boneT[i], "cube", objmodel2.get(), world);
-	}
-
 	isBlend = false;
+
 	stop = false;
 
 	gameoverUi.Initialize();
@@ -123,7 +69,6 @@ void Scene1::Update()
 
 	GameHelper::Instance()->SetStop(stop);
 
-	fbx->Update();
 	player->Update();
 	field->Update();
 	boss->SetTargetPos(player->GetPosition());
@@ -167,7 +112,6 @@ void Scene1::Draw(const int _cameraNum)
 {
 	field->Draw();
 
-	fbx->BoneDraw();
 	//gobject->ColliderDraw();
 
 	player->Draw();
@@ -229,7 +173,6 @@ void Scene1::ImguiDraw()
 void Scene1::FrameReset()
 {
 	boss->FrameReset();
-	fbx->FrameReset();
 }
 
 void Scene1::CollisionCheck()
