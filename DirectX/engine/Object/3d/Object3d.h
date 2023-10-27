@@ -40,8 +40,6 @@ public: // 静的メンバ関数
 	/// <returns>インスタンス</returns>
 	static std::unique_ptr<Object3d> Create(Model* _model = nullptr);
 
-	static void SetLightDepthTexture(Texture* _texture) { lightDepthTexture = _texture; }
-
 private:
 
 	/// <summary>
@@ -74,9 +72,6 @@ private: // 静的メンバ変数
 	//パイプライン情報
 	static std::vector<GraphicsPipelineManager::DrawSet> pipeline;
 	static std::vector<GraphicsPipelineManager::DrawSet> lightviewPipeline;
-
-	//シャドウ用
-	static Texture* lightDepthTexture;
 
 	// 名前
 	const char* name = nullptr;

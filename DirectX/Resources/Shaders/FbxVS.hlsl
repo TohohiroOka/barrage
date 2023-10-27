@@ -82,6 +82,9 @@ VSOutput main(VSInput input)
 
 	output.normal = wnormal.xyz;
 	output.uv = input.uv;
+	
+	//ライト視点から見た座標
+    output.shadowpos = mul(mul(lightViewproj, world), input.pos);
 
 	return output;
 }

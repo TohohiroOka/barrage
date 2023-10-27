@@ -39,6 +39,12 @@
         },
         {
             "shader":{
+                "Name":"FbxLightView",
+                "Type":["v","p"]
+            }
+        },
+        {
+            "shader":{
                 "Name":"Sprite",
                 "Type":["v","p"]
             }

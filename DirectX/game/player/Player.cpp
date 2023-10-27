@@ -22,11 +22,11 @@ const float Player::dashSpeedMax = 2.5f;
 
 Player::Player()
 {
-	model = Model::CreateFromOBJ("NormalCube");
-	object = Object3d::Create(model.get());
+	model = FbxModel::Create("uma3");
+	object = Fbx::Create(model.get());
 	object->SetShadowMap(true);
-
-
+	object->SetAnimation(true);
+	
 	pos = { 100.0f,200.0f,100.0f };
 	//連続ジャンプ可能回数設定
 	jumpMaxNum = 2;

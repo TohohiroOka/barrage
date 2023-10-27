@@ -12,7 +12,6 @@ using namespace DirectX;
 
 std::vector<GraphicsPipelineManager::DrawSet> Object3d::pipeline;
 std::vector<GraphicsPipelineManager::DrawSet> Object3d::lightviewPipeline;
-Texture* Object3d::lightDepthTexture;
 
 std::unique_ptr<Object3d> Object3d::Create(Model* _model)
 {

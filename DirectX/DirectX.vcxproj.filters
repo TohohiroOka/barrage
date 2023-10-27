@@ -134,6 +134,9 @@
     <Filter Include="シェーダーファイル\ObjLightView">
       <UniqueIdentifier>{f6415680-dd3a-496c-b831-d4f1ac64895f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\FbxLightView">
+      <UniqueIdentifier>{7aa3c5ec-638b-4ed1-85fc-db21f22324f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -438,12 +441,6 @@
     <FxCompile Include="Resources\Shaders\FogVS.hlsl">
       <Filter>シェーダーファイル\PostEffect\Fog</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\FbxPS.hlsl">
-      <Filter>シェーダーファイル\Fbx</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shaders\FbxVS.hlsl">
-      <Filter>シェーダーファイル\Fbx</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\Shaders\PrimitiveObject3DPS.hlsl">
       <Filter>シェーダーファイル\PrimitiveObject3D</Filter>
     </FxCompile>
@@ -455,6 +452,18 @@
     </FxCompile>
     <FxCompile Include="Resources\Shaders\ObjLightViewVS.hlsl">
       <Filter>シェーダーファイル\ObjLightView</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\FbxPS.hlsl">
+      <Filter>シェーダーファイル\Fbx</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\FbxVS.hlsl">
+      <Filter>シェーダーファイル\Fbx</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\FbxLightViewPS.hlsl">
+      <Filter>シェーダーファイル\FbxLightView</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\FbxLightViewVS.hlsl">
+      <Filter>シェーダーファイル\FbxLightView</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -485,14 +494,17 @@
     <None Include="Resources\Shaders\Fog.hlsli">
       <Filter>シェーダーファイル\PostEffect\Fog</Filter>
     </None>
-    <None Include="Resources\Shaders\Fbx.hlsli">
-      <Filter>シェーダーファイル\Fbx</Filter>
-    </None>
     <None Include="Resources\Shaders\PrimitiveObject3D.hlsli">
       <Filter>シェーダーファイル\PrimitiveObject3D</Filter>
     </None>
     <None Include="Resources\Shaders\ObjLightView.hlsli">
       <Filter>シェーダーファイル\ObjLightView</Filter>
+    </None>
+    <None Include="Resources\Shaders\Fbx.hlsli">
+      <Filter>シェーダーファイル\Fbx</Filter>
+    </None>
+    <None Include="Resources\Shaders\FbxLightView.hlsli">
+      <Filter>シェーダーファイル\FbxLightView</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

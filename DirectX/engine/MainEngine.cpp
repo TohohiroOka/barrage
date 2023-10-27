@@ -54,7 +54,7 @@ void MainEngine::Initialize()
 	postEffect = PostEffect::Create();
 
 	shadowMap = Depth::Create({ 4096 ,4096 });
-	Object3d::SetLightDepthTexture(shadowMap->GetTex());
+	Base3D::SetLightDepthTexture(shadowMap->GetTex());
 
 	bloom = Bloom::Create();
 	outline = Outline::Create();

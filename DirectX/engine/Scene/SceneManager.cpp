@@ -101,11 +101,15 @@ void SceneManager::CreatePipeline()
 		SetPipeline("PrimitiveObject3D", addDrawSet);
 		PrimitiveObject3D::SetPipeline(addDrawSet);
 	}
-	//PrimitiveObject3D
+	//Fbx
 	{
 		std::vector<GraphicsPipelineManager::DrawSet> addDrawSet{};
 		SetPipeline("Fbx", addDrawSet);
 		Fbx::SetPipeline(addDrawSet);
+
+		std::vector<GraphicsPipelineManager::DrawSet> lightAddDrawSet{};
+		SetPipeline("FbxLightView", lightAddDrawSet);
+		Fbx::SetLightviewPipeline(lightAddDrawSet);
 	}
 	//SPRITE
 	{

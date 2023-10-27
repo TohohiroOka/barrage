@@ -25,6 +25,8 @@ private://構造体宣言
 		XMMATRIX viewproj; // ビュープロジェクション行列
 		XMMATRIX world; // ワールド行列
 		XMFLOAT3 cameraPos; // カメラ座標（ワールド座標）
+		XMMATRIX lightViewproj;	//ライトビュープロジェクション行列
+		unsigned int isShadowMap;	//影を付けるか
 		unsigned int isSkinning;//スキニングを行うか
 		unsigned int isBloom;//ブルームの有無
 		unsigned int isToon;//トゥーンの有無
@@ -46,6 +48,15 @@ private://構造体宣言
 		float roughness; // 粗さ
 		float alpha;	// アルファ
 		//float pad[3];//パディング
+	};
+
+	//影用
+	struct  CONST_BUFFER_DATA_LIGHTVIEW_B0
+	{
+		XMMATRIX viewproj;	//ビュープロジェクション行列
+		XMMATRIX world;		//ワールド行列
+		XMFLOAT3 cameraPos;	//カメラ座標(ワールド座標)
+		unsigned int isSkinning;//スキニングを行うか
 	};
 
 public://静的メンバ関数
@@ -87,6 +98,11 @@ public:
 	void Draw(const DrawMode _drawMode = DrawMode::alpha);
 
 	/// <summary>
+	/// 影用光源ライトから見た視点での描画
+	/// </summary>
+	void DrawLightView();
+
+	/// <summary>
 	/// マテリアル情報を定数バッファに送る
 	/// </summary>
 	void TransferMaterial();
@@ -95,6 +111,7 @@ private://メンバ変数
 
 	//パイプライン情報
 	static std::vector<GraphicsPipelineManager::DrawSet> pipeline;
+	static std::vector<GraphicsPipelineManager::DrawSet> lightviewPipeline;
 
 	//モデル
 	FbxModel* model = nullptr;
@@ -104,6 +121,8 @@ private://メンバ変数
 	ComPtr<ID3D12Resource> constBuffB0;
 	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuffB1;
+	//影用定数バッファ
+	ComPtr<ID3D12Resource> constBuffLightViewB0;
 	//マテリアルが変化したか
 	bool isTransferMaterial = false;
 	//ベースカラ―
@@ -143,4 +162,5 @@ public:
 		isTransferMaterial = true;
 	}
 	static void SetPipeline(const std::vector<GraphicsPipelineManager::DrawSet>& _pipeline) { Fbx::pipeline = _pipeline; }
+	static void SetLightviewPipeline(const std::vector<GraphicsPipelineManager::DrawSet>& _pipeline) { Fbx::lightviewPipeline = _pipeline; }
 };

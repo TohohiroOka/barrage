@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Object/3d/Object3d.h"
+#include "Object/3d/Fbx.h"
 #include "Math/Vector3.h"
 #include "game/ui/Gauge.h"
 #include "BasePlayerAttack.h"
@@ -49,7 +49,7 @@ public:
 	const Vector3& GetVelocity() { return velocity; }
 	int GetJumpCount() { return jumpCount; }
 	int GetJumpMaxNum() { return jumpMaxNum; }
-	Object3d* GetObject3d() { return object.get(); }
+	Fbx* GetObject3d() { return object.get(); }
 	BasePlayerAttack* GetAttackAction() { return attackAction.get(); }
 	bool GetIsDead() { return isDead; }
 
@@ -76,8 +76,8 @@ private: //静的メンバ変数
 	static const int blinkUseEndurance = 0;
 
 private: //メンバ変数
-	std::unique_ptr<Model> model = nullptr;
-	std::unique_ptr<Object3d> object = nullptr;
+	std::unique_ptr<FbxModel> model = nullptr;
+	std::unique_ptr<Fbx> object = nullptr;
 
 	GameCamera* gameCamera = nullptr;
 

@@ -4,6 +4,8 @@ cbuffer cbuff0 : register(b0)
 	matrix viewproj; // ビュープロジェクション行列
 	matrix world; // ワールド行列
 	float3 cameraPos; // カメラ座標（ワールド座標）
+    matrix lightViewproj; // 光源視点ビュープロジェクション行列
+    uint isShadowMap; //影を付けるか
 	uint isSkinning;//スキニングを行うか
     uint isBloom; //ブルームの有無
     uint isToon; //トゥーンの有無
@@ -104,6 +106,7 @@ struct VSOutput
 	float4 outputpos : POSITION1; // ワールド座標
 	float3 normal :NORMAL; // 法線
 	float2 uv  :TEXCOORD; // uv値
+    float4 shadowpos : POSITION2;
 };
 
 //ピクセルシェーダーから実行処理へのやり取りに使用する構造体

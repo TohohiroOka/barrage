@@ -30,7 +30,7 @@ void Scene1::Initialize()
 	player->SetGameCamera(camera.get());
 
 	//‰e—pŒõŒ¹ƒJƒƒ‰‰Šú‰»
-	lightCamera.reset(new LightCamera({ 205, 200, 205 }, { 205, 0, 204 }));
+	lightCamera.reset(new LightCamera({ 205, 200, 204 }, { 205, 0, 205 }));
 	const float projectionSize = 1.5f;
 	lightCamera->SetProjectionNum({ projectionSize * (float)WindowApp::GetWindowWidth() / 5, projectionSize * (float)WindowApp::GetWindowHeight() / 5 },
 		{ -projectionSize * (float)WindowApp::GetWindowWidth() / 5, -projectionSize * (float)WindowApp::GetWindowHeight() / 5 });
@@ -124,7 +124,6 @@ void Scene1::Draw(const int _cameraNum)
 void Scene1::DrawLightView(const int _cameraNum)
 {
 	player->DrawLightView();
-	field->Draw();
 }
 
 void Scene1::NonPostEffectDraw(const int _cameraNum)

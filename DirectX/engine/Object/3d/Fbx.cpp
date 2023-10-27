@@ -1,5 +1,6 @@
 #include "Fbx.h"
 #include "Camera/Camera.h"
+#include "Camera/LightCamera.h"
 #include "Light/LightGroup.h"
 
 #include <fstream>
@@ -10,6 +11,7 @@
 using namespace DirectX;
 
 std::vector<GraphicsPipelineManager::DrawSet> Fbx::pipeline;
+std::vector<GraphicsPipelineManager::DrawSet> Fbx::lightviewPipeline;
 
 Fbx::~Fbx()
 {
@@ -38,6 +40,16 @@ void Fbx::Initialize()
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&constBuffB1));
+	assert(SUCCEEDED(result));
+
+	//定数バッファシャドウの生成
+	result = device->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),//アップロード可能
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(CONST_BUFFER_DATA_LIGHTVIEW_B0) + 0xff) & ~0xff),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuffLightViewB0));
 	assert(SUCCEEDED(result));
 }
 
@@ -96,6 +108,15 @@ void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 		constMap->cameraPos = {0.0f,0.0f,0.0f };
 	}
 	constMap->world = matWorld;
+	if (lightCamera)
+	{
+		constMap->lightViewproj = lightCamera->GetView() * lightCamera->GetProjection();
+	}
+	else
+	{
+		constMap->lightViewproj = XMMatrixIdentity();
+	}
+	constMap->isShadowMap = isShadowMap;
 	constMap->isSkinning = model->isSkinning;
 	constMap->isBloom = isBloom;
 	constMap->isToon = isToon;
@@ -103,6 +124,26 @@ void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 	constMap->isLight = isLight;
 	constMap->outlineColor = outlineColor;
 	constBuffB0->Unmap(0, nullptr);
+
+	//定数バッファへのデータ転送(光源カメラ視点)
+	CONST_BUFFER_DATA_LIGHTVIEW_B0* constMapLightView = nullptr;
+	if (SUCCEEDED(constBuffLightViewB0->Map(0, nullptr, (void**)&constMapLightView))) {
+		if (lightCamera)
+		{
+			constMapLightView->viewproj = lightCamera->GetView() * lightCamera->GetProjection();
+			constMapLightView->cameraPos = lightCamera->GetEye();
+		}
+		else
+		{
+			constMapLightView->viewproj = XMMatrixIdentity();
+			constMapLightView->cameraPos = { 0,0,0 };
+		}
+
+		constMapLightView->world = matWorld;
+		constMapLightView->isSkinning = model->isSkinning;
+		constBuffLightViewB0->Unmap(0, nullptr);
+	}
+
 
 	if (isTransferMaterial)
 	{
@@ -112,7 +153,8 @@ void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 
 	if (_motionBlendRate1 >= 2.0f) {
 		model->Update();
-	} else {
+	}
+	else {
 		model->Update(motionBlendModel, _motionBlendRate1, _motionBlendRate2);
 	}
 }
@@ -134,6 +176,32 @@ void Fbx::Draw(const DrawMode _drawMode)
 
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
+
+	cmdList->SetGraphicsRootDescriptorTable(5, lightDepthTexture->descriptor->gpu);
+
+	// ライトの描画
+	light->Draw(cmdList, 2);
+
+	// モデル描画
+	model->Draw(cmdList);
+}
+
+void Fbx::DrawLightView()
+{
+	// nullptrチェック
+	assert(device);
+	assert(ObjectBase::cmdList);
+
+	// モデルの割り当てがなければ描画しない
+	if (model == nullptr) {
+		return;
+	}
+
+	Base3D::Draw(lightviewPipeline[0]);
+
+	// 定数バッファビューをセット
+	cmdList->SetGraphicsRootConstantBufferView(0, constBuffLightViewB0->GetGPUVirtualAddress());
 	cmdList->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
 
 	// ライトの描画
