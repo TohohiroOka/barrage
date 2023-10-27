@@ -30,8 +30,10 @@ void Scene1::Initialize()
 	player->SetGameCamera(camera.get());
 
 	//影用光源カメラ初期化
-	lightCamera.reset(new LightCamera({ -50, 70, -50 }));
-	lightCamera->SetProjectionNum({ 380, 550 }, { -380, -50 });
+	lightCamera.reset(new LightCamera({ 205, 200, 205 }, { 205, 0, 204 }));
+	const float projectionSize = 1.5f;
+	lightCamera->SetProjectionNum({ projectionSize * (float)WindowApp::GetWindowWidth() / 5, projectionSize * (float)WindowApp::GetWindowHeight() / 5 },
+		{ -projectionSize * (float)WindowApp::GetWindowWidth() / 5, -projectionSize * (float)WindowApp::GetWindowHeight() / 5 });
 
 	Base3D::SetCamera(camera.get());
 	Base3D::SetLightCamera(lightCamera.get());
@@ -105,7 +107,8 @@ void Scene1::Update()
 	//体力0でゲームオーバー表示
 	//デバッグ用ゲームオーバー表示
 	if (DirectInput::GetInstance()->TriggerKey(DIK_F4)) { gameoverUi.ResetGameOverUI(); }
-	if (DirectInput::GetInstance()->TriggerKey(DIK_4)) { gameoverUi.StartGameOverUI(); }
+	//if (DirectInput::GetInstance()->TriggerKey(DIK_4)) { gameoverUi.StartGameOverUI(); }
+	if (player->GetIsDead() && !gameoverUi.GetIsGameOver()) { gameoverUi.StartGameOverUI(); }
 }
 
 void Scene1::Draw(const int _cameraNum)
@@ -163,6 +166,8 @@ void Scene1::ImguiDraw()
 	else { ImGui::Text("lockon  false"); }
 	ImGui::Text("Player Boss Length [ %f ]", boss->GetLength());
 	ImGui::Text("%d : %d ", player->GetJumpMaxNum(), player->GetJumpCount());
+	
+	player->ImguiDraw();
 
 	ImGui::SliderFloat("blend rate", &rate, 0.0f, 1.0f);
 	ImGui::Checkbox("stop", &stop);

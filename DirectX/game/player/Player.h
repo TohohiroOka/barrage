@@ -21,6 +21,7 @@ public:
 
 	void Update();
 	void Draw();
+	void ImguiDraw();
 	void DrawLightView();
 	void Damage(int damageNum, const Vector3& subjectPos);
 	void Heal(int healNum);
@@ -50,6 +51,8 @@ public:
 	int GetJumpMaxNum() { return jumpMaxNum; }
 	Object3d* GetObject3d() { return object.get(); }
 	BasePlayerAttack* GetAttackAction() { return attackAction.get(); }
+	bool GetIsDead() { return isDead; }
+
 
 	void SetGameCamera(GameCamera* gameCamera) { this->gameCamera = gameCamera; }
 
@@ -60,15 +63,17 @@ private: //静的メンバ変数
 	static const XMFLOAT3 moveMaxPos;
 	//最大移動スピード
 	static const float moveSpeedMax;
+	//ジャンプ力
+	static float jumpPower;
+	//落下用重力加速度
+	static float gravityAccel;
 	//最大ダッシュスピード
 	static const float dashSpeedMax;
-	//ジャンプ力
-	static const float jumpPower;
 	//各行動で使用する持久力
 	static const int dashUseEndurance = 1;
 	static const int avoidUseEndurance = 10;
-	static const int jumpUseEndurance = 30;
-	static const int blinkUseEndurance = 30;
+	static const int jumpUseEndurance = 0;
+	static const int blinkUseEndurance = 0;
 
 private: //メンバ変数
 	std::unique_ptr<Model> model = nullptr;

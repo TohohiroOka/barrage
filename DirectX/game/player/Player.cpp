@@ -9,12 +9,14 @@
 #include "game/camera/GameCamera.h"
 #include "engine/Math/Easing/Easing.h"
 #include "PlayerSwordAttack1.h"
+#include <imgui.h>
 
 using namespace DirectX;
 
 const XMFLOAT3 Player::moveMinPos = { 0,0,0 };
 const XMFLOAT3 Player::moveMaxPos = { 510,0,510 };
-const float Player::jumpPower = 7.0f;
+float Player::jumpPower = 3.0f;
+float Player::gravityAccel = -0.02f;
 const float Player::moveSpeedMax = 1.25f;
 const float Player::dashSpeedMax = 2.5f;
 
@@ -96,6 +98,12 @@ void Player::Draw()
 	if (attackAction) {
 		attackAction->Draw();
 	}
+}
+
+void Player::ImguiDraw()
+{
+	ImGui::SliderFloat("playerFallAccel", &gravityAccel, 0.0f, -0.5f);
+	ImGui::SliderFloat("playerJumpPower", &jumpPower, 0.0f, 20.0f);
 }
 
 void Player::DrawLightView()
@@ -272,8 +280,7 @@ void Player::Fall()
 	//地面に接地していたら抜ける
 	if (onGround) { return; }
 
-	// 下向き加速度
-	float fallAcc = -0.08f;
+	float fallAcc = gravityAccel;
 
 	//ジャンプ中で入力をし続けている場合は落下速度を減少させる
 	if (jumpCount >= 1 && isInputJump && (DirectInput::GetInstance()->PushKey(DIK_SPACE) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_A))) {

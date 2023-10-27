@@ -30,6 +30,8 @@ public:
 
 	void ResetGameOverUI();
 
+	bool GetIsGameOver() { return isGameOver; }
+
 private:
 	//表示開始フラグ
 	bool isGameOver = false;
