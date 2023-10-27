@@ -2,7 +2,6 @@
 #include "Scene/InterfaceScene.h"
 #include "engine/camera/DebugCamera.h"
 #include "engine/Camera/LightCamera.h"
-#include "../field/Field.h"
 
 #include <memory>
 
@@ -15,6 +14,29 @@ private:// エイリアス
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 	using XMINT3 = DirectX::XMINT3;
+
+	//選択肢強調表示用クラス
+	class ChoiceEmphasisDrawer
+	{
+	public:
+		ChoiceEmphasisDrawer() = default;
+		~ChoiceEmphasisDrawer() = default;
+
+		void Initialize();
+
+		void Update();
+
+		void Draw();
+
+		void SetEmphasisPos(float posX, float posY, float sizeX, float sizeY);
+
+	private:
+		//強調用ぼかし
+		std::unique_ptr<Sprite> emphasisSprite;
+
+		//時間
+		const int ALPHA_ANIM_FRAME = 90;
+	};
 
 public:
 
@@ -63,13 +85,39 @@ public:
 	void CollisionCheck();
 
 private:
+	//選択中
+	enum class PLAYER_SELECT
+	{
+		SELECT_STARTGAME,
+		SELECT_CONFIG,
+		SELECT_EXIT,
+	};
+	PLAYER_SELECT selecting = PLAYER_SELECT::SELECT_STARTGAME;
 
-	//地形
-	std::unique_ptr<Field> field;
+	bool isPressed = false;
+
+	ChoiceEmphasisDrawer choiceDrawer;
+	//表示座標系
+	const float OPTIONS_START_Y = 550.f;
+	const float OPTIONS_DISTANCE_Y = 50.f;
 	//カメラ
 	std::unique_ptr<DebugCamera> debugCamera;
 	std::unique_ptr<LightCamera> lightCamera;
 	//スプライト
 	std::unique_ptr<Sprite> titleLogoSprite;
+	std::unique_ptr<Sprite> pressAnyButtonSprite;
+	std::unique_ptr<Sprite> gamestartSprite;
+	std::unique_ptr<Sprite> configSprite;
+	std::unique_ptr<Sprite> exitgameSprite;
+	//時間
+	const int FADEIN_FRAME = 150;
+	int fadeinFrame = 0;
+
+
+	//入力判定用
+	bool IsUp();
+	bool IsDown();
+	bool IsEnter();
+
 };
 
