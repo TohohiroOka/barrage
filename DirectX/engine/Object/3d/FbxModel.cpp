@@ -449,10 +449,10 @@ void FbxModel::LoadNode(FbxNode* fbxNode, Node* parent)
 	}
 }
 
-void FbxModel::LoadAnimation(FbxScene* fbxScene)
+void FbxModel::LoadAnimation(FbxScene* fbxScene, const int _animationNum)
 {
 	//0番目のアニメーション取得
-	FbxAnimStack* animstick = fbxScene->GetSrcObject<FbxAnimStack>(0);
+	FbxAnimStack* animstick = fbxScene->GetSrcObject<FbxAnimStack>(_animationNum);
 
 	//アニメーションが無ければスキップ
 	if (!animstick) { return; }
@@ -463,16 +463,16 @@ void FbxModel::LoadAnimation(FbxScene* fbxScene)
 	FbxTakeInfo* takeinfo = fbxScene->GetTakeInfo(anumstackkname);
 
 	//開始時間
-	data->fbxUpdate.startTime = takeinfo->mLocalTimeSpan.GetStart();
+	data->fbxUpdate[_animationNum].startTime = takeinfo->mLocalTimeSpan.GetStart();
 
 	//終了時間
-	data->fbxUpdate.stopTime = takeinfo->mLocalTimeSpan.GetStop();
+	data->fbxUpdate[_animationNum].stopTime = takeinfo->mLocalTimeSpan.GetStop();
 
 	//開始時間に合わせる
-	data->fbxUpdate.nowTime = data->fbxUpdate.startTime;
+	data->fbxUpdate[_animationNum].nowTime = data->fbxUpdate[_animationNum].startTime;
 
 	//再生可能
-	data->fbxUpdate.isAnimation = true;
+	data->fbxUpdate[_animationNum].isAnimation = true;
 }
 
 void FbxModel::LoadFbx(const std::string modelName)
@@ -507,14 +507,28 @@ void FbxModel::LoadFbx(const std::string modelName)
 	LoadNode(fbxScene->GetRootNode());
 
 	//アニメーションの設定
-	LoadAnimation(fbxScene);
+	int animStackCount = fbxImporter->GetAnimStackCount();
+	data->fbxUpdate.resize(animStackCount);
+	for (int i = 0; i < animStackCount; i++) {
+		LoadAnimation(fbxScene, i);
+	}
 
-	data->fbxUpdate.fbxScene = fbxScene;
+	data->fbxScene = fbxScene;
 
 	texture[defaultTexture] = Texture::Create(defaultTexture);
 
 	//モーションブレンド用の配列
 	skinData.resize(data->buffData.size());
+
+	for (int buffNum = 0; buffNum < data->buffData.size(); buffNum++)
+	{
+		//ボーン配列取得
+		std::vector<Bone>& bones = data->buffData[buffNum].bones;
+		for (int i = 0; i < bones.size(); i++)
+		{
+			boneMatWorld[bones[i].name] = XMMatrixIdentity();
+		}
+	}
 }
 
 void FbxModel::Initialize(const int _createNum)
@@ -596,20 +610,23 @@ std::unique_ptr<FbxModel> FbxModel::Create(const std::string fileName)
 	return std::unique_ptr<FbxModel>(instance);
 }
 
-void FbxModel::Update()
+void FbxModel::Update(const int _animationNum)
 {
 	HRESULT result;
 
 	//アニメーション
-	if (data->fbxUpdate.isAnimation && isAnimation)
+	if (data->fbxUpdate[_animationNum].isAnimation && isAnimation)
 	{
-		data->fbxUpdate.nowTime += frameTime;
+		data->fbxUpdate[_animationNum].nowTime += frameTime;
 		//最後まで行ったら先頭に戻す
-		if (data->fbxUpdate.nowTime > data->fbxUpdate.stopTime)
+		if (data->fbxUpdate[_animationNum].nowTime > data->fbxUpdate[_animationNum].stopTime)
 		{
-			data->fbxUpdate.nowTime = data->fbxUpdate.startTime;
+			data->fbxUpdate[_animationNum].nowTime = data->fbxUpdate[_animationNum].startTime;
 		}
 	}
+
+	FbxAnimStack* pStack = data->fbxScene->GetSrcObject<FbxAnimStack>(_animationNum);
+	data->fbxScene->SetCurrentAnimationStack(pStack);
 
 	for (int buffNum = 0; buffNum < data->buffData.size(); buffNum++)
 	{
@@ -627,12 +644,14 @@ void FbxModel::Update()
 				XMMATRIX matCurrentPose;
 				//現在の姿勢を取得
 				FbxAMatrix fbxCurrentPose =
-					bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(data->fbxUpdate.nowTime);
+					bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(data->fbxUpdate[_animationNum].nowTime);
 				//XMMATRIXに変換
 				ConvertMatrixFormFbx(&matCurrentPose, fbxCurrentPose);
 				//合成してスキニング行列に保存
 				skinData[buffNum].bones[i] = bones[i].invInitialPose * matCurrentPose;
 				constMapSkin->bones[i] = skinData[buffNum].bones[i];
+
+				boneMatWorld[bones[i].name] = matCurrentPose;
 			}
 		}
 		//スキニングをしない場合初期化値を送る
@@ -645,20 +664,20 @@ void FbxModel::Update()
 	}
 }
 
-void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _rate2)
+void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _rate2, const int _animationNum)
 {
 	HRESULT result;
 
 	_motionBlend->Update();
 
 	//アニメーション
-	if (data->fbxUpdate.isAnimation && isAnimation)
+	if (data->fbxUpdate[_animationNum].isAnimation && isAnimation)
 	{
-		data->fbxUpdate.nowTime += frameTime;
+		data->fbxUpdate[_animationNum].nowTime += frameTime;
 		//最後まで行ったら先頭に戻す
-		if (data->fbxUpdate.nowTime > data->fbxUpdate.stopTime)
+		if (data->fbxUpdate[_animationNum].nowTime > data->fbxUpdate[_animationNum].stopTime)
 		{
-			data->fbxUpdate.nowTime = data->fbxUpdate.startTime;
+			data->fbxUpdate[_animationNum].nowTime = data->fbxUpdate[_animationNum].startTime;
 		}
 	}
 
@@ -678,7 +697,7 @@ void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _r
 				XMMATRIX matCurrentPose;
 				//現在の姿勢を取得
 				FbxAMatrix fbxCurrentPose =
-					bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(data->fbxUpdate.nowTime);
+					bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(data->fbxUpdate[_animationNum].nowTime);
 				//XMMATRIXに変換
 				ConvertMatrixFormFbx(&matCurrentPose, fbxCurrentPose);
 				//合成してスキニング行列に保存
@@ -686,6 +705,8 @@ void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _r
 				XMMATRIX anime1= bones[i].invInitialPose * matCurrentPose;
 				skinData[buffNum].bones[i] = anime1 * _rate1 + motionBlendSkin * _rate2;
 				constMapSkin->bones[i] = skinData[buffNum].bones[i];
+
+				boneMatWorld[bones[i].name] = matCurrentPose * _rate1 + _motionBlend->GetBornMatWorld(bones[i].name) * _rate2;
 			}
 		}
 		//スキニングをしない場合初期化値を送る

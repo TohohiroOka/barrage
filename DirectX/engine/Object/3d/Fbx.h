@@ -1,6 +1,7 @@
 #pragma once
 #include "FbxModel.h"
 #include "Base3D.h"
+#include "InstanceObject.h"
 
 class Camera;
 class LightGroup;
@@ -59,6 +60,12 @@ private://構造体宣言
 		unsigned int isSkinning;//スキニングを行うか
 	};
 
+	struct BoneObjectInfo {
+		std::string boneName;
+		XMMATRIX matWorld;
+		std::string instanceName;
+	};
+
 public://静的メンバ関数
 
 	/// <summary>
@@ -103,9 +110,26 @@ public:
 	void DrawLightView();
 
 	/// <summary>
+	/// 描画
+	/// </summary>
+	void BoneDraw(const DrawMode _drawMode = DrawMode::alpha);
+
+	/// <summary>
 	/// マテリアル情報を定数バッファに送る
 	/// </summary>
 	void TransferMaterial();
+
+	/// <summary>
+	/// bone用モデルセット
+	/// </summary>
+	/// <param name="_boneName">ボーン名</param>
+	/// <param name="_modelName">モデル名</param>
+	/// <param name="_model">モデル</param>
+	/// <param name="_matWorld">ワールド行列</param>
+	void SetBoneObject(const std::string& _boneName, const std::string& _modelName,
+		Model* _model = nullptr, const XMMATRIX& _matWorld = DirectX::XMMatrixIdentity());
+
+	void FrameReset();
 
 private://メンバ変数
 
@@ -134,6 +158,12 @@ private://メンバ変数
 	//粗さ
 	float roughness = 0.0f;
 
+	//使用アニメーション番号指定
+	int useAnimation;
+
+	std::vector<BoneObjectInfo> boneObjectInfo;
+	std::unordered_map<std::string, std::unique_ptr<InstanceObject>> boneObject;
+
 public:
 
 	FbxModel* GetModel() { return model; }
@@ -142,6 +172,7 @@ public:
 	float GetMetalness() { return metalness; }
 	float GetSpecular() { return specular; }
 	float GetRoughness() { return roughness; }
+	int SetUseAnimation() { return useAnimation; }
 	void SetModel(FbxModel* model) { this->model = model; }
 	void SetMotionBlendModel(FbxModel* _model) { motionBlendModel = _model; }
 	void SetAnimation(bool isAnimation) { model->isAnimation = isAnimation; }
@@ -161,6 +192,7 @@ public:
 		this->roughness = roughness;
 		isTransferMaterial = true;
 	}
+	void SetUseAnimation(int _useAnimation) { useAnimation = _useAnimation; }
 	static void SetPipeline(const std::vector<GraphicsPipelineManager::DrawSet>& _pipeline) { Fbx::pipeline = _pipeline; }
 	static void SetLightviewPipeline(const std::vector<GraphicsPipelineManager::DrawSet>& _pipeline) { Fbx::lightviewPipeline = _pipeline; }
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include "../Object/3d/Object3d.h"
 #include "BaseAction.h"
+#include "BaseBossModel.h"
 #include "Math/Vector3.h"
 #include "ui/Gauge.h"
 
@@ -14,7 +15,7 @@ public:
 
 	virtual void Update();
 
-	virtual void Draw() = 0;
+	virtual void Draw();
 
 	virtual void FrameReset() = 0;
 
@@ -37,6 +38,9 @@ protected:
 	Vector3 targetPos;
 	//中心点（描画無し）
 	std::unique_ptr<Object3d> center;
+
+	//ボスのモデル情報
+	std::unique_ptr<BaseBossModel> bossModel;
 
 	//移動距離
 	Vector3 moveVec;

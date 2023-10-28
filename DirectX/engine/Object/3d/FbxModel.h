@@ -4,10 +4,9 @@
 #include <d3d12.h>
 #include <d3dx12.h>
 #include <DirectXMath.h>
-#include <map>
 #include "Texture/Texture.h"
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 class FbxModel
 {
@@ -118,7 +117,6 @@ private://構造体宣言
 	struct FbxUpdate
 	{
 		bool isAnimation = false;//アニメーション可能か
-		FbxScene* fbxScene = nullptr;
 		FbxTime startTime = {};//フレームのスタート
 		FbxTime stopTime = {};//フレームの最後
 		FbxTime nowTime = {};//現在の進行フレーム
@@ -130,7 +128,8 @@ private://構造体宣言
 		std::vector<Node> nodes;
 		std::vector<BuffData> buffData;
 		Node* meshNode;
-		FbxUpdate fbxUpdate;
+		FbxScene* fbxScene = nullptr;
+		std::vector<FbxUpdate> fbxUpdate;
 	};
 
 private://メンバ関数
@@ -172,7 +171,7 @@ private://メンバ関数
 	/// <summary>
 	/// アニメーション読み込み
 	/// </summary>
-	void LoadAnimation(FbxScene* fbxScene);
+	void LoadAnimation(FbxScene* fbxScene, const int _animationNum);
 
 	/// <summary>
 	/// Fbxファイルの読み込み
@@ -226,7 +225,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Update(const int _animationNum = 0);
 
 	/// <summary>
 	/// 更新
@@ -234,7 +233,7 @@ public:
 	/// <param name="_motionBlend">blend用モデル</param>
 	/// <param name="_rate1">現在のモデルの比率</param>
 	/// <param name="_rate2">ブレンドするモデルの比率</param>
-	void Update(FbxModel* _motionBlend, const float _rate1, const float _rate2);
+	void Update(FbxModel* _motionBlend, const float _rate1, const float _rate2, const int _animationNum = 0);
 
 	/// <summary>
 	/// 描画
@@ -264,7 +263,7 @@ public://メンバ変数
 	//モデル名
 	std::string name;
 	//テクスチャパス
-	std::map<std::string,std::unique_ptr<Texture>> texture;
+	std::unordered_map<std::string,std::unique_ptr<Texture>> texture;
 	//定数Texture
 	ComPtr<ID3D12Resource> constBuffSkin = nullptr;
 	//アニメーション可能か
@@ -275,10 +274,13 @@ public://メンバ変数
 	int elementsNum;
 	//motionblend用
 	std::vector<ConstBufferDataSkin> skinData;
+	//ボーン描画用の行列
+	std::unordered_map<std::string, XMMATRIX> boneMatWorld;
 
 public:
 
 	XMMATRIX GetSkinData(const int _number, const int _bonesNumber) { return skinData[_number].bones[_bonesNumber]; }
+	XMMATRIX GetBornMatWorld(const std::string _boneName) { return boneMatWorld[_boneName]; }
 
 	///// <summary>
 	///// アンビエント影響度の取得
