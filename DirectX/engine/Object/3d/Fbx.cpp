@@ -67,26 +67,10 @@ std::unique_ptr<Fbx> Fbx::Create(FbxModel* model)
 
 void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 {
-	HRESULT result;
-	XMMATRIX matScale, matRot, matTrans;
-
-	// スケール、回転、平行移動行列の計算
-	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
-	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
-	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
-	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
-	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
-
-	// ワールド行列の合成
-	matWorld = XMMatrixIdentity(); // 変形をリセット
-	matWorld *= matScale; // ワールド行列にスケーリングを反映
-	matWorld *= matRot; // ワールド行列に回転を反映
-	matWorld *= matTrans; // ワールド行列に平行移動を反映
-
+	UpdateWorldMatrix();
 	// 定数バッファ1へデータ転送
 	ConstBufferDataB0* constMap = nullptr;
-	result = constBuffB0->Map(0, nullptr, (void**)&constMap);
+	HRESULT result = constBuffB0->Map(0, nullptr, (void**)&constMap);
 	constMap->color = { 1,1,1,1 };
 	if (camera) {
 		constMap->viewproj = camera->GetView() * camera->GetProjection();
@@ -111,9 +95,9 @@ void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 	}
 
 	if (_motionBlendRate1 >= 2.0f) {
-		model->Update();
+		model->Update(useAnimation);
 	} else {
-		model->Update(motionBlendModel, _motionBlendRate1, _motionBlendRate2);
+		model->Update(motionBlendModel, _motionBlendRate1, _motionBlendRate2, useAnimation);
 	}
 }
 

@@ -45,19 +45,6 @@ void Scene1::Initialize()
 
 	ParticleManager::SetCamera(camera.get());
 
-	fbxModel1 = FbxModel::Create("uma_j");
-	fbxModel2 = FbxModel::Create("uma4");
-	fbxModel1->isAnimation = true;
-	fbxModel2->isAnimation = true;
-	//fbxModel->SetIsBoneDraw(true);
-	fbx = Fbx::Create(fbxModel1.get());
-	fbx->SetMotionBlendModel(fbxModel2.get());
-	fbx->SetScale({ 10.0f,10.0f ,10.0f });
-	fbx->SetLight(true);
-	fbx->SetAnimation(true);
-
-	isBlend = false;
-
 	stop = false;
 
 	gameoverUi.Initialize();
@@ -111,7 +98,6 @@ void Scene1::Update()
 void Scene1::Draw(const int _cameraNum)
 {
 	field->Draw();
-
 	//gobject->ColliderDraw();
 
 	player->Draw();

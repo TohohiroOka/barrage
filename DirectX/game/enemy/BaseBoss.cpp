@@ -21,6 +21,17 @@ void BaseBoss::Update()
 	center->Update();
 
 	hpGauge->Update();
+
+	action->Update();
+
+	bossModel->Update();
+}
+
+void BaseBoss::Draw()
+{
+	action->Draw();
+	bossModel->Draw();
+	hpGauge->Draw();
 }
 
 void BaseBoss::Damage(int damageNum)

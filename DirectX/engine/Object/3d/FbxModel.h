@@ -117,7 +117,6 @@ private://構造体宣言
 	struct FbxUpdate
 	{
 		bool isAnimation = false;//アニメーション可能か
-		FbxScene* fbxScene = nullptr;
 		FbxTime startTime = {};//フレームのスタート
 		FbxTime stopTime = {};//フレームの最後
 		FbxTime nowTime = {};//現在の進行フレーム
@@ -129,7 +128,8 @@ private://構造体宣言
 		std::vector<Node> nodes;
 		std::vector<BuffData> buffData;
 		Node* meshNode;
-		FbxUpdate fbxUpdate;
+		FbxScene* fbxScene = nullptr;
+		std::vector<FbxUpdate> fbxUpdate;
 	};
 
 private://メンバ関数
@@ -171,7 +171,7 @@ private://メンバ関数
 	/// <summary>
 	/// アニメーション読み込み
 	/// </summary>
-	void LoadAnimation(FbxScene* fbxScene);
+	void LoadAnimation(FbxScene* fbxScene, const int _animationNum);
 
 	/// <summary>
 	/// Fbxファイルの読み込み
@@ -225,7 +225,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Update(const int _animationNum = 0);
 
 	/// <summary>
 	/// 更新
@@ -233,7 +233,7 @@ public:
 	/// <param name="_motionBlend">blend用モデル</param>
 	/// <param name="_rate1">現在のモデルの比率</param>
 	/// <param name="_rate2">ブレンドするモデルの比率</param>
-	void Update(FbxModel* _motionBlend, const float _rate1, const float _rate2);
+	void Update(FbxModel* _motionBlend, const float _rate1, const float _rate2, const int _animationNum = 0);
 
 	/// <summary>
 	/// 描画

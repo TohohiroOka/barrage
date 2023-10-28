@@ -139,6 +139,9 @@ private://メンバ変数
 	//粗さ
 	float roughness = 0.0f;
 
+	//使用アニメーション番号指定
+	int useAnimation;
+
 	std::vector<BoneObjectInfo> boneObjectInfo;
 	std::unordered_map<std::string, std::unique_ptr<InstanceObject>> boneObject;
 
@@ -150,6 +153,7 @@ public:
 	float GetMetalness() { return metalness; }
 	float GetSpecular() { return specular; }
 	float GetRoughness() { return roughness; }
+	int SetUseAnimation() { return useAnimation; }
 	void SetModel(FbxModel* model) { this->model = model; }
 	void SetMotionBlendModel(FbxModel* _model) { motionBlendModel = _model; }
 	void SetAnimation(bool isAnimation) { model->isAnimation = isAnimation; }
@@ -169,5 +173,6 @@ public:
 		this->roughness = roughness;
 		isTransferMaterial = true;
 	}
+	void SetUseAnimation(int _useAnimation) { useAnimation = _useAnimation; }
 	static void SetPipeline(const std::vector<GraphicsPipelineManager::DrawSet>& _pipeline) { Fbx::pipeline = _pipeline; }
 };

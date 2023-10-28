@@ -39,19 +39,10 @@ public:
 
 	void Update() override;
 
-	void Draw() override;
-
 	void FrameReset() override;
 
 	void SetAction() override;
 
 	void SetShortMoveAction();
-
-private:
-	std::unique_ptr<Model> model;
-	static const int partsNum = 8;
-	static const std::array<Vector3, partsNum> partsDist;
-	std::array<std::unique_ptr<Object3d>, partsNum> boss;
-
 };
 

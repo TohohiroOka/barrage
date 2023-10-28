@@ -1,6 +1,7 @@
 #include "Boss1.h"
 #include "GameHelper.h"
 
+#include "Boss1Model.h"
 #include "Boss1NearAttack1.h"
 #include "Boss1Move1.h"
 #include "Boss1Move2.h"
@@ -8,34 +9,19 @@
 #include "Boss1Bullet2.h"
 #include "Boss1Bullet3.h"
 
-const float partsOneDist = 7.0f;
-const std::array<Vector3, Boss1::partsNum> Boss1::partsDist = {
-	{{partsOneDist,partsOneDist,partsOneDist},{-partsOneDist,partsOneDist,partsOneDist},
-	{partsOneDist,-partsOneDist,partsOneDist},{-partsOneDist,-partsOneDist,partsOneDist},
-	{partsOneDist,partsOneDist,-partsOneDist},{-partsOneDist,partsOneDist,-partsOneDist},
-	{partsOneDist,-partsOneDist,-partsOneDist},{-partsOneDist,-partsOneDist,-partsOneDist}}
-};
-
 Boss1::Boss1()
 {
 	maxHP = 1000;
 
 	BaseBoss::Initialize();
 
-	model = Model::CreateFromOBJ("NormalCube");
-
-	for (int i=0;i< partsNum;i++) {
-		boss[i] = Object3d::Create(model.get());
-		boss[i]->SetParent(center.get());
-		boss[i]->SetPosition(partsDist[i]);
-		boss[i]->SetScale({ 5.0f,5.0f ,5.0f });
-	}
-
 	center->SetPosition({ 255.0f / 2.0f,10.0f ,255.0f / 2.0f });
 
 	BaseAction::SetBossPtr(this);
 
 	action = std::make_unique<Boss1Move1>();
+
+	bossModel= std::make_unique<Boss1Model>(center.get());
 	//action = std::make_unique<Boss1Bullet3>();
 }
 
@@ -46,20 +32,7 @@ void Boss1::Update()
 		SetAction();
 	}
 
-	action->Update();
-
 	BaseBoss::Update();
-}
-
-void Boss1::Draw()
-{
-	action->Draw();
-
-	for (auto& i : boss) {
-		i->Draw();
-	}
-
-	hpGauge->Draw();
 }
 
 void Boss1::FrameReset()

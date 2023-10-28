@@ -4,12 +4,13 @@
 class BaseBossModel
 {
 public:
+	virtual ~BaseBossModel() {};
 
 	virtual void Update() {};
 
 	virtual void Draw() {};
 
-private:
+protected:
 	
 	std::unique_ptr<FbxModel> model;
 	std::unique_ptr<Fbx> fbxObject;
