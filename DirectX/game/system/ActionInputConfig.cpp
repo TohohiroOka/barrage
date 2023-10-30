@@ -288,6 +288,13 @@ void ActionInputConfig::Reset()
 
 	//選択中のスプライトの枠の色を黄色くする
 	frameSprites[selectInputType][selectAction]->SetColor(selectColor);
+
+	//フレームスプライト更新
+	for (int i = 0; i < frameSprites.size(); i++) {
+		for (int j = 0; j < frameSprites[i].size(); j++) {
+			frameSprites[i][j]->Update();
+		}
+	}
 }
 
 void ActionInputConfig::Select()
@@ -377,7 +384,7 @@ void ActionInputConfig::Select()
 		}
 	}
 	//入力設定終了
-	else if (DirectInput::GetInstance()->TriggerKey(DIK_F1) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B)) {
+	else if (DirectInput::GetInstance()->TriggerKey(DIK_TAB) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B)) {
 		isInputConfigEnd = true;
 	}
 }

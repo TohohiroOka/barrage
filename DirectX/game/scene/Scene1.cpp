@@ -105,8 +105,7 @@ void Scene1::Update()
 			actionInputConfig->Reset();
 		}
 	}
-
-	if (isInputConfigMode) {
+	else {
 		//“ü—ÍÝ’èXV
 		actionInputConfig->Update();
 
