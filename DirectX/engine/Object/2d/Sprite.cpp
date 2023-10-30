@@ -5,7 +5,7 @@
 using namespace DirectX;
 
 std::vector<GraphicsPipelineManager::DrawSet> Sprite::pipeline;
-std::map<std::string, Sprite::INFORMATION> Sprite::texture;
+std::unordered_map<std::string, Sprite::INFORMATION> Sprite::texture;
 XMMATRIX Sprite::matProjection;
 
 Sprite::~Sprite()
@@ -279,16 +279,15 @@ void Sprite::TransferVerticesNoTex()
 
 void Sprite::SceneFinalize()
 {
-	for (auto itr = texture.begin(); itr != texture.end(); ++itr) {
-		if ((*itr).second.isDelete)
-		{
-			(*itr).second.instance.reset();
-			auto deleteItr = itr;
-			itr--;
-			texture.erase(deleteItr);
-			if (itr == texture.end()) { break; }
-		}
+	for (auto itr = texture.begin(); itr != texture.end(); itr++) {
+		if (!(*itr).second.isDelete) { continue; }
+		(*itr).second.instance.reset();
+		auto deleteItr = itr;
+		itr--;
+		texture.erase(deleteItr);
 	}
+
+	int a = 0;
 }
 
 void Sprite::Finalize()

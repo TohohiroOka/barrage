@@ -13,10 +13,10 @@ DirectX::XMFLOAT4 ActionInputConfig::selectColor = { 1, 1, 0.5f, 1 };
 void ActionInputConfig::LoadTexture()
 {
 	//仮置き背景用テクスチャ
-	Sprite::LoadTexture("white1x1", "Resources/SubTexture/white1x1.png");
+	Sprite::LoadTexture("white1x1", "Resources/SubTexture/white1x1.png",false);
 
 	//フレームテクスチャ読み込み
-	Sprite::LoadTexture("inputFrame", "Resources/SpriteTexture/inputFrame.png");
+	Sprite::LoadTexture("inputFrame", "Resources/SpriteTexture/inputFrame.png", false);
 
 	//行動名テクスチャ読み込み
 	LoadActionNameTexture(GameInputManager::MoveForward, "MoveForward.png");
@@ -117,29 +117,29 @@ void ActionInputConfig::LoadTexture()
 	LoadPadTexture(17, "RSTICK.png");
 
 	//カメラ回転用「ノーマル」「リバース」テクスチャ読み込み
-	Sprite::LoadTexture("normal", "Resources/SpriteTexture/normal.png");
-	Sprite::LoadTexture("reverse", "Resources/SpriteTexture/reverse.png");
+	Sprite::LoadTexture("normal", "Resources/SpriteTexture/normal.png", false);
+	Sprite::LoadTexture("reverse", "Resources/SpriteTexture/reverse.png", false);
 }
 
 void ActionInputConfig::LoadActionNameTexture(int actionName, const std::string& fileName)
 {
 	std::string directoryPass = "Resources/SpriteTexture/action/";
 	std::string keepname = "action_" + std::to_string(actionName);
-	Sprite::LoadTexture(keepname, directoryPass + fileName);
+	Sprite::LoadTexture(keepname, directoryPass + fileName, false);
 }
 
 void ActionInputConfig::LoadKeyTexture(BYTE num, const std::string& fileName)
 {
 	std::string directoryPass = "Resources/SpriteTexture/key/";
 	std::string keepname = "key_" + std::to_string(num);
-	Sprite::LoadTexture(keepname, directoryPass + fileName);
+	Sprite::LoadTexture(keepname, directoryPass + fileName, false);
 }
 
 void ActionInputConfig::LoadPadTexture(int num, const std::string& fileName)
 {
 	std::string directoryPass = "Resources/SpriteTexture/pad/";
 	std::string keepname = "pad_" + std::to_string(num);
-	Sprite::LoadTexture(keepname, directoryPass + fileName);
+	Sprite::LoadTexture(keepname, directoryPass + fileName, false);
 }
 
 

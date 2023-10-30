@@ -109,7 +109,7 @@ protected: // メンバ変数
 	// 頂点数
 	static const int vertNum = 4;
 	//テクスチャ情報
-	static std::map<std::string, INFORMATION> texture;
+	static std::unordered_map<std::string, INFORMATION> texture;
 	// 射影行列
 	static XMMATRIX matProjection;
 
