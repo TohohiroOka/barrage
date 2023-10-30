@@ -17,7 +17,7 @@ private:
 
 public:
 
-	Boss1Model(Base3D* _parent = nullptr);
+	Boss1Model();
 	~Boss1Model() {}
 
 	void Update() override;

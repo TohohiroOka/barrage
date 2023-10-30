@@ -4,6 +4,7 @@
 
 Boss1Bullet1::Boss1Bullet1()
 {
+	boss->GetBaseModel()->SetAnimation(1);
 	model = Model::CreateFromOBJ("bullet");
 	for (auto& i : instanceObject) {
 		i = InstanceObject::Create(model.get());

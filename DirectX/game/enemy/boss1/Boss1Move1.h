@@ -4,12 +4,12 @@
 #include "../Math/Timer.h"
 
 /// <summary>
-/// 直線移動（イージングあり）
+/// 歩き
 /// </summary>
 class Boss1Move1 : public BaseAction
 {
 public:
-	Boss1Move1(const DirectX::XMFLOAT3& _pos = {});
+	Boss1Move1();
 	~Boss1Move1() {};
 
 	void Update() override;
@@ -20,13 +20,15 @@ public:
 
 	void GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info) override {};
 
+	/// <summary>
+	/// 移動方向
+	/// </summary>
+	/// <param name="_rota"></param>
+	void SetMoveRotation(DirectX::XMFLOAT3& _rota);
+
 private:
 
-	//開始地点
-	DirectX::XMFLOAT3 startPos;
-	//移動後地点
-	DirectX::XMFLOAT3 endPos;
 	//イージングタイマー
-	std::unique_ptr<Engine::Timer> timer;
+	std::unique_ptr<Engine::Timer> moveTime;
 };
 

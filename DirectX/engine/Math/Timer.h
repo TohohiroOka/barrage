@@ -30,6 +30,12 @@ namespace Engine
 			bool isMove = true;
 			float time = 0.0f;
 
+			void operator=(const int _num) { time = float(_num); }
+			void operator=(const float _num) { time = _num; }
+			void operator+=(const int _num) { time += float(_num); }
+			void operator+=(const float _num) { time += _num; }
+			void operator-=(const int _num) { time -= float(_num); }
+			void operator-=(const float _num) { time -= _num; }
 			int operator+(const int _num) { return int(time) + _num; }
 			float operator+(const float _num) { return time + _num; }
 			int operator-(const int _num) { return int(time) - int(_num); }

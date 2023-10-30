@@ -7,6 +7,7 @@
 #include "Texture/Texture.h"
 #include <vector>
 #include <unordered_map>
+#include "Math/DirectXMathHelper.h"
 
 class FbxModel
 {
@@ -120,6 +121,7 @@ private://構造体宣言
 		FbxTime startTime = {};//フレームのスタート
 		FbxTime stopTime = {};//フレームの最後
 		FbxTime nowTime = {};//現在の進行フレーム
+		XMFLOAT3 startPos = {};//モデルの初期座標
 	};
 
 	//Fbxデータ
@@ -276,11 +278,19 @@ public://メンバ変数
 	std::vector<ConstBufferDataSkin> skinData;
 	//ボーン描画用の行列
 	std::unordered_map<std::string, XMMATRIX> boneMatWorld;
+	//１フレーム前の座標
+	XMFLOAT3 beforePos;
 
 public:
 
 	XMMATRIX GetSkinData(const int _number, const int _bonesNumber) { return skinData[_number].bones[_bonesNumber]; }
 	XMMATRIX GetBornMatWorld(const std::string _boneName) { return boneMatWorld[_boneName]; }
+	XMFLOAT3 GetWorldMove(const int _animationNum) {
+		return
+			XMFLOAT3{ boneMatWorld[data->buffData[0].bones[0].name].r[3].m128_f32[0],
+			boneMatWorld[data->buffData[0].bones[0].name].r[3].m128_f32[1],
+			boneMatWorld[data->buffData[0].bones[0].name].r[3].m128_f32[2] } - beforePos;
+	}
 
 	///// <summary>
 	///// アンビエント影響度の取得

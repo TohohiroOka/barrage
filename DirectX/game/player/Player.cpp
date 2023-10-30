@@ -39,6 +39,12 @@ Player::Player()
 	maxEndurance = 200;
 	endurance = maxEndurance;
 	enduranceGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 20.0f, 90.0f }), 600.0f, maxEndurance, endurance, DirectX::XMFLOAT4({ 0.1f, 0.6f, 0.1f, 1.0f }));
+
+	//タイマークラス
+	avoidTimer = std::make_unique<Engine::Timer>();
+	blinkTimer = std::make_unique<Engine::Timer>();
+	healTimer = std::make_unique<Engine::Timer>();
+	enduranceRecoveryStartTimer = std::make_unique<Engine::Timer>();
 }
 
 void Player::Update()
@@ -314,7 +320,7 @@ void Player::AvoidStart()
 	avoidVec.x = cosf(rotaRadian);
 	avoidVec.z = -sinf(rotaRadian);
 
-	avoidTimer = 0;
+	avoidTimer->Reset();
 	isAvoid = true;
 	isDash = false;
 	isDashStart = true;
@@ -324,8 +330,8 @@ void Player::Avoid()
 {
 	//タイマー更新
 	const float avoidTime = 20;
-	avoidTimer++;
-	const float time = avoidTimer / avoidTime;
+	avoidTimer->Update();
+	const float time = *avoidTimer.get() / avoidTime;
 
 	const float power = Easing::OutCirc(10, 1, time);
 
@@ -335,7 +341,7 @@ void Player::Avoid()
 	object->SetRotation(rota);
 
 	//タイマーが指定した時間になったら回避終了
-	if (avoidTimer >= avoidTime) {
+	if (*avoidTimer.get() >= avoidTime) {
 		isAvoid = false;
 	}
 }
@@ -377,7 +383,7 @@ void Player::BlinkStart()
 	//落下速度を0にする
 	velocity.y = 0;
 
-	blinkTimer = 0;
+	blinkTimer->Reset();
 	isBlink = true;
 	isBlinkStart = false;
 }
@@ -386,15 +392,15 @@ void Player::Blink()
 {
 	//タイマー更新
 	const float blinkTime = 20;
-	blinkTimer++;
-	const float time = blinkTimer / blinkTime;
+	blinkTimer->Update();
+	const float time = *blinkTimer.get() / blinkTime;
 
 	const float power = Easing::OutCirc(20, 1, time);
 
 	velocity = blinkVec.normalize() * power;
 
 	//タイマーが指定した時間になったらブリンク終了
-	if (blinkTimer >= blinkTime) {
+	if (*blinkTimer.get() >= blinkTime) {
 		isBlink = false;
 	}
 }
@@ -429,12 +435,12 @@ void Player::HealHPMove()
 	if (!isHeal) { return; }
 
 	const float healTime = 10;
-	healTimer++;
-	const float time = healTimer / healTime;
+	healTimer->Update();
+	const float time = *healTimer.get() / healTime;
 	HP = (int)Easing::Lerp((float)healBeforeHP, (float)healAfterHP, time);
 	hpGauge->ChangeLength(HP, false);
 
-	if (healTimer >= healTime) {
+	if (*healTimer.get() >= healTime) {
 		isHeal = false;
 	}
 }
@@ -447,7 +453,7 @@ void Player::UseEndurance(const int enduranceUseNum, const int enduranceRecovery
 	enduranceGauge->ChangeLength(endurance, isDecreaseDiffMode);
 
 	//回復開始までにかかる時間をセット
-	enduranceRecoveryStartTimer = enduranceRecoveryStartTime;
+	*enduranceRecoveryStartTimer.get() = enduranceRecoveryStartTime;
 }
 
 void Player::EnduranceRecovery()
@@ -457,14 +463,14 @@ void Player::EnduranceRecovery()
 
 
 	//タイマーが0になったら持久力を回復していく
-	if (enduranceRecoveryStartTimer <= 0) {
+	if (*enduranceRecoveryStartTimer.get() <= 0) {
 		endurance++;
 		endurance = min(endurance, maxEndurance);
 		enduranceGauge->ChangeLength(endurance, false);
 	}
 	//それ以外ならタイマー更新
 	else {
-		enduranceRecoveryStartTimer--;
+		*enduranceRecoveryStartTimer.get() -= 1;
 	}
 }
 

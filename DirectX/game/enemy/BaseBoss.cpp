@@ -6,9 +6,6 @@
 
 void BaseBoss::Initialize()
 {
-	center = Object3d::Create();
-	center->SetPosition({ 40.0f,10.0f,20.0f });
-
 	HP = maxHP;
 	const float length = 1200;
 	hpGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ WindowApp::GetWindowWidth() / 2 - length / 2, 650.0f }), length, maxHP, HP, DirectX::XMFLOAT4({ 0.5f, 0.1f, 0.1f, 1.0f }));
@@ -17,8 +14,6 @@ void BaseBoss::Initialize()
 void BaseBoss::Update()
 {
 	Collider();
-
-	center->Update();
 
 	hpGauge->Update();
 
@@ -46,7 +41,7 @@ void BaseBoss::Damage(int damageNum)
 void BaseBoss::Collider()
 {
 	using namespace DirectX;
-	Vector3 pos = Vector3(center->GetPosition());
+	Vector3 pos = Vector3(bossModel->GetObjectInst()->GetPosition());
 	// 球の上端から球の下端までのレイキャスト
 	Segment ray;
 	ray.start = { pos.x,pos.y,pos.z,0.0f };
@@ -79,5 +74,5 @@ void BaseBoss::Collider()
 
 	moveVec = { 0.0f,0.0f,0.0f };
 
-	center->SetPosition(pos);
+	bossModel->GetObjectInst()->SetPosition(pos);
 }

@@ -160,6 +160,8 @@ private://メンバ変数
 
 	//使用アニメーション番号指定
 	int useAnimation;
+	//アニメーションの移動距離
+	XMFLOAT3 animationMove;
 
 	std::vector<BoneObjectInfo> boneObjectInfo;
 	std::unordered_map<std::string, std::unique_ptr<InstanceObject>> boneObject;
@@ -173,6 +175,7 @@ public:
 	float GetSpecular() { return specular; }
 	float GetRoughness() { return roughness; }
 	int SetUseAnimation() { return useAnimation; }
+	XMFLOAT3 GetModelMove() { return animationMove; }
 	void SetModel(FbxModel* model) { this->model = model; }
 	void SetMotionBlendModel(FbxModel* _model) { motionBlendModel = _model; }
 	void SetAnimation(bool isAnimation) { model->isAnimation = isAnimation; }
