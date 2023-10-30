@@ -44,7 +44,7 @@ private://メンバ構造体
 public://メンバEnum
 
 	//ゲームパッドキーコンフィグ
-	enum PUD_BUTTON {
+	enum PAD_BUTTON {
 		PAD_A = 0,//A
 		PAD_B,//B
 		PAD_Y,//Y
@@ -54,13 +54,15 @@ public://メンバEnum
 		PAD_LT,//LT
 		PAD_RT,//RT
 		PAD_START,//START
-		PAD_BUCK,//BUCK
+		PAD_BACK,//BACK
 		PAD_UP,//十字上
 		PAD_DOWN,//十字下
 		PAD_LEFT,//十字左
 		PAD_RIGHT,//十字右
 		PAD_LEFT_STICK_PUSH,//左ステック押し込み
 		PAD_RIGHT_STICK_PUSH,//右ステック押し込み
+
+		BUTTONNUM,//ボタン数
 	};
 
 	enum STRENGTH {
@@ -93,14 +95,21 @@ public://メンバ関数
 	/// </summary>
 	/// <param name="button">ボタン</param>
 	/// <returns>押されているか否か</returns>
-	bool PushButton(const PUD_BUTTON& _button);
+	bool PushButton(const int _button);
 
 	/// <summary>
 	/// 指定ボタンのトリガーをチェック
 	/// </summary>
 	/// <param name="button">ボタン</param>
 	/// <returns>押されているか否か</returns>
-	bool TriggerButton(const PUD_BUTTON& _button);
+	bool TriggerButton(const int _button);
+
+	/// <summary>
+	/// 押したボタンを取得
+	/// </summary>
+	/// <param name="button">更新したボタンを格納</param>
+	/// <returns>変更したか</returns>
+	bool GetTriggerButton(int& button);
 
 	/// <summary>
 	/// 左スティックのX軸チェック

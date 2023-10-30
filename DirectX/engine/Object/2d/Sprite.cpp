@@ -38,7 +38,7 @@ void Sprite::LoadTexture(const std::string& _keepName, const std::string& _filen
 	texture[_keepName].isDelete = _isDelete;
 }
 
-std::unique_ptr<Sprite> Sprite::Create(const std::string& _name, const XMFLOAT2& _position, const XMFLOAT2& _size, const XMFLOAT2& _anchorpoint, const XMFLOAT4& _color, bool _isFlipX, bool _isFlipY)
+std::unique_ptr<Sprite> Sprite::Create(const std::string& _name, const XMFLOAT2& _position, const XMFLOAT2& _anchorpoint, const XMFLOAT4& _color, bool _isFlipX, bool _isFlipY)
 {
 	// Spriteのインスタンスを生成
 	Sprite* instance = new Sprite();
@@ -47,7 +47,7 @@ std::unique_ptr<Sprite> Sprite::Create(const std::string& _name, const XMFLOAT2&
 	}
 
 	// 初期化
-	instance->Initialize(_name, _position, _size, _anchorpoint, _color, _isFlipX, _isFlipY);
+	instance->Initialize(_name, _position, _anchorpoint, _color, _isFlipX, _isFlipY);
 
 	//更新
 	instance->Update();
@@ -56,17 +56,25 @@ std::unique_ptr<Sprite> Sprite::Create(const std::string& _name, const XMFLOAT2&
 	return std::unique_ptr<Sprite>(instance);
 }
 
-void Sprite::Initialize(const std::string& _name, const XMFLOAT2& _position, const XMFLOAT2& _size, const XMFLOAT2& _anchorpoint, const XMFLOAT4& _color, bool _isFlipX, bool _isFlipY)
+void Sprite::Initialize(const std::string& _name, const XMFLOAT2& _position, const XMFLOAT2& _anchorpoint, const XMFLOAT4& _color, bool _isFlipX, bool _isFlipY)
 {
 	this->name = _name;
 	this->position = _position;
-	this->size = _size;
 	this->anchorpoint = _anchorpoint;
 	this-> color = _color;
 	this->isFlipX = _isFlipX;
 	this->isFlipY = _isFlipY;
 
 	HRESULT result = S_FALSE;
+
+	//指定番号の画像が読み込み済みなら
+	if (texture[_name].instance->texBuffer.Get()) {
+		//テクスチャ情報取得
+		D3D12_RESOURCE_DESC resDesc = texture[_name].instance->texBuffer.Get()->GetDesc();
+		//スプライトの大きさを画像の解像度に合わせる
+		size = { (float)resDesc.Width, (float)resDesc.Height };
+		texSize = { (float)resDesc.Width, (float)resDesc.Height };
+	}
 
 	// 頂点バッファ生成
 	result = device->CreateCommittedResource(
@@ -134,6 +142,9 @@ void Sprite::Update()
 
 void Sprite::Draw(const DrawMode _drawMode)
 {
+	//テクスチャがセットされていなければ抜ける
+	if (name == "") { return; }
+
 	int modeNum = int(_drawMode);
 
 	ObjectBase::Draw(pipeline[modeNum]);
@@ -174,8 +185,8 @@ void Sprite::TransferVertices()
 
 	float left = (0.0f - anchorpoint.x) * size.x;
 	float right = (1.0f - anchorpoint.x) * size.x;
-	float top = (0.0f - anchorpoint.x) * size.y;
-	float bottom = (1.0f - anchorpoint.x) * size.y;
+	float top = (0.0f - anchorpoint.y) * size.y;
+	float bottom = (1.0f - anchorpoint.y) * size.y;
 	if (isFlipX)
 	{// 左右入れ替え
 		left = -left;
@@ -230,8 +241,8 @@ void Sprite::TransferVerticesNoTex()
 
 	float left = (0.0f - anchorpoint.x) * size.x;
 	float right = (1.0f - anchorpoint.x) * size.x;
-	float top = (0.0f - anchorpoint.x) * size.y;
-	float bottom = (1.0f - anchorpoint.x) * size.y;
+	float top = (0.0f - anchorpoint.y) * size.y;
+	float bottom = (1.0f - anchorpoint.y) * size.y;
 	if (isFlipX)
 	{// 左右入れ替え
 		left = -left;

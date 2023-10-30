@@ -8,6 +8,8 @@
 #include "Pipeline/GraphicsPipelineManager.h"
 #include "Texture/Texture.h"
 #include "Object/3d/FbxModel.h"
+#include "system/GameInputManager.h"
+#include "system/ActionInputConfig.h"
 #include "WindowApp.h"
 #include "GameHelper.h"
 
@@ -48,7 +50,11 @@ void MainEngine::Initialize()
 	ComputeShaderManager::StaticInitialize(dXCommon->GetDevice());
 	DebugText::GetInstance()->Initialize();
 	FbxModel::StaticInitialize(dXCommon->GetDevice());
-	
+
+	//ƒQ[ƒ€“ü—Í
+	GameInputManager::Initialize();
+	ActionInputConfig::LoadTexture();
+
 	scene = SceneManager::Create();
 
 	postEffect = PostEffect::Create();

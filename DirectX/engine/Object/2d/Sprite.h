@@ -51,7 +51,7 @@ public: // 静的メンバ関数
 	/// </summary>
 	/// <param name="_name">テクスチャ保存名</param>
 	/// <returns>インスタンス</returns>
-	static std::unique_ptr<Sprite> Create(const std::string& _name, const XMFLOAT2& _position, const XMFLOAT2& _size, const XMFLOAT2& _anchorpoint = { 0, 0 }, const XMFLOAT4& _color = { 1,1,1,1 }, bool _isFlipX = false, bool _isFlipY = false);
+	static std::unique_ptr<Sprite> Create(const std::string& _name, const XMFLOAT2& _position, const XMFLOAT2& _anchorpoint = { 0, 0 }, const XMFLOAT4& _color = { 1,1,1,1 }, bool _isFlipX = false, bool _isFlipY = false);
 
 	/// <summary>
 	/// シーンごとの解放処理
@@ -82,7 +82,7 @@ public: // メンバ関数
 	/// <param name="_anchorpoint">アンカーポイント</param>
 	/// <param name="_isFlipX">左右反転するか</param>
 	/// <param name="_isFlipY">上下反転するか</param>
-	void Initialize(const std::string& _name, const XMFLOAT2& _position, const XMFLOAT2& _size, const XMFLOAT2& _anchorpoint = { 0, 0 }, const XMFLOAT4& _color = { 1,1,1,1 }, bool _isFlipX = false, bool _isFlipY = false);
+	void Initialize(const std::string& _name, const XMFLOAT2& _position, const XMFLOAT2& _anchorpoint = { 0, 0 }, const XMFLOAT4& _color = { 1,1,1,1 }, bool _isFlipX = false, bool _isFlipY = false);
 
 	/// <summary>
 	/// 更新
@@ -157,6 +157,10 @@ protected: // メンバ関数
 public:
 
 	static void SetPipeline(const std::vector<GraphicsPipelineManager::DrawSet>& _pipeline) { Sprite::pipeline = _pipeline; }
+	static bool GetIsTextureName(const std::string& name) {
+		if (texture[name].instance) { return true; }
+		return false;
+	};
 	const XMFLOAT2& GetPosition() { return position; }
 	const float GetRotation() { return rotation; }
 	const XMFLOAT2& GetSize() { return size; }
@@ -166,7 +170,21 @@ public:
 	const XMFLOAT2& GetAnchorpoint() { return anchorpoint; }
 	bool GetIsFlipX() { return isFlipX; }
 	bool GetIsFlipY() { return isFlipY; }
-	void SetTexNumber(const std::string& _name) { this->name = _name; };
+	void SetTexture(const std::string& _name, bool isChangeSize = true) {
+		this->name = _name;
+
+		if (!isChangeSize) { return; }
+
+		//指定番号の画像が読み込み済みなら
+		if (texture[_name].instance->texBuffer.Get()) {
+			//テクスチャ情報取得
+			D3D12_RESOURCE_DESC resDesc = texture[_name].instance->texBuffer.Get()->GetDesc();
+			//スプライトの大きさを画像の解像度に合わせる
+			size = { (float)resDesc.Width, (float)resDesc.Height };
+			texSize = { (float)resDesc.Width, (float)resDesc.Height };
+		}
+	};
+	void DeleteTexture() { name = ""; }
 	void SetPosition(const XMFLOAT2& _position) { this->position = _position; }
 	void SetRotation(float _rotation) { this->rotation = _rotation; }
 	void SetSize(const XMFLOAT2& _size) { this->size = _size; }

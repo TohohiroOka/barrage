@@ -1,6 +1,5 @@
 ﻿#include "Player.h"
-#include "Input/DirectInput.h"
-#include "Input/XInputManager.h"
+#include "system/GameInputManager.h"
 #include "GameHelper.h"
 #include "Object/3d/collider/SphereCollider.h"
 #include "Object/3d/collider/CollisionManager.h"
@@ -182,12 +181,14 @@ void Player::Move()
 	DirectInput* input = DirectInput::GetInstance();
 
 	//移動キー入力を判定
-	isMoveKey = (input->PushKey(DIK_D) || input->PushKey(DIK_A) || input->PushKey(DIK_W) || input->PushKey(DIK_S));
+	isMoveKey = (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveRight).key) || 
+		input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveLeft).key) || 
+		input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveForward).key) ||
+		input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveBack).key));
 
 	//ある程度スティックを傾けないと移動パッド入力判定しない
-	const float moveStickIncline = 0.3f;
-	const XMFLOAT2 padIncline = XInputManager::GetInstance()->GetPadLStickIncline();
-	isMovePad = (fabsf(padIncline.x) >= moveStickIncline || fabsf(padIncline.y) >= moveStickIncline);
+	const XMFLOAT2 padIncline = GameInputManager::GetPadLStickIncline();
+	isMovePad = (fabsf(padIncline.x) >= GameInputManager::GetPadStickInputIncline() || fabsf(padIncline.y) >= GameInputManager::GetPadStickInputIncline());
 
 	//ダッシュ
 	Dash();
@@ -202,27 +203,27 @@ void Player::Move()
 		Vector3 inputMoveVec{};
 
 		if (isMoveKey) {
-			if (input->PushKey(DIK_D)) {
+			if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveRight).key)) {
 				inputMoveVec.x = 1;
 				inputMoveVec.z = 0;
 			}
-			if (input->PushKey(DIK_A)) {
+			if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveLeft).key)) {
 				inputMoveVec.x = -1;
 				inputMoveVec.z = 0;
 			}
-			if (input->PushKey(DIK_W)) {
+			if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveForward).key)) {
 				inputMoveVec.x = 0;
 				inputMoveVec.z = 1;
 			}
-			if (input->PushKey(DIK_S)) {
+			if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveBack).key)) {
 				inputMoveVec.x = 0;
 				inputMoveVec.z = -1;
 			}
 		}
 		if (isMovePad) {
 			//パッドスティックの方向をベクトル化
-			inputMoveVec.x = XInputManager::GetInstance()->GetPadLStickIncline().x;
-			inputMoveVec.z = XInputManager::GetInstance()->GetPadLStickIncline().y;
+			inputMoveVec.x = GameInputManager::GetPadLStickIncline().x;
+			inputMoveVec.z = GameInputManager::GetPadLStickIncline().y;
 		}
 
 		//ベクトルをカメラの傾きで回転させる
@@ -253,19 +254,19 @@ void Player::Dash()
 
 	if (!isDash) {
 		//ダッシュ開始可能で地面接地しているかつ、ダッシュ入力があって移動した場合にダッシュ状態にする
-		if (isDashStart && (isMoveKey || isMovePad) && (DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)) && endurance > 0) {
+		if (isDashStart && (isMoveKey || isMovePad) && endurance > 0 && GameInputManager::PushInputAction(GameInputManager::Avoid_Blink_Dash)) {
 			isDash = true;
 			isDashStart = false;
 		}
 
 		//ダッシュ開始不能時は、ダッシュボタン入力を一度離すことで可能になる
-		if ((!isDashStart) && (!(DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)))) {
+		if ((!isDashStart) && (!GameInputManager::PushInputAction(GameInputManager::Avoid_Blink_Dash))) {
 			isDashStart = true;
 		}
 	}
 	else {
 		//移動 & 入力中はダッシュ状態を維持
-		if ((isMoveKey || isMovePad) && (DirectInput::GetInstance()->PushKey(DIK_Z) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_B)) && endurance > 0) {
+		if ((isMoveKey || isMovePad) && endurance > 0 && GameInputManager::PushInputAction(GameInputManager::Avoid_Blink_Dash)) {
 			UseEndurance(dashUseEndurance, 1, false); //持久力を使用
 		}
 		//入力が途切れたときにダッシュを終了する
@@ -283,7 +284,7 @@ void Player::Fall()
 	float fallAcc = gravityAccel;
 
 	//ジャンプ中で入力をし続けている場合は落下速度を減少させる
-	if (jumpCount >= 1 && isInputJump && (DirectInput::GetInstance()->PushKey(DIK_SPACE) || XInputManager::GetInstance()->PushButton(XInputManager::PAD_A))) {
+	if (jumpCount >= 1 && isInputJump && GameInputManager::PushInputAction(GameInputManager::Jump)) {
 		fallAcc /= 3.5f;
 	}
 	else {
@@ -303,7 +304,7 @@ void Player::AvoidStart()
 	//地面にいない場合は抜ける
 	if (!onGround) { return; }
 	//移動中に回避入力がなければ抜ける
-	if (!((isMoveKey || isMovePad) && (DirectInput::GetInstance()->TriggerKey(DIK_Z) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B)))) { return; }
+	if (!((isMoveKey || isMovePad) && GameInputManager::TriggerInputAction(GameInputManager::Avoid_Blink_Dash))) { return; }
 	//持久力が回避で使用する値以下なら抜ける	
 	if (endurance < avoidUseEndurance) { return; }
 	UseEndurance(avoidUseEndurance, 30, true); //持久力を使用
@@ -344,7 +345,7 @@ void Player::Jump()
 	//ジャンプ回数が連続ジャンプ可能回数を超えていたら抜ける
 	if (jumpCount >= jumpMaxNum) { return; }
 	//ジャンプ入力がなければ抜ける
-	if (!(DirectInput::GetInstance()->TriggerKey(DIK_SPACE) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
+	if (!GameInputManager::TriggerInputAction(GameInputManager::Jump)) { return; }
 	//持久力がジャンプで使用する値以下なら抜ける
 	if (endurance < jumpUseEndurance) { return; }
 	UseEndurance(jumpUseEndurance, 30, true); //持久力を使用
@@ -363,7 +364,7 @@ void Player::BlinkStart()
 	//ジャンプ中でなければ抜ける
 	if (!(jumpCount >= 1)) { return; }
 	//ブリンク入力がなければ抜ける
-	if (!(DirectInput::GetInstance()->TriggerKey(DIK_Z) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B))) { return; }
+	if (!GameInputManager::TriggerInputAction(GameInputManager::Avoid_Blink_Dash)) { return; }
 	//持久力がブリンクで使用する値以下なら抜ける	
 	if (endurance < blinkUseEndurance) { return; }
 	UseEndurance(blinkUseEndurance, 30, true); //持久力を使用
@@ -402,7 +403,7 @@ void Player::Attack()
 {
 	if (!isAttack) {
 		//入力で攻撃をセット
-		if (DirectInput::GetInstance()->TriggerKey(DIK_Q) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_RB)) {
+		if (GameInputManager::TriggerInputAction(GameInputManager::Attack)) {
 			attackAction = std::make_unique<PlayerSwordAttack1>(object.get());
 			if (!attackAction->NextAttack(endurance)) { return; }
 
@@ -414,7 +415,7 @@ void Player::Attack()
 		//次の攻撃を入力可能なら
 		if (attackAction->GetIsNextAttackInput()) {
 			//入力で攻撃をセット
-			if (DirectInput::GetInstance()->TriggerKey(DIK_Q) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_RB)) {
+			if (GameInputManager::TriggerInputAction(GameInputManager::Attack)) {
 				if (!attackAction->NextAttack(endurance)) { return; }
 
 				UseEndurance(attackAction->GetUseEndranceNum(), 30, true);

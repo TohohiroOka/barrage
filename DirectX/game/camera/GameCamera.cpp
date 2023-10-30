@@ -1,6 +1,5 @@
 #include "GameCamera.h"
-#include "Input/DirectInput.h"
-#include "Input/XInputManager.h"
+#include "system/GameInputManager.h"
 #include "WindowApp.h"
 #include "GameHelper.h"
 #include "Math/Easing/Easing.h"
@@ -110,10 +109,10 @@ void GameCamera::UpdateRotate()
 
 	//キー入力
 	{
-		if (input->PushKey(DIK_LEFT)) { rotation.y -= Tgspeed; }//右入力
-		if (input->PushKey(DIK_RIGHT)) { rotation.y += Tgspeed; }//左入力
-		if (input->PushKey(DIK_DOWN)) { rotation.x -= Tgspeed; }//下入力
-		if (input->PushKey(DIK_UP)) { rotation.x += Tgspeed; }//上入力
+		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveCameraLeft).key)) { rotation.y -= Tgspeed; }//右入力
+		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveCameraRight).key)) { rotation.y += Tgspeed; }//左入力
+		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveCameraDown).key)) { rotation.x -= Tgspeed; }//下入力
+		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveCameraUp).key)) { rotation.x += Tgspeed; }//上入力
 	}
 	//コントローラー入力
 	{
@@ -121,8 +120,8 @@ void GameCamera::UpdateRotate()
 		const float moveStickIncline = 0.3f;
 		const XMFLOAT2 padIncline = XInputManager::GetInstance()->GetPadRStickIncline();
 		if (fabsf(padIncline.x) >= moveStickIncline || fabsf(padIncline.y) >= moveStickIncline) {
-			const XMFLOAT2 padIncline = XInputManager::GetInstance()->GetPadRStickIncline();
-			const float stickRadian = XMConvertToRadians(XInputManager::GetInstance()->GetPadRStickAngle() - 90);
+			const XMFLOAT2 padIncline = GameInputManager::GetPadRStickIncline();
+			const float stickRadian = GameInputManager::GetPadRStickRadian();
 			rotation.y += cosf(stickRadian) * fabsf(padIncline.x) * Tgspeed;
 			rotation.x += -sinf(stickRadian) * fabsf(padIncline.y) * Tgspeed;
 		}
@@ -208,7 +207,7 @@ void GameCamera::LockonInput()
 	isLockonStart = false;
 
 	//ロックオン入力がなければ抜ける
-	if (!(DirectInput::GetInstance()->TriggerKey(DIK_F1) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_LEFT_STICK_PUSH))) { return; }
+	if (!GameInputManager::TriggerInputAction(GameInputManager::Lockon)) { return; }
 
 	//ロックオンしていない場合はロックオンターゲットを検出する状態にする
 	if (!isLockon) {

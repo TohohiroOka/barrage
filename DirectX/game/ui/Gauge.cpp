@@ -11,10 +11,13 @@ Gauge::Gauge(const DirectX::XMFLOAT2& position, float length, int maxGaugeNum, i
 	const std::string textureName = "gauge";
 	
 	const DirectX::XMFLOAT4 frameColor = { 0.1f, 0.1f, 0.1f, 1.0f };
-	gaugeFrame = Sprite::Create(textureName, position, { length, thickness }, { 0, 0.5f }, frameColor);
-	gaugeBar = Sprite::Create(textureName, position, { length, thickness }, { 0, 0.5f }, color);
+	gaugeFrame = Sprite::Create(textureName, position, { 0, 0.5f }, frameColor);
+	gaugeFrame->SetSize({ length, thickness });
+	gaugeBar = Sprite::Create(textureName, position, { 0, 0.5f }, color);
+	gaugeBar->SetSize({ length, thickness });
 	const DirectX::XMFLOAT4 decreaseDiffColor = { 0.6f, 0.6f, 0.1f, 1.0f };
-	gaugeDecreaseDiff = Sprite::Create(textureName, position, { 0, thickness }, { 0, 0.5f }, decreaseDiffColor);
+	gaugeDecreaseDiff = Sprite::Create(textureName, position, { 0, 0.5f }, decreaseDiffColor);
+	gaugeDecreaseDiff->SetSize({ 0, thickness });
 }
 
 Gauge::~Gauge()

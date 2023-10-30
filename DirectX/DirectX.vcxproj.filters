@@ -137,6 +137,9 @@
     <Filter Include="シェーダーファイル\FbxLightView">
       <UniqueIdentifier>{7aa3c5ec-638b-4ed1-85fc-db21f22324f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ゲームシステム\System">
+      <UniqueIdentifier>{044cbb03-9714-45ed-bdf6-6e5a5f89d67d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -384,6 +387,12 @@
     </ClCompile>
     <ClCompile Include="game\enemy\boss1\Boss1Model.cpp">
       <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="game\system\GameInputManager.cpp">
+      <Filter>ゲームシステム\System</Filter>
+    </ClCompile>
+    <ClCompile Include="game\system\ActionInputConfig.cpp">
+      <Filter>ゲームシステム\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -807,6 +816,12 @@
     </ClInclude>
     <ClInclude Include="game\enemy\boss1\Boss1Model.h">
       <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="game\system\GameInputManager.h">
+      <Filter>ゲームシステム\System</Filter>
+    </ClInclude>
+    <ClInclude Include="game\system\ActionInputConfig.h">
+      <Filter>ゲームシステム\System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

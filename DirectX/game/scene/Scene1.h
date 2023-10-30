@@ -8,6 +8,7 @@
 #include "../enemy/boss1/Boss1.h"
 #include "../field/Field.h"
 #include "game/ui/GameOver.h"
+#include "system/ActionInputConfig.h"
 
 class Scene1 : public InterfaceScene
 {
@@ -84,6 +85,11 @@ private:
 
 	//ゲームオーバーUI
 	GameOver gameoverUi;
+
+	//行動入力設定
+	std::unique_ptr<ActionInputConfig> actionInputConfig;
+	//行動入力設定中か
+	bool isInputConfigMode = false;
 
 	float rate;
 

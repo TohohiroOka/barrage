@@ -71,6 +71,13 @@ public: //メンバ関数
 	bool ReleaseKey(const BYTE& _keyNumber);
 
 	/// <summary>
+	/// 押したキーを取得
+	/// </summary>
+	/// <param name="key">更新したキーを格納</param>
+	/// <returns>変更したか</returns>
+	bool GetTriggerKey(BYTE& key);
+
+	/// <summary>
 	/// マウスボタンの押下をチェック
 	/// </summary>
 	/// <param name = "_mouseButton">マウスボタン</param>

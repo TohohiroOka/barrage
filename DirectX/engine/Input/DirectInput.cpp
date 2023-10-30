@@ -118,6 +118,18 @@ bool DirectInput::ReleaseKey(const BYTE& _keyNumber)
 	return false;
 }
 
+bool DirectInput::GetTriggerKey(BYTE& key)
+{
+	for (int i = 0; i < 256; i++) {
+		if (TriggerKey((BYTE)i)) {
+			key = (BYTE)i;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool DirectInput::PushMouseButton(const MOUSE_BUTTON _mouseButton)
 {
 	//Žw’è‚Ìƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚¢‚ê‚Îtrue‚ð•Ô‚·

@@ -50,6 +50,8 @@ void Scene1::Initialize()
 	stop = false;
 
 	gameoverUi.Initialize();
+
+	actionInputConfig = std::make_unique<ActionInputConfig>();
 }
 
 void Scene1::Update()
@@ -58,44 +60,58 @@ void Scene1::Update()
 
 	GameHelper::Instance()->SetStop(stop);
 
-	player->Update();
-	field->Update();
-	boss->SetTargetPos(player->GetPosition());
-	boss->Update();
+	if (!isInputConfigMode) {
+		player->Update();
+		field->Update();
+		boss->SetTargetPos(player->GetPosition());
+		boss->Update();
 
-	CollisionCheck();
+		CollisionCheck();
 
-	//カメラ更新
-	if (isNormalCamera) {
-		camera->Update();
-		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
-			isNormalCamera = !isNormalCamera;
+		//カメラ更新
+		if (isNormalCamera) {
+			camera->Update();
+			if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
+				isNormalCamera = !isNormalCamera;
+				Base3D::SetCamera(debugCamera.get());
+			}
+		}
+		else {
+			debugCamera->Update();
 			Base3D::SetCamera(debugCamera.get());
+			if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
+				isNormalCamera = !isNormalCamera;
+				Base3D::SetCamera(camera.get());
+			}
+		}
+		//camera->Update();
+		lightCamera->Update();
+
+		//デバッグ用シーン切り替え
+		if (DirectInput::GetInstance()->ReleaseKey(DIK_1)) {
+			TitleScene* titleScene = new TitleScene;
+			SceneManager::SetNextScene(titleScene);
+		}
+
+		gameoverUi.Update();
+		//体力0でゲームオーバー表示
+		//デバッグ用ゲームオーバー表示
+		if (DirectInput::GetInstance()->TriggerKey(DIK_F4)) { gameoverUi.ResetGameOverUI(); }
+		//if (DirectInput::GetInstance()->TriggerKey(DIK_4)) { gameoverUi.StartGameOverUI(); }
+		if (player->GetIsDead() && !gameoverUi.GetIsGameOver()) { gameoverUi.StartGameOverUI(); }
+
+		if (DirectInput::GetInstance()->TriggerKey(DIK_TAB) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_START)) {
+			isInputConfigMode = true;
+			actionInputConfig->Reset();
 		}
 	}
-	else {
-		debugCamera->Update();
-		Base3D::SetCamera(debugCamera.get());
-		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
-			isNormalCamera = !isNormalCamera;
-			Base3D::SetCamera(camera.get());
-		}
-	}
-	//camera->Update();
-	lightCamera->Update();
 
-	//デバッグ用シーン切り替え
-	if (DirectInput::GetInstance()->ReleaseKey(DIK_1)) {
-		TitleScene* titleScene = new TitleScene;
-		SceneManager::SetNextScene(titleScene);
-	}
+	if (isInputConfigMode) {
+		//入力設定更新
+		actionInputConfig->Update();
 
-	gameoverUi.Update();
-	//体力0でゲームオーバー表示
-	//デバッグ用ゲームオーバー表示
-	if (DirectInput::GetInstance()->TriggerKey(DIK_F4)) { gameoverUi.ResetGameOverUI(); }
-	//if (DirectInput::GetInstance()->TriggerKey(DIK_4)) { gameoverUi.StartGameOverUI(); }
-	if (player->GetIsDead() && !gameoverUi.GetIsGameOver()) { gameoverUi.StartGameOverUI(); }
+		if (actionInputConfig->GetIsInputConfigEnd()) { isInputConfigMode = false; }
+	}
 }
 
 void Scene1::Draw(const int _cameraNum)
@@ -121,6 +137,11 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 	}
 
 	gameoverUi.Draw();
+
+	//入力設定描画
+	if (isInputConfigMode) {
+		actionInputConfig->Draw();
+	}
 }
 
 void Scene1::Finalize()
@@ -151,7 +172,7 @@ void Scene1::ImguiDraw()
 	else { ImGui::Text("lockon  false"); }
 	ImGui::Text("Player Boss Length [ %f ]", boss->GetLength());
 	ImGui::Text("%d : %d ", player->GetJumpMaxNum(), player->GetJumpCount());
-	
+
 	player->ImguiDraw();
 
 	ImGui::SliderFloat("blend rate", &rate, 0.0f, 1.0f);
