@@ -8,11 +8,6 @@
 class GameCamera :public Camera
 {
 public: //静的メンバ関数
-	/// <summary>
-	/// インスタンスの生成
-	/// </summary>
-	/// <returns></returns>
-	static std::unique_ptr<GameCamera> Create();
 	
 	static void SetPlayer(Player* player) { GameCamera::player = player; }
 
@@ -95,7 +90,7 @@ private: //メンバ変数
 	//ロックオンターゲットを検出するか
 	bool isLockonStart = false;
 	//ロックオン開始時にロックオン回転角にイージングする時間タイマー
-	int lockonChangeRotaTimer = 0;
+	std::unique_ptr<Engine::Timer> lockonChangeRotaTimer;
 	//イージング用変数
 	Vector3 easeBeforeRota;
 };

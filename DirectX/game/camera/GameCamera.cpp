@@ -9,22 +9,13 @@ using namespace DirectX;
 Player* GameCamera::player = nullptr;
 const float GameCamera::baseDistance = 25.0f;
 
-std::unique_ptr<GameCamera> GameCamera::Create()
-{
-	// インスタンスを生成
-	GameCamera* instance = new GameCamera();
-	if (instance == nullptr) {
-		return nullptr;
-	}
-
-	//ユニークポインタを返す
-	return std::unique_ptr<GameCamera>(instance);
-}
-
 GameCamera::GameCamera() :
 	Camera(true)
 {
 	targetDistance = baseDistance;
+
+	//タイマークラス
+	lockonChangeRotaTimer = std::make_unique<Engine::Timer>();
 }
 
 GameCamera::~GameCamera()
@@ -56,7 +47,7 @@ void GameCamera::Lockon(Base3D* lockonTarget)
 	this->lockonTarget = lockonTarget;
 
 	easeBeforeRota = rotation;
-	lockonChangeRotaTimer = 0;
+	lockonChangeRotaTimer->Reset();
 
 	isLockon = true;
 }
@@ -159,8 +150,8 @@ void GameCamera::UpdateLockonRotate()
 	}
 
 	//イージングで動かす場合
-	if (lockonChangeRotaTimer <= changeRotaTime) {
-		lockonChangeRotaTimer++;
+	if (*lockonChangeRotaTimer.get() <= changeRotaTime) {
+		lockonChangeRotaTimer->Update();
 
 		//回転をなるべく短くするために元角度を調整(例：350→10 より -10→10の方が近い)
 		float adjustRota = easeBeforeRota.y;
@@ -176,7 +167,7 @@ void GameCamera::UpdateLockonRotate()
 		}
 
 		//ロックオンしたターゲットの方向をイージングで向くようにする
-		const float time = lockonChangeRotaTimer / changeRotaTime;
+		const float time = *lockonChangeRotaTimer.get() / changeRotaTime;
 		rotation.y = Easing::OutCubic(adjustRota, lockonRotate, time);
 	}
 	else {

@@ -26,11 +26,11 @@ void Scene1::Initialize()
 
 	GameCamera::SetPlayer(player.get());
 	debugCamera = DebugCamera::Create({ 300, 40, 0 });
-	camera = GameCamera::Create();
+	camera = std::make_unique<GameCamera>();
 	player->SetGameCamera(camera.get());
 
 	//‰e—pŒõŒ¹ƒJƒƒ‰‰Šú‰»
-	lightCamera.reset(new LightCamera({ 205, 200, 204 }, { 205, 0, 205 }));
+	lightCamera = std::make_unique<LightCamera>(Vector3{ 205, 200, 204 }, Vector3{ 205, 0, 205 });
 	const float projectionSize = 1.5f;
 	lightCamera->SetProjectionNum({ projectionSize * (float)WindowApp::GetWindowWidth() / 5, projectionSize * (float)WindowApp::GetWindowHeight() / 5 },
 		{ -projectionSize * (float)WindowApp::GetWindowWidth() / 5, -projectionSize * (float)WindowApp::GetWindowHeight() / 5 });
