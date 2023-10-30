@@ -2,8 +2,8 @@
 
 std::array<GameInputManager::KeyInputActionData, GameInputManager::InputActionNum> GameInputManager::keyInputActions;
 std::array<GameInputManager::PadInputActionData, GameInputManager::InputActionNum> GameInputManager::padInputActions;
-bool GameInputManager::isCameraMoveYReverse = false;
-bool GameInputManager::isCameraMoveXReverse = true;
+bool GameInputManager::isCameraRotaYReverse = false;
+bool GameInputManager::isCameraRotaXReverse = false;
 float GameInputManager::padStickInputIncline = 0.3f;
 
 void GameInputManager::Initialize()
@@ -16,10 +16,10 @@ void GameInputManager::Initialize()
 	keyInputActions[Avoid_Blink_Dash] = { DIK_Z, true };
 	keyInputActions[Jump] = { DIK_SPACE, true };
 	keyInputActions[Attack] = { DIK_Q, true };
-	keyInputActions[MoveCameraUp] = { DIK_UP, false };
-	keyInputActions[MoveCameraDown] = { DIK_DOWN, false };
-	keyInputActions[MoveCameraLeft] = { DIK_LEFT, false };
-	keyInputActions[MoveCameraRight] = { DIK_RIGHT, false };
+	keyInputActions[CameraUpRota] = { DIK_UP, false };
+	keyInputActions[CameraDownRota] = { DIK_DOWN, false };
+	keyInputActions[CameraLeftRota] = { DIK_LEFT, false };
+	keyInputActions[CameraRightRota] = { DIK_RIGHT, false };
 	keyInputActions[Lockon] = { DIK_X, true };
 
 
@@ -33,10 +33,10 @@ void GameInputManager::Initialize()
 	padInputActions[Avoid_Blink_Dash] = { XInputManager::PAD_B, true };
 	padInputActions[Jump] = { XInputManager::PAD_A, true };
 	padInputActions[Attack] = { XInputManager::PAD_RB, true };
-	padInputActions[MoveCameraUp] = { RStickNum, false };
-	padInputActions[MoveCameraDown] = { RStickNum, false };
-	padInputActions[MoveCameraLeft] = { RStickNum, false };
-	padInputActions[MoveCameraRight] = { RStickNum, false };
+	padInputActions[CameraUpRota] = { RStickNum, false };
+	padInputActions[CameraDownRota] = { RStickNum, false };
+	padInputActions[CameraLeftRota] = { RStickNum, false };
+	padInputActions[CameraRightRota] = { RStickNum, false };
 	padInputActions[Lockon] = { XInputManager::PAD_RIGHT_STICK_PUSH, true };
 }
 

@@ -26,10 +26,10 @@ void ActionInputConfig::LoadTexture()
 	LoadActionNameTexture(GameInputManager::Avoid_Blink_Dash, "Avoid_Blink_Dash.png");
 	LoadActionNameTexture(GameInputManager::Jump, "Jump.png");
 	LoadActionNameTexture(GameInputManager::Attack, "Attack.png");
-	LoadActionNameTexture(GameInputManager::MoveCameraUp, "MoveCameraUp.png");
-	LoadActionNameTexture(GameInputManager::MoveCameraDown, "MoveCameraDown.png");
-	LoadActionNameTexture(GameInputManager::MoveCameraLeft, "MoveCameraLeft.png");
-	LoadActionNameTexture(GameInputManager::MoveCameraRight, "MoveCameraRight.png");
+	LoadActionNameTexture(GameInputManager::CameraUpRota, "CameraUpRota.png");
+	LoadActionNameTexture(GameInputManager::CameraDownRota, "CameraDownRota.png");
+	LoadActionNameTexture(GameInputManager::CameraLeftRota, "CameraLeftRota.png");
+	LoadActionNameTexture(GameInputManager::CameraRightRota, "CameraRightRota.png");
 	LoadActionNameTexture(GameInputManager::Lockon, "Lockon.png");
 
 	//キーテクスチャ読み込み
@@ -115,6 +115,10 @@ void ActionInputConfig::LoadTexture()
 	LoadPadTexture(XInputManager::PAD_RIGHT_STICK_PUSH, "RIGHT_STICK_PUSH.png");
 	LoadPadTexture(16, "LSTICK.png");
 	LoadPadTexture(17, "RSTICK.png");
+
+	//カメラ回転用「ノーマル」「リバース」テクスチャ読み込み
+	Sprite::LoadTexture("normal", "Resources/SpriteTexture/normal.png");
+	Sprite::LoadTexture("reverse", "Resources/SpriteTexture/reverse.png");
 }
 
 void ActionInputConfig::LoadActionNameTexture(int actionName, const std::string& fileName)
@@ -164,30 +168,50 @@ void ActionInputConfig::Initialize()
 		actionNameSprites[i]->Initialize(name, pos, { 0, 0.5f });
 	}
 
-	//入力スプライト初期化
-	for (int i = 0; i < configSprites[0].size(); i++) {
-		configSprites[0][i] = std::make_unique<Sprite>();
-		const std::string name = "key_" + std::to_string(GameInputManager::GetKeyInputActionData(i).key);
-		const DirectX::XMFLOAT2 pos = { 820, 100 + (float)i * 55 };
-		DirectX::XMFLOAT4 color = normalColor;
-		if (!GameInputManager::GetKeyInputActionData(i).isChangeInput) { color = noChangeColor; }
-		configSprites[0][i]->Initialize(name, pos, { 0.5f, 0.5f }, color);
 
-		//フレームスプライト初期化
-		frameSprites[0][i] = std::make_unique<Sprite>();
-		frameSprites[0][i]->Initialize("inputFrame", pos, { 0.5f, 0.5f }, color);
-	}
-	for (int i = 0; i < configSprites[1].size(); i++) {
-		configSprites[1][i] = std::make_unique<Sprite>();
-		const std::string name = "pad_" + std::to_string(GameInputManager::GetPadInputActionData(i).padButton);
-		const DirectX::XMFLOAT2 pos = { 1070, 100 + (float)i * 55 };
-		DirectX::XMFLOAT4 color = normalColor;
-		if (!GameInputManager::GetPadInputActionData(i).isChangeInput) { color = noChangeColor; }
-		configSprites[1][i]->Initialize(name, pos, { 0.5f, 0.5f }, color);
+	for (int i = Key; i < InputTypeNum; i++) {
+		//各入力種類の要素数
+		int loopNum = 0;
+		if (i == CameraRota) { loopNum = CameraRotaTypeNum; }
+		else { loopNum = GameInputManager::InputActionNum; }
 
-		//フレームスプライト初期化
-		frameSprites[1][i] = std::make_unique<Sprite>();
-		frameSprites[1][i]->Initialize("inputFrame", pos, { 0.5f, 0.5f }, color);
+		for (int j = 0; j < loopNum; j++) {
+			//入力スプライト初期化
+			std::unique_ptr<Sprite> newConfigSprite = std::make_unique<Sprite>();
+			std::string name;
+			const DirectX::XMFLOAT2 leftTopPos = { 820, 100 };
+			const DirectX::XMFLOAT2 posInterval = { 250, 55 };
+			DirectX::XMFLOAT2 pos = { leftTopPos.x + (float)i * posInterval.x, leftTopPos.y + (float)j * posInterval.y };
+			DirectX::XMFLOAT4 color = normalColor;
+			if (i == Key) {
+				name = "key_" + std::to_string(GameInputManager::GetKeyInputActionData(j).key);
+				if (!GameInputManager::GetKeyInputActionData(j).isChangeInput) { color = noChangeColor; }
+			}
+			else if (i == PadButton) {
+				name = "pad_" + std::to_string(GameInputManager::GetPadInputActionData(j).padButton);
+				if (!GameInputManager::GetPadInputActionData(j).isChangeInput) { color = noChangeColor; }
+			}
+			else if (i == CameraRota) {
+				if (j == CameraUpDown) {
+					if (!GameInputManager::GetIsCameraRotaXReverse()) { name = "normal"; }
+					else { name = "reverse"; }
+					pos.y = leftTopPos.y + (float)GameInputManager::CameraUpRota * posInterval.y + posInterval.y / 2;
+				}
+				else if (j == CameraLeftRight) {
+					if (!GameInputManager::GetIsCameraRotaYReverse()) { name = "normal"; }
+					else { name = "reverse"; }
+					pos.y = leftTopPos.y + (float)GameInputManager::CameraLeftRota * posInterval.y + posInterval.y / 2;
+				}
+			}
+
+			newConfigSprite->Initialize(name, pos, { 0.5f, 0.5f }, color);
+			configSprites[i].push_back(std::move(newConfigSprite));
+
+			//フレームスプライト初期化
+			std::unique_ptr<Sprite> newFrameSprite = std::make_unique<Sprite>();
+			newFrameSprite->Initialize("inputFrame", pos, { 0.5f, 0.5f }, color);
+			frameSprites[i].push_back(std::move(newFrameSprite));
+		}
 	}
 
 	//選択中のスプライトの枠の色を黄色くする
@@ -256,8 +280,8 @@ void ActionInputConfig::Reset()
 	for (int i = 0; i < frameSprites.size(); i++) {
 		for (int j = 0; j < frameSprites[i].size(); j++) {
 			DirectX::XMFLOAT4 color = normalColor;
-			if (i == 0 && !GameInputManager::GetKeyInputActionData(j).isChangeInput) { color = noChangeColor; }
-			else if (i == 1 && !GameInputManager::GetPadInputActionData(j).isChangeInput) { color = noChangeColor; }
+			if (i == Key && !GameInputManager::GetKeyInputActionData(j).isChangeInput) { color = noChangeColor; }
+			else if (i == PadButton && !GameInputManager::GetPadInputActionData(j).isChangeInput) { color = noChangeColor; }
 			frameSprites[i][j]->SetColor(color);
 		}
 	}
@@ -269,56 +293,68 @@ void ActionInputConfig::Reset()
 void ActionInputConfig::Select()
 {
 	//選択入力形態変更
-	if (DirectInput::GetInstance()->TriggerKey(DIK_RIGHT) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_RIGHT)) {
+	if (selectInputType < CameraRota && (DirectInput::GetInstance()->TriggerKey(DIK_RIGHT) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_RIGHT))) {
 		//選択中のスプライトの枠の色を元に戻す
 		DirectX::XMFLOAT4 returnColor = normalColor;
-		if (selectInputType == 0 && !GameInputManager::GetKeyInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
-		else if (selectInputType == 1 && !GameInputManager::GetPadInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
+		if (selectInputType == Key && !GameInputManager::GetKeyInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
+		else if (selectInputType == PadButton && !GameInputManager::GetPadInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
 		frameSprites[selectInputType][selectAction]->SetColor(returnColor);
 
+		//次の入力種類へ
 		selectInputType++;
-		selectInputType = min(selectInputType, 1);
+
+		//カメラ回転変更の要素数は他と異なるので、横にある行動によって数値を調整
+		if (selectInputType == CameraRota) {
+			if (selectAction <= GameInputManager::CameraDownRota) { selectAction = CameraUpDown; }
+			else { selectAction = CameraLeftRight; }
+		}
 
 		//新たに選択する枠の色を変更
 		frameSprites[selectInputType][selectAction]->SetColor(selectColor);
 	}
-	else if (DirectInput::GetInstance()->TriggerKey(DIK_LEFT) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_LEFT)) {
+	else if (selectInputType > Key && (DirectInput::GetInstance()->TriggerKey(DIK_LEFT) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_LEFT))) {
 		//選択中のスプライトの枠の色を元に戻す
 		DirectX::XMFLOAT4 returnColor = normalColor;
-		if (selectInputType == 0 && !GameInputManager::GetKeyInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
-		else if (selectInputType == 1 && !GameInputManager::GetPadInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
+		if (selectInputType == Key && !GameInputManager::GetKeyInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
+		else if (selectInputType == PadButton && !GameInputManager::GetPadInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
 		frameSprites[selectInputType][selectAction]->SetColor(returnColor);
 
+		//カメラ回転変更から戻る場合は要素数が他と異なるので、横にある行動によって数値を調整
+		if (selectInputType == CameraRota) {
+			if (selectAction == CameraUpDown) { selectAction = GameInputManager::CameraUpRota; }
+			else if (selectAction == CameraLeftRight) { selectAction = GameInputManager::CameraLeftRota; }
+		}
+
+		//前の入力種類へ
 		selectInputType--;
-		selectInputType = max(selectInputType, 0);
 
 		//新たに選択する枠の色を変更
 		frameSprites[selectInputType][selectAction]->SetColor(selectColor);
 	}
 
 	//選択行動変更
-	if (DirectInput::GetInstance()->TriggerKey(DIK_UP) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_UP)) {
+	if (selectAction > 0 && (DirectInput::GetInstance()->TriggerKey(DIK_UP) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_UP))) {
 		//選択中のスプライトの枠の色を元に戻す
 		DirectX::XMFLOAT4 returnColor = normalColor;
-		if (selectInputType == 0 && !GameInputManager::GetKeyInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
-		else if (selectInputType == 1 && !GameInputManager::GetPadInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
+		if (selectInputType == Key && !GameInputManager::GetKeyInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
+		else if (selectInputType == PadButton && !GameInputManager::GetPadInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
 		frameSprites[selectInputType][selectAction]->SetColor(returnColor);
 
+		//前の行動へ
 		selectAction--;
-		selectAction = max(selectAction, 0);
 
 		//新たに選択する枠の色を変更
 		frameSprites[selectInputType][selectAction]->SetColor(selectColor);
 	}
-	else if (DirectInput::GetInstance()->TriggerKey(DIK_DOWN) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_DOWN)) {
+	else if (selectAction < (int)configSprites[selectInputType].size() - 1 && (DirectInput::GetInstance()->TriggerKey(DIK_DOWN) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_DOWN))) {
 		//選択中のスプライトの枠の色を元に戻す
 		DirectX::XMFLOAT4 returnColor = normalColor;
-		if (selectInputType == 0 && !GameInputManager::GetKeyInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
-		else if (selectInputType == 1 && !GameInputManager::GetPadInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
+		if (selectInputType == Key && !GameInputManager::GetKeyInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
+		else if (selectInputType == PadButton && !GameInputManager::GetPadInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
 		frameSprites[selectInputType][selectAction]->SetColor(returnColor);
 
+		//次の行動へ
 		selectAction++;
-		selectAction = min(selectAction, GameInputManager::InputActionNum - 1);
 
 		//新たに選択する枠の色を変更
 		frameSprites[selectInputType][selectAction]->SetColor(selectColor);
@@ -326,14 +362,17 @@ void ActionInputConfig::Select()
 
 	//変更する選択を確定
 	if (DirectInput::GetInstance()->TriggerKey(DIK_SPACE) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A)) {
-		if (selectInputType == 0 && GameInputManager::GetKeyInputActionData(selectAction).isChangeInput) {
-			configSprites[0][selectAction]->DeleteTexture();
+		if (selectInputType == Key && GameInputManager::GetKeyInputActionData(selectAction).isChangeInput) {
+			configSprites[Key][selectAction]->DeleteTexture();
 
 			phase = Phase::InputChangeMode;
 		}
-		else if (selectInputType == 1 && GameInputManager::GetPadInputActionData(selectAction).isChangeInput) {
-			configSprites[1][selectAction]->DeleteTexture();
+		else if (selectInputType == PadButton && GameInputManager::GetPadInputActionData(selectAction).isChangeInput) {
+			configSprites[PadButton][selectAction]->DeleteTexture();
 
+			phase = Phase::InputChangeMode;
+		}
+		else if (selectInputType == CameraRota) {
 			phase = Phase::InputChangeMode;
 		}
 	}
@@ -345,46 +384,64 @@ void ActionInputConfig::Select()
 
 void ActionInputConfig::InputChange()
 {
-	//キーorボタン変更の場合
-	if (selectAction <= GameInputManager::InputActionNum - 1) {
-		//キー
-		if (selectInputType == 0) {
-			//キー割り当て更新
-			BYTE newKey;
-			if (DirectInput::GetInstance()->GetTriggerKey(newKey)) {
-				//他の行動と被っていなければ進む
-				if (GameInputManager::ChangeInputKey((GameInputManager::InputAction)selectAction, newKey)) {
-					//指定したキーのテクスチャがあるか
-					if (!Sprite::GetIsTextureName("key_" + std::to_string(newKey))) {
-						return;
-					}
-					//テクスチャ割り当て
-					configSprites[0][selectAction]->SetTexture("key_" + std::to_string(newKey));
-
-					//選択に戻る
-					phase = Phase::SelectMode;
+	//キー
+	if (selectInputType == Key) {
+		//キー割り当て更新
+		BYTE newKey;
+		if (DirectInput::GetInstance()->GetTriggerKey(newKey)) {
+			//他の行動と被っていなければ進む
+			if (GameInputManager::ChangeInputKey((GameInputManager::InputAction)selectAction, newKey)) {
+				//指定したキーのテクスチャがあるか
+				if (!Sprite::GetIsTextureName("key_" + std::to_string(newKey))) {
+					return;
 				}
+				//テクスチャ割り当て
+				configSprites[Key][selectAction]->SetTexture("key_" + std::to_string(newKey));
+
+				//選択に戻る
+				phase = Phase::SelectMode;
 			}
 		}
-		//ボタン
-		else if (selectInputType == 1) {
-			//ボタン割り当て更新
-			int newButton;
-			if (XInputManager::GetInstance()->GetTriggerButton(newButton)) {
-				//他の行動と被っていなければ進む
-				if (GameInputManager::ChangeInputPadButton((GameInputManager::InputAction)selectAction, newButton)) {
-					//指定したボタンのテクスチャがあるか
-					if (!Sprite::GetIsTextureName("pad_" + std::to_string(newButton))) {
-						return;
-					}
-
-					//テクスチャ割り当て
-					configSprites[1][selectAction]->SetTexture("pad_" + std::to_string(newButton));
-
-					//選択に戻る
-					phase = Phase::SelectMode;
+	}
+	//ボタン
+	else if (selectInputType == PadButton) {
+		//ボタン割り当て更新
+		int newButton;
+		if (XInputManager::GetInstance()->GetTriggerButton(newButton)) {
+			//他の行動と被っていなければ進む
+			if (GameInputManager::ChangeInputPadButton((GameInputManager::InputAction)selectAction, newButton)) {
+				//指定したボタンのテクスチャがあるか
+				if (!Sprite::GetIsTextureName("pad_" + std::to_string(newButton))) {
+					return;
 				}
+
+				//テクスチャ割り当て
+				configSprites[PadButton][selectAction]->SetTexture("pad_" + std::to_string(newButton));
+
+				//選択に戻る
+				phase = Phase::SelectMode;
 			}
 		}
+	}
+	//カメラ回転
+	else if (selectInputType == CameraRota) {
+		//選択したカメラ回転の回転方向を逆にする
+		if (selectAction == CameraUpDown) {
+			GameInputManager::SetIsCameraRotaXReverse(!(GameInputManager::GetIsCameraRotaXReverse()));
+
+			//テクスチャ変更
+			if (!GameInputManager::GetIsCameraRotaXReverse()) { configSprites[CameraRota][selectAction]->SetTexture("normal"); }
+			else { configSprites[CameraRota][selectAction]->SetTexture("reverse"); }
+		}
+		else if (selectAction == CameraLeftRight) {
+			GameInputManager::SetIsCameraRotaYReverse(!(GameInputManager::GetIsCameraRotaYReverse()));
+
+			//テクスチャ変更
+			if (!GameInputManager::GetIsCameraRotaYReverse()) { configSprites[CameraRota][selectAction]->SetTexture("normal"); }
+			else { configSprites[CameraRota][selectAction]->SetTexture("reverse"); }
+		}
+
+		//選択に戻る
+		phase = Phase::SelectMode;
 	}
 }

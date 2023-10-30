@@ -105,14 +105,15 @@ void GameCamera::UpdateRotate()
 {
 	DirectInput* input = DirectInput::GetInstance();
 	//視界移動
-	const float Tgspeed = 1.0f;
+	const float Tgspeed = 2.0f;
+	XMFLOAT2 rotNum = { 0,0 };//回転量
 
 	//キー入力
 	{
-		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveCameraLeft).key)) { rotation.y -= Tgspeed; }//右入力
-		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveCameraRight).key)) { rotation.y += Tgspeed; }//左入力
-		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveCameraDown).key)) { rotation.x -= Tgspeed; }//下入力
-		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveCameraUp).key)) { rotation.x += Tgspeed; }//上入力
+		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::CameraLeftRota).key)) { rotNum.y -= Tgspeed; }//右入力
+		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::CameraRightRota).key)) { rotNum.y += Tgspeed; }//左入力
+		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::CameraDownRota).key)) { rotNum.x += Tgspeed; }//下入力
+		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::CameraUpRota).key)) { rotNum.x -= Tgspeed; }//上入力
 	}
 	//コントローラー入力
 	{
@@ -122,10 +123,18 @@ void GameCamera::UpdateRotate()
 		if (fabsf(padIncline.x) >= moveStickIncline || fabsf(padIncline.y) >= moveStickIncline) {
 			const XMFLOAT2 padIncline = GameInputManager::GetPadRStickIncline();
 			const float stickRadian = GameInputManager::GetPadRStickRadian();
-			rotation.y += cosf(stickRadian) * fabsf(padIncline.x) * Tgspeed;
-			rotation.x += -sinf(stickRadian) * fabsf(padIncline.y) * Tgspeed;
+			rotNum.y += cosf(stickRadian) * fabsf(padIncline.x) * Tgspeed;
+			rotNum.x += sinf(stickRadian) * fabsf(padIncline.y) * Tgspeed;
 		}
 	}
+
+	//入力設定がリバースモードなら回転量を逆にする
+	if (GameInputManager::GetIsCameraRotaYReverse()) { rotNum.y = -rotNum.y; }
+	if (GameInputManager::GetIsCameraRotaXReverse()) { rotNum.x = -rotNum.x; }
+
+	//回転量を加算して回転させる
+	rotation.y += rotNum.y;
+	rotation.x += rotNum.x;
 
 	//上下方向の角度制限
 	rotation.x = max(rotation.x, -89);

@@ -17,6 +17,29 @@ public: //enum
 		InputChangeMode,
 	};
 
+	/// <summary>
+	/// 入力変更種類
+	/// </summary>
+	enum InputType 
+	{
+		Key,
+		PadButton,
+		CameraRota,
+
+		InputTypeNum,
+	};
+
+	/// <summary>
+	/// カメラ回転種類名
+	/// </summary>
+	enum CameraRotaName
+	{
+		CameraUpDown,
+		CameraLeftRight,
+
+		CameraRotaTypeNum,
+	};
+
 public: //静的メンバ関数
 	/// <summary>
 	/// テクスチャ読み込み
@@ -93,10 +116,10 @@ private: //メンバ変数
 
 	//行動名スプライト
 	std::array<std::unique_ptr<Sprite>, GameInputManager::InputActionNum> actionNameSprites;
-	//キー・ボタンスプライト
-	std::array<std::array<std::unique_ptr<Sprite>, GameInputManager::InputActionNum>, 2> configSprites;
+	//キー・ボタンスプライト(要素2は、カメラ回転用なので要素は2個)
+	std::array<std::vector<std::unique_ptr<Sprite>>, InputTypeNum> configSprites;
 	//フレームスプライト
-	std::array<std::array<std::unique_ptr<Sprite>, GameInputManager::InputActionNum>, 2> frameSprites;
+	std::array<std::vector<std::unique_ptr<Sprite>>, InputTypeNum> frameSprites;
 
 	//選択中の行動番号
 	int selectAction = 0;

@@ -22,10 +22,10 @@ public: //enum
 		Avoid_Blink_Dash,//回避&ブリンク&ダッシュ
 		Jump,			//ジャンプ
 		Attack,			//攻撃
-		MoveCameraUp,	//カメラ移動(上)
-		MoveCameraDown,	//カメラ移動(下)
-		MoveCameraLeft,	//カメラ移動(左)
-		MoveCameraRight,//カメラ移動(右)
+		CameraUpRota,	//カメラ回転(上)
+		CameraDownRota,	//カメラ回転(下)
+		CameraLeftRota,	//カメラ回転(左)
+		CameraRightRota,//カメラ回転(右)
 		Lockon,			//ロックオン
 
 		InputActionNum,	//入力対応数
@@ -94,17 +94,21 @@ public: //静的メンバ関数
 	static float GetPadRStickAngle() { return XInputManager::GetInstance()->GetPadRStickAngle(); }
 	static float GetPadLStickRadian() { return DirectX::XMConvertToRadians(GetPadLStickAngle() - 90); }
 	static float GetPadRStickRadian() { return DirectX::XMConvertToRadians(GetPadRStickAngle() - 90); }
-	static bool GetIsCameraMoveYReverse() { return isCameraMoveYReverse; }
-	static bool GetIsCameraMoveXReverse() { return isCameraMoveXReverse; }
+	static bool GetIsCameraRotaYReverse() { return isCameraRotaYReverse; }
+	static bool GetIsCameraRotaXReverse() { return isCameraRotaXReverse; }
+
+	//setter
+	static void SetIsCameraRotaYReverse(bool isCameraRotaYReverse) { GameInputManager::isCameraRotaYReverse = isCameraRotaYReverse; }
+	static void SetIsCameraRotaXReverse(bool isCameraRotaXReverse) { GameInputManager::isCameraRotaXReverse = isCameraRotaXReverse; }
 
 private: //静的メンバ変数
 	//キー入力データ
 	static std::array<KeyInputActionData, InputActionNum> keyInputActions;
 	//パッド入力データ
 	static std::array<PadInputActionData, InputActionNum> padInputActions;
-	//カメラ移動を逆にするか
-	static bool isCameraMoveYReverse; //上下
-	static bool isCameraMoveXReverse; //左右
+	//カメラ回転を逆にするか
+	static bool isCameraRotaYReverse; //左右
+	static bool isCameraRotaXReverse; //上下
 	//パッドスティック入力判定傾き量
 	static float padStickInputIncline;
 };
