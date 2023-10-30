@@ -15,14 +15,12 @@ Boss1::Boss1()
 
 	BaseBoss::Initialize();
 
-	center->SetPosition({ 255.0f / 2.0f,10.0f ,255.0f / 2.0f });
+	bossModel = std::make_unique<Boss1Model>();
+	//action = std::make_unique<Boss1Bullet3>();
 
 	BaseAction::SetBossPtr(this);
 
 	action = std::make_unique<Boss1Move1>();
-
-	bossModel= std::make_unique<Boss1Model>(center.get());
-	//action = std::make_unique<Boss1Bullet3>();
 }
 
 void Boss1::Update()
@@ -46,7 +44,7 @@ void Boss1::SetAction()
 	action->~BaseAction();
 	action = nullptr;
 
-	Vector3 pos = center->GetPosition();
+	Vector3 pos = bossModel->GetObjectInst()->GetPosition();
 	Vector3 dist = targetPos - pos;
 
 	//action = std::make_unique<Boss1Bullet3>();

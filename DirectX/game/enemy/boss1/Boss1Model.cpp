@@ -1,16 +1,16 @@
 #include "Boss1Model.h"
 
-Boss1Model::Boss1Model(Base3D* _parent)
+Boss1Model::Boss1Model()
 {
 	objModel[int(ObjectType::cube)] = Model::CreateFromOBJ("NormalCube");
 	objModel[int(ObjectType::cone)] = Model::CreateFromOBJ("cone");
 
-	model = FbxModel::Create("model");
+	model = FbxModel::Create("boss1");
 	fbxObject = Fbx::Create(model.get());
 	fbxObject->SetScale({ 1.0f,1.0f ,1.0f });
 	fbxObject->SetLight(true);
 	fbxObject->SetAnimation(true);
-	fbxObject->SetParent(_parent);
+	fbxObject->SetPosition({ 255.0f / 2.0f,10.0f ,255.0f / 2.0f });
 
 	std::array<std::string, 9> bone = {
 	"mixamorig:HeadTop_End","mixamorig:Head","mixamorig:Spine1","mixamorig:Spine","mixamorig:Hips",

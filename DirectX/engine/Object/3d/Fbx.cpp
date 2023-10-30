@@ -79,6 +79,32 @@ std::unique_ptr<Fbx> Fbx::Create(FbxModel* model)
 
 void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 {
+	if (isTransferMaterial)
+	{
+		TransferMaterial();
+		isTransferMaterial = false;
+	}
+
+	if (_motionBlendRate1 >= 2.0f) {
+		model->Update(useAnimation);
+	} else {
+		model->Update(motionBlendModel, _motionBlendRate1, _motionBlendRate2, useAnimation);
+	}
+
+	//モデル自体の移動計算
+	{
+		// スケール、回転、平行移動行列の計算
+		DirectX::XMMATRIX matRot = XMMatrixIdentity();
+		matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
+		matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
+		matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
+
+		XMFLOAT3 move = model->GetWorldMove(useAnimation);
+		XMVECTOR matMove = XMVector3Transform({ move.x,move.y,move.z }, matRot);
+
+		animationMove = XMFLOAT3{ matMove.m128_f32[0], matMove.m128_f32[1], matMove.m128_f32[2] };
+	}
+
 	UpdateWorldMatrix();
 	// 定数バッファ1へデータ転送
 	ConstBufferDataB0* constMap = nullptr;
@@ -126,19 +152,6 @@ void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 		constMapLightView->world = matWorld;
 		constMapLightView->isSkinning = model->isSkinning;
 		constBuffLightViewB0->Unmap(0, nullptr);
-	}
-
-
-	if (isTransferMaterial)
-	{
-		TransferMaterial();
-		isTransferMaterial = false;
-	}
-
-	if (_motionBlendRate1 >= 2.0f) {
-		model->Update(useAnimation);
-	} else {
-		model->Update(motionBlendModel, _motionBlendRate1, _motionBlendRate2, useAnimation);
 	}
 }
 

@@ -10,6 +10,10 @@ public:
 
 	virtual void Draw() {};
 
+	DirectX::XMFLOAT3 GetModelMove() { return fbxObject->GetModelMove(); }
+	void SetAnimation(const int _animationNumber) { fbxObject->SetUseAnimation(_animationNumber); }
+	Base3D* GetObjectInst() { return fbxObject.get(); }
+
 protected:
 	
 	std::unique_ptr<FbxModel> model;

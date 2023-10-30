@@ -25,19 +25,18 @@ public:
 
 	void Collider();
 
-	Object3d* GetCenter() { return center.get(); }
+	Base3D* GetCenter() { return bossModel->GetObjectInst(); }
 	void SetMoveVec(const Vector3& _moveVec) { moveVec = _moveVec; }
 	BaseAction* GetBaseAction() { return action.get(); }
 	void SetTargetPos(const Vector3& _targetPos) { targetPos = _targetPos; }
 	Vector3 GetTargetPos() { return targetPos; }
-	float GetLength() { return (targetPos - Vector3(center->GetPosition())).length(); }
+	float GetLength() { return (targetPos - Vector3(bossModel->GetObjectInst()->GetPosition())).length(); }
+	BaseBossModel* GetBaseModel() { return bossModel.get(); }
 
 protected:
 
 	//ターゲット座標
 	Vector3 targetPos;
-	//中心点（描画無し）
-	std::unique_ptr<Object3d> center;
 
 	//ボスのモデル情報
 	std::unique_ptr<BaseBossModel> bossModel;

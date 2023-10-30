@@ -473,6 +473,22 @@ void FbxModel::LoadAnimation(FbxScene* fbxScene, const int _animationNum)
 
 	//再生可能
 	data->fbxUpdate[_animationNum].isAnimation = true;
+
+	//今の姿勢行列
+	XMMATRIX matCurrentPose;
+	//現在の姿勢を取得
+	FbxAMatrix fbxCurrentPose =
+		data->buffData[0].bones[0].fbxCluster->GetLink()->EvaluateGlobalTransform(data->fbxUpdate[_animationNum].nowTime);
+	//XMMATRIXに変換
+	ConvertMatrixFormFbx(&matCurrentPose, fbxCurrentPose);
+	boneMatWorld[data->buffData[0].bones[0].name] = matCurrentPose;
+
+	//初期座標セット
+	data->fbxUpdate[_animationNum].startPos =
+		XMFLOAT3{ boneMatWorld[data->buffData[0].bones[0].name].r[3].m128_f32[0],
+		boneMatWorld[data->buffData[0].bones[0].name].r[3].m128_f32[1],
+		boneMatWorld[data->buffData[0].bones[0].name].r[3].m128_f32[2]
+	};
 }
 
 void FbxModel::LoadFbx(const std::string modelName)
@@ -524,7 +540,7 @@ void FbxModel::LoadFbx(const std::string modelName)
 	{
 		//ボーン配列取得
 		std::vector<Bone>& bones = data->buffData[buffNum].bones;
-		for (int i = 0; i < bones.size(); i++)
+		for (int i = 1; i < bones.size(); i++)
 		{
 			boneMatWorld[bones[i].name] = XMMatrixIdentity();
 		}
@@ -618,10 +634,16 @@ void FbxModel::Update(const int _animationNum)
 	if (data->fbxUpdate[_animationNum].isAnimation && isAnimation)
 	{
 		data->fbxUpdate[_animationNum].nowTime += frameTime;
+
+		beforePos = XMFLOAT3{ boneMatWorld[data->buffData[0].bones[0].name].r[3].m128_f32[0],
+			boneMatWorld[data->buffData[0].bones[0].name].r[3].m128_f32[1],
+			boneMatWorld[data->buffData[0].bones[0].name].r[3].m128_f32[2] };
+
 		//最後まで行ったら先頭に戻す
 		if (data->fbxUpdate[_animationNum].nowTime > data->fbxUpdate[_animationNum].stopTime)
 		{
 			data->fbxUpdate[_animationNum].nowTime = data->fbxUpdate[_animationNum].startTime;
+			beforePos = data->fbxUpdate[_animationNum].startPos;
 		}
 	}
 
@@ -648,10 +670,13 @@ void FbxModel::Update(const int _animationNum)
 				//XMMATRIXに変換
 				ConvertMatrixFormFbx(&matCurrentPose, fbxCurrentPose);
 				//合成してスキニング行列に保存
+				boneMatWorld[bones[i].name] = matCurrentPose;
+
+				matCurrentPose.r[3].m128_f32[0] -= boneMatWorld[bones[0].name].r[3].m128_f32[0];
+				matCurrentPose.r[3].m128_f32[1] -= boneMatWorld[bones[0].name].r[3].m128_f32[1];
+				matCurrentPose.r[3].m128_f32[2] -= boneMatWorld[bones[0].name].r[3].m128_f32[2];
 				skinData[buffNum].bones[i] = bones[i].invInitialPose * matCurrentPose;
 				constMapSkin->bones[i] = skinData[buffNum].bones[i];
-
-				boneMatWorld[bones[i].name] = matCurrentPose;
 			}
 		}
 		//スキニングをしない場合初期化値を送る

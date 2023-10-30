@@ -3,6 +3,7 @@
 #include "Math/Vector3.h"
 #include "game/ui/Gauge.h"
 #include "BasePlayerAttack.h"
+#include "Math/Timer.h"
 
 class GameCamera;
 
@@ -105,7 +106,7 @@ private: //メンバ変数
 	//回避ベクトル
 	Vector3 avoidVec;
 	//回避用タイマー
-	int avoidTimer = 0;
+	std::unique_ptr<Engine::Timer> avoidTimer;
 	//回避開始可能か
 	bool isAvoidStart = true;
 
@@ -121,7 +122,7 @@ private: //メンバ変数
 	//ブリンクベクトル
 	Vector3 blinkVec;
 	//ブリンク用タイマー
-	int blinkTimer = 0;
+	std::unique_ptr<Engine::Timer> blinkTimer = 0;
 	//ブリンク開始可能か
 	bool isBlinkStart = true;
 
@@ -141,7 +142,7 @@ private: //メンバ変数
 	//回復中か
 	bool isHeal = false;
 	//回復タイマー
-	int healTimer = 0;
+	std::unique_ptr<Engine::Timer> healTimer = 0;
 	//回復前の体力
 	int healBeforeHP;
 	//回復完了後の体力
@@ -157,7 +158,7 @@ private: //メンバ変数
 	//持久力
 	int endurance;
 	//持久力回復開始までのタイマー
-	int enduranceRecoveryStartTimer;
+	std::unique_ptr<Engine::Timer> enduranceRecoveryStartTimer;
 	//持久力ゲージ
 	std::unique_ptr<Gauge> enduranceGauge;
 

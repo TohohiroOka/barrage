@@ -5,6 +5,8 @@
 
 Boss1Move2::Boss1Move2()
 {
+	boss->GetBaseModel()->SetAnimation(1);
+
 	using namespace DirectX;
 	XMFLOAT3 target = boss->GetTargetPos();
 	startPos = boss->GetCenter()->GetPosition();

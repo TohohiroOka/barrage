@@ -9,6 +9,7 @@ const float dist = maxScale + 5.0f;
 
 Boss1NearAttack1::Boss1NearAttack1()
 {
+	boss->GetBaseModel()->SetAnimation(1);
 	model = Model::CreateFromOBJ("NormalCube");
 	XMFLOAT3 pos = boss->GetCenter()->GetPosition();
 	for (int i = 0; i < objectNum; i++) {
