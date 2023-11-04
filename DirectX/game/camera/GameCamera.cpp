@@ -7,12 +7,19 @@
 using namespace DirectX;
 
 Player* GameCamera::player = nullptr;
-const float GameCamera::baseDistance = 25.0f;
+const float GameCamera::rotateCenterDistanceNormal = 45.0f;
+const Vector3 GameCamera::targetDistanceNormal = { 0, 7, 0 };
 
 GameCamera::GameCamera() :
 	Camera(true)
 {
-	targetDistance = baseDistance;
+	//回転の中心との距離をセット
+	rotateCenterDistance = rotateCenterDistanceNormal;
+	//ターゲットの中心からずらす距離をセット
+	targetDistance = targetDistanceNormal;
+
+	//初期の回転角をセット
+	rotation.x = 7.0f;
 
 	//タイマークラス
 	lockonChangeRotaTimer = std::make_unique<Engine::Timer>();
@@ -90,21 +97,23 @@ void GameCamera::UpdateTransform()
 		UpdateLockonRotate();
 	}
 	UpdatePosition();
+
+	PositionCollision();
 }
 
 void GameCamera::UpdateRotate()
 {
 	DirectInput* input = DirectInput::GetInstance();
 	//視界移動
-	const float Tgspeed = 2.0f;
+	const float rotSpeed = 2.0f;
 	XMFLOAT2 rotNum = { 0,0 };//回転量
 
 	//キー入力
 	{
-		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::CameraLeftRota).key)) { rotNum.y -= Tgspeed; }//右入力
-		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::CameraRightRota).key)) { rotNum.y += Tgspeed; }//左入力
-		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::CameraDownRota).key)) { rotNum.x += Tgspeed; }//下入力
-		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::CameraUpRota).key)) { rotNum.x -= Tgspeed; }//上入力
+		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::CameraLeftRota).key)) { rotNum.y -= rotSpeed; }//右入力
+		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::CameraRightRota).key)) { rotNum.y += rotSpeed; }//左入力
+		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::CameraDownRota).key)) { rotNum.x += rotSpeed; }//下入力
+		if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::CameraUpRota).key)) { rotNum.x -= rotSpeed; }//上入力
 	}
 	//コントローラー入力
 	{
@@ -114,8 +123,8 @@ void GameCamera::UpdateRotate()
 		if (fabsf(padIncline.x) >= moveStickIncline || fabsf(padIncline.y) >= moveStickIncline) {
 			const XMFLOAT2 padIncline = GameInputManager::GetPadRStickIncline();
 			const float stickRadian = GameInputManager::GetPadRStickRadian();
-			rotNum.y += cosf(stickRadian) * fabsf(padIncline.x) * Tgspeed;
-			rotNum.x += sinf(stickRadian) * fabsf(padIncline.y) * Tgspeed;
+			rotNum.y += cosf(stickRadian) * fabsf(padIncline.x) * rotSpeed;
+			rotNum.x += sinf(stickRadian) * fabsf(padIncline.y) * rotSpeed;
 		}
 	}
 
@@ -128,8 +137,8 @@ void GameCamera::UpdateRotate()
 	rotation.x += rotNum.x;
 
 	//上下方向の角度制限
-	rotation.x = max(rotation.x, -89);
-	rotation.x = min(rotation.x, 89);
+	rotation.x = max(rotation.x, -45);
+	rotation.x = min(rotation.x, 70);
 
 	//横回転の回転角を0～360以内に収まるようにする
 	if (rotation.y > 360) { rotation.y -= 360; }
@@ -179,26 +188,51 @@ void GameCamera::UpdateLockonRotate()
 void GameCamera::UpdatePosition()
 {
 	//X,Y回転角をラジアンに直す
-	const float angleX = XMConvertToRadians(rotation.x);
-	const float angleY = XMConvertToRadians(rotation.y);
+	Vector2 radian;
+	radian.x = XMConvertToRadians(rotation.x);
+	radian.y = XMConvertToRadians(rotation.y);
 	//アンダーフローする可能性があるので、小数点を切り捨てる
 	const float divNum = 1000;
-	const float floorAngleX = floorf(angleX * divNum) / divNum;
-	const float floorAngleY = floorf(angleY * divNum) / divNum;
+	radian.x = floorf(radian.x * divNum) / divNum;
+	radian.y = floorf(radian.y * divNum) / divNum;
 
-	//X,Yラジアンを使用し、sin,cosを算出
-	const float sinfAngleY = sinf(floorAngleY);
-	const float cosfAngleY = cosf(floorAngleY);
-	const float sinfAngleX = sinf(floorAngleX);
-	const float cosfAngleX = cosf(floorAngleX);
+	//ターゲットへの追従を指定したフレームの分遅らせる
+	targetPositionsKeep.push_back(player->GetPosition());
+	const int frame = 3;
+	if (targetPositionsKeep.size() > frame) {
+		targetPositionsKeep.pop_front();
+	}
 
 	//計算結果を割り当てて座標をセット
 	//Y座標はX回転角のsinを使用
 	//X,Z座標はY回転角のsin,cosで計算し、X回転角(Y座標)のcosを乗算して算出
-	Vector3 targetPos = player->GetPosition();
-	position.x = (-sinfAngleY * cosfAngleX) * targetDistance + targetPos.x;
-	position.y = sinfAngleX * targetDistance + targetPos.y;
-	position.z = (-cosfAngleY * cosfAngleX) * targetDistance + targetPos.z;
+	Vector3 targetPos = targetPositionsKeep.front() + targetDistance;
+	position.x = (-sinf(radian.y) * cosf(radian.x)) * rotateCenterDistance + targetPos.x;
+	position.y = sinf(radian.x) * rotateCenterDistance + targetPos.y;
+	position.z = (-cosf(radian.y) * cosf(radian.x)) * rotateCenterDistance + targetPos.z;
+}
+
+void GameCamera::PositionCollision()
+{
+	//地面のめり込みを解消する
+	const float groundHeight = 1; //仮置き地面の高さ
+	const float collisionHeight = groundHeight + 0.1f; //押し戻しを開始する高さ
+	if (position.y < collisionHeight) {
+		//めり込み量を算出
+		const float sinkNum = collisionHeight - position.y;
+
+		//高さ押し戻し
+		position.y += sinkNum;
+
+		//押し戻しの分、X,Zの同じ量移動させる
+		Vector2 posXZ = { position.x, position.z };
+		Vector2 targetPosXZ = { player->GetPosition().x, player->GetPosition().z};
+		Vector2 vec = targetPosXZ - posXZ;
+		vec.normalize();
+
+		position.x += vec.x * sinkNum;
+		position.z += vec.y * sinkNum;
+	}
 }
 
 void GameCamera::LockonInput()

@@ -15,7 +15,7 @@ using namespace DirectX;
 const XMFLOAT3 Player::moveMinPos = { 0,0,0 };
 const XMFLOAT3 Player::moveMaxPos = { 510,0,510 };
 float Player::jumpPower = 3.0f;
-float Player::gravityAccel = -0.02f;
+float Player::gravityAccel = -0.015f;
 const float Player::moveSpeedMax = 1.25f;
 const float Player::dashSpeedMax = 2.5f;
 
@@ -166,8 +166,9 @@ void Player::ObjectUpdate()
 	pos.z = min(pos.z, moveMaxPos.z);
 
 	//地面に接地判定
-	if (pos.y <= object->GetScale().y * 2) {
-		pos.y = object->GetScale().y * 2;
+	const float modelHeight = 5; //スケール1のときのモデルの高さ
+	if (pos.y <= object->GetScale().y * 2 * modelHeight) {
+		pos.y = object->GetScale().y * 2 * modelHeight;
 		if (!onGround) {
 			onGround = true;
 			fallSpeed = 0;
@@ -329,7 +330,7 @@ void Player::AvoidStart()
 void Player::Avoid()
 {
 	//タイマー更新
-	const float avoidTime = 20;
+	const float avoidTime = 30;
 	avoidTimer->Update();
 	const float time = *avoidTimer.get() / avoidTime;
 
@@ -391,7 +392,7 @@ void Player::BlinkStart()
 void Player::Blink()
 {
 	//タイマー更新
-	const float blinkTime = 20;
+	const float blinkTime = 30;
 	blinkTimer->Update();
 	const float time = *blinkTimer.get() / blinkTime;
 

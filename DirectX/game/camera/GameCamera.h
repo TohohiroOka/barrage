@@ -65,21 +65,31 @@ private: //メンバ関数
 	void UpdatePosition();
 
 	/// <summary>
+	/// 座標更新による地面などのめり込みを解消
+	/// </summary>
+	void PositionCollision();
+
+	/// <summary>
 	/// ロックオン入力の挙動
 	/// </summary>
 	void LockonInput();
 
 private: //静的メンバ変数
 	static Player* player;
-	static const float baseDistance;
+	static const float rotateCenterDistanceNormal;
+	static const Vector3 targetDistanceNormal;
 
 private: //メンバ変数
 	//カメラ座標
 	Vector3 position;
 	//ターゲット角度
 	Vector3 rotation;
-	//ターゲットとの距離
-	float targetDistance;
+	//回転の中心となるターゲットとの距離
+	float rotateCenterDistance;
+	//ターゲットの座標保存用(数フレーム遅らせてカメラを追従させるため)
+	std::list<Vector3> targetPositionsKeep;
+	//ターゲットの中心から視点をずらす距離
+	Vector3 targetDistance;
 	//ワールド変換行列
 	XMMATRIX matWorld = {};
 
