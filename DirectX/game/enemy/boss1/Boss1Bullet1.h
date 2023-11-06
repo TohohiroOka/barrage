@@ -31,5 +31,8 @@ public:
 private:
 
 	std::forward_list<BulletInfo> bullet;
+
+	DirectX::XMFLOAT4 bulletColor = { 1.0f,1.0f,1.0f,1.0f };
+	DirectX::XMFLOAT4 effectColor = { 1.0f,0.3f,0.3f,0.3f };
 };
 

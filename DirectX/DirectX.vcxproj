@@ -157,6 +157,7 @@
     <ClCompile Include="engine\Texture\Texture.cpp" />
     <ClCompile Include="engine\WindowApp.cpp" />
     <ClCompile Include="game\camera\GameCamera.cpp" />
+    <ClCompile Include="game\effect\BulletEffect.cpp" />
     <ClCompile Include="game\enemy\BaseAction.cpp" />
     <ClCompile Include="game\enemy\BaseBoss.cpp" />
     <ClCompile Include="game\enemy\BaseBossModel.cpp" />
@@ -441,6 +442,7 @@
     <ClInclude Include="engine\Texture\Texture.h" />
     <ClInclude Include="engine\WindowApp.h" />
     <ClInclude Include="game\camera\GameCamera.h" />
+    <ClInclude Include="game\effect\BulletEffect.h" />
     <ClInclude Include="game\enemy\BaseAction.h" />
     <ClInclude Include="game\enemy\BaseBoss.h" />
     <ClInclude Include="game\enemy\BaseBossModel.h" />

@@ -4,14 +4,17 @@ void BaseBullet::Update()
 {
 	//タイマー加算
 	timer->Update();
+	bulletEffect.Update();
 }
 
 void BaseBullet::Draw()
 {
-	for (auto& i : instanceObject) {
-		if (i->GetInstanceDrawNum() == 0) { continue; }
-		i->Draw();
-	}
+	//for (auto& i : instanceObject) {
+	//	if (i->GetInstanceDrawNum() == 0) { continue; }
+	//	i->Draw();
+	//}
+
+	bulletEffect.Draw();
 
 	if (predictionLine) {
 		predictionLine->Draw();
