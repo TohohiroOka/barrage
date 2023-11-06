@@ -74,8 +74,16 @@ private: //メンバ関数
 	/// </summary>
 	void LockonInput();
 
+	/// <summary>
+	/// ロックオン解除時に回転角を戻す
+	/// </summary>
+	void LockonEndRotate();
+
 private: //静的メンバ変数
 	static Player* player;
+	static const float rotateXMin;
+	static const float rotateXMax;
+	static const float rotateXBase;
 	static const float rotateCenterDistanceNormal;
 	static const Vector3 targetDistanceNormal;
 
@@ -99,6 +107,8 @@ private: //メンバ変数
 	bool isLockon = false;
 	//ロックオンターゲットを検出するか
 	bool isLockonStart = false;
+	//ロックオン解除時に回転角を戻すか
+	bool isLockonEndRotate = false;
 	//ロックオン開始時にロックオン回転角にイージングする時間タイマー
 	std::unique_ptr<Engine::Timer> lockonChangeRotaTimer;
 	//イージング用変数
