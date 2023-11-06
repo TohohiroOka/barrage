@@ -243,6 +243,14 @@ public:
 	/// <param name="cmdList">描画コマンドリスト</param
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
+	/// <summary>
+	/// 
+	/// </summary>
+	void AnimationReset(const int _animationNum) {
+		data->fbxUpdate[_animationNum].nowTime = data->fbxUpdate[_animationNum].startTime;
+		beforePos = data->fbxUpdate[_animationNum].startPos;
+	}
+
 private://静的メンバ変数
 
 	//デバイス

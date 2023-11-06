@@ -20,7 +20,7 @@ Boss1::Boss1()
 
 	BaseAction::SetBossPtr(this);
 
-	action = std::make_unique<Boss1Move1>();
+	action = std::make_unique<Boss1Move2>();
 }
 
 void Boss1::Update()

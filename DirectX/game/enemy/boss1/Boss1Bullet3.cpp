@@ -5,6 +5,7 @@
 
 Boss1Bullet3::Boss1Bullet3()
 {
+	boss->GetBaseModel()->AnimationReset();
 	boss->GetBaseModel()->SetAnimation(1);
 	model = Model::CreateFromOBJ("bullet");
 	for (auto& i : instanceObject) {
