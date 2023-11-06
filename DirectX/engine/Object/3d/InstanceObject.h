@@ -87,6 +87,7 @@ public:
 
 	/// <summary>
 	/// インスタンシング描画最大描画数になっていないかのチェック
+	/// trueなら描画可能
 	/// </summary>
 	/// <returns></returns>
 	bool GetInstanceDrawCheck() { return instanceDrawNum < draw_max_num; }

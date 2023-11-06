@@ -5,6 +5,7 @@
 
 Boss1Move1::Boss1Move1()
 {
+	boss->GetBaseModel()->AnimationReset();
 	boss->GetBaseModel()->SetAnimation(0);
 	DirectX::XMFLOAT3 rota = {};
 	SetMoveRotation(rota);

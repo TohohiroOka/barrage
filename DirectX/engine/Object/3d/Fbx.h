@@ -131,6 +131,10 @@ public:
 
 	void FrameReset();
 
+	void AnimationReset() {
+		model->AnimationReset(useAnimation);
+	}
+
 private://メンバ変数
 
 	//パイプライン情報

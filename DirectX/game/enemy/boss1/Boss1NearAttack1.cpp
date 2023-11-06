@@ -4,34 +4,23 @@
 #include "../Math/Easing/Easing.h"
 
 using namespace DirectX;
-const float maxScale = 10.0f;
-const float dist = maxScale + 5.0f;
 
 Boss1NearAttack1::Boss1NearAttack1()
 {
+	boss->GetBaseModel()->AnimationReset();
 	boss->GetBaseModel()->SetAnimation(1);
-	model = Model::CreateFromOBJ("NormalCube");
-	XMFLOAT3 pos = boss->GetCenter()->GetPosition();
-	for (int i = 0; i < objectNum; i++) {
-		object[i].pos = { 0.0,pos.y - dist * (objectNum - 1 - i) ,0.0 };
-		object[i].object = Object3d::Create(model.get());
-		object[i].object->SetPosition(object[i].pos);
-		object[i].object->SetScale({ maxScale,maxScale,maxScale });
-		object[i].object->SetParent(boss->GetCenter());
-		object[i].timer = std::make_unique<Engine::Timer>();
-		object[i].hokanPointNum = i % 9;
+	model = Model::CreateFromOBJ("cone");
+	for (auto& i : instanceObject) {
+		i = InstanceObject::Create(model.get());
 	}
-
 	state = State::start;
 
 	timer = std::make_unique<Engine::Timer>();
 	isEnd = false;
 
 	func_.emplace_back([this] {return StartMove(); });
-	func_.emplace_back([this] {return BeforeMove(); });
 	func_.emplace_back([this] {return Attack(); });
-	func_.emplace_back([this] {return afterMove(); });
-	func_.emplace_back([this] {return EndMove(); });
+	func_.emplace_back([this] {return Finish(); });
 }
 
 void Boss1NearAttack1::Update()
@@ -41,17 +30,21 @@ void Boss1NearAttack1::Update()
 		func_[int(state)]();
 	}
 
-	for (auto& i : object) {
-		i.object->Update();
-	}
-
-	timer->Update();
+	ObjectUpdate();
 }
 
 void Boss1NearAttack1::Draw()
 {
-	for (auto& i : object) {
-		i.object->Draw();
+	for (auto& i : instanceObject) {
+		if (i->GetInstanceDrawNum() <= 0.0f) { continue; }
+		i->Draw();
+	}
+}
+
+void Boss1NearAttack1::FrameReset()
+{
+	for (auto& i : instanceObject) {
+		i->FrameReset();
 	}
 }
 
@@ -59,176 +52,90 @@ void Boss1NearAttack1::GetAttackCollision(std::vector<BaseAction::AttackCollisio
 {
 	for (auto& i : object) {
 		BaseAction::AttackCollision add;
-		add.pos = i.object->GetWorldPosition();
-		add.radius = maxScale;
+		add.pos = i.pos;
+		add.radius = 1.0f;
 		_info.emplace_back(add);
 	}
 }
 
 void Boss1NearAttack1::StartMove()
 {
-	const float maxTimer = 100.0f;
-	const float maxY = 100.0f;
-	float posy = Easing::Lerp(0, maxY, *timer.get() / maxTimer);
-
-	const float maxHokanTimer = 15.0f;
-	const std::vector<float> hokanPos = { 0.0f,10.0f,20.0f,10.0f,0.0,-10.0f,-20.0f,-10.0f,0.0f };
-
-	for (auto& i : object) {
-		float posx = SplinePosition(hokanPos, i.hokanPointNum, *i.timer.get() / maxHokanTimer);
-		i.timer->Update();
-
-		i.object->SetPosition({ i.pos.x + posx,i.pos.y + posy,i.pos.z });
-
-		//時間になったら更新
-		if (*i.timer.get() <= maxHokanTimer) { continue; }
-		if (i.hokanPointNum < hokanPos.size() - 1) {
-			i.hokanPointNum++;
-		} else {
-			i.hokanPointNum = 0;
-		}
-		i.timer->Reset();
-	}
-
-	if (*timer.get() <= maxTimer) { return; }
-	timer->Reset();
-	state = State::beforeMove;
-	for (auto& i : object) {
-		i.pos = i.object->GetPosition();
-		i.timer->Reset();
-		i.hokanPointNum = 0;
-	}
-}
-
-void Boss1NearAttack1::BeforeMove()
-{
-	const float maxTimer = 30.0f;
-
-	XMFLOAT3 pos = {};
-	const XMFLOAT3 centerPos = boss->GetCenter()->GetPosition();
-	const float rate = *timer.get() / maxTimer;
-	for (int i = 0; i < objectNum; i++) {
-		pos.x = Easing::Lerp(object[i].pos.x, 0.0f, rate);
-		pos.y = Easing::Lerp(object[i].pos.y, 5.0f, rate);
-		pos.z = Easing::Lerp(object[i].pos.z, i * dist, rate);
-		object[i].object->SetPosition(pos);
-	}
-
-	if (rate<1.0f) { return; }
-	timer->Reset();
 	state = State::attack;
-	for (auto& i : object) {
-		i.pos = i.object->GetPosition();
-	}
 }
 
 void Boss1NearAttack1::Attack()
 {
-	const float maxTimer = 50.0f;
-	const float rotationNum = 3.0f;
-	
-	//回転
-	allRota = Easing::Lerp(0.0f, 360.0f * rotationNum, *timer.get() / maxTimer);
-	boss->GetCenter()->SetRotation({ 0,allRota,0 });
-
-	//個々にずらし
-	for (int i = 0; i < objectNum; i++) {
-		//ずらし
-		if (*timer.get() > i * 2 && object[i].stateInState == 0) {
-			float posx = Easing::Lerp(0.0f, 15.0f + i * 5, *object[i].timer.get() / (maxTimer / 5.0f));
-			object[i].object->SetPosition({ object[i].pos.x + posx,object[i].pos.y ,object[i].pos.z });
-			object[i].timer->Update();
-			if (*object[i].timer.get() < maxTimer / 5) { continue; }
-			object[i].timer->Reset();
-			object[i].stateInState++;
-		}
-		//戻し
-		else if (*timer.get() > maxTimer - (maxTimer / 5.0f) && object[i].stateInState == 1) {
-			float posx = Easing::Lerp(15.0f + i * 5, 0.0f, *object[i].timer.get() / (maxTimer / 5.0f));
-			object[i].object->SetPosition({ object[i].pos.x + posx,object[i].pos.y ,object[i].pos.z });
-			object[i].timer->Update();
-			if (*object[i].timer.get() < maxTimer / 5) { continue; }
-			object[i].timer->Reset();
-			object[i].stateInState++;
-		}
-		//ずれ中
-		else if (object[i].stateInState == 1) {
-			object[i].object->SetPosition({ object[i].pos.x + 15.0f + i * 5,object[i].pos.y ,object[i].pos.z });
-		}
-	}
-
-	if (*timer.get() <= maxTimer + 20) { return; }
-	timer->Reset();
-	state = State::afterMove;
-	for (auto& i : object) {
-		i.stateInState = 0;
-		i.pos = i.object->GetPosition();
-	}
-}
-
-void Boss1NearAttack1::afterMove()
-{
-	const float maxTimer = 30.0f;
-
-	XMFLOAT3 pos = {};
-	const XMFLOAT3 centerPos = boss->GetCenter()->GetPosition();
-	const float rate = *timer.get() / maxTimer;
-	for (int i = 0; i < objectNum; i++) {
-		pos.x = Easing::Lerp(object[i].pos.x, 0.0f, rate);
-		pos.y = Easing::Lerp(object[i].pos.y, i * dist, rate);
-		pos.z = Easing::Lerp(object[i].pos.z, 0.0f, rate);
-		object[i].object->SetPosition(pos);
-	}
-
-	if (*timer.get() <= maxTimer) { return; }
-	timer->Reset();
-	state = State::end;
-	int num = 0;
-	for (auto& i : object) {
-		i.pos = i.object->GetPosition();
-		i.hokanPointNum = num % 9;
-		num++;
-	}
-}
-
-void Boss1NearAttack1::EndMove()
-{
-	const float maxTimer = 100.0f;
-
+	timer->Update();
+	if (*timer.get() % 5 != 0) { return; }
+	//出現数
 	XMFLOAT3 pos = boss->GetCenter()->GetPosition();
-
-	const float maxHokanTimer = 15.0f;
-	const std::vector<float> hokanPos = { 0.0f,10.0f,20.0f,10.0f,0.0,-10.0f,-20.0f,-10.0f,0.0f };
-
-	const float classRate = *timer.get() / maxTimer;
-
-	for (int i = 0; i < objectNum; i++) {
-		//y軸移動
-		float posy = Easing::Lerp(object[i].pos.y, (pos.y - dist * (objectNum - 1 - i)) - 100.0f, classRate);
-
-		//x軸移動
-		float posx = SplinePosition(hokanPos, object[i].hokanPointNum, *object[i].timer.get() / maxHokanTimer);
-		object[i].timer->Update();
-
-		object[i].object->SetPosition({ object[i].pos.x + posx,posy,object[i].pos.z });
-
-		//時間になったら更新
-		if (*object[i].timer.get() <= maxHokanTimer) { continue; }
-		if (object[i].hokanPointNum < hokanPos.size() - 1) {
-			object[i].hokanPointNum++;
-		} else {
-			object[i].hokanPointNum = 0;
-		}
-		object[i].timer->Reset();
+	float inNum = timer->GetTime();
+	if (inNum >= 40.0f) {
+		inNum = 40.0f;
 	}
+	const float addAngle = 360.0f / inNum;
+	float angle = timer->GetTime() * 2.0f;
+	for (int i = 0; i < int(inNum); i++) {
+		//リストに要素を追加
+		object.emplace_front();
+		//追加した要素の参照
+		ObjectInfo& add = object.front();
+		//値のリセット
+		add.isUp = true;
+		add.timer = std::make_unique<Engine::Timer>();
+		float radian = XMConvertToRadians(angle);
+		add.pos.x = pos.x + dist * sinf(radian);
+		add.pos.y = 0.0f;
+		add.pos.z = pos.z + dist * cosf(radian);
+		add.alpha = 1.0f;
 
-	if (*timer.get() <= maxTimer) { return; }
-	timer->Reset();
-	state = State::non;
+		angle += addAngle;
+	}
+	
+	dist += 3.0f;
+
+	const float maxTimer = 100.0f;
+	if (*timer.get() < maxTimer) { return; }
+	state = State::finish;
+
+}
+
+void Boss1NearAttack1::Finish()
+{
+	int size = int(std::distance(object.begin(), object.end()));
+	if (size != 0) { return; }
 	isEnd = true;
-	for (auto& i : object) {
-		i.pos = i.object->GetPosition();
-		i.timer->Reset();
-		i.hokanPointNum = 0;
+}
+
+void Boss1NearAttack1::ObjectUpdate()
+{
+	//全更新
+	for (std::forward_list<ObjectInfo>::iterator it = object.begin();
+		it != object.end(); it++) {
+		//経過フレーム数をカウント
+		it->timer->Update();
+
+		//上昇
+		const float maxTimer = 10.0f;
+		float rate = *it->timer.get() / maxTimer;
+		if (rate < 1.0) {
+			it->pos.y = Easing::Lerp(0.0f, 5.0f, rate);
+		}
+		else {
+			it->alpha -= 0.05f;
+		}
+
+		if (it->alpha > 0.0f) {
+			for (auto& i : instanceObject) {
+				if (!i->GetInstanceDrawCheck()) { continue; }
+				i->DrawInstance(it->pos, { 1.0f,5.0f,1.0f }, { 1.0f,1.0f,1.0f }, { 1,1,1,it->alpha });
+			}
+		}
 	}
+
+	//攻撃削除
+	object.remove_if([](ObjectInfo& x) {
+		return x.alpha <= 0.0f;
+		}
+	);
 }

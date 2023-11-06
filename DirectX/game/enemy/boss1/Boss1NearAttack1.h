@@ -1,8 +1,8 @@
 #pragma once
 #include "../game/enemy/BaseAction.h"
-#include "Object/3d/Object3d.h"
+#include "Object/3d/InstanceObject.h"
 #include "../Math/Timer.h"
-#include <array>
+#include <forward_list>
 #include <functional>
 
 /// <summary>
@@ -14,19 +14,16 @@ private:
 
 	enum class State {
 		start,
-		beforeMove,
 		attack,
-		afterMove,
-		end,
+		finish,
 		non,
 	};
 
 	struct ObjectInfo {
-		std::unique_ptr<Object3d> object;
+		bool isUp;
 		std::unique_ptr<Engine::Timer> timer;
 		DirectX::XMFLOAT3 pos;
-		int hokanPointNum;
-		int stateInState;//行動内での処理番号
+		float alpha;
 	};
 
 public:
@@ -37,7 +34,7 @@ public:
 
 	void Draw() override;
 
-	void FrameReset() override {};
+	void FrameReset() override;
 
 	void GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info) override;
 
@@ -45,25 +42,24 @@ private:
 
 	void StartMove();
 
-	void BeforeMove();
-
 	void Attack();
 
-	void afterMove();
+	void Finish();
 
-	void EndMove();
+	void ObjectUpdate();
 
 private:
-	static const int objectNum = 10;
 	std::unique_ptr<Model> model;
-	std::array<ObjectInfo, objectNum> object;
+	std::forward_list<ObjectInfo> object;
+	std::array<std::unique_ptr<InstanceObject>, 5> instanceObject;
+
 	//現在の動き
 	std::vector<std::function<void()>> func_;
 	//状態
 	State state;
 	//全体タイマー
 	std::unique_ptr<Engine::Timer> timer;
-	//回転角度
-	float allRota;
+	//出現する場所（中心からの距離）
+	float dist;
 };
 
