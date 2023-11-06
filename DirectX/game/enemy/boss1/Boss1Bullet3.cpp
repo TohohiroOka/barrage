@@ -13,6 +13,7 @@ Boss1Bullet3::Boss1Bullet3()
 	}
 	AddBullet();
 	timer = std::make_unique<Engine::Timer>();
+	bulletEffect.Init();
 }
 
 void Boss1Bullet3::Update()
@@ -104,4 +105,10 @@ void Boss1Bullet3::BulletUpdate(BulletInfo& _bullet)
 		if (!i->GetInstanceDrawCheck()) { continue; }
 		i->DrawInstance(_bullet.pos, { 2.0f ,2.0f ,2.0f }, { 0.0f ,0.0f ,0.0f }, { 1,1,1,1 });
 	}
+
+	//エフェクト追加
+	DirectX::XMFLOAT4 bulletColor = { 0.f,0.f,0.f,1.0f };
+	DirectX::XMFLOAT4 effectColor = { 0.2f,0.2f,0.8f,1.0f };
+	float effectScale = 5.f;
+	bulletEffect.AddBulletEffect(_bullet.pos, B_SCALE, bulletColor, effectScale, effectColor);
 }

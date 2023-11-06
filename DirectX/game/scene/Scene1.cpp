@@ -10,6 +10,7 @@
 #include "Object/3d/collider/CollisionAttribute.h"
 #include "GameHelper.h"
 #include "scene/TitleScene.h"
+#include "effect/BulletEffect.h"
 
 using namespace DirectX;
 
@@ -51,7 +52,11 @@ void Scene1::Initialize()
 
 	gameoverUi.Initialize();
 
+<<<<<<< HEAD
 	actionInputConfig = std::make_unique<ActionInputConfig>();
+=======
+	BulletEffect::LoadResources();
+>>>>>>> bulletEffect
 }
 
 void Scene1::Update()

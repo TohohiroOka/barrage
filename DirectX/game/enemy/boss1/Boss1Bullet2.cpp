@@ -14,6 +14,7 @@ Boss1Bullet2::Boss1Bullet2()
 	}
 	predictionLine = std::make_unique<PredictionLine>();
 	timer = std::make_unique<Engine::Timer>();
+	bulletEffect.Init();
 }
 
 void Boss1Bullet2::Update()
@@ -82,6 +83,8 @@ void Boss1Bullet2::AddBullet(bool _easing)
 	add.moveVec = {};
 	add.timer=std::make_unique<Engine::Timer>();
 	add.predictionLinePoint.emplace_back(bossPos);
+
+
 }
 
 void Boss1Bullet2::BulletUpdate(BulletInfo& _bullet)
@@ -141,4 +144,10 @@ void Boss1Bullet2::BulletUpdate(BulletInfo& _bullet)
 	for (int i = 1; i < _bullet.predictionLinePoint.size(); i++) {
 		predictionLine->Update(_bullet.predictionLinePoint[i - 1], _bullet.predictionLinePoint[i], 1.0f, { 1.0f,1.0f,1.0f,0.5f });
 	}
+
+	//エフェクト追加
+	DirectX::XMFLOAT4 bulletColor = { 0.f,0.f,0.f,1.0f };
+	DirectX::XMFLOAT4 effectColor = { 0.2f,0.2f,0.8f,1.0f };
+	float effectScale = 5.f;
+	bulletEffect.AddBulletEffect(_bullet.nowPos, B_SCALE, bulletColor, effectScale, effectColor);
 }
