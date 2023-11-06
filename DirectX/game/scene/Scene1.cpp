@@ -52,11 +52,11 @@ void Scene1::Initialize()
 
 	gameoverUi.Initialize();
 
-<<<<<<< HEAD
+
 	actionInputConfig = std::make_unique<ActionInputConfig>();
-=======
+
 	BulletEffect::LoadResources();
->>>>>>> bulletEffect
+
 }
 
 void Scene1::Update()
