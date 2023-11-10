@@ -10,8 +10,8 @@ Player* GameCamera::player = nullptr;
 const float GameCamera::rotateXMin = -45;
 const float GameCamera::rotateXMax = 70;
 const float GameCamera::rotateXBase = 7;
-const float GameCamera::rotateCenterDistanceNormal = 45.0f;
-const Vector3 GameCamera::targetDistanceNormal = { 0, 7, 0 };
+const float GameCamera::rotateCenterDistanceNormal = 15.0f;
+const Vector3 GameCamera::targetDistanceNormal = { 0, 0, 0 };
 
 GameCamera::GameCamera() :
 	Camera(true)

@@ -21,7 +21,7 @@ const float Player::dashSpeedMax = 2.5f;
 
 Player::Player()
 {
-	model = FbxModel::Create("uma3");
+	model = FbxModel::Create("player");
 	object = Fbx::Create(model.get());
 	object->SetShadowMap(true);
 	object->SetAnimation(true);
