@@ -7,6 +7,9 @@
 using namespace DirectX;
 
 Player* GameCamera::player = nullptr;
+const float GameCamera::rotateXMin = -45;
+const float GameCamera::rotateXMax = 70;
+const float GameCamera::rotateXBase = 7;
 const float GameCamera::rotateCenterDistanceNormal = 45.0f;
 const Vector3 GameCamera::targetDistanceNormal = { 0, 7, 0 };
 
@@ -19,7 +22,7 @@ GameCamera::GameCamera() :
 	targetDistance = targetDistanceNormal;
 
 	//初期の回転角をセット
-	rotation.x = 7.0f;
+	rotation.x = rotateXBase;
 
 	//タイマークラス
 	lockonChangeRotaTimer = std::make_unique<Engine::Timer>();
@@ -55,6 +58,7 @@ void GameCamera::Lockon(Base3D* lockonTarget)
 
 	easeBeforeRota = rotation;
 	lockonChangeRotaTimer->Reset();
+	isLockonEndRotate = false;
 
 	isLockon = true;
 }
@@ -91,7 +95,12 @@ void GameCamera::UpdateEyeTarget()
 void GameCamera::UpdateTransform()
 {
 	if (!isLockon) {
-		UpdateRotate();
+		if (isLockonEndRotate) {
+			LockonEndRotate();
+		}
+		else {
+			UpdateRotate();
+		}
 	}
 	else {
 		UpdateLockonRotate();
@@ -137,8 +146,8 @@ void GameCamera::UpdateRotate()
 	rotation.x += rotNum.x;
 
 	//上下方向の角度制限
-	rotation.x = max(rotation.x, -45);
-	rotation.x = min(rotation.x, 70);
+	rotation.x = max(rotation.x, rotateXMin);
+	rotation.x = min(rotation.x, rotateXMax);
 
 	//横回転の回転角を0～360以内に収まるようにする
 	if (rotation.y > 360) { rotation.y -= 360; }
@@ -151,11 +160,16 @@ void GameCamera::UpdateLockonRotate()
 	const float changeRotaTime = 15;
 
 	//プレイヤーとロックオンターゲットの角度を取得(0～360に調整)
-	float lockonRotate = -GetAngle({ lockonTarget->GetPosition().x, lockonTarget->GetPosition().z }, { player->GetPosition().x, player->GetPosition().z }) - 90;
-	while (lockonRotate < 0 || lockonRotate > 360) {
+	Vector3 moveRotaVelocity = VelocityRotate(((Vector3)lockonTarget->GetPosition() - targetDistance) - (player->GetPosition() + targetDistance));
+	while (moveRotaVelocity.y < 0 || moveRotaVelocity.y > 360) {
 		//横回転の回転角を0～360以内に収まるようにする
-		if (lockonRotate > 360) { lockonRotate -= 360; }
-		else if (lockonRotate < 0) { lockonRotate += 360; }
+		if (moveRotaVelocity.y > 360) { moveRotaVelocity.y -= 360; }
+		else if (moveRotaVelocity.y < 0) { moveRotaVelocity.y += 360; }
+	}
+	while (moveRotaVelocity.x < 0 || moveRotaVelocity.x > 360) {
+		//縦回転の回転角を0～360以内に収まるようにする
+		if (moveRotaVelocity.x > 360) { moveRotaVelocity.x -= 360; }
+		else if (moveRotaVelocity.x < 0) { moveRotaVelocity.x += 360; }
 	}
 
 	//イージングで動かす場合
@@ -163,25 +177,36 @@ void GameCamera::UpdateLockonRotate()
 		lockonChangeRotaTimer->Update();
 
 		//回転をなるべく短くするために元角度を調整(例：350→10 より -10→10の方が近い)
-		float adjustRota = easeBeforeRota.y;
-		if (adjustRota > lockonRotate) {
-			if (adjustRota - lockonRotate > 180) {
-				adjustRota -= 360;
+		Vector3 adjustRota = easeBeforeRota;
+		if (adjustRota.y > moveRotaVelocity.y) {
+			if (adjustRota.y - moveRotaVelocity.y > 180) {
+				adjustRota.y -= 360;
 			}
 		}
-		else if (adjustRota < lockonRotate) {
-			if (lockonRotate - adjustRota > 180) {
-				adjustRota += 360;
+		else if (adjustRota.y < moveRotaVelocity.y) {
+			if (moveRotaVelocity.y - adjustRota.y > 180) {
+				adjustRota.y += 360;
+			}
+		}
+		if (adjustRota.x > moveRotaVelocity.x) {
+			if (adjustRota.x - moveRotaVelocity.x > 180) {
+				adjustRota.x -= 360;
+			}
+		}
+		else if (adjustRota.x < moveRotaVelocity.x) {
+			if (moveRotaVelocity.x - adjustRota.x > 180) {
+				adjustRota.x += 360;
 			}
 		}
 
 		//ロックオンしたターゲットの方向をイージングで向くようにする
 		const float time = *lockonChangeRotaTimer.get() / changeRotaTime;
-		rotation.y = Easing::OutCubic(adjustRota, lockonRotate, time);
+		rotation.y = Easing::OutCubic(adjustRota.y, moveRotaVelocity.y, time);
+		rotation.x = Easing::OutCubic(adjustRota.x, moveRotaVelocity.x, time);
 	}
 	else {
 		//ロックオンしたターゲットの方向を向く
-		rotation.y = lockonRotate;
+		rotation = moveRotaVelocity;
 	}
 }
 
@@ -226,7 +251,7 @@ void GameCamera::PositionCollision()
 
 		//押し戻しの分、X,Zの同じ量移動させる
 		Vector2 posXZ = { position.x, position.z };
-		Vector2 targetPosXZ = { player->GetPosition().x, player->GetPosition().z};
+		Vector2 targetPosXZ = { player->GetPosition().x, player->GetPosition().z };
 		Vector2 vec = targetPosXZ - posXZ;
 		vec.normalize();
 
@@ -251,5 +276,36 @@ void GameCamera::LockonInput()
 	else {
 		lockonTarget = nullptr;
 		isLockon = false;
+
+		//ロックオン解除時に回転角を戻すか
+		const float rotateLine = 5.0f; //回転角をイージングで動かすかを決定する差分
+		if (rotation.x > rotateLine || rotation.x < -rotateLine) {
+			easeBeforeRota = rotation;
+			lockonChangeRotaTimer->Reset();
+
+			isLockonEndRotate = true;
+		}
+	}
+}
+
+void GameCamera::LockonEndRotate()
+{
+	//回転角変更にかかる時間
+	const float changeRotaTime = 15;
+	lockonChangeRotaTimer->Update();
+	const float time = *lockonChangeRotaTimer.get() / changeRotaTime;
+
+	//回転をなるべく短くするために元角度を調整(例：350→10 より -10→10の方が近い)
+	Vector3 adjustRota = easeBeforeRota;
+	if (adjustRota.x > 180) {
+		adjustRota.x -= 360;
+	}
+
+	//初期の高さにカメラをイージングで動かす
+	rotation.x = Easing::OutCubic(adjustRota.x, rotateXBase, time);
+
+	//タイマーが指定した時間になったら終了
+	if (*lockonChangeRotaTimer.get() > changeRotaTime) {
+		isLockonEndRotate = false;
 	}
 }
