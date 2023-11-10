@@ -217,17 +217,43 @@ void Scene1::CollisionCheck()
 		playerSphere.center = { player->GetPosition().x, player->GetPosition().y,player->GetPosition().z, 1.0f };
 		playerSphere.radius = player->GetObject3d()->GetScale().x;
 
-		std::vector<BaseAction::AttackCollision> bossAttackDatas;
-		boss->GetBaseAction()->GetAttackCollision(bossAttackDatas);
+		//球とボックス
+		if (boss->GetBaseAction()->GetUseCollision()== BaseAction::UseCollision::box) {
+			std::vector<Box> bossAttackDatas;
+			boss->GetBaseAction()->GetAttackCollisionBox(bossAttackDatas);
 
-		for (auto& i : bossAttackDatas) {
-			Sphere attackSphere;
-			attackSphere.center = { i.pos.x, i.pos.y, i.pos.z, 1.0f };
-			attackSphere.radius = i.radius;
-			if (Collision::CheckSphere2Sphere(playerSphere, attackSphere)) {
-				player->Damage(10, i.pos);
-				camera->ShakeStart(10, 10);
-				break;
+			for (auto& i : bossAttackDatas) {
+				if (Collision::CheckSphere2Box(playerSphere, i)) {
+					player->Damage(10, i.point1);
+					camera->ShakeStart(10, 10);
+					break;
+				}
+			}
+		}
+		//球と球
+		else if (boss->GetBaseAction()->GetUseCollision() == BaseAction::UseCollision::sphere) {
+			std::vector<Sphere> bossAttackDatas;
+			boss->GetBaseAction()->GetAttackCollisionSphere(bossAttackDatas);
+
+			for (auto& i : bossAttackDatas) {
+				if (Collision::CheckSphere2Sphere(playerSphere, i)) {
+					player->Damage(10, { i.center.m128_f32[0],i.center.m128_f32[1] ,i.center.m128_f32[2] });
+					camera->ShakeStart(10, 10);
+					break;
+				}
+			}
+		}
+		//球とカプセル
+		else if (boss->GetBaseAction()->GetUseCollision() == BaseAction::UseCollision::capsule) {
+			std::vector<Capsule> bossAttackDatas;
+			boss->GetBaseAction()->GetAttackCollisionCapsule(bossAttackDatas);
+
+			for (auto& i : bossAttackDatas) {
+				if (Collision::CheckSphereCapsule(playerSphere, i, nullptr)) {
+					player->Damage(10, i.startPosition);
+					camera->ShakeStart(10, 10);
+					break;
+				}
 			}
 		}
 	}

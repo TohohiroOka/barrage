@@ -163,6 +163,46 @@ bool Collision::CheckSphere2Triangle(const Sphere& _sphere, const Triangle& _tri
 	return true;
 }
 
+bool Collision::CheckSphere2Box(const Sphere& sphere, const Box& box)
+{
+	//まず、球の中心座標と、AABBとの距離の2乗を求める -------
+	float sqDistance = 0.0f;
+	float pos;
+
+	//x軸方向の距離の2乗を加算
+	pos = sphere.center.m128_f32[0];
+	if (pos < box.point1.x)
+	{
+		sqDistance += (pos - box.point1.x) * (pos - box.point1.x);
+	} else if (pos > box.point2.x)
+	{
+		sqDistance += (pos - box.point2.x) * (pos - box.point2.x);
+	}
+
+	//y軸方向の距離の2乗を加算
+	pos = sphere.center.m128_f32[1];
+	if (pos < box.point1.y)
+	{
+		sqDistance += (pos - box.point1.y) * (pos - box.point1.y);
+	} else if (pos > box.point2.y)
+	{
+		sqDistance += (pos - box.point2.y) * (pos - box.point2.y);
+	}
+
+	//z軸方向の距離の2乗を加算
+	pos = sphere.center.m128_f32[2];
+	if (pos < box.point1.z)
+	{
+		sqDistance += (pos - box.point1.z) * (pos - box.point1.z);
+	} else if (pos > box.point2.z)
+	{
+		sqDistance += (pos - box.point2.z) * (pos - box.point2.z);
+	}
+
+	//上記で求めた値 < 判定の2乗なら、衝突している ----------------
+	return sqDistance < sphere.radius * sphere.radius;
+}
+
 bool Collision::CheckRayAabb(const Segment& _lay, const Box& _box, const DirectX::XMMATRIX& _boxMat, float* _t, DirectX::XMVECTOR* _inter)
 {
 	// 光線を境界ボックスの空間へ移動

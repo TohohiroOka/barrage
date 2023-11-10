@@ -20,7 +20,11 @@ public:
 
 	void FrameReset() override;
 
-	virtual void GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info) override{};
+	virtual void GetAttackCollisionSphere(std::vector<Sphere>& _info) override {};
+
+	virtual void GetAttackCollisionBox(std::vector<Box>& _info) override {};
+
+	virtual void GetAttackCollisionCapsule(std::vector<Capsule>& _info) override {};
 
 protected:
 	static const int instanceNum = 5;
