@@ -288,17 +288,14 @@ public://メンバ変数
 	std::unordered_map<std::string, XMMATRIX> boneMatWorld;
 	//１フレーム前の座標
 	XMFLOAT3 beforePos;
+	//FBXの動き
+	XMFLOAT3 move;
 
 public:
 
 	XMMATRIX GetSkinData(const int _number, const int _bonesNumber) { return skinData[_number].bones[_bonesNumber]; }
 	XMMATRIX GetBornMatWorld(const std::string _boneName) { return boneMatWorld[_boneName]; }
-	XMFLOAT3 GetWorldMove(const int _animationNum) {
-		return
-			XMFLOAT3{ boneMatWorld[data->buffData[0].bones[0].name].r[3].m128_f32[0],
-			boneMatWorld[data->buffData[0].bones[0].name].r[3].m128_f32[1],
-			boneMatWorld[data->buffData[0].bones[0].name].r[3].m128_f32[2] } - beforePos;
-	}
+	XMFLOAT3 GetWorldMove(const int _animationNum) { return move; }
 
 	///// <summary>
 	///// アンビエント影響度の取得

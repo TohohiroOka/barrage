@@ -68,4 +68,5 @@ void Boss1Model::Update()
 void Boss1Model::Draw()
 {
 	fbxObject->Draw();
+	fbxObject->BoneDraw();
 }
