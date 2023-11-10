@@ -37,9 +37,12 @@ public: //ƒƒ“ƒoŠÖ”
 	//getter
 	int GetUseEndranceNum() { return useEnduranceNum; }
 	AttackCollisionData GetAttackCollisionData() { return attackCollisionData; }
-	bool GetisCollisionValid() { return isCollisionValid; }
+	bool GetIsCollisionValid() { return isCollisionValid; }
 	bool GetIsNextAttackInput() { return isNextAttackInput; }
 	bool GetIsAttackActionEnd() { return isAttackActionEnd; }
+
+	//setter
+	void SetIsCollisionValid(bool isCollisionValid) { this->isCollisionValid = isCollisionValid; }
 
 protected: //ƒƒ“ƒo•Ï”
 	//˜A‘±UŒ‚‰ñ”

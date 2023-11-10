@@ -16,7 +16,7 @@ PlayerSwordAttack1::PlayerSwordAttack1(Base3D* attacker)
 	object->SetPosition(DirectX::XMFLOAT3{ 0, 1, 1 } * object->GetScale().x);
 	object->SetColor(nonAttackColor);
 
-	attackCollisionData.power = 10;
+	attackCollisionData.power = 50;
 
 	//持久力の使用料をセット
 	useEnduranceNum = attackUseEnduranceNum;
@@ -81,6 +81,8 @@ bool PlayerSwordAttack1::NextAttack(int endurance)
 		state = State::NONATTACK1;
 
 		easeAfterPos = DirectX::XMFLOAT3{ 1, 2, 1 } * object->GetScale().x;
+
+		attackCollisionData.power = 50;
 	}
 	else if (attackNum == 2) {
 		//攻撃前兆2へ
@@ -93,6 +95,8 @@ bool PlayerSwordAttack1::NextAttack(int endurance)
 		state = State::NONATTACK3;
 
 		easeAfterPos = DirectX::XMFLOAT3{ 0, 2, 1 } * object->GetScale().x;
+
+		attackCollisionData.power = 100;
 	}
 
 	isNextAttackInput = false;
