@@ -75,4 +75,25 @@ void BaseBoss::Collider()
 	moveVec = { 0.0f,0.0f,0.0f };
 
 	bossModel->GetObjectInst()->SetPosition(pos);
+
+	//速度を加算して座標更新
+	pos += moveVec;
+
+	const XMFLOAT3 moveMinPos = { 0,0,0 };
+	const XMFLOAT3 moveMaxPos = { 510,0,510 };
+
+	//壁判定
+	pos.x = max(pos.x, moveMinPos.x);
+	pos.x = min(pos.x, moveMaxPos.x);
+	pos.z = max(pos.z, moveMinPos.z);
+	pos.z = min(pos.z, moveMaxPos.z);
+
+	//地面に接地判定
+	float scaleY = bossModel->GetObjectInst()->GetScale().y;
+	const float modelHeight = 5; //スケール1のときのモデルの高さ
+	if (pos.y <= scaleY * 2.0f * modelHeight) {
+		pos.y = scaleY * 2.0f * modelHeight;
+	}
+	//最終的な座標をセット
+	bossModel->GetObjectInst()->SetPosition(pos);
 }

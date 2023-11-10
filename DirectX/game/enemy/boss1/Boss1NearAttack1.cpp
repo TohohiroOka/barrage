@@ -9,6 +9,7 @@ Boss1NearAttack1::Boss1NearAttack1()
 {
 	boss->GetBaseModel()->AnimationReset();
 	boss->GetBaseModel()->SetAnimation(1);
+	useCollision = UseCollision::box;
 	model = Model::CreateFromOBJ("cone");
 	for (auto& i : instanceObject) {
 		i = InstanceObject::Create(model.get());
@@ -48,12 +49,12 @@ void Boss1NearAttack1::FrameReset()
 	}
 }
 
-void Boss1NearAttack1::GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info)
+void Boss1NearAttack1::GetAttackCollisionBox(std::vector<Box>& _info)
 {
 	for (auto& i : object) {
-		BaseAction::AttackCollision add;
-		add.pos = i.pos;
-		add.radius = 1.0f;
+		Box add;
+		add.point1 = { i.pos.x - 10.0f,i.pos.y - 15.0f,i.pos.z - 10.0f };
+		add.point2 = { i.pos.x + 10.0f,i.pos.y + 15.0f,i.pos.z + 10.0f };
 		_info.emplace_back(add);
 	}
 }
