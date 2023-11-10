@@ -8,6 +8,7 @@ Boss1Bullet2::Boss1Bullet2()
 {
 	boss->GetBaseModel()->AnimationReset();
 	boss->GetBaseModel()->SetAnimation(1);
+	useCollision = UseCollision::sphere;
 	model = Model::CreateFromOBJ("bullet");
 	for (auto& i : instanceObject) {
 		i = InstanceObject::Create(model.get());
@@ -48,12 +49,12 @@ void Boss1Bullet2::Update()
 	timer->Update();
 }
 
-void Boss1Bullet2::GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info)
+void Boss1Bullet2::GetAttackCollisionSphere(std::vector<Sphere>& _info)
 {
 	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
 		it != bullet.end(); it++) {
-		BaseAction::AttackCollision add;
-		add.pos = it->nowPos;
+		Sphere add;
+		add.center = { it->nowPos.x,it->nowPos.y ,it->nowPos.z };
 		add.radius = 1.0f;
 		_info.emplace_back(add);
 	}

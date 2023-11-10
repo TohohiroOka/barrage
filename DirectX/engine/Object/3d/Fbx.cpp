@@ -103,6 +103,7 @@ void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 		XMVECTOR matMove = XMVector3Transform({ move.x,move.y,move.z }, matRot);
 
 		animationMove = XMFLOAT3{ matMove.m128_f32[0], matMove.m128_f32[1], matMove.m128_f32[2] };
+		animationMove.y = 0.0f;
 	}
 
 	UpdateWorldMatrix();

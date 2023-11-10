@@ -22,7 +22,11 @@ public:
 
 	void Update() override;
 
-	void GetAttackCollision(std::vector<BaseAction::AttackCollision>& _info) override;
+	void GetAttackCollisionSphere(std::vector<Sphere>& _info) override;
+
+	void GetAttackCollisionBox(std::vector<Box>& _info) override {};
+
+	void GetAttackCollisionCapsule(std::vector<Capsule>& _info) override {};
 
 	void AddBullet();
 

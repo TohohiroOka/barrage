@@ -64,6 +64,14 @@ public:
 		const Triangle& _triangle, DirectX::XMVECTOR* _inter = nullptr, DirectX::XMVECTOR* _reject = nullptr);
 
 	/// <summary>
+	/// 球とボックス
+	/// </summary>
+	/// <param name="sphere"></param>
+	/// <param name="box"></param>
+	/// <returns></returns>
+	static bool CheckSphere2Box(const Sphere& sphere, const Box& box);
+
+	/// <summary>
 	/// レイと平面（範囲・表裏有）の当たり判定
 	/// </summary>
 	/// <param name="_lay">レイ</param>
