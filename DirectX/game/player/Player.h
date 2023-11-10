@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Object/3d/Object3d.h"
 #include "Object/3d/Fbx.h"
 #include "Math/Vector3.h"
 #include "game/ui/Gauge.h"
@@ -22,6 +23,7 @@ public:
 
 	void Update();
 	void Draw();
+	void FrameReset();
 	void ImguiDraw();
 	void DrawLightView();
 	void Damage(int damageNum, const Vector3& subjectPos);
@@ -80,6 +82,9 @@ private: //静的メンバ変数
 private: //メンバ変数
 	std::unique_ptr<FbxModel> model = nullptr;
 	std::unique_ptr<Fbx> object = nullptr;
+
+	std::unique_ptr<Model> swordModel = nullptr;
+	std::unique_ptr<Object3d> swordObject = nullptr;
 
 	GameCamera* gameCamera = nullptr;
 

@@ -187,6 +187,7 @@ void Scene1::ImguiDraw()
 
 void Scene1::FrameReset()
 {
+	player->FrameReset();
 	boss->FrameReset();
 }
 

@@ -25,7 +25,22 @@ Player::Player()
 	object = Fbx::Create(model.get());
 	object->SetShadowMap(true);
 	object->SetAnimation(true);
-	
+
+	//剣モデル読み込み
+	swordModel = Model::CreateFromOBJ("sword");
+	std::string bone = "mixamorig:RightHand";
+	XMMATRIX matScale = XMMatrixScaling(100.0f, 100.0f, 100.0f);
+	XMMATRIX matRot = XMMatrixIdentity();
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
+	matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
+	matRot *= XMMatrixRotationY(XMConvertToRadians(0.0f));
+	DirectX::XMMATRIX matTrans = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
+	world *= matScale;
+	world *= matRot;
+	world *= matTrans;
+	object->SetBoneObject(bone, "rightHand", swordModel.get(), world);
+
 	pos = { 100.0f,200.0f,100.0f };
 	//連続ジャンプ可能回数設定
 	jumpMaxNum = 2;
@@ -95,6 +110,7 @@ void Player::Update()
 
 void Player::Draw()
 {
+	object->BoneDraw();
 	object->Draw();
 
 	hpGauge->Draw();
@@ -103,6 +119,11 @@ void Player::Draw()
 	if (attackAction) {
 		attackAction->Draw();
 	}
+}
+
+void Player::FrameReset()
+{
+	object->FrameReset();
 }
 
 void Player::ImguiDraw()
@@ -195,8 +216,8 @@ void Player::Move()
 	DirectInput* input = DirectInput::GetInstance();
 
 	//移動キー入力を判定
-	isMoveKey = (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveRight).key) || 
-		input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveLeft).key) || 
+	isMoveKey = (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveRight).key) ||
+		input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveLeft).key) ||
 		input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveForward).key) ||
 		input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveBack).key));
 
