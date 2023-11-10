@@ -36,6 +36,7 @@ void Boss1::Update()
 void Boss1::FrameReset()
 {
 	action->FrameReset();
+	BaseBoss::FrameReset();
 }
 
 void Boss1::SetAction()

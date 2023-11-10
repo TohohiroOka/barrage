@@ -14,6 +14,7 @@ public:
 	void AnimationReset() { fbxObject->AnimationReset(); }
 	void SetAnimation(const int _animationNumber) { fbxObject->SetUseAnimation(_animationNumber); }
 	Base3D* GetObjectInst() { return fbxObject.get(); }
+	void RrameReset() { fbxObject->FrameReset(); }
 
 protected:
 	

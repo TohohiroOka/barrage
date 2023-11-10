@@ -17,7 +17,7 @@ public:
 
 	virtual void Draw();
 
-	virtual void FrameReset() = 0;
+	virtual void FrameReset() { bossModel->RrameReset(); }
 
 	virtual void SetAction() = 0;
 

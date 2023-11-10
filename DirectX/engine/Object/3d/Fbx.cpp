@@ -211,7 +211,7 @@ void Fbx::DrawLightView()
 void Fbx::BoneDraw(const DrawMode _drawMode)
 {
 	for (auto& i : boneObjectInfo) {
-		boneObject[i.instanceName]->DrawInstance(i.matWorld * model->GetBornMatWorld(i.boneName), { 1,1,1,1 });
+		boneObject[i.instanceName]->DrawInstance(i.matWorld * model->GetBornMatWorld(i.boneName) * matWorld, { 1,1,1,1 });
 	}
 
 	for (auto& i : boneObject) {
