@@ -26,6 +26,7 @@ public:
 	void DrawLightView();
 	void Damage(int damageNum, const Vector3& subjectPos);
 	void Heal(int healNum);
+	void PushBack(const XMVECTOR& reject);
 
 private:
 	void ObjectUpdate();

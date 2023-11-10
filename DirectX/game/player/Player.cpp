@@ -154,6 +154,13 @@ void Player::Heal(int healNum)
 	healTimer = 0;
 }
 
+void Player::PushBack(const XMVECTOR& reject)
+{
+	//押し戻し
+	Vector3 rejectNum = { reject.m128_f32[0],reject.m128_f32[1], reject.m128_f32[2] };
+	pos += rejectNum;
+}
+
 void Player::ObjectUpdate()
 {
 	//速度を加算して座標更新

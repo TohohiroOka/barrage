@@ -192,6 +192,25 @@ void Scene1::FrameReset()
 
 void Scene1::CollisionCheck()
 {
+#pragma region プレイヤーと敵の衝突判定
+	{
+		Sphere playerSphere;
+		playerSphere.center = { player->GetPosition().x, player->GetPosition().y,player->GetPosition().z, 1.0f };
+		playerSphere.radius = player->GetObject3d()->GetScale().x * 5;
+
+		Sphere enemySphere;
+		enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
+		enemySphere.radius = boss->GetCenter()->GetScale().x * 2 * 5;
+
+		XMVECTOR inter;
+		XMVECTOR reject;
+		if (Collision::CheckSphere2Sphere(playerSphere, enemySphere, &inter, &reject)) {
+			//プレイヤーを押し戻す
+			player->PushBack(reject);
+		}
+	}
+#pragma endregion
+
 #pragma region プレイヤーと敵の攻撃の衝突判定
 	{
 		Sphere playerSphere;
