@@ -135,6 +135,7 @@ void Scene1::Draw(const int _cameraNum)
 void Scene1::DrawLightView(const int _cameraNum)
 {
 	player->DrawLightView();
+	boss->DrawLightView();
 }
 
 void Scene1::NonPostEffectDraw(const int _cameraNum)
@@ -145,6 +146,8 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 		//sprite->Draw();
 	}
 
+	player->DrawSprite();
+	boss->DrawSprite();
 	gameoverUi.Draw();
 
 	//“ü—ÍÝ’è•`‰æ
@@ -203,7 +206,7 @@ void Scene1::CollisionCheck()
 	{
 		Sphere playerSphere;
 		playerSphere.center = { player->GetPosition().x, player->GetPosition().y,player->GetPosition().z, 1.0f };
-		playerSphere.radius = player->GetObject3d()->GetScale().x * 2;
+		playerSphere.radius = player->GetObject3d()->GetScale().x;
 
 		Sphere enemySphere;
 		enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
@@ -286,7 +289,7 @@ void Scene1::CollisionCheck()
 				//–ˆƒtƒŒ[ƒ€‘½’iƒqƒbƒg‚·‚é‚Ì‚ð–h‚®‚½‚ßA‚±‚ÌUŒ‚‚ÌÕ“Ë”»’è‚ðoff‚É‚µ‚Ä‚¨‚­B
 				player->GetAttackAction()->SetIsCollisionValid(false);
 
-				GameHelper::Instance()->SetSlow(0.1f, 2000);
+				GameHelper::Instance()->SetSlow(0, 20);
 			}
 		}
 	}

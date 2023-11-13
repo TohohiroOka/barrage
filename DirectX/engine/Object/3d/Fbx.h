@@ -182,7 +182,7 @@ public:
 	float GetMetalness() { return metalness; }
 	float GetSpecular() { return specular; }
 	float GetRoughness() { return roughness; }
-	int SetUseAnimation() { return useAnimation; }
+	int GetUseAnimation() { return useAnimation; }
 	XMFLOAT3 GetModelMove() { return animationMove; }
 	void SetIsModelDraw(bool _isModelDraw) { isModelDraw = _isModelDraw; }
 	void SetModel(FbxModel* model) { this->model = model; }

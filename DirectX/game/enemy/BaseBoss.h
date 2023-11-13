@@ -17,6 +17,10 @@ public:
 
 	virtual void Draw();
 
+	virtual void DrawLightView();
+
+	virtual void DrawSprite();
+
 	virtual void FrameReset() { bossModel->RrameReset(); }
 
 	virtual void SetAction() = 0;

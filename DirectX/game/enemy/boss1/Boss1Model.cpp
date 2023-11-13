@@ -71,3 +71,8 @@ void Boss1Model::Draw()
 {
 	fbxObject->Draw();
 }
+
+void Boss1Model::DrawLightView()
+{
+	fbxObject->DrawLightView();
+}
