@@ -16,6 +16,17 @@ private:
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMVECTOR = DirectX::XMVECTOR;
 
+private: //enum
+
+	enum AnimationName
+	{
+		RUN,
+		ATTACK_RIGHT,
+		JUMP,
+		ATTACK_LEFT,
+		ROLL,
+	};
+
 public:
 
 	Player();
@@ -23,6 +34,7 @@ public:
 
 	void Update();
 	void Draw();
+	void DrawSprite();
 	void FrameReset();
 	void ImguiDraw();
 	void DrawLightView();
@@ -86,7 +98,6 @@ private: //メンバ変数
 	std::unique_ptr<Fbx> object = nullptr;
 
 	std::unique_ptr<Model> swordModel = nullptr;
-	std::unique_ptr<Object3d> swordObject = nullptr;
 
 	GameCamera* gameCamera = nullptr;
 
@@ -114,8 +125,6 @@ private: //メンバ変数
 
 	//回避中か
 	bool isAvoid = false;
-	//回避ベクトル
-	Vector3 avoidVec;
 	//回避用タイマー
 	std::unique_ptr<Engine::Timer> avoidTimer;
 	//回避開始可能か
@@ -130,8 +139,6 @@ private: //メンバ変数
 
 	//ブリンク中か
 	bool isBlink = false;
-	//ブリンクベクトル
-	Vector3 blinkVec;
 	//ブリンク用タイマー
 	std::unique_ptr<Engine::Timer> blinkTimer = 0;
 	//ブリンク開始可能か

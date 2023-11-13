@@ -26,6 +26,15 @@ void BaseBoss::Draw()
 {
 	action->Draw();
 	bossModel->Draw();
+}
+
+void BaseBoss::DrawLightView()
+{
+	bossModel->DrawLightView();
+}
+
+void BaseBoss::DrawSprite()
+{
 	hpGauge->Draw();
 }
 

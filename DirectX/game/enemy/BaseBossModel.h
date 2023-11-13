@@ -10,6 +10,8 @@ public:
 
 	virtual void Draw() {};
 
+	virtual void DrawLightView() {};
+
 	DirectX::XMFLOAT3 GetModelMove() { return fbxObject->GetModelMove(); }
 	void AnimationReset() { fbxObject->AnimationReset(); }
 	void SetAnimation(const int _animationNumber) { fbxObject->SetUseAnimation(_animationNumber); }

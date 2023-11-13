@@ -24,6 +24,8 @@ public:
 
 	void Draw() override;
 
+	void DrawLightView() override;
+
 private:
 
 	std::array<std::unique_ptr<Model>, int(ObjectType::size)> objModel;

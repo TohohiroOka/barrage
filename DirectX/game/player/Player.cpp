@@ -26,6 +26,7 @@ Player::Player()
 	object->SetShadowMap(true);
 	object->SetAnimation(true);
 	object->SetIsBoneDraw(true);
+	object->SetUseAnimation(AnimationName::JUMP);
 
 	//剣モデル読み込み
 	swordModel = Model::CreateFromOBJ("sword");
@@ -42,7 +43,7 @@ Player::Player()
 	world *= matTrans;
 	object->SetBoneObject(bone, "rightHand", swordModel.get(), world);
 
-	pos = { 100.0f,0.0f,100.0f };
+	pos = { 100.0f,50.0f,100.0f };
 	object->SetScale({ 5,5,5 });
 	//連続ジャンプ可能回数設定
 	jumpMaxNum = 2;
@@ -81,7 +82,6 @@ void Player::Update()
 	}
 	else {
 		Move();
-		MoveRotate();
 		Jump();
 		Attack();
 		AvoidStart();
@@ -91,6 +91,9 @@ void Player::Update()
 	if (!isBlink) {
 		Fall();
 	}
+
+	//進行方向に向きを変える
+	MoveRotate();
 
 	HealHPMove();
 	EnduranceRecovery();
@@ -107,6 +110,11 @@ void Player::Update()
 		if (attackAction->GetIsAttackActionEnd()) {
 			attackAction.release();
 			isAttack = false;
+
+			//攻撃アニメーションなら待機アニメーションに変更(現在は待機アニメーションがないので代用中)
+			if (object->GetUseAnimation() == AnimationName::ATTACK_RIGHT) {
+				object->SetUseAnimation(AnimationName::ATTACK_LEFT);
+			}
 		}
 	}
 }
@@ -115,12 +123,15 @@ void Player::Draw()
 {
 	object->Draw();
 
-	hpGauge->Draw();
-	enduranceGauge->Draw();
-
 	if (attackAction) {
 		attackAction->Draw();
 	}
+}
+
+void Player::DrawSprite()
+{
+	hpGauge->Draw();
+	enduranceGauge->Draw();
 }
 
 void Player::FrameReset()
@@ -204,6 +215,11 @@ void Player::ObjectUpdate()
 			fallSpeed = 0;
 			jumpCount = 0;
 			isBlinkStart = true; //ブリンク開始可能にする
+
+			//ジャンプアニメーションなら待機アニメーションに変更(現在は待機アニメーションがないので代用中)
+			if (object->GetUseAnimation() == AnimationName::JUMP) {
+				object->SetUseAnimation(AnimationName::ATTACK_LEFT);
+			}
 		}
 	}
 	//最終的な座標をセット
@@ -267,10 +283,20 @@ void Player::Move()
 
 		//進行方向を向くようにする
 		SetMoveRotate();
+
+		//待機アニメーションのときのみ走るアニメーションを開始する(現在は待機アニメーションがないので代用中)
+		if (object->GetUseAnimation() == AnimationName::ATTACK_LEFT) {
+			object->SetUseAnimation(AnimationName::RUN);
+		}
 	}
 	else {
 		moveSpeed -= moveAccel;
 		moveSpeed = max(moveSpeed, 0);
+
+		//スピードがなくなったら待機アニメーションに変更(設計中)
+		if (object->GetUseAnimation() == AnimationName::RUN && moveSpeed <= 0) {
+			object->SetUseAnimation(AnimationName::ATTACK_LEFT);
+		}
 	}
 
 	//速度をセット
@@ -390,15 +416,13 @@ void Player::AvoidStart()
 	if (endurance < avoidUseEndurance) { return; }
 	UseEndurance(avoidUseEndurance, 30, true); //持久力を使用
 
-	//回避するベクトルを求める(現在向いている方向)
-	const float rotaRadian = XMConvertToRadians(rota.y - 90);
-	avoidVec.x = cosf(rotaRadian);
-	avoidVec.z = -sinf(rotaRadian);
-
 	avoidTimer->Reset();
 	isAvoid = true;
 	isDash = false;
 	isDashStart = true;
+
+	object->AnimationReset();
+	object->SetUseAnimation(AnimationName::ROLL);
 }
 
 void Player::Avoid()
@@ -410,14 +434,14 @@ void Player::Avoid()
 
 	const float power = Easing::OutCirc(10, 1, time);
 
-	velocity = avoidVec.normalize() * power;
-
-	rota.x = Easing::OutCubic(0, 360, time);
-	object->SetRotation(rota);
+	velocity = moveVec.normalize() * power;
 
 	//タイマーが指定した時間になったら回避終了
 	if (*avoidTimer.get() >= avoidTime) {
 		isAvoid = false;
+
+		//待機アニメーションに変更(設計中)
+		object->SetUseAnimation(AnimationName::ATTACK_LEFT);
 	}
 }
 
@@ -436,6 +460,9 @@ void Player::Jump()
 	velocity.y = jumpPower;
 	fallSpeed = 0;
 	jumpCount++; //ジャンプ回数を増やす
+
+	object->AnimationReset();
+	object->SetUseAnimation(AnimationName::JUMP);
 }
 
 void Player::BlinkStart()
@@ -450,17 +477,15 @@ void Player::BlinkStart()
 	if (endurance < blinkUseEndurance) { return; }
 	UseEndurance(blinkUseEndurance, 30, true); //持久力を使用
 
-	//ブリンクするベクトルを求める(現在向いている方向)
-	const float rotaRadian = XMConvertToRadians(rota.y - 90);
-	blinkVec.x = cosf(rotaRadian);
-	blinkVec.z = -sinf(rotaRadian);
-
 	//落下速度を0にする
 	velocity.y = 0;
 
 	blinkTimer->Reset();
 	isBlink = true;
 	isBlinkStart = false;
+
+	object->AnimationReset();
+	object->SetUseAnimation(AnimationName::ROLL);
 }
 
 void Player::Blink()
@@ -472,11 +497,14 @@ void Player::Blink()
 
 	const float power = Easing::OutCirc(20, 1, time);
 
-	velocity = blinkVec.normalize() * power;
+	velocity = moveVec.normalize() * power;
 
 	//タイマーが指定した時間になったらブリンク終了
 	if (*blinkTimer.get() >= blinkTime) {
 		isBlink = false;
+
+		//待機アニメーションに変更(設計中)
+		object->SetUseAnimation(AnimationName::ATTACK_LEFT);
 	}
 }
 
@@ -490,6 +518,9 @@ void Player::Attack()
 
 			UseEndurance(attackAction->GetUseEndranceNum(), 30, true);
 			isAttack = true;
+
+			object->AnimationReset();
+			object->SetUseAnimation(AnimationName::ATTACK_RIGHT);
 		}
 	}
 	else {
@@ -500,6 +531,9 @@ void Player::Attack()
 				if (!attackAction->NextAttack(endurance)) { return; }
 
 				UseEndurance(attackAction->GetUseEndranceNum(), 30, true);
+
+				object->AnimationReset();
+				object->SetUseAnimation(AnimationName::ATTACK_RIGHT);
 			}
 		}
 	}
