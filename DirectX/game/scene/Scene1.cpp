@@ -11,6 +11,7 @@
 #include "GameHelper.h"
 #include "scene/TitleScene.h"
 #include "effect/BulletEffect.h"
+#include "scene/OnStageTest.h"
 
 using namespace DirectX;
 
@@ -88,6 +89,10 @@ void Scene1::Update()
 				isNormalCamera = !isNormalCamera;
 				Base3D::SetCamera(camera.get());
 			}
+		}
+		if (DirectInput::GetInstance()->TriggerKey(DIK_9)) {
+			OnStageTestScene* testScene = new OnStageTestScene;
+			SceneManager::SetNextScene(testScene);
 		}
 		//camera->Update();
 		lightCamera->Update();
