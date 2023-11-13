@@ -146,14 +146,28 @@ void MainEngine::Draw()
 
 void MainEngine::ImguiDraw()
 {
-	static float t = 0;
-	ImGui::Begin("debug imgui");
+	static float t = 0.0f;
+	static float rate = 0.0f;
+	static XMFLOAT3 color1 = {};
+	static XMFLOAT3 color2 = {};
+
+	ImGui::Begin("fog");
 	ImGui::SetWindowSize(ImVec2(300, 300), ImGuiCond_::ImGuiCond_FirstUseEver);
 
-	ImGui::SliderFloat("slider 1", &t, 0.0f, 2.0f);
+	ImGui::SliderFloat("fog set", &t, 0.0f, 2.0f);
+	ImGui::SliderFloat("fog rate", &rate, 0.0f, 2.0f);
+	ImGui::SliderFloat("fog color1 r", &color1.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("fog color1 g", &color1.y, 0.0f, 1.0f);
+	ImGui::SliderFloat("fog color1 b", &color1.z, 0.0f, 1.0f);
+	ImGui::SliderFloat("fog color2 r", &color2.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("fog color2 g", &color2.y, 0.0f, 1.0f);
+	ImGui::SliderFloat("fog color2 b", &color2.z, 0.0f, 1.0f);
 	ImGui::End();
 
 	fog->SetStrength(t);
+	fog->SetBlendRate(rate);
+	fog->SetColor1(color1);
+	fog->SetColor2(color2);
 }
 
 void MainEngine::FrameControl()

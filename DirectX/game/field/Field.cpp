@@ -6,9 +6,6 @@
 
 Field::Field()
 {
-	const std::string jimen = "jimen.png";
-	const std::string kabe = "kabe.png";
-
 	//ínñ 
 	wallModel = Model::CreateFromOBJ("plane");
 
@@ -27,16 +24,6 @@ Field::Field()
 	collider->ConstructTriangles(groundObject->GetModel());
 	collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
 
-	//äOòg
-	float outsideScale = 6.0f;
-	outsideModel = TerrainModel::Create("heightmap6.bmp", 3.0f,
-		{ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, 1.0f, kabe, kabe);
-	outsideObject = HeightMap::Create(outsideModel.get());
-	outsideObject->SetScale({ outsideScale ,outsideScale ,outsideScale });
-	float outPos = (outsideScale * scale / 2.0f) - scale / 2.0f;
-	outsideObject->SetPosition({ -outPos,0.0f,-outPos });
-	outsideObject->UpdateWorldMatrix();
-
 	//ï«
 	const float distPos = scale - 1.0f;
 	float distPosY = distPos / 1.9f;
@@ -54,24 +41,24 @@ Field::Field()
 		collider->ConstructTriangles(wallObject[i]->GetModel());
 		collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
 	}
+
+	//îwåi
+	backGround = std::make_unique<BackGround>();
 }
 
-void Field::Update()
+void Field::Update(const DirectX::XMFLOAT3& _playerPos)
 {
 	groundObject->Update();
-	outsideObject->Update();
 
 	for (auto& i : wallObject) {
 		i->Update();
 	}
+
+	backGround->Update(_playerPos);
 }
 
 void Field::Draw()
 {
 	groundObject->Draw();
-	outsideObject->Draw();
-
-	//for (auto& i : wallObject) {
-	//	i->Draw();
-	//}
+	backGround->Draw();
 }

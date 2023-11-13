@@ -140,6 +140,9 @@
     <Filter Include="ゲームシステム\Effect">
       <UniqueIdentifier>{a3377b69-42d7-446b-a8a4-ac747c839458}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ゲームシステム\system">
+      <UniqueIdentifier>{06e873eb-d527-4e88-baba-9f17b8ce442d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -390,6 +393,15 @@
     </ClCompile>
     <ClCompile Include="game\effect\BulletEffect.cpp">
       <Filter>ゲームシステム\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="game\field\BackGround.cpp">
+      <Filter>ゲームシステム\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="game\system\ActionInputConfig.cpp">
+      <Filter>ゲームシステム\system</Filter>
+    </ClCompile>
+    <ClCompile Include="game\system\GameInputManager.cpp">
+      <Filter>ゲームシステム\system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -816,6 +828,15 @@
     </ClInclude>
     <ClInclude Include="game\effect\BulletEffect.h">
       <Filter>ゲームシステム\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="game\field\BackGround.h">
+      <Filter>ゲームシステム\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="game\system\ActionInputConfig.h">
+      <Filter>ゲームシステム\system</Filter>
+    </ClInclude>
+    <ClInclude Include="game\system\GameInputManager.h">
+      <Filter>ゲームシステム\system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

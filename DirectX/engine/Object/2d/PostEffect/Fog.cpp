@@ -21,7 +21,9 @@ void Fog::Update()
 	HRESULT result = constBuff->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result)) {
 		constMap->strength = strength;
-		constMap->color = color;
+		constMap->blendRate = blendRate;
+		constMap->color1 = color1;
+		constMap->color2 = color2;
 		constBuff->Unmap(0, nullptr);
 	}
 }
@@ -30,7 +32,9 @@ Fog::Fog()
 {
 	//ƒtƒHƒO‚Ì‹­‚³
 	strength = 1.5f;
-	color = { 1.0f,1.0f,1.0f };
+	blendRate = 0.0f;
+	color1 = { 1.0f,1.0f,1.0f };
+	color2 = { 1.0f,1.0f,1.0f };
 }
 
 std::unique_ptr<Fog> Fog::Create()
