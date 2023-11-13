@@ -150,5 +150,5 @@ void Boss1Bullet2::BulletUpdate(BulletInfo& _bullet)
 	DirectX::XMFLOAT4 bulletColor = { 0.f,0.f,0.f,1.0f };
 	DirectX::XMFLOAT4 effectColor = { 0.2f,0.2f,0.8f,1.0f };
 	float effectScale = 5.f;
-	bulletEffect.AddBulletEffect(_bullet.nowPos, B_SCALE, bulletColor, effectScale, effectColor);
+	bulletEffect.AddBulletEffect(_bullet.nowPos, bulletColor, effectScale, effectColor);
 }

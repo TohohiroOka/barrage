@@ -31,8 +31,6 @@ protected:
 	//弾描画用
 	std::array<std::unique_ptr<InstanceObject>, instanceNum> instanceObject;
 	BulletEffect bulletEffect;
-	//弾エフェクトの共通パラメータ
-	DirectX::XMFLOAT3 B_SCALE = { 1.f,1.f,1.f };
 
 	//弾道描画用
 	std::unique_ptr<PredictionLine> predictionLine;
