@@ -11,11 +11,6 @@ void BaseBullet::Update()
 		i->Update();
 	}
 
-	for (auto& i : instanceObject) {
-		if (i->GetInstanceDrawNum() == 0) { continue; }
-		i->Update();
-	}
-
 	if (predictionLine) {
 		predictionLine->Update();
 	}

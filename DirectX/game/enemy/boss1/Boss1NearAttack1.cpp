@@ -32,6 +32,11 @@ void Boss1NearAttack1::Update()
 	}
 
 	ObjectUpdate();
+
+	for (auto& i : instanceObject) {
+		if (i->GetInstanceDrawNum() <= 0.0f) { continue; }
+		i->Update();
+	}
 }
 
 void Boss1NearAttack1::Draw()

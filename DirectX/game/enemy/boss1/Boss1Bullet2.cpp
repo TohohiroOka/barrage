@@ -47,6 +47,8 @@ void Boss1Bullet2::Update()
 	}
 
 	timer->Update();
+
+	BaseBullet::Update();
 }
 
 void Boss1Bullet2::GetAttackCollisionSphere(std::vector<Sphere>& _info)
