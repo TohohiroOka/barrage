@@ -10,8 +10,8 @@ Player* GameCamera::player = nullptr;
 const float GameCamera::rotateXMin = -45;
 const float GameCamera::rotateXMax = 70;
 const float GameCamera::rotateXBase = 7;
-const float GameCamera::rotateCenterDistanceNormal = 15.0f;
-const Vector3 GameCamera::targetDistanceNormal = { 0, 0, 0 };
+const float GameCamera::rotateCenterDistanceNormal = 25.0f;
+const Vector3 GameCamera::targetDistanceNormal = { 0, 5, 0 };
 
 GameCamera::GameCamera() :
 	Camera(true)
@@ -150,8 +150,7 @@ void GameCamera::UpdateRotate()
 	rotation.x = min(rotation.x, rotateXMax);
 
 	//‰¡‰ñ“]‚Ì‰ñ“]Šp‚ð0`360ˆÈ“à‚ÉŽû‚Ü‚é‚æ‚¤‚É‚·‚é
-	if (rotation.y > 360) { rotation.y -= 360; }
-	if (rotation.y < 0) { rotation.y += 360; }
+	Rotate360(rotation.y);
 }
 
 void GameCamera::UpdateLockonRotate()
@@ -161,16 +160,9 @@ void GameCamera::UpdateLockonRotate()
 
 	//ƒvƒŒƒCƒ„[‚ÆƒƒbƒNƒIƒ“ƒ^[ƒQƒbƒg‚ÌŠp“x‚ðŽæ“¾(0`360‚É’²®)
 	Vector3 moveRotaVelocity = VelocityRotate(((Vector3)lockonTarget->GetPosition() - targetDistance) - (player->GetPosition() + targetDistance));
-	while (moveRotaVelocity.y < 0 || moveRotaVelocity.y > 360) {
-		//‰¡‰ñ“]‚Ì‰ñ“]Šp‚ð0`360ˆÈ“à‚ÉŽû‚Ü‚é‚æ‚¤‚É‚·‚é
-		if (moveRotaVelocity.y > 360) { moveRotaVelocity.y -= 360; }
-		else if (moveRotaVelocity.y < 0) { moveRotaVelocity.y += 360; }
-	}
-	while (moveRotaVelocity.x < 0 || moveRotaVelocity.x > 360) {
-		//c‰ñ“]‚Ì‰ñ“]Šp‚ð0`360ˆÈ“à‚ÉŽû‚Ü‚é‚æ‚¤‚É‚·‚é
-		if (moveRotaVelocity.x > 360) { moveRotaVelocity.x -= 360; }
-		else if (moveRotaVelocity.x < 0) { moveRotaVelocity.x += 360; }
-	}
+	//‰ñ“]Šp‚ð0`360ˆÈ“à‚ÉŽû‚Ü‚é‚æ‚¤‚É‚·‚é
+	Rotate360(moveRotaVelocity.y);
+	Rotate360(moveRotaVelocity.x);
 
 	//ƒC[ƒWƒ“ƒO‚Å“®‚©‚·ê‡
 	if (*lockonChangeRotaTimer.get() <= changeRotaTime) {

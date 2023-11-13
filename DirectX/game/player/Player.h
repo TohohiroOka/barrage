@@ -33,6 +33,8 @@ public:
 private:
 	void ObjectUpdate();
 	void Move();
+	void SetMoveRotate();
+	void MoveRotate();
 	void Dash();
 	void Fall();
 	void AvoidStart();
@@ -96,12 +98,15 @@ private: //メンバ変数
 	// 落下ベクトル
 	float fallSpeed = 0;;
 
-	//移動スピード
+	//移動
 	float moveSpeed = 0.0f;
 	Vector3 moveVec;
+	Vector3 moveVelRota;
+	float moveRotSpeed = 0.0f;
 	//移動入力があるか
 	bool isMoveKey = false;
 	bool isMovePad = false;
+	bool isMoveRotate = false;
 
 	//ダッシュしているか
 	bool isDash = false;

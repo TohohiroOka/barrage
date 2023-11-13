@@ -29,7 +29,7 @@ Player::Player()
 	//剣モデル読み込み
 	swordModel = Model::CreateFromOBJ("sword");
 	std::string bone = "mixamorig:RightHand";
-	XMMATRIX matScale = XMMatrixScaling(100.0f, 100.0f, 100.0f);
+	XMMATRIX matScale = XMMatrixScaling(50.0f, 50.0f, 50.0f);
 	XMMATRIX matRot = XMMatrixIdentity();
 	matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
 	matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
@@ -41,7 +41,8 @@ Player::Player()
 	world *= matTrans;
 	object->SetBoneObject(bone, "rightHand", swordModel.get(), world);
 
-	pos = { 100.0f,200.0f,100.0f };
+	pos = { 100.0f,0.0f,100.0f };
+	object->SetScale({ 5,5,5 });
 	//連続ジャンプ可能回数設定
 	jumpMaxNum = 2;
 
@@ -79,6 +80,7 @@ void Player::Update()
 	}
 	else {
 		Move();
+		MoveRotate();
 		Jump();
 		Attack();
 		AvoidStart();
@@ -110,8 +112,8 @@ void Player::Update()
 
 void Player::Draw()
 {
-	object->BoneDraw();
 	object->Draw();
+	object->BoneDraw();
 
 	hpGauge->Draw();
 	enduranceGauge->Draw();
@@ -185,7 +187,7 @@ void Player::PushBack(const XMVECTOR& reject)
 void Player::ObjectUpdate()
 {
 	//速度を加算して座標更新
-	pos += velocity;
+	pos += velocity * GameHelper::Instance()->GetGameSpeed();
 
 	//壁判定
 	pos.x = max(pos.x, moveMinPos.x);
@@ -194,9 +196,9 @@ void Player::ObjectUpdate()
 	pos.z = min(pos.z, moveMaxPos.z);
 
 	//地面に接地判定
-	const float modelHeight = 5; //スケール1のときのモデルの高さ
-	if (pos.y <= object->GetScale().y * 2 * modelHeight) {
-		pos.y = object->GetScale().y * 2 * modelHeight;
+	const float modelHeight = 1; //スケール1のときのモデルの高さ
+	if (pos.y <= object->GetScale().y * modelHeight + 0.5f) {
+		pos.y = object->GetScale().y * modelHeight + 0.5f;
 		if (!onGround) {
 			onGround = true;
 			fallSpeed = 0;
@@ -229,7 +231,7 @@ void Player::Move()
 	Dash();
 
 	//入力
-	const float moveAccel = 0.1f;
+	const float moveAccel = 0.1f * GameHelper::Instance()->GetGameSpeed();
 	if (isMoveKey || isMovePad) {
 		moveSpeed += moveAccel;
 		if (isDash) { moveSpeed = min(moveSpeed, dashSpeedMax); }
@@ -240,18 +242,14 @@ void Player::Move()
 		if (isMoveKey) {
 			if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveRight).key)) {
 				inputMoveVec.x = 1;
-				inputMoveVec.z = 0;
 			}
 			if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveLeft).key)) {
 				inputMoveVec.x = -1;
-				inputMoveVec.z = 0;
 			}
 			if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveForward).key)) {
-				inputMoveVec.x = 0;
 				inputMoveVec.z = 1;
 			}
 			if (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveBack).key)) {
-				inputMoveVec.x = 0;
 				inputMoveVec.z = -1;
 			}
 		}
@@ -268,9 +266,7 @@ void Player::Move()
 		moveVec.z = inputMoveVec.x * sinf(cameraRotaRadian) + inputMoveVec.z * cosf(cameraRotaRadian);
 
 		//進行方向を向くようにする
-		Vector3 moveRotaVelocity = { moveVec.x, 0, moveVec.z };//プレイヤー回転にジャンプは関係ないので、速度Yは0にしておく
-		rota = VelocityRotate(moveRotaVelocity);
-		object->SetRotation(rota);
+		SetMoveRotate();
 	}
 	else {
 		moveSpeed -= moveAccel;
@@ -280,6 +276,56 @@ void Player::Move()
 	//速度をセット
 	velocity.x = moveVec.x * moveSpeed;
 	velocity.z = moveVec.z * moveSpeed;
+}
+
+void Player::SetMoveRotate()
+{
+	//進行方向回転角を更新
+	const Vector3 moveRotaVelocity = { moveVec.x, 0, moveVec.z };//プレイヤー回転にジャンプは関係ないので、速度Yは0にしておく
+	moveVelRota = VelocityRotate(moveRotaVelocity);
+	//横回転の回転角を0～360以内に収まるようにする
+	Rotate360(moveVelRota.y);
+
+	//回転スピードを設定
+	moveRotSpeed = 15.0f;
+	//回転をなるべく短くするために元角度を調整(例：350→10 より -10→10の方が近い)
+	if (moveVelRota.y > rota.y) {
+		if (moveVelRota.y - rota.y > 180) {
+			moveRotSpeed = -moveRotSpeed;
+		}
+	}
+	else if (moveVelRota.y < rota.y) {
+		if (rota.y - moveVelRota.y < 180) {
+			moveRotSpeed = -moveRotSpeed;
+		}
+	}
+
+	//移動回転を開始
+	isMoveRotate = true;
+}
+
+void Player::MoveRotate()
+{
+	//移動回転をしない場合は抜ける
+	if (!isMoveRotate) { return; }
+
+	//回転変化が微差ならそのまま進行方向を向く
+	const float notRotDifference = 15.0f * GameHelper::Instance()->GetGameSpeed();
+	if (fabsf(moveVelRota.y - rota.y) <= notRotDifference) {
+		rota.y = moveVelRota.y;
+
+		//微差を調整したら移動回転終了
+		isMoveRotate = false;
+	}
+	else {
+		//回転
+		rota.y += moveRotSpeed * GameHelper::Instance()->GetGameSpeed();
+		//横回転の回転角を0～360以内に収まるようにする
+		Rotate360(rota.y);
+	}
+
+	//更新した回転角をセット
+	object->SetRotation(rota);
 }
 
 void Player::Dash()
@@ -316,7 +362,7 @@ void Player::Fall()
 	//地面に接地していたら抜ける
 	if (onGround) { return; }
 
-	float fallAcc = gravityAccel;
+	float fallAcc = gravityAccel * GameHelper::Instance()->GetGameSpeed();
 
 	//ジャンプ中で入力をし続けている場合は落下速度を減少させる
 	if (jumpCount >= 1 && isInputJump && GameInputManager::PushInputAction(GameInputManager::Jump)) {
@@ -524,7 +570,7 @@ void Player::Knockback()
 	velocity = knockbackVec.normalize() * knockbackPower;
 
 	//ノックバックを弱くしていく
-	knockbackPower -= 0.05f;
+	knockbackPower -= 0.05f * GameHelper::Instance()->GetGameSpeed();
 
 	//ノックバックによる移動がなくなったらノックバック状態終了
 	if (knockbackPower < 0) {
