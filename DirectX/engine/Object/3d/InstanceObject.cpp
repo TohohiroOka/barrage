@@ -1,4 +1,5 @@
 #include "InstanceObject.h"
+#include "Camera/LightCamera.h"
 #include "Light/LightGroup.h"
 #include "Camera/Camera.h"
 #include <string>
@@ -8,6 +9,7 @@ using namespace Microsoft::WRL;
 using namespace DirectX;
 
 std::vector<GraphicsPipelineManager::DrawSet> InstanceObject::pipeline;
+std::vector<GraphicsPipelineManager::DrawSet> InstanceObject::lightviewPipeline;
 
 std::unique_ptr<InstanceObject> InstanceObject::Create(Model* _model)
 {
@@ -55,6 +57,26 @@ void InstanceObject::Initialize(Model* _model)
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&constBuffB1));
+
+	//定数バッファの生成
+	result = device->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),//アップロード可能
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(CONST_BUFFER_DATA_LIGHTVIEW_B0) + 0xff) & ~0xff),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuffLightViewB0));
+	if (FAILED(result)) { assert(0); }
+
+	// 定数バッファの生成
+	result = device->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), 	// アップロード可能
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(OBJECT_INFO_LIGHTVIEW) + 0xff) & ~0xff),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuffLightViewB1));
+
 	if (FAILED(result)) { assert(0); }
 }
 
@@ -67,6 +89,8 @@ InstanceObject::~InstanceObject()
 {
 	constBuffB0.Reset();
 	constBuffB1.Reset();
+	constBuffLightViewB0.Reset();
+	constBuffLightViewB1.Reset();
 }
 
 void InstanceObject::DrawInstance(const XMFLOAT3& _pos, const XMFLOAT3& _scale,
@@ -118,6 +142,15 @@ void InstanceObject::Update()
 			constMap->viewproj = XMMatrixIdentity();
 			constMap->cameraPos = { 0,0,0 };
 		}
+		if (lightCamera)
+		{
+			constMap->lightViewproj = lightCamera->GetView() * lightCamera->GetProjection();
+		}
+		else
+		{
+			constMap->lightViewproj = XMMatrixIdentity();
+		}
+		constMap->isShadowMap = isShadowMap;
 		constMap->isBloom = isBloom;
 		constMap->isToon = isToon;
 		constMap->isOutline = isOutline;
@@ -136,6 +169,31 @@ void InstanceObject::Update()
 		}
 		constBuffB1->Unmap(0, nullptr);
 	}
+
+	CONST_BUFFER_DATA_LIGHTVIEW_B0* constMapLightView = nullptr;
+	if (SUCCEEDED(constBuffLightViewB0->Map(0, nullptr, (void**)&constMapLightView))) {
+		if (lightCamera)
+		{
+			constMapLightView->viewproj = lightCamera->GetView() * lightCamera->GetProjection();
+			constMapLightView->cameraPos = lightCamera->GetEye();
+		}
+		else
+		{
+			constMapLightView->viewproj = XMMatrixIdentity();
+			constMapLightView->cameraPos = { 0,0,0 };
+		}
+		constBuffLightViewB0->Unmap(0, nullptr);
+	}
+
+	OBJECT_INFO_LIGHTVIEW* constMapLightViewB1 = nullptr;
+	result = constBuffLightViewB1->Map(0, nullptr, (void**)&constMapLightViewB1);//マッピング
+	if (SUCCEEDED(result)) {
+		for (int i = 0; i < draw_max_num; i++)
+		{
+			constMapLightViewB1->matWorld[i] = objInform.matWorld[i];
+		}
+		constBuffLightViewB1->Unmap(0, nullptr);
+	}
 }
 
 void InstanceObject::Draw(const DrawMode _drawMode)
@@ -152,6 +210,28 @@ void InstanceObject::Draw(const DrawMode _drawMode)
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 	cmdList->SetGraphicsRootConstantBufferView(3, constBuffB1->GetGPUVirtualAddress());
+
+	cmdList->SetGraphicsRootDescriptorTable(5, lightDepthTexture->descriptor->gpu);
+
+	// ライトの描画
+	light->Draw(cmdList, 2);
+
+	// モデル描画
+	model->Draw(cmdList, 4, instanceDrawNum);
+}
+
+void InstanceObject::DrawLightView()
+{
+	// モデルの割り当てがなければ描画しない
+	if (model == nullptr) {
+		return;
+	}
+
+	Base3D::Draw(lightviewPipeline[0]);
+
+	// 定数バッファビューをセット
+	cmdList->SetGraphicsRootConstantBufferView(0, constBuffLightViewB0->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(3, constBuffLightViewB1->GetGPUVirtualAddress());
 
 	// ライトの描画
 	light->Draw(cmdList, 2);

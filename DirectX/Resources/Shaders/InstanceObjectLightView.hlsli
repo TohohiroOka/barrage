@@ -2,13 +2,6 @@ cbuffer cbuff0 : register(b0)
 {
 	matrix viewproj; // ビュープロジェクション行列
 	float3 cameraPos; // カメラ座標（ワールド座標）
-    matrix lightViewproj; //ライトビュープロジェクション行列
-    uint isShadowMap; //影を付けるか
-	uint isBloom;//ブルームの有無
-	uint isToon;//トゥーンの有無
-	uint isOutline;//アウトラインの有無
-    uint isLight;//ライトの有無
-    float3 outlineColor;//アウトラインの色
 };
 
 cbuffer cbuff1 : register(b1)
@@ -79,9 +72,9 @@ cbuffer cbuff2 : register(b2)
 static const int INSTANCE_NUM = 512;
 cbuffer cbuff3 : register(b3)
 {
-	float4 baseColor[INSTANCE_NUM];//色
-	matrix matWorld[INSTANCE_NUM]; // ワールド行列
+    matrix matWorld[INSTANCE_NUM]; // ワールド行列
 };
+
 
 // 頂点シェーダーからピクセルシェーダーへのやり取りに使用する構造体
 struct VSOutput
@@ -90,14 +83,5 @@ struct VSOutput
 	float4 worldpos : POSITION0; // ワールド座標
 	float3 normal :NORMAL; // 法線
 	float2 uv  :TEXCOORD; // uv値
-    float4 shadowpos : POSITION1;
 	uint instNo : SV_InstanceID;//インスタンシング描画用
-};
-
-//ピクセルシェーダーから実行処理へのやり取りに使用する構造体
-struct PSOutput
-{
-	float4 target0 : SV_TARGET0;
-	float4 target1 : SV_TARGET1;
-	float4 target2 : SV_TARGET2;
 };

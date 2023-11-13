@@ -221,12 +221,22 @@ void Fbx::DrawLightView()
 		// ƒ‚ƒfƒ‹•`‰æ
 		model->Draw(cmdList);
 	}
+
+	if (!isBoneDraw) { return; }
+	BoneDrawLightView();
 }
 
 void Fbx::BoneDraw(const DrawMode _drawMode)
 {
 	for (auto& i : boneObject) {
 		i.second->Draw();
+	}
+}
+
+void Fbx::BoneDrawLightView()
+{
+	for (auto& i : boneObject) {
+		i.second->DrawLightView();
 	}
 }
 

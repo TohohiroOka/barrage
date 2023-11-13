@@ -21,6 +21,12 @@
         },
         {
             "shader":{
+                "Name":"InstanceObjectLightView",
+                "Type":["v","p"]
+            }
+        },
+        {
+            "shader":{
                 "Name":"HeightMap",
                 "Type":["v","p"]
             }

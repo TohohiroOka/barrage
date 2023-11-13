@@ -1,4 +1,4 @@
-#include "InstanceObject.hlsli"
+#include "InstanceObjectLightView.hlsli"
 
 VSOutput main(float4 pos : POSITION, float3 normal : NORMAL, float2 uv : TEXCOORD, uint instNo : SV_InstanceID)
 {
@@ -10,10 +10,6 @@ VSOutput main(float4 pos : POSITION, float3 normal : NORMAL, float2 uv : TEXCOOR
 	output.worldpos = mul(matWorld[instNo], pos);
 	output.normal = wnormal.xyz;
 	output.uv = uv;
-	
-	//ライト視点から見た座標
-    output.shadowpos = mul(mul(lightViewproj, matWorld[instNo]), pos);
-	
 	output.instNo = instNo;
 
 	return output;

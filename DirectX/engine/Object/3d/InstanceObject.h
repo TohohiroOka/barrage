@@ -28,6 +28,8 @@ private:
 	{
 		XMMATRIX viewproj; // ビュープロジェクション行列
 		XMFLOAT3 cameraPos; // カメラ座標（ワールド座標）
+		XMMATRIX lightViewproj;	//ライトビュープロジェクション行列
+		unsigned int isShadowMap;	//影を付けるか
 		unsigned int isBloom;//ブルームの有無
 		unsigned int isToon;//トゥーンの有無
 		unsigned int isOutline;//アウトラインの有無
@@ -36,6 +38,20 @@ private:
 		XMFLOAT3 outlineColor;
 		float pad1;
 	};
+
+	//影用
+	struct  CONST_BUFFER_DATA_LIGHTVIEW_B0
+	{
+		XMMATRIX viewproj;	//ビュープロジェクション行列
+		XMFLOAT3 cameraPos;	//カメラ座標(ワールド座標)
+	};
+
+	//影用
+	struct  OBJECT_INFO_LIGHTVIEW
+	{
+		XMMATRIX matWorld[draw_max_num];//world行列
+	};
+
 public://メンバ関数
 
 	/// <summary>
@@ -86,6 +102,11 @@ public:
 	void Draw(const DrawMode _drawMode = DrawMode::alpha);
 
 	/// <summary>
+	/// 影用光源ライトから見た視点での描画
+	/// </summary>
+	void DrawLightView();
+
+	/// <summary>
 	/// インスタンシング描画最大描画数になっていないかのチェック
 	/// trueなら描画可能
 	/// </summary>
@@ -107,6 +128,7 @@ private:
 
 	//パイプライン情報
 	static std::vector<GraphicsPipelineManager::DrawSet> pipeline;
+	static std::vector<GraphicsPipelineManager::DrawSet> lightviewPipeline;
 
 	//モデル
 	Model* model;
@@ -116,10 +138,15 @@ private:
 	ComPtr<ID3D12Resource> constBuffB0;
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBuffB1;
+	//影用定数バッファ
+	ComPtr<ID3D12Resource> constBuffLightViewB0;
+	//影用定数バッファ
+	ComPtr<ID3D12Resource> constBuffLightViewB1;
 	//インスタンシング描画個数
 	int instanceDrawNum = 0;
 
 public:
 
 	static void SetPipeline(const std::vector<GraphicsPipelineManager::DrawSet>& _pipeline) { InstanceObject::pipeline = _pipeline; }
+	static void SetLightviewPipeline(const std::vector<GraphicsPipelineManager::DrawSet>& _pipeline) { InstanceObject::lightviewPipeline = _pipeline; }
 };

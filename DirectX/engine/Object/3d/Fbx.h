@@ -115,6 +115,11 @@ public:
 	void BoneDraw(const DrawMode _drawMode = DrawMode::alpha);
 
 	/// <summary>
+	/// 描画
+	/// </summary>
+	void BoneDrawLightView();
+
+	/// <summary>
 	/// マテリアル情報を定数バッファに送る
 	/// </summary>
 	void TransferMaterial();

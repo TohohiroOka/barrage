@@ -88,6 +88,10 @@ void SceneManager::CreatePipeline()
 		std::vector<GraphicsPipelineManager::DrawSet> addDrawSet{};
 		SetPipeline("InstanceObject", addDrawSet);
 		InstanceObject::SetPipeline(addDrawSet);
+
+		std::vector<GraphicsPipelineManager::DrawSet> lightAddDrawSet{};
+		SetPipeline("InstanceObjectLightView", lightAddDrawSet);
+		InstanceObject::SetLightviewPipeline(lightAddDrawSet);
 	}
 	//HEIGHT_MAP
 	{
