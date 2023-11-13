@@ -72,7 +72,7 @@ public://静的メンバ関数
 	/// コンストラクタ
 	/// </summary>
 	/// <returns></returns>
-	Fbx() {};
+	Fbx();
 
 	/// <summary>
 	/// デストラクタ
@@ -141,6 +141,8 @@ private://メンバ変数
 	static std::vector<GraphicsPipelineManager::DrawSet> pipeline;
 	static std::vector<GraphicsPipelineManager::DrawSet> lightviewPipeline;
 
+	//モデル描画
+	bool isModelDraw;
 	//モデル
 	FbxModel* model = nullptr;
 	//motionblend用
@@ -167,6 +169,8 @@ private://メンバ変数
 	//アニメーションの移動距離
 	XMFLOAT3 animationMove;
 
+	//ボーン描画
+	bool isBoneDraw;
 	std::vector<BoneObjectInfo> boneObjectInfo;
 	std::unordered_map<std::string, std::unique_ptr<InstanceObject>> boneObject;
 
@@ -180,10 +184,12 @@ public:
 	float GetRoughness() { return roughness; }
 	int SetUseAnimation() { return useAnimation; }
 	XMFLOAT3 GetModelMove() { return animationMove; }
+	void SetIsModelDraw(bool _isModelDraw) { isModelDraw = _isModelDraw; }
 	void SetModel(FbxModel* model) { this->model = model; }
 	void SetMotionBlendModel(FbxModel* _model) { motionBlendModel = _model; }
 	void SetAnimation(bool isAnimation) { model->isAnimation = isAnimation; }
-	void SetBaseColor(const XMFLOAT3& baseColor) { 
+	void SetIsBoneDraw(bool _isBoneDraw) { isBoneDraw = _isBoneDraw; }
+	void SetBaseColor(const XMFLOAT3& baseColor) {
 		this->baseColor = baseColor;
 		isTransferMaterial = true;
 	}

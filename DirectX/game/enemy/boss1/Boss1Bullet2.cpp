@@ -141,9 +141,9 @@ void Boss1Bullet2::BulletUpdate(BulletInfo& _bullet)
 	}
 
 	//弾道描画セット
-	predictionLine->Update(_bullet.nowPos, _bullet.predictionLinePoint[0], 1.0f, { 1.0f,1.0f,1.0f,0.5f });
+	predictionLine->AddLine(_bullet.nowPos, _bullet.predictionLinePoint[0], 1.0f, { 1.0f,1.0f,1.0f,0.5f });
 	for (int i = 1; i < _bullet.predictionLinePoint.size(); i++) {
-		predictionLine->Update(_bullet.predictionLinePoint[i - 1], _bullet.predictionLinePoint[i], 1.0f, { 1.0f,1.0f,1.0f,0.5f });
+		predictionLine->AddLine(_bullet.predictionLinePoint[i - 1], _bullet.predictionLinePoint[i], 1.0f, { 1.0f,1.0f,1.0f,0.5f });
 	}
 
 	//エフェクト追加

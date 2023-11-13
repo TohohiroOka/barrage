@@ -109,5 +109,5 @@ void Boss1Bullet1::BulletUpdate(BulletInfo& _bullet)
 	if (*_bullet.timer.get() > 10.0f) {
 		_bullet.predictionLinePoint += _bullet.moveVec;
 	}
-	predictionLine->Update(_bullet.pos, _bullet.predictionLinePoint, 1.0f, { 1.0f,1.0f,1.0f,0.5f });
+	predictionLine->AddLine(_bullet.pos, _bullet.predictionLinePoint, 1.0f, { 1.0f,1.0f,1.0f,0.5f });
 }

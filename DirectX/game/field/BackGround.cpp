@@ -34,6 +34,11 @@ void BackGround::Update(const DirectX::XMFLOAT3& _playerPos)
 			break;
 		}
 	}
+
+	for (auto& i : object) {
+		if (i->GetInstanceDrawNum() == 0) { continue; }
+		i->Update();
+	}
 }
 
 void BackGround::Draw()

@@ -25,6 +25,7 @@ Player::Player()
 	object = Fbx::Create(model.get());
 	object->SetShadowMap(true);
 	object->SetAnimation(true);
+	object->SetIsBoneDraw(true);
 
 	//剣モデル読み込み
 	swordModel = Model::CreateFromOBJ("sword");
@@ -113,7 +114,6 @@ void Player::Update()
 void Player::Draw()
 {
 	object->Draw();
-	object->BoneDraw();
 
 	hpGauge->Draw();
 	enduranceGauge->Draw();

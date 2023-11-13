@@ -11,6 +11,8 @@ Boss1Model::Boss1Model()
 	fbxObject->SetLight(true);
 	fbxObject->SetAnimation(true);
 	fbxObject->SetPosition({ 255.0f / 2.0f,10.0f ,255.0f / 2.0f });
+	//fbxObject->SetIsModelDraw(false);
+	fbxObject->SetIsBoneDraw(true);
 
 	std::array<std::string, 9> bone = {
 	"mixamorig:HeadTop_End","mixamorig:Head","mixamorig:Spine1","mixamorig:Spine","mixamorig:Hips",
@@ -68,5 +70,4 @@ void Boss1Model::Update()
 void Boss1Model::Draw()
 {
 	fbxObject->Draw();
-	fbxObject->BoneDraw();
 }

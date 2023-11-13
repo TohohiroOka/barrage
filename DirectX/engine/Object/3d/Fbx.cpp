@@ -13,6 +13,14 @@ using namespace DirectX;
 std::vector<GraphicsPipelineManager::DrawSet> Fbx::pipeline;
 std::vector<GraphicsPipelineManager::DrawSet> Fbx::lightviewPipeline;
 
+Fbx::Fbx()
+{
+	isModelDraw = true;
+	isBoneDraw = false;
+	//初期化
+	Initialize();
+}
+
 Fbx::~Fbx()
 {
 	constBuffB0.Reset();
@@ -58,19 +66,10 @@ std::unique_ptr<Fbx> Fbx::Create(FbxModel* model)
 	// 3Dオブジェクトのインスタンスを生成
 	Fbx* instance = new Fbx();
 
-	//初期化
-	instance->Initialize();
-
 	//モデルが指定されていればセットする
 	if (model) {
 		instance->SetModel(model);
 	}
-
-	////マテリアル情報の取得
-	//instance->baseColor = model->GetBaseColor();
-	//instance->metalness = model->GetMetalness();
-	//instance->specular = model->GetSpecular();
-	//instance->roughness = model->GetRoughness();
 
 	instance->TransferMaterial();
 
@@ -154,6 +153,15 @@ void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 		constMapLightView->isSkinning = model->isSkinning;
 		constBuffLightViewB0->Unmap(0, nullptr);
 	}
+
+	if (!isBoneDraw) { return; }
+	for (auto& i : boneObjectInfo) {
+		boneObject[i.instanceName]->DrawInstance(i.matWorld * model->GetBornMatWorld(i.boneName) * matWorld, { 1,1,1,1 });
+	}
+	for (auto& i : boneObject) {
+		if (i.second->GetInstanceDrawNum() == 0) { continue; }
+		i.second->Update();
+	}
 }
 
 void Fbx::Draw(const DrawMode _drawMode)
@@ -167,21 +175,26 @@ void Fbx::Draw(const DrawMode _drawMode)
 		return;
 	}
 
-	int modeNum = int(_drawMode);
+	if (isModelDraw) {
+		int modeNum = int(_drawMode);
 
-	Base3D::Draw(pipeline[modeNum]);
+		Base3D::Draw(pipeline[modeNum]);
 
-	// 定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
-	cmdList->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
+		// 定数バッファビューをセット
+		cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+		cmdList->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
 
-	cmdList->SetGraphicsRootDescriptorTable(5, lightDepthTexture->descriptor->gpu);
+		cmdList->SetGraphicsRootDescriptorTable(5, lightDepthTexture->descriptor->gpu);
 
-	// ライトの描画
-	light->Draw(cmdList, 2);
+		// ライトの描画
+		light->Draw(cmdList, 2);
 
-	// モデル描画
-	model->Draw(cmdList);
+		// モデル描画
+		model->Draw(cmdList);
+	}
+
+	if (!isBoneDraw) { return; }
+	BoneDraw(_drawMode);
 }
 
 void Fbx::DrawLightView()
@@ -195,25 +208,23 @@ void Fbx::DrawLightView()
 		return;
 	}
 
-	Base3D::Draw(lightviewPipeline[0]);
+	if (isModelDraw) {
+		Base3D::Draw(lightviewPipeline[0]);
 
-	// 定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(0, constBuffLightViewB0->GetGPUVirtualAddress());
-	cmdList->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
+		// 定数バッファビューをセット
+		cmdList->SetGraphicsRootConstantBufferView(0, constBuffLightViewB0->GetGPUVirtualAddress());
+		cmdList->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
 
-	// ライトの描画
-	light->Draw(cmdList, 2);
+		// ライトの描画
+		light->Draw(cmdList, 2);
 
-	// モデル描画
-	model->Draw(cmdList);
+		// モデル描画
+		model->Draw(cmdList);
+	}
 }
 
 void Fbx::BoneDraw(const DrawMode _drawMode)
 {
-	for (auto& i : boneObjectInfo) {
-		boneObject[i.instanceName]->DrawInstance(i.matWorld * model->GetBornMatWorld(i.boneName) * matWorld, { 1,1,1,1 });
-	}
-
 	for (auto& i : boneObject) {
 		i.second->Draw();
 	}

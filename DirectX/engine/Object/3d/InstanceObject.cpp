@@ -140,8 +140,6 @@ void InstanceObject::Update()
 
 void InstanceObject::Draw(const DrawMode _drawMode)
 {
-	Update();
-
 	// ƒ‚ƒfƒ‹‚ÌŠ„‚è“–‚Ä‚ª‚È‚¯‚ê‚Î•`‰æ‚µ‚È‚¢
 	if (model == nullptr) {
 		return;
