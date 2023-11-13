@@ -63,7 +63,7 @@ void Scene1::Update()
 {
 	DirectInput* input = DirectInput::GetInstance();
 
-	GameHelper::Instance()->SetStop(stop);
+	//GameHelper::Instance()->SetStop(stop);
 
 	if (!isInputConfigMode) {
 		player->Update();
@@ -103,7 +103,7 @@ void Scene1::Update()
 		//デバッグ用ゲームオーバー表示
 		if (DirectInput::GetInstance()->TriggerKey(DIK_F4)) { gameoverUi.ResetGameOverUI(); }
 		//if (DirectInput::GetInstance()->TriggerKey(DIK_4)) { gameoverUi.StartGameOverUI(); }
-		if (player->GetIsDead() && !gameoverUi.GetIsGameOver()) { gameoverUi.StartGameOverUI(); }
+		//if (player->GetIsDead() && !gameoverUi.GetIsGameOver()) { gameoverUi.StartGameOverUI(); }
 
 		if (DirectInput::GetInstance()->TriggerKey(DIK_TAB) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_START)) {
 			isInputConfigMode = true;
@@ -197,7 +197,7 @@ void Scene1::CollisionCheck()
 	{
 		Sphere playerSphere;
 		playerSphere.center = { player->GetPosition().x, player->GetPosition().y,player->GetPosition().z, 1.0f };
-		playerSphere.radius = player->GetObject3d()->GetScale().x * 5;
+		playerSphere.radius = player->GetObject3d()->GetScale().x * 2;
 
 		Sphere enemySphere;
 		enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
@@ -279,6 +279,8 @@ void Scene1::CollisionCheck()
 
 				//毎フレーム多段ヒットするのを防ぐため、この攻撃の衝突判定をoffにしておく。
 				player->GetAttackAction()->SetIsCollisionValid(false);
+
+				GameHelper::Instance()->SetSlow(0.1f, 2000);
 			}
 		}
 	}

@@ -58,6 +58,17 @@ public:
 };
 
 /// <summary>
+/// Šp“x‚ğ0`360ˆÈ“à‚É’²®
+/// </summary>
+/// <param name="rotation"></param>
+static void Rotate360(float& rotation) {
+	while (rotation < 0 || rotation > 360) {
+		if (rotation > 360) { rotation -= 360; }
+		if (rotation < 0) { rotation += 360; }
+	}
+}
+
+/// <summary>
 /// Œ…”æ“¾
 /// </summary>
 /// <param name="num"></param>

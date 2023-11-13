@@ -12,7 +12,7 @@ namespace Engine
 				if (!isMove) { return; }
 				float gameSpeed = GameHelper::Instance()->GetGameSpeed();
 				if (gameSpeed != 0) {
-					time += 1.0f / gameSpeed;
+					time += 1.0f * gameSpeed;
 				} else { return; }
 			}
 
