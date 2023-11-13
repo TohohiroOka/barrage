@@ -156,11 +156,11 @@ static float RandomFloat(float _range1, float _range2) {
 static int RandomSign() {
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
-	std::uniform_int_distribution<> rand100(0, 1);
+	std::uniform_int_distribution<> rand100(0, 100);
 
 	int sign = rand100(mt);
 
-	if (sign == 0)
+	if (sign < 49)
 	{
 		return 1;
 	} else
@@ -173,7 +173,7 @@ static int RandomSign() {
 /// 円状に乱数を生成。均一化有り
 /// </summary>
 /// <returns></returns>
-static DirectX::XMFLOAT3 GetRandInUniformInCircle() {
+static DirectX::XMFLOAT3 GetRandInUniformInCircle2D() {
 	float Range = 1.0f;
 	float Theta = float((RandomInt(314 * 2) - 314)) / 100.0f;
 
@@ -189,7 +189,7 @@ static DirectX::XMFLOAT3 GetRandInUniformInCircle() {
 /// 円状に乱数を生成。均一化有り
 /// </summary>
 /// <returns></returns>
-static DirectX::XMFLOAT3 GetHalfRandInUniformInCircle() {
+static DirectX::XMFLOAT3 GetHalfRandInUniformInCircle2D() {
 	DirectX::XMFLOAT3 result = { 0,0,0 };
 
 	while (result.x > 0)
@@ -202,6 +202,63 @@ static DirectX::XMFLOAT3 GetHalfRandInUniformInCircle() {
 		result.y = Range * sinf(Theta);
 		result.z = 0;
 	}
+
+	return result;
+}
+
+/// <summary>
+/// 円状に乱数を生成。均一化有り
+/// </summary>
+/// <returns></returns>
+static DirectX::XMFLOAT3 GetRandInUniformInCircle3D() {
+	float Theta1 = (RandomFloat(314.0f * 2.0f) - 314.0f) / 100.0f;
+	float Theta2 = (RandomFloat(314.0f * 2.0f) - 314.0f) / 100.0f;
+
+	int sign = 0;
+	if (fabs(Theta1) < 0.5) {
+		sign = RandomSign();
+		if (sign == 1) {
+			if (Theta1 >= 0) {
+				Theta1 += (RandomFloat(100.0f) + 80.0f) / 100.0f;
+			} else {
+				Theta1 -= (RandomFloat(100.0f) + 80.0f) / 100.0f;
+			}
+		}
+	} else if(fabs(Theta1) > 2.64){
+		sign = RandomSign();
+		if (sign == 1) {
+			if (Theta1 >= 0) {
+				Theta1 -= (RandomFloat(100.0f) + 80.0f) / 100.0f;
+			} else {
+				Theta1 += (RandomFloat(100.0f) + 80.0f) / 100.0f;
+			}
+		}
+	}
+
+	//if (fabs(Theta2) < 0.5) {
+	//	sign = RandomSign();
+	//	if (sign == 1) {
+	//		if (Theta2 >= 0) {
+	//			Theta2 += (RandomFloat(100.0f) + 80.0f) / 100.0f;
+	//		} else {
+	//			Theta2 -= (RandomFloat(100.0f) + 80.0f) / 100.0f;
+	//		}
+	//	}
+	//} else if (fabs(Theta2) > 2.64) {
+	//	sign = RandomSign();
+	//	if (sign == 1) {
+	//		if (Theta2 >= 0) {
+	//			Theta2 -= (RandomFloat(100.0f) + 80.0f) / 100.0f;
+	//		} else {
+	//			Theta2 += (RandomFloat(100.0f) + 80.0f) / 100.0f;
+	//		}
+	//	}
+	//}
+
+	DirectX::XMFLOAT3 result;
+	result.x = sinf(Theta1) * cosf(Theta2);
+	result.y = sinf(Theta1) * sinf(Theta2);
+	result.z = cosf(Theta1);
 
 	return result;
 }

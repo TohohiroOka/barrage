@@ -7,7 +7,11 @@ private:
 
 	struct CONST_BUFFER_DATA {
 		float strength;//フォグの強さ
-		XMFLOAT3 color;//フォグの色
+		float blendRate;//カラーの割合
+		XMFLOAT2 pad1;
+		XMFLOAT3 color1;//フォグの色（中央）
+		float pad2;
+		XMFLOAT3 color2;//フォグの色（端）
 	};
 
 private:
@@ -48,11 +52,17 @@ private:
 
 	//フォグの強さ
 	float strength;
+	//カラーの割合
+	float blendRate;
 	//フォグの色
-	XMFLOAT3 color;
+	XMFLOAT3 color1;
+	//フォグの色
+	XMFLOAT3 color2;
 
 public:
 	void SetStrength(const float _strength) { strength = _strength; }
-	void SetColor(const XMFLOAT3& _color) { color = _color; }
+	void SetBlendRate(const float _blendRate) { blendRate = _blendRate; }
+	void SetColor1(const XMFLOAT3& _color) { color1 = _color; }
+	void SetColor2(const XMFLOAT3& _color) { color2 = _color; }
 };
 

@@ -68,7 +68,7 @@ void Scene1::Update()
 
 	if (!isInputConfigMode) {
 		player->Update();
-		field->Update();
+		field->Update(player->GetPosition());
 		boss->SetTargetPos(player->GetPosition());
 		boss->Update();
 
@@ -192,6 +192,7 @@ void Scene1::ImguiDraw()
 
 void Scene1::FrameReset()
 {
+	field->FrameReset();
 	player->FrameReset();
 	boss->FrameReset();
 }

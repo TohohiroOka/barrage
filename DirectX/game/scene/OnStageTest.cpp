@@ -28,7 +28,7 @@ void OnStageTestScene::Initialize()
 
 void OnStageTestScene::Update()
 {
-	field->Update();
+	field->Update(debugCamera->GetEye());
 
 	lightCamera->Update();
 
@@ -36,7 +36,7 @@ void OnStageTestScene::Update()
 		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
 			isNormalCamera = !isNormalCamera;
 			Base3D::SetCamera(debugCamera.get());
-		}
+		}  
 
 		onStageDirection.Update();
 		onStageDirection.SetBase3DCamera();
