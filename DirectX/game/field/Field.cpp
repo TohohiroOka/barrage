@@ -8,16 +8,18 @@ Field::Field()
 {
 	//地面
 	wallModel = Model::CreateFromOBJ("plane");
+	groundModel = Model::CreateFromOBJ("jimen");
 
 	const float scale = GameHelper::Instance()->GetStageSize();
-	groundObject = Object3d::Create(wallModel.get());
+	groundObject = Object3d::Create(groundModel.get());
 	groundObject->SetPosition({ 255.0f,1.0f,255.0f });
 	groundObject->SetScale({ scale,scale,scale });
-	groundObject->SetColor({ 0.3f,0.3f ,0.3f,1.0f });
+	groundObject->SetColor({ 1.0f,1.0f ,1.0f,1.0f });
 	groundObject->UpdateWorldMatrix();
 	groundObject->DeleteCollider();
 	//シャドウマップで影を付ける
 	groundObject->SetShadowMap(true);
+	groundObject->SetBloom(true);
 	// コライダーの追加
 	MeshCollider* collider = new MeshCollider;
 	groundObject->SetCollider(collider);
