@@ -1,8 +1,10 @@
 #pragma once
 #include "Object/3d/Object3d.h"
 #include <array>
+#include <forward_list>
 
 #include "BackGround.h"
+#include "FieldLine.h"
 
 class Field
 {
@@ -16,6 +18,7 @@ public:
 
 	void FrameReset() {
 		backGround->FrameReset();
+		FieldLine::FrameReset();
 	}
 
 private:
@@ -31,5 +34,9 @@ private:
 
 	//”wŒi
 	std::unique_ptr<BackGround> backGround;
+
+	//”wŒi‚Ìü
+	std::unique_ptr<Engine::Timer> timer;
+	std::forward_list<std::unique_ptr<FieldLine>> line;
 };
 

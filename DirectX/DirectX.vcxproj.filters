@@ -418,6 +418,7 @@
     <ClCompile Include="game\ui\BaseOnStageDirection.cpp">
       <Filter>ゲームシステム\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="game\field\FieldLine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -874,5 +875,6 @@
     <ClInclude Include="game\scene\OnStageTest.h">
       <Filter>ゲームシステム\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="game\field\FieldLine.h" />
   </ItemGroup>
 </Project>

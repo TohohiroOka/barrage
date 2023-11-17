@@ -46,6 +46,9 @@ Field::Field()
 
 	//”wŒi
 	backGround = std::make_unique<BackGround>();
+
+	timer = std::make_unique<Engine::Timer>();
+	FieldLine::StaticInitialize();
 }
 
 void Field::Update(const DirectX::XMFLOAT3& _playerPos)
@@ -55,12 +58,34 @@ void Field::Update(const DirectX::XMFLOAT3& _playerPos)
 	for (auto& i : wallObject) {
 		i->Update();
 	}
-
+	
 	backGround->Update(_playerPos);
+
+	timer->Update();
+	if (RandomSign() == 1 && *timer.get() > 2) {
+		timer->Reset();
+		//ˆê‚Â’Ç‰Á
+		line.emplace_front(std::make_unique<FieldLine>());
+	}
+
+	//XVˆ—
+	for (std::forward_list<std::unique_ptr<FieldLine>>::iterator it = line.begin();
+		it != line.end(); it++) {
+		(*it)->Update();
+	}
+
+	//Á‚·
+	line.remove_if([](std::unique_ptr<FieldLine>& x) {
+		return x->GetIsEnd();
+		}
+	);
+
+	FieldLine::StaticUpdate();
 }
 
 void Field::Draw()
 {
 	groundObject->Draw();
 	backGround->Draw();
+	FieldLine::StaticDraw();
 }
