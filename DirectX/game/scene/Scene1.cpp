@@ -58,6 +58,7 @@ void Scene1::Initialize()
 
 	BulletEffect::LoadResources();
 
+	defeatDirection.Init();
 }
 
 void Scene1::Update()
@@ -71,6 +72,10 @@ void Scene1::Update()
 		field->Update(player->GetPosition());
 		boss->SetTargetPos(player->GetPosition());
 		boss->Update();
+
+		//撃破演出再生
+		//デバッグ用再生
+		if (DirectInput::GetInstance()->TriggerKey(DIK_H)) { defeatDirection.StartDefeatDirection(boss->GetCenter()->GetPosition()); }
 
 		CollisionCheck();
 
@@ -121,6 +126,8 @@ void Scene1::Update()
 
 		if (actionInputConfig->GetIsInputConfigEnd()) { isInputConfigMode = false; }
 	}
+
+	defeatDirection.Update();
 }
 
 void Scene1::Draw(const int _cameraNum)
@@ -130,6 +137,8 @@ void Scene1::Draw(const int _cameraNum)
 
 	player->Draw();
 	boss->Draw();
+
+	defeatDirection.Draw();
 }
 
 void Scene1::DrawLightView(const int _cameraNum)
@@ -154,6 +163,8 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 	if (isInputConfigMode) {
 		actionInputConfig->Draw();
 	}
+
+	defeatDirection.Draw2D();
 }
 
 void Scene1::Finalize()
