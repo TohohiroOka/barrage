@@ -247,8 +247,8 @@ public:
 	/// 
 	/// </summary>
 	void AnimationReset(const int _animationNum) {
-		data->fbxUpdate[0].nowTime = data->fbxUpdate[0].startTime;
-		beforePos = data->fbxUpdate[0].startPos;
+		data->fbxUpdate[_animationNum].nowTime = data->fbxUpdate[_animationNum].startTime;
+		beforePos = data->fbxUpdate[_animationNum].startPos;
 	}
 
 private://Ã“Iƒƒ“ƒo•Ï”

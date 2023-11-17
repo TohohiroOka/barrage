@@ -7,7 +7,7 @@
 Boss1Bullet2::Boss1Bullet2()
 {
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(1);
+	boss->GetBaseModel()->SetAnimation(0);
 	useCollision = UseCollision::sphere;
 	model = Model::CreateFromOBJ("bullet");
 	for (auto& i : instanceObject) {

@@ -179,6 +179,10 @@ private://メンバ変数
 	std::vector<BoneObjectInfo> boneObjectInfo;
 	std::unordered_map<std::string, std::unique_ptr<InstanceObject>> boneObject;
 
+	//付属品の座標
+	std::string attachName;
+	XMFLOAT3 attachPos;
+
 public:
 
 	FbxModel* GetModel() { return model; }
@@ -189,11 +193,13 @@ public:
 	float GetRoughness() { return roughness; }
 	int GetUseAnimation() { return useAnimation; }
 	XMFLOAT3 GetModelMove() { return animationMove; }
+	XMFLOAT3 GetAttachPos() { return attachPos; }
 	void SetIsModelDraw(bool _isModelDraw) { isModelDraw = _isModelDraw; }
 	void SetModel(FbxModel* model) { this->model = model; }
 	void SetMotionBlendModel(FbxModel* _model) { motionBlendModel = _model; }
 	void SetAnimation(bool isAnimation) { model->isAnimation = isAnimation; }
 	void SetIsBoneDraw(bool _isBoneDraw) { isBoneDraw = _isBoneDraw; }
+	void SetAttachName(const std::string& _name) { attachName = _name; }
 	void SetBaseColor(const XMFLOAT3& baseColor) {
 		this->baseColor = baseColor;
 		isTransferMaterial = true;

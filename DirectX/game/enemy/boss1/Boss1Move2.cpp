@@ -7,7 +7,7 @@ Boss1Move2::Boss1Move2()
 {
 	//アニメーションセット
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(1);
+	boss->GetBaseModel()->SetAnimation(0);
 
 	Vector3 target = boss->GetTargetPos();
 	startPos = boss->GetCenter()->GetPosition();

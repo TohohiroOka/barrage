@@ -8,7 +8,7 @@ using namespace DirectX;
 Boss1NearAttack1::Boss1NearAttack1()
 {
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(1);
+	boss->GetBaseModel()->SetAnimation(0);
 	useCollision = UseCollision::box;
 	model = Model::CreateFromOBJ("cone");
 	for (auto& i : instanceObject) {
