@@ -143,6 +143,9 @@
     <Filter Include="ゲームシステム\system">
       <UniqueIdentifier>{06e873eb-d527-4e88-baba-9f17b8ce442d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ゲームシステム\cutScene">
+      <UniqueIdentifier>{c3e76316-062d-4a44-846c-e4af45b42aa1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -409,11 +412,11 @@
     <ClCompile Include="game\scene\OnStageTest.cpp">
       <Filter>ゲームシステム\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="game\ui\Boss1OnStage.cpp">
-      <Filter>ゲームシステム\Scene</Filter>
+    <ClCompile Include="game\cutscene\BaseOnStageDirection.cpp">
+      <Filter>ゲームシステム\cutScene</Filter>
     </ClCompile>
-    <ClCompile Include="game\ui\BaseOnStageDirection.cpp">
-      <Filter>ゲームシステム\Scene</Filter>
+    <ClCompile Include="game\cutscene\Boss1OnStage.cpp">
+      <Filter>ゲームシステム\cutScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -853,14 +856,14 @@
     <ClInclude Include="game\camera\CutSceneCamera.h">
       <Filter>ゲームシステム\camera</Filter>
     </ClInclude>
-    <ClInclude Include="game\ui\BaseOnStageDirection.h">
-      <Filter>ゲームシステム\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="game\ui\Boss1OnStage.h">
-      <Filter>ゲームシステム\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="game\scene\OnStageTest.h">
       <Filter>ゲームシステム\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\cutscene\BaseOnStageDirection.h">
+      <Filter>ゲームシステム\cutScene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\cutscene\Boss1OnStage.h">
+      <Filter>ゲームシステム\cutScene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

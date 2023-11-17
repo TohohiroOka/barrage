@@ -1,6 +1,6 @@
 #pragma once
 #include "Scene/InterfaceScene.h"
-#include "ui/Boss1OnStage.h"
+#include "cutScene/Boss1OnStage.h"
 #include "engine/Camera/LightCamera.h"
 #include "../field/Field.h"
 #include "camera/DebugCamera.h"

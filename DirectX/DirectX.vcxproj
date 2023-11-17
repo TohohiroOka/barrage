@@ -158,6 +158,8 @@
     <ClCompile Include="engine\WindowApp.cpp" />
     <ClCompile Include="game\camera\GameCamera.cpp" />
     <ClCompile Include="game\camera\CutSceneCamera.cpp" />
+    <ClCompile Include="game\cutscene\BaseOnStageDirection.cpp" />
+    <ClCompile Include="game\cutscene\Boss1OnStage.cpp" />
     <ClCompile Include="game\effect\BulletEffect.cpp" />
     <ClCompile Include="game\enemy\BaseAction.cpp" />
     <ClCompile Include="game\enemy\BaseBoss.cpp" />
@@ -182,8 +184,6 @@
     <ClCompile Include="game\scene\TitleScene.cpp" />
     <ClCompile Include="game\system\ActionInputConfig.cpp" />
     <ClCompile Include="game\system\GameInputManager.cpp" />
-    <ClCompile Include="game\ui\BaseOnStageDirection.cpp" />
-    <ClCompile Include="game\ui\Boss1OnStage.cpp" />
     <ClCompile Include="game\ui\GameOver.cpp" />
     <ClCompile Include="game\ui\Gauge.cpp" />
     <ClCompile Include="main.cpp">
@@ -450,6 +450,8 @@
     <ClInclude Include="engine\WindowApp.h" />
     <ClInclude Include="game\camera\GameCamera.h" />
     <ClInclude Include="game\camera\CutSceneCamera.h" />
+    <ClInclude Include="game\cutscene\BaseOnStageDirection.h" />
+    <ClInclude Include="game\cutscene\Boss1OnStage.h" />
     <ClInclude Include="game\effect\BulletEffect.h" />
     <ClInclude Include="game\enemy\BaseAction.h" />
     <ClInclude Include="game\enemy\BaseBoss.h" />
@@ -475,10 +477,8 @@
     <ClInclude Include="game\scene\TitleScene.h" />
     <ClInclude Include="game\system\ActionInputConfig.h" />
     <ClInclude Include="game\system\GameInputManager.h" />
-    <ClInclude Include="game\ui\Boss1OnStage.h" />
     <ClInclude Include="game\ui\GameOver.h" />
     <ClInclude Include="game\ui\Gauge.h" />
-    <ClInclude Include="game\ui\BaseOnStageDirection.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="engine\external\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
