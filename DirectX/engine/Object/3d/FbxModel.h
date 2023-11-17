@@ -215,8 +215,8 @@ public://静的メンバ関数
 	/// インスタンスの生成
 	/// </summary>
 	/// <param name="fileName">ファイル名</param>
-	static std::unique_ptr<FbxModel> Create(const std::string fileName);
-	
+	static std::unique_ptr<FbxModel> Create(const std::string fileName, const std::string& _baseBoneName = "");
+
 	/// <summary>
 	/// 解放処理
 	/// </summary>
@@ -247,8 +247,8 @@ public:
 	/// 
 	/// </summary>
 	void AnimationReset(const int _animationNum) {
-		data->fbxUpdate[_animationNum].nowTime = data->fbxUpdate[_animationNum].startTime;
-		beforePos = data->fbxUpdate[_animationNum].startPos;
+		data->fbxUpdate[0].nowTime = data->fbxUpdate[0].startTime;
+		beforePos = data->fbxUpdate[0].startPos;
 	}
 
 private://静的メンバ変数
@@ -286,6 +286,8 @@ public://メンバ変数
 	std::vector<ConstBufferDataSkin> skinData;
 	//ボーン描画用の行列
 	std::unordered_map<std::string, XMMATRIX> boneMatWorld;
+	//基準ボーン
+	std::string baseBoneName="";
 	//１フレーム前の座標
 	XMFLOAT3 beforePos;
 	//FBXの動き

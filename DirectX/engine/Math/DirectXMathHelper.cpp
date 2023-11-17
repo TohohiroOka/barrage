@@ -79,6 +79,24 @@ const XMFLOAT3 operator-(const XMFLOAT3& v1, const XMFLOAT3& v2) {
 	return result;
 }
 
+const XMFLOAT3 operator*(const DirectX::XMFLOAT3& v1, const DirectX::XMFLOAT3& v2)
+{
+	XMFLOAT3 result = v1;
+	result.x *= v2.x;
+	result.y *= v2.y;
+	result.z *= v2.z;
+	return result;
+}
+
+const XMFLOAT3 operator/(const DirectX::XMFLOAT3& v1, const DirectX::XMFLOAT3& v2)
+{
+	XMFLOAT3 result = v1;
+	result.x /= v2.x;
+	result.y /= v2.y;
+	result.z /= v2.z;
+	return result;
+}
+
 const XMFLOAT3 operator*(const XMFLOAT3& v, float s) {
 	XMFLOAT3 result = v;
 	result.x *= s;
@@ -102,6 +120,15 @@ const XMFLOAT3 operator/(const XMFLOAT3& v, float s) {
 	result.x /= s;
 	result.y /= s;
 	result.z /= s;
+	return result;
+}
+
+const XMFLOAT3 operator/(float s, const DirectX::XMFLOAT3& v)
+{
+	XMFLOAT3 result = v;
+	result.x = s / result.x;
+	result.y = s / result.y;
+	result.z = s / result.z;
 	return result;
 }
 

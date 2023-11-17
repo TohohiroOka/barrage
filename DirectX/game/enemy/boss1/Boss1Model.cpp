@@ -5,60 +5,72 @@ Boss1Model::Boss1Model()
 	objModel[int(ObjectType::cube)] = Model::CreateFromOBJ("NormalCube");
 	objModel[int(ObjectType::cone)] = Model::CreateFromOBJ("cone");
 
-	model = FbxModel::Create("boss1");
+	model = FbxModel::Create("walk","Hips");
 	fbxObject = Fbx::Create(model.get());
-	fbxObject->SetScale({ 1.0f,1.0f ,1.0f });
+	fbxObject->SetScale({ 0.001f,0.001f ,0.001f });
 	fbxObject->SetLight(true);
 	fbxObject->SetAnimation(true);
 	fbxObject->SetPosition({ 255.0f / 2.0f,10.0f ,255.0f / 2.0f });
-	//fbxObject->SetIsModelDraw(false);
+	fbxObject->SetIsModelDraw(false);
 	fbxObject->SetIsBoneDraw(true);
 
-	std::array<std::string, 9> bone = {
-	"mixamorig:HeadTop_End","mixamorig:Head","mixamorig:Spine1","mixamorig:Spine","mixamorig:Hips",
-	"mixamorig:LeftShoulder",
-	"mixamorig:RightShoulder",
-	"mixamorig:LeftUpLeg",
-	"mixamorig:RightUpLeg"
+	//std::array<std::string, 5> bone = {
+	//"mixamorig:HeadTop_End","mixamorig:Head","mixamorig:Spine1","mixamorig:Spine","mixamorig:Hips",
+	////"mixamorig:LeftShoulder",
+	////"mixamorig:RightShoulder",
+	////"mixamorig:LeftUpLeg",
+	////"mixamorig:RightUpLeg"
+	//};
+
+	//std::array<std::string, 4> boneT = {
+	//	"mixamorig:RightLeg","mixamorig:LeftLeg","mixamorig:LeftForeArm","mixamorig:RightForeArm"
+	//};
+
+	std::array<std::string, 2> bone = {
+		"Hips","Spine"
 	};
 
 	std::array<std::string, 4> boneT = {
-		"mixamorig:RightLeg","mixamorig:LeftLeg","mixamorig:LeftForeArm","mixamorig:RightForeArm"
+		"UpperLeg_L","UpperLeg_R","UpperArm_L","UpperArm_R"
 	};
 
+	using namespace DirectX;
 	for (int i = 0; i < bone.size(); i++) {
-		fbxObject->SetBoneObject(bone[i], "normal", objModel[int(ObjectType::cube)].get());
+		XMMATRIX world = DirectX::XMMatrixIdentity();
+		XMMATRIX matScale = XMMatrixScaling(10.0f, 10.0f, 10.0f);
+		world *= matScale;
+		fbxObject->SetBoneObject(bone[i], "normal", objModel[int(ObjectType::cube)].get(), world);
 	}
 
-	using namespace DirectX;
 	for (int i = 0; i < 4; i++) {
-		DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
-		if (i == 2) {
-			XMMATRIX matScale = XMMatrixScaling(1.0f, 2.0f, 1.0f);
+		XMMATRIX world = DirectX::XMMatrixIdentity();
+		if (i < 2) {
+			XMMATRIX matScale = XMMatrixScaling(10.0f, 30.0f, 10.0f);
+			world *= matScale;
+		} else if (i == 2) {
+			XMMATRIX matScale = XMMatrixScaling(10.0f, 10.0f, 10.0f);
 			XMMATRIX matRot = XMMatrixIdentity();
 			matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
 			matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
 			matRot *= XMMatrixRotationY(XMConvertToRadians(-90.0f));
 			DirectX::XMMATRIX matTrans = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 
-			world = XMMatrixIdentity();
 			world *= matScale;
 			world *= matRot;
 			world *= matTrans;
 		} else if (i == 3) {
-			XMMATRIX matScale = XMMatrixScaling(1.0f, 2.0f, 1.0f);
+			XMMATRIX matScale = XMMatrixScaling(10.0f, 10.0f, 10.0f);
 			XMMATRIX matRot = XMMatrixIdentity();
 			matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
 			matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
 			matRot *= XMMatrixRotationY(XMConvertToRadians(90.0f));
 			XMMATRIX matTrans = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 
-			world = XMMatrixIdentity();
 			world *= matScale;
 			world *= matRot;
 			world *= matTrans;
 		}
-		fbxObject->SetBoneObject(boneT[i], "cube", objModel[int(ObjectType::cube)].get(), world);
+		fbxObject->SetBoneObject(boneT[i], "cube", objModel[int(ObjectType::cone)].get(), world);
 	}
 }
 

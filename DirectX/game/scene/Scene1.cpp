@@ -191,6 +191,8 @@ void Scene1::ImguiDraw()
 	ImGui::Checkbox("stop", &stop);
 
 	ImGui::End();
+
+	GameHelper::Instance()->SetStop(stop);
 }
 
 void Scene1::FrameReset()
