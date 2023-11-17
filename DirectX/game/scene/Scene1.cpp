@@ -192,7 +192,7 @@ void Scene1::ImguiDraw()
 
 	ImGui::End();
 
-	GameHelper::Instance()->SetStop(stop);
+	//GameHelper::Instance()->SetStop(stop);
 }
 
 void Scene1::FrameReset()
@@ -212,7 +212,7 @@ void Scene1::CollisionCheck()
 
 		Sphere enemySphere;
 		enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
-		enemySphere.radius = boss->GetCenter()->GetScale().x * 5;
+		enemySphere.radius = boss->GetCenter()->GetScale().x * 1000;
 
 		XMVECTOR inter;
 		XMVECTOR reject;
@@ -280,7 +280,7 @@ void Scene1::CollisionCheck()
 		if (player->GetAttackAction()) {
 			Sphere enemySphere;
 			enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
-			enemySphere.radius = boss->GetCenter()->GetScale().x * 5;
+			enemySphere.radius = boss->GetCenter()->GetScale().x * 1000;
 
 			Sphere attackSphere;
 			attackSphere.center = player->GetAttackAction()->GetAttackCollisionData().center;
@@ -292,9 +292,9 @@ void Scene1::CollisionCheck()
 				boss->Damage(player->GetAttackAction()->GetAttackCollisionData().power);
 
 				//毎フレーム多段ヒットするのを防ぐため、この攻撃の衝突判定をoffにしておく。
-				player->GetAttackAction()->SetIsCollisionValid(false);
+				player->GetAttackAction()->AttackCollision();
 
-				GameHelper::Instance()->SetSlow(0, 20);
+				GameHelper::Instance()->SetSlow(0.1f, 2000);
 			}
 		}
 	}
