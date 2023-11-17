@@ -143,8 +143,8 @@
     <Filter Include="ゲームシステム\system">
       <UniqueIdentifier>{06e873eb-d527-4e88-baba-9f17b8ce442d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="シェーダーファイル\InstanceObjectLightView">
-      <UniqueIdentifier>{105b5627-3e39-441a-a197-9c624333b619}</UniqueIdentifier>
+    <Filter Include="ゲームシステム\cutScene">
+      <UniqueIdentifier>{c3e76316-062d-4a44-846c-e4af45b42aa1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -406,19 +406,24 @@
     <ClCompile Include="game\system\GameInputManager.cpp">
       <Filter>ゲームシステム\system</Filter>
     </ClCompile>
-    <ClCompile Include="game\camera\OnStageCamera.cpp">
+    <ClCompile Include="game\camera\CutSceneCamera.cpp">
       <Filter>ゲームシステム\camera</Filter>
     </ClCompile>
     <ClCompile Include="game\scene\OnStageTest.cpp">
       <Filter>ゲームシステム\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="game\ui\Boss1OnStage.cpp">
-      <Filter>ゲームシステム\Scene</Filter>
+    <ClCompile Include="game\cutscene\BaseOnStageDirection.cpp">
+      <Filter>ゲームシステム\cutScene</Filter>
     </ClCompile>
-    <ClCompile Include="game\ui\BaseOnStageDirection.cpp">
-      <Filter>ゲームシステム\Scene</Filter>
+    <ClCompile Include="game\cutscene\Boss1OnStage.cpp">
+      <Filter>ゲームシステム\cutScene</Filter>
     </ClCompile>
-    <ClCompile Include="game\field\FieldLine.cpp" />
+    <ClCompile Include="game\cutscene\BaseDefeatDirection.cpp">
+      <Filter>ゲームシステム\cutScene</Filter>
+    </ClCompile>
+    <ClCompile Include="game\cutscene\Boss1Defeat.cpp">
+      <Filter>ゲームシステム\cutScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -505,12 +510,6 @@
     <FxCompile Include="Resources\Shaders\FbxLightViewVS.hlsl">
       <Filter>シェーダーファイル\FbxLightView</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\InstanceObjectLightViewPS.hlsl">
-      <Filter>シェーダーファイル\InstanceObjectLightView</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shaders\InstanceObjectLightViewVS.hlsl">
-      <Filter>シェーダーファイル\InstanceObjectLightView</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite.hlsli">
@@ -551,9 +550,6 @@
     </None>
     <None Include="Resources\Shaders\FbxLightView.hlsli">
       <Filter>シェーダーファイル\FbxLightView</Filter>
-    </None>
-    <None Include="Resources\Shaders\InstanceObjectLightView.hlsli">
-      <Filter>シェーダーファイル\InstanceObjectLightView</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -863,18 +859,23 @@
     <ClInclude Include="game\system\GameInputManager.h">
       <Filter>ゲームシステム\system</Filter>
     </ClInclude>
-    <ClInclude Include="game\camera\OnStageCamera.h">
+    <ClInclude Include="game\camera\CutSceneCamera.h">
       <Filter>ゲームシステム\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="game\ui\BaseOnStageDirection.h">
-      <Filter>ゲームシステム\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="game\ui\Boss1OnStage.h">
-      <Filter>ゲームシステム\Scene</Filter>
     </ClInclude>
     <ClInclude Include="game\scene\OnStageTest.h">
       <Filter>ゲームシステム\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="game\field\FieldLine.h" />
+    <ClInclude Include="game\cutscene\BaseOnStageDirection.h">
+      <Filter>ゲームシステム\cutScene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\cutscene\Boss1OnStage.h">
+      <Filter>ゲームシステム\cutScene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\cutscene\BaseDefeatDirection.h">
+      <Filter>ゲームシステム\cutScene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\cutscene\Boss1Defeat.h">
+      <Filter>ゲームシステム\cutScene</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

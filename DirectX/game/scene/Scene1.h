@@ -9,6 +9,7 @@
 #include "../field/Field.h"
 #include "game/ui/GameOver.h"
 #include "system/ActionInputConfig.h"
+#include "game/cutscene/Boss1Defeat.h"
 
 class Scene1 : public InterfaceScene
 {
@@ -85,6 +86,9 @@ private:
 
 	//ゲームオーバーUI
 	GameOver gameoverUi;
+
+	//死亡演出
+	Boss1Defeat defeatDirection;
 
 	//行動入力設定
 	std::unique_ptr<ActionInputConfig> actionInputConfig;
