@@ -22,6 +22,7 @@ private:
 
 	//モデル
 	std::unique_ptr<Model> wallModel;
+	std::unique_ptr<Model> groundModel;
 	//オブジェクト
 	std::shared_ptr<Object3d> groundObject;
 
