@@ -62,7 +62,8 @@ private:
 	void Knockback();
 
 public:
-
+	bool GetIsAvoid() { return isAvoid; }
+	bool GetIsBlink() { return isBlink; }
 	const Vector3& GetPosition() { return pos; }
 	const Vector3& GetVelocity() { return velocity; }
 	int GetJumpCount() { return jumpCount; }

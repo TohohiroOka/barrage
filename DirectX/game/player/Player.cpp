@@ -113,6 +113,7 @@ void Player::Update()
 
 			//攻撃アニメーションなら待機アニメーションに変更(現在は待機アニメーションがないので代用中)
 			if (object->GetUseAnimation() == AnimationName::ATTACK_RIGHT) {
+				object->AnimationReset();
 				object->SetUseAnimation(AnimationName::ATTACK_LEFT);
 			}
 		}
@@ -218,6 +219,7 @@ void Player::ObjectUpdate()
 
 			//ジャンプアニメーションなら待機アニメーションに変更(現在は待機アニメーションがないので代用中)
 			if (object->GetUseAnimation() == AnimationName::JUMP) {
+				object->AnimationReset();
 				object->SetUseAnimation(AnimationName::ATTACK_LEFT);
 			}
 		}
@@ -286,6 +288,7 @@ void Player::Move()
 
 		//待機アニメーションのときのみ走るアニメーションを開始する(現在は待機アニメーションがないので代用中)
 		if (object->GetUseAnimation() == AnimationName::ATTACK_LEFT) {
+			object->AnimationReset();
 			object->SetUseAnimation(AnimationName::RUN);
 		}
 	}
@@ -295,6 +298,7 @@ void Player::Move()
 
 		//スピードがなくなったら待機アニメーションに変更(設計中)
 		if (object->GetUseAnimation() == AnimationName::RUN && moveSpeed <= 0) {
+			object->AnimationReset();
 			object->SetUseAnimation(AnimationName::ATTACK_LEFT);
 		}
 	}
@@ -386,7 +390,7 @@ void Player::Dash()
 void Player::Fall()
 {
 	//地面に接地していたら抜ける
-	if (onGround) { return; }
+	//if (onGround) { return; }
 
 	float fallAcc = gravityAccel * GameHelper::Instance()->GetGameSpeed();
 
@@ -428,11 +432,11 @@ void Player::AvoidStart()
 void Player::Avoid()
 {
 	//タイマー更新
-	const float avoidTime = 30;
+	const float avoidTime = 60;
 	avoidTimer->Update();
 	const float time = *avoidTimer.get() / avoidTime;
 
-	const float power = Easing::OutCirc(10, 1, time);
+	const float power = Easing::OutCirc(8, 1, time);
 
 	velocity = moveVec.normalize() * power;
 
@@ -441,6 +445,7 @@ void Player::Avoid()
 		isAvoid = false;
 
 		//待機アニメーションに変更(設計中)
+		object->AnimationReset();
 		object->SetUseAnimation(AnimationName::ATTACK_LEFT);
 	}
 }
@@ -491,11 +496,11 @@ void Player::BlinkStart()
 void Player::Blink()
 {
 	//タイマー更新
-	const float blinkTime = 30;
+	const float blinkTime = 90;
 	blinkTimer->Update();
 	const float time = *blinkTimer.get() / blinkTime;
 
-	const float power = Easing::OutCirc(20, 1, time);
+	const float power = Easing::OutCirc(8, 1, time);
 
 	velocity = moveVec.normalize() * power;
 
@@ -504,6 +509,7 @@ void Player::Blink()
 		isBlink = false;
 
 		//待機アニメーションに変更(設計中)
+		object->AnimationReset();
 		object->SetUseAnimation(AnimationName::ATTACK_LEFT);
 	}
 }
@@ -587,7 +593,6 @@ void Player::KnockbackStart(const Vector3& subjectPos, int power)
 {
 	//攻撃対象と自分のベクトルを算出
 	knockbackVec = pos - subjectPos;
-	knockbackVec.y = 0;
 
 	//ノックバックの強さをセット(仮で食らったダメージ量 / 10)
 	knockbackPower = (float)power / 10;
