@@ -5,7 +5,7 @@
 #include <vector>
 
 //出現演出用のカメラ
-class OnStageCamera
+class CutSceneCamera
 {
 public:
 	enum EASEMODE

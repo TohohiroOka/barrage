@@ -26,7 +26,4 @@ private:
 	//アニメーション再生時間
 	const int TEXTANIM_MAXFRAME = 15;
 	bool isDisplayBossText = false;
-
-	//下側レターボックス
-	std::unique_ptr<Sprite> letterBoxUnder;
 };

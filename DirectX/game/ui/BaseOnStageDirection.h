@@ -1,5 +1,5 @@
 #pragma once
-#include "camera/OnStageCamera.h"
+#include "camera/CutSceneCamera.h"
 #include "object/2d/Sprite.h"
 
 #include <memory>
@@ -18,12 +18,14 @@ public:
 	virtual void ImguiDraw();
 
 protected:
-	//上下の黒枠
+	//上レターボックス
 	std::unique_ptr<Sprite> letterBox;
+	//下側レターボックス
+	std::unique_ptr<Sprite> letterBoxUnder;
 	//文字
 	std::unique_ptr<Sprite> firstName;
 	std::unique_ptr<Sprite> secondName;
 	//カメラ
-	OnStageCamera camera;
+	CutSceneCamera camera;
 
 };

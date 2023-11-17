@@ -31,14 +31,14 @@ void Boss1OnStage::Init()
 	//演出用カメラワーク初期化
 	camera.Init();
 	//フィールド全域撮影
-	camera.SetPan({ 100,15,60 }, { 500,15,200 }, { 0,-100,+300 }, 180, OnStageCamera::EASE_LERP);
+	camera.SetPan({ 100,15,60 }, { 500,15,200 }, { 0,-100,+300 }, 180, CutSceneCamera::EASE_LERP);
 	//プレイヤーキャラクターをズーム表示
-	camera.SetZoom({ 250,15,100 }, { 250,0,50 }, { 250,10,30 }, 180, OnStageCamera::EASE_LERP);
+	camera.SetZoom({ 250,15,100 }, { 250,0,50 }, { 250,10,30 }, 180, CutSceneCamera::EASE_LERP);
 	//敵をズーム表示
-	camera.SetZoom({ 250,50,400 }, { 250,50,450 }, { 250,60,450 }, 60, OnStageCamera::EASE_LERP);
+	camera.SetZoom({ 250,50,400 }, { 250,50,450 }, { 250,60,450 }, 60, CutSceneCamera::EASE_LERP);
 	//敵全体表示&ボスの名前表示
-	camera.SetTrack({ 250,60,450 }, { 250,50,400 }, { 250,10,250 }, 15, OnStageCamera::EASE_IN_QUAD);
-	camera.SetTrack({ 250,60,450 }, { 250,10,250 }, { 250,5,200 }, 120, OnStageCamera::EASE_LERP);
+	camera.SetTrack({ 250,60,450 }, { 250,50,400 }, { 250,10,250 }, 15, CutSceneCamera::EASE_IN_QUAD);
+	camera.SetTrack({ 250,60,450 }, { 250,10,250 }, { 250,5,200 }, 120, CutSceneCamera::EASE_LERP);
 }
 
 void Boss1OnStage::Update()

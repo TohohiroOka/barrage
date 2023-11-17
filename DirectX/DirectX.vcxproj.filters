@@ -403,7 +403,7 @@
     <ClCompile Include="game\system\GameInputManager.cpp">
       <Filter>ゲームシステム\system</Filter>
     </ClCompile>
-    <ClCompile Include="game\camera\OnStageCamera.cpp">
+    <ClCompile Include="game\camera\CutSceneCamera.cpp">
       <Filter>ゲームシステム\camera</Filter>
     </ClCompile>
     <ClCompile Include="game\scene\OnStageTest.cpp">
@@ -850,7 +850,7 @@
     <ClInclude Include="game\system\GameInputManager.h">
       <Filter>ゲームシステム\system</Filter>
     </ClInclude>
-    <ClInclude Include="game\camera\OnStageCamera.h">
+    <ClInclude Include="game\camera\CutSceneCamera.h">
       <Filter>ゲームシステム\camera</Filter>
     </ClInclude>
     <ClInclude Include="game\ui\BaseOnStageDirection.h">

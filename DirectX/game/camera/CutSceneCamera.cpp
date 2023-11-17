@@ -1,13 +1,13 @@
-#include "OnStageCamera.h"
+#include "CutSceneCamera.h"
 #include "Math/Easing/Easing.h"
 
-void OnStageCamera::Init()
+void CutSceneCamera::Init()
 {
 	camera = Camera::Create();
 	camera->SetUp({ 0,1,0 });
 }
 
-void OnStageCamera::Update()
+void CutSceneCamera::Update()
 {
 	//ëÄçÏÇ™èIÇÌÇ¡ÇƒÇ¢ÇÈÇ©
 	if (isEnd) { return; }
@@ -56,7 +56,7 @@ void OnStageCamera::Update()
 
 }
 
-void OnStageCamera::SetPan(Vector3 startEyePos, Vector3 endEyePos, Vector3 targetLocal, int frame, EASEMODE mode)
+void CutSceneCamera::SetPan(Vector3 startEyePos, Vector3 endEyePos, Vector3 targetLocal, int frame, EASEMODE mode)
 {
 	CameraMoveStatus addStatus;
 	addStatus.eyeStart		= startEyePos;
@@ -69,7 +69,7 @@ void OnStageCamera::SetPan(Vector3 startEyePos, Vector3 endEyePos, Vector3 targe
 	moveStatus.push_back(addStatus);
 }
 
-void OnStageCamera::SetTrack(Vector3 targetPos, Vector3 eyeStart, Vector3 eyeEnd, int frame, EASEMODE mode)
+void CutSceneCamera::SetTrack(Vector3 targetPos, Vector3 eyeStart, Vector3 eyeEnd, int frame, EASEMODE mode)
 {
 	CameraMoveStatus addStatus;
 	addStatus.eyeStart		= eyeStart;
@@ -82,7 +82,7 @@ void OnStageCamera::SetTrack(Vector3 targetPos, Vector3 eyeStart, Vector3 eyeEnd
 	moveStatus.push_back(addStatus);
 }
 
-void OnStageCamera::SetZoom(Vector3 eyePos, Vector3 targetStartPos, Vector3 targetEndPos, int frame, EASEMODE mode)
+void CutSceneCamera::SetZoom(Vector3 eyePos, Vector3 targetStartPos, Vector3 targetEndPos, int frame, EASEMODE mode)
 {
 	CameraMoveStatus addStatus;
 	addStatus.eyeStart		= eyePos;
@@ -95,7 +95,7 @@ void OnStageCamera::SetZoom(Vector3 eyePos, Vector3 targetStartPos, Vector3 targ
 	moveStatus.push_back(addStatus);
 }
 
-void OnStageCamera::SetMove(Vector3 eyeStart, Vector3 eyeEnd, Vector3 targetStart, Vector3 targetEnd, int frame, EASEMODE mode)
+void CutSceneCamera::SetMove(Vector3 eyeStart, Vector3 eyeEnd, Vector3 targetStart, Vector3 targetEnd, int frame, EASEMODE mode)
 {
 	CameraMoveStatus addStatus;
 	addStatus.eyeStart		= eyePos;
@@ -106,7 +106,7 @@ void OnStageCamera::SetMove(Vector3 eyeStart, Vector3 eyeEnd, Vector3 targetStar
 	addStatus.mode			= mode;
 }
 
-void OnStageCamera::StartCameraMove()
+void CutSceneCamera::StartCameraMove()
 {
 	frame = 0;
 	indexNum = 0;
