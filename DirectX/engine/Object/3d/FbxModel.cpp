@@ -130,7 +130,7 @@ void FbxModel::LoadMaterial(FbxNode* fbxNode)
 					std::string fileName = ExtractFileName(path_str);
 
 					//テクスチャ読み込み
-					const std::string texName= baseDirectory + name + '/' + fileName;
+					const std::string texName = baseDirectory + name + '/' + fileName;
 					if (!texture[texName]) {
 						texture[texName] = Texture::Create(texName);
 					}
@@ -482,7 +482,8 @@ void FbxModel::LoadAnimation(FbxScene* fbxScene, const int _animationNum)
 			if (bones[i].name != baseBoneName) { continue; }
 			break;
 		}
-	} else {
+	}
+	else {
 		baseBoneName = bones[0].name;
 	}
 
@@ -659,11 +660,9 @@ void FbxModel::Update(const int _animationNum)
 	if (!isAnim) { return; }
 
 	//アニメーション
-	float a = GameHelper::Instance()->GetGameSpeed();
-	if (a != 1.0) {
-		frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
-		frameTime.Set(frameTime.Get() * FbxLongLong(a));
-	}
+	const float a = GameHelper::Instance()->GetGameSpeed();
+	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
+	frameTime.Set(frameTime.Get() / 100 * (int)(a * 100));
 	data->fbxUpdate[_animationNum].nowTime += frameTime;
 
 	//最後まで行ったら先頭に戻す
@@ -706,9 +705,10 @@ void FbxModel::Update(const int _animationNum)
 				skinData[buffNum].bones[i] = bones[i].invInitialPose * matCurrentPose;
 				constMapSkin->bones[i] = skinData[buffNum].bones[i];
 
-				if (bones[i].name== baseBoneName) {
+				if (bones[i].name == baseBoneName) {
 					boneMatWorld000 = matCurrentPose;
-				} else {
+				}
+				else {
 					boneMatWorld[bones[i].name] = matCurrentPose;
 				}
 			}
@@ -725,7 +725,7 @@ void FbxModel::Update(const int _animationNum)
 	move = XMFLOAT3{ boneMatWorld[baseBoneName].r[3].m128_f32[0],
 			boneMatWorld[baseBoneName].r[3].m128_f32[1],
 			boneMatWorld[baseBoneName].r[3].m128_f32[2] } - beforePos;
-	beforePos= XMFLOAT3{ boneMatWorld[baseBoneName].r[3].m128_f32[0],
+	beforePos = XMFLOAT3{ boneMatWorld[baseBoneName].r[3].m128_f32[0],
 			boneMatWorld[baseBoneName].r[3].m128_f32[1],
 			boneMatWorld[baseBoneName].r[3].m128_f32[2] };
 
@@ -792,7 +792,7 @@ void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _r
 				matCurrentPose.r[3].m128_f32[2] -= boneMatWorld[baseBoneName].r[3].m128_f32[2];
 
 				XMMATRIX motionBlendSkin = _motionBlend->GetSkinData(buffNum, i);
-				XMMATRIX anime1= bones[i].invInitialPose * matCurrentPose;
+				XMMATRIX anime1 = bones[i].invInitialPose * matCurrentPose;
 				skinData[buffNum].bones[i] = anime1 * _rate1 + motionBlendSkin * _rate2;
 				constMapSkin->bones[i] = skinData[buffNum].bones[i];
 
@@ -800,7 +800,8 @@ void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _r
 
 				if (i != 0) {
 					boneMatWorld[bones[i].name] = matCurrentPose;
-				} else {
+				}
+				else {
 					boneMatWorld000 = matCurrentPose;
 				}
 			}
@@ -840,7 +841,8 @@ void FbxModel::Draw(ID3D12GraphicsCommandList* cmdList)
 		//シェーダーリソースビューをセット
 		if (i.texName == "") {
 			cmdList->SetGraphicsRootDescriptorTable(4, texture[defaultTexture]->descriptor->gpu);
-		} else {
+		}
+		else {
 			cmdList->SetGraphicsRootDescriptorTable(4, texture[i.texName]->descriptor->gpu);
 		}
 		//描画コマンド

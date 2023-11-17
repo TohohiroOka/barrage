@@ -160,7 +160,7 @@ void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 	for (auto& i : boneObjectInfo) {
 		XMMATRIX inWorld = i.matWorld * model->GetBornMatWorld(i.boneName) * matWorld;
 		boneObject[i.instanceName]->DrawInstance(inWorld, { 1,1,1,1 });
-		attachPos = XMFLOAT3{ inWorld.r->m128_f32[0], inWorld.r->m128_f32[1], inWorld.r->m128_f32[2]};
+		attachPos = XMFLOAT3{ inWorld.r[3].m128_f32[0], inWorld.r[3].m128_f32[1], inWorld.r[3].m128_f32[2]};
 	}
 	for (auto& i : boneObject) {
 		if (i.second->GetInstanceDrawNum() == 0) { continue; }

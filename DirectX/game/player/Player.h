@@ -21,10 +21,11 @@ private: //enum
 	enum AnimationName
 	{
 		RUN,
-		ATTACK_RIGHT,
-		JUMP,
-		ATTACK_LEFT,
 		ROLL,
+		ATTACK_RIGHT,
+		ATTACK_LEFT,
+		JUMP,
+		STAY,
 	};
 
 public:

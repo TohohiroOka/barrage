@@ -34,6 +34,11 @@ public: //ƒƒ“ƒoŠÖ”
 	/// </summary>
 	virtual bool NextAttack(int endurance) = 0;
 
+	/// <summary>
+	/// UŒ‚‚ª“–‚½‚Á‚½ê‡‚Ìˆ—
+	/// </summary>
+	virtual void AttackCollision() = 0;
+
 	//getter
 	int GetUseEndranceNum() { return useEnduranceNum; }
 	AttackCollisionData GetAttackCollisionData() { return attackCollisionData; }

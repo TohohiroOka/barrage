@@ -42,7 +42,6 @@ Player::Player()
 	world *= matRot;
 	world *= matTrans;
 	object->SetBoneObject(bone, "rightHand", swordModel.get(), world);
-
 	pos = { 100.0f,50.0f,100.0f };
 	object->SetScale({ 5,5,5 });
 	//連続ジャンプ可能回数設定
@@ -114,7 +113,7 @@ void Player::Update()
 			//攻撃アニメーションなら待機アニメーションに変更(現在は待機アニメーションがないので代用中)
 			if (object->GetUseAnimation() == AnimationName::ATTACK_RIGHT) {
 				object->AnimationReset();
-				object->SetUseAnimation(AnimationName::ATTACK_LEFT);
+				object->SetUseAnimation(AnimationName::STAY);
 			}
 		}
 	}
@@ -220,7 +219,7 @@ void Player::ObjectUpdate()
 			//ジャンプアニメーションなら待機アニメーションに変更(現在は待機アニメーションがないので代用中)
 			if (object->GetUseAnimation() == AnimationName::JUMP) {
 				object->AnimationReset();
-				object->SetUseAnimation(AnimationName::ATTACK_LEFT);
+				object->SetUseAnimation(AnimationName::STAY);
 			}
 		}
 	}
@@ -287,7 +286,7 @@ void Player::Move()
 		SetMoveRotate();
 
 		//待機アニメーションのときのみ走るアニメーションを開始する(現在は待機アニメーションがないので代用中)
-		if (object->GetUseAnimation() == AnimationName::ATTACK_LEFT) {
+		if (object->GetUseAnimation() == AnimationName::STAY) {
 			object->AnimationReset();
 			object->SetUseAnimation(AnimationName::RUN);
 		}
@@ -299,7 +298,7 @@ void Player::Move()
 		//スピードがなくなったら待機アニメーションに変更(設計中)
 		if (object->GetUseAnimation() == AnimationName::RUN && moveSpeed <= 0) {
 			object->AnimationReset();
-			object->SetUseAnimation(AnimationName::ATTACK_LEFT);
+			object->SetUseAnimation(AnimationName::STAY);
 		}
 	}
 
@@ -446,7 +445,7 @@ void Player::Avoid()
 
 		//待機アニメーションに変更(設計中)
 		object->AnimationReset();
-		object->SetUseAnimation(AnimationName::ATTACK_LEFT);
+		object->SetUseAnimation(AnimationName::STAY);
 	}
 }
 
@@ -510,7 +509,7 @@ void Player::Blink()
 
 		//待機アニメーションに変更(設計中)
 		object->AnimationReset();
-		object->SetUseAnimation(AnimationName::ATTACK_LEFT);
+		object->SetUseAnimation(AnimationName::STAY);
 	}
 }
 
@@ -519,7 +518,8 @@ void Player::Attack()
 	if (!isAttack) {
 		//入力で攻撃をセット
 		if (GameInputManager::TriggerInputAction(GameInputManager::Attack)) {
-			attackAction = std::make_unique<PlayerSwordAttack1>(object.get());
+			std::function<DirectX::XMFLOAT3()> getAttachPos = std::bind(&Fbx::GetAttachPos, object.get());
+			attackAction = std::make_unique<PlayerSwordAttack1>(getAttachPos);
 			if (!attackAction->NextAttack(endurance)) { return; }
 
 			UseEndurance(attackAction->GetUseEndranceNum(), 30, true);
