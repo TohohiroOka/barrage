@@ -55,9 +55,24 @@ private: //メンバ関数
 	void UpdateRotate();
 
 	/// <summary>
+	/// ロックオン時のターゲットと注視点との距離を更新
+	/// </summary>
+	void UpdateLockonTargetDistance();
+
+	/// <summary>
 	/// ロックオン時の回転を更新
 	/// </summary>
 	void UpdateLockonRotate();
+
+	/// <summary>
+	/// ロックオン時の回転を実行
+	/// </summary>
+	void LockonAdjastEaseRotate(float& rotation, float easeBeforeRotate, float easeAfterRotate, float easeTime);
+
+	/// <summary>
+	/// ロックオン時にy軸回転を停止中の処理
+	/// </summary>
+	void LockonRotYStop();
 
 	/// <summary>
 	/// 座標を更新
@@ -103,6 +118,8 @@ private: //メンバ変数
 
 	//ロックオンターゲット
 	Base3D* lockonTarget = nullptr;
+	//注視点とロックオンターゲットの中心との距離
+	Vector3 lockonTargetDistance;
 	//ロックオン状態か
 	bool isLockon = false;
 	//ロックオンターゲットを検出するか
@@ -111,6 +128,12 @@ private: //メンバ変数
 	bool isLockonEndRotate = false;
 	//ロックオン開始時にロックオン回転角にイージングする時間タイマー
 	std::unique_ptr<Engine::Timer> lockonChangeRotaTimer;
+	//ロックオン時にプレイヤーとロックオン対象のy軸が重なったときにy軸回転を停止させるか
+	bool isLockonRotYStop = false;
+	//ロックオン時にプレイヤーとロックオン対象のy軸が重なったときにy軸回転を停止させる時間タイマー
+	std::unique_ptr<Engine::Timer> lockonRotYStopTimer;
+	//ロックオン時にy軸回転を停止させた後、修正に使用する前フレームのプレイヤーとロックオン対象との角度
+	float oldMoveRotaVelocity;
 	//イージング用変数
 	Vector3 easeBeforeRota;
 };

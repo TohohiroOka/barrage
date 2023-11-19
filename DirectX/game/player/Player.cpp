@@ -16,8 +16,8 @@ const XMFLOAT3 Player::moveMinPos = { 0,0,0 };
 const XMFLOAT3 Player::moveMaxPos = { 510,0,510 };
 float Player::jumpPower = 3.0f;
 float Player::gravityAccel = -0.015f;
-const float Player::moveSpeedMax = 1.25f;
-const float Player::dashSpeedMax = 2.5f;
+const float Player::moveSpeedMax = 1;
+const float Player::dashSpeedMax = 2;
 
 Player::Player()
 {
@@ -210,6 +210,8 @@ void Player::ObjectUpdate()
 	const float modelHeight = 1; //スケール1のときのモデルの高さ
 	if (pos.y <= object->GetScale().y * modelHeight + 0.5f) {
 		pos.y = object->GetScale().y * modelHeight + 0.5f;
+		velocity.y = 0;
+
 		if (!onGround) {
 			onGround = true;
 			fallSpeed = 0;
@@ -248,7 +250,7 @@ void Player::Move()
 	Dash();
 
 	//入力
-	const float moveAccel = 0.1f * GameHelper::Instance()->GetGameSpeed();
+	const float moveAccel = 0.05f * GameHelper::Instance()->GetGameSpeed();
 	if (isMoveKey || isMovePad) {
 		moveSpeed += moveAccel;
 		if (isDash) { moveSpeed = min(moveSpeed, dashSpeedMax); }
@@ -388,9 +390,6 @@ void Player::Dash()
 
 void Player::Fall()
 {
-	//地面に接地していたら抜ける
-	//if (onGround) { return; }
-
 	float fallAcc = gravityAccel * GameHelper::Instance()->GetGameSpeed();
 
 	//ジャンプ中で入力をし続けている場合は落下速度を減少させる
