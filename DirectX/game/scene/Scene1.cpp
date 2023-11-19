@@ -223,7 +223,7 @@ void Scene1::CollisionCheck()
 
 		Sphere enemySphere;
 		enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
-		enemySphere.radius = boss->GetCenter()->GetScale().x * 1000;
+		enemySphere.radius = boss->GetHitScale();
 
 		XMVECTOR inter;
 		XMVECTOR reject;
@@ -237,7 +237,8 @@ void Scene1::CollisionCheck()
 #pragma region プレイヤーと敵の攻撃の衝突判定
 	{
 		//プレイヤーが回避またはブリンクをしていなければ衝突判定
-		if (!(player->GetIsAvoid() || player->GetIsBlink())) {
+		//攻撃の判定を行わない時間なら判定を取らない
+		if ((!(player->GetIsAvoid() || player->GetIsBlink())) && boss->GetBaseAction()->GetIsCollision()) {
 			Sphere playerSphere;
 			playerSphere.center = { player->GetPosition().x, player->GetPosition().y,player->GetPosition().z, 1.0f };
 			playerSphere.radius = player->GetObject3d()->GetScale().x;
@@ -251,6 +252,7 @@ void Scene1::CollisionCheck()
 					if (Collision::CheckSphere2Box(playerSphere, i)) {
 						player->Damage(10, i.point1);
 						camera->ShakeStart(10, 10);
+						boss->GetBaseAction()->SetIsCollision(false);
 						break;
 					}
 				}
@@ -264,6 +266,7 @@ void Scene1::CollisionCheck()
 					if (Collision::CheckSphere2Sphere(playerSphere, i)) {
 						player->Damage(10, { i.center.m128_f32[0],i.center.m128_f32[1] ,i.center.m128_f32[2] });
 						camera->ShakeStart(10, 10);
+						boss->GetBaseAction()->SetIsCollision(false);
 						break;
 					}
 				}
@@ -277,6 +280,7 @@ void Scene1::CollisionCheck()
 					if (Collision::CheckSphereCapsule(playerSphere, i, nullptr)) {
 						player->Damage(10, i.startPosition);
 						camera->ShakeStart(10, 10);
+						boss->GetBaseAction()->SetIsCollision(false);
 						break;
 					}
 				}
@@ -291,7 +295,7 @@ void Scene1::CollisionCheck()
 		if (player->GetAttackAction()) {
 			Sphere enemySphere;
 			enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
-			enemySphere.radius = boss->GetCenter()->GetScale().x * 1000;
+			enemySphere.radius = boss->GetHitScale();
 
 			Sphere attackSphere;
 			attackSphere.center = player->GetAttackAction()->GetAttackCollisionData().center;

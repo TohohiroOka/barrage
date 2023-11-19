@@ -61,6 +61,7 @@ const bool operator>=(const XMFLOAT2& a, const XMFLOAT2& b) {
 	return (a.x >= b.x) && (a.y >= b.y);
 }
 
+//--------------------XMFLOAT3-----------------------//
 
 const XMFLOAT3 operator+(const XMFLOAT3& v1, const XMFLOAT3& v2) {
 	XMFLOAT3 result = v1;

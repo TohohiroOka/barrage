@@ -16,6 +16,8 @@ Boss1Bullet2::Boss1Bullet2()
 	predictionLine = std::make_unique<PredictionLine>();
 	timer = std::make_unique<Engine::Timer>();
 	bulletEffect.Init();
+
+	hitTimer = std::make_unique<Engine::Timer>();
 }
 
 void Boss1Bullet2::Update()

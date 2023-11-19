@@ -21,6 +21,8 @@ Boss1::Boss1()
 	BaseAction::SetBossPtr(this);
 
 	action = std::make_unique<Boss1Move2>();
+
+	hitScale = bossModel->GetObjectInst()->GetScale().y * 5000.0f;
 }
 
 void Boss1::Update()
@@ -42,8 +44,7 @@ void Boss1::FrameReset()
 void Boss1::SetAction()
 {
 	//‰Šú‰»
-	action->~BaseAction();
-	action = nullptr;
+	action.reset();
 
 	Vector3 pos = bossModel->GetObjectInst()->GetPosition();
 	Vector3 dist = targetPos - pos;
