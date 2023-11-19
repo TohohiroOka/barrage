@@ -19,6 +19,8 @@ Boss1NearAttack1::Boss1NearAttack1()
 	timer = std::make_unique<Engine::Timer>();
 	isEnd = false;
 
+	hitTimer = std::make_unique<Engine::Timer>();
+
 	func_.emplace_back([this] {return StartMove(); });
 	func_.emplace_back([this] {return Attack(); });
 	func_.emplace_back([this] {return Finish(); });
@@ -36,6 +38,14 @@ void Boss1NearAttack1::Update()
 	for (auto& i : instanceObject) {
 		if (i->GetInstanceDrawNum() <= 0.0f) { continue; }
 		i->Update();
+	}
+
+	if (!isCollision) {
+		hitTimer->Update();
+		//”»’è‚ðŽæ‚ç‚È‚¢ŽžŠÔˆÈã‚É‚È‚Á‚½‚ç–ß‚·
+		if (*hitTimer.get() > 10) {
+			isCollision = true;
+		}
 	}
 }
 
@@ -57,9 +67,10 @@ void Boss1NearAttack1::FrameReset()
 void Boss1NearAttack1::GetAttackCollisionBox(std::vector<Box>& _info)
 {
 	for (auto& i : object) {
+		if (i.alpha < 0.3f) { continue; }
 		Box add;
-		add.point1 = { i.pos.x - 10.0f,i.pos.y - 15.0f,i.pos.z - 10.0f };
-		add.point2 = { i.pos.x + 10.0f,i.pos.y + 15.0f,i.pos.z + 10.0f };
+		add.point1 = { i.pos.x - 2.0f,i.pos.y - 10.0f,i.pos.z - 2.0f };
+		add.point2 = { i.pos.x + 2.0f,i.pos.y + 10.0f,i.pos.z + 2.0f };
 		_info.emplace_back(add);
 	}
 }

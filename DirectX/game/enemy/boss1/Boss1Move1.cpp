@@ -11,6 +11,8 @@ Boss1Move1::Boss1Move1()
 	SetMoveRotation(rota);
 	boss->GetCenter()->SetRotation(rota);
 	moveTime = std::make_unique<Engine::Timer>();
+
+	hitTimer = std::make_unique<Engine::Timer>();
 }
 
 void Boss1Move1::Update()

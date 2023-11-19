@@ -3,7 +3,7 @@
 Boss1Model::Boss1Model()
 {
 	objModel[int(ObjectType::cube)] = Model::CreateFromOBJ("NormalCube");
-	objModel[int(ObjectType::cone)] = Model::CreateFromOBJ("cone");
+	objModel[int(ObjectType::cone)] = Model::CreateFromOBJ("feet");
 
 	model = FbxModel::Create("walk","Hips");
 	fbxObject = Fbx::Create(model.get());
@@ -31,13 +31,13 @@ Boss1Model::Boss1Model()
 	};
 
 	std::array<std::string, 4> boneT = {
-		"UpperLeg_L","UpperLeg_R","UpperArm_L","UpperArm_R"
+		"LowerLeg_L","LowerLeg_R","LowerArm_L","LowerArm_R"
 	};
 
 	using namespace DirectX;
 	for (int i = 0; i < bone.size(); i++) {
 		XMMATRIX world = DirectX::XMMatrixIdentity();
-		XMMATRIX matScale = XMMatrixScaling(10.0f, 10.0f, 10.0f);
+		XMMATRIX matScale = XMMatrixScaling(5.0f, 5.0f, 5.0f);
 		world *= matScale;
 		fbxObject->SetBoneObject(bone[i], "normal", objModel[int(ObjectType::cube)].get(), world);
 	}
@@ -45,10 +45,10 @@ Boss1Model::Boss1Model()
 	for (int i = 0; i < 4; i++) {
 		XMMATRIX world = DirectX::XMMatrixIdentity();
 		if (i < 2) {
-			XMMATRIX matScale = XMMatrixScaling(10.0f, 30.0f, 10.0f);
+			XMMATRIX matScale = XMMatrixScaling(5.0f, 9.0f, 5.0f);
 			world *= matScale;
 		} else if (i == 2) {
-			XMMATRIX matScale = XMMatrixScaling(10.0f, 10.0f, 10.0f);
+			XMMATRIX matScale = XMMatrixScaling(3.0f, 5.0f, 3.0f);
 			XMMATRIX matRot = XMMatrixIdentity();
 			matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
 			matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
@@ -59,7 +59,7 @@ Boss1Model::Boss1Model()
 			world *= matRot;
 			world *= matTrans;
 		} else if (i == 3) {
-			XMMATRIX matScale = XMMatrixScaling(10.0f, 10.0f, 10.0f);
+			XMMATRIX matScale = XMMatrixScaling(3.0f, 5.0f, 3.0f);
 			XMMATRIX matRot = XMMatrixIdentity();
 			matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
 			matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));

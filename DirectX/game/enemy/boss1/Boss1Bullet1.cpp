@@ -14,6 +14,8 @@ Boss1Bullet1::Boss1Bullet1()
 	predictionLine = std::make_unique<PredictionLine>();
 	timer = std::make_unique<Engine::Timer>();
 	bulletEffect.Init();
+
+	hitTimer = std::make_unique<Engine::Timer>();
 }
 
 void Boss1Bullet1::Update()
@@ -77,7 +79,7 @@ void Boss1Bullet1::AddBullet()
 	add.isAlive = true;
 	add.pos = bossPos;
 	add.moveVec = normalVec * 20.0f;
-	add.timer=std::make_unique<Engine::Timer>();
+	add.timer = std::make_unique<Engine::Timer>();
 	add.predictionLinePoint = bossPos;
 
 }

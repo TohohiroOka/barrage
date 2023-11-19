@@ -22,6 +22,8 @@ Boss1Move2::Boss1Move2()
 
 	timer = std::make_unique<Engine::Timer>();
 
+	hitTimer = std::make_unique<Engine::Timer>();
+
 	func_.emplace_back([this] {return UpMove(); });
 	func_.emplace_back([this] {return SideMove(); });
 }

@@ -15,6 +15,8 @@ Boss1Bullet3::Boss1Bullet3()
 	AddBullet();
 	timer = std::make_unique<Engine::Timer>();
 	bulletEffect.Init();
+
+	hitTimer = std::make_unique<Engine::Timer>();
 }
 
 void Boss1Bullet3::Update()

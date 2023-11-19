@@ -223,7 +223,7 @@ void Scene1::CollisionCheck()
 
 		Sphere enemySphere;
 		enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
-		enemySphere.radius = boss->GetCenter()->GetScale().x * 1000;
+		enemySphere.radius = boss->GetHitScale();
 
 		XMVECTOR inter;
 		XMVECTOR reject;
@@ -235,54 +235,58 @@ void Scene1::CollisionCheck()
 #pragma endregion
 
 #pragma region プレイヤーと敵の攻撃の衝突判定
-	//{
-	//	//プレイヤーが回避またはブリンクをしていなければ衝突判定
-	//	if (!(player->GetIsAvoid() || player->GetIsBlink())) {
-	//		Sphere playerSphere;
-	//		playerSphere.center = { player->GetPosition().x, player->GetPosition().y,player->GetPosition().z, 1.0f };
-	//		playerSphere.radius = player->GetObject3d()->GetScale().x;
+	{
+		//プレイヤーが回避またはブリンクをしていなければ衝突判定
+		//攻撃の判定を行わない時間なら判定を取らない
+		if ((!(player->GetIsAvoid() || player->GetIsBlink())) && boss->GetBaseAction()->GetIsCollision()) {
+			Sphere playerSphere;
+			playerSphere.center = { player->GetPosition().x, player->GetPosition().y,player->GetPosition().z, 1.0f };
+			playerSphere.radius = player->GetObject3d()->GetScale().x;
 
-	//		//球とボックス
-	//		if (boss->GetBaseAction()->GetUseCollision() == BaseAction::UseCollision::box) {
-	//			std::vector<Box> bossAttackDatas;
-	//			boss->GetBaseAction()->GetAttackCollisionBox(bossAttackDatas);
+			//球とボックス
+			if (boss->GetBaseAction()->GetUseCollision() == BaseAction::UseCollision::box) {
+				std::vector<Box> bossAttackDatas;
+				boss->GetBaseAction()->GetAttackCollisionBox(bossAttackDatas);
 
-	//			for (auto& i : bossAttackDatas) {
-	//				if (Collision::CheckSphere2Box(playerSphere, i)) {
-	//					player->Damage(10, i.point1);
-	//					camera->ShakeStart(10, 10);
-	//					break;
-	//				}
-	//			}
-	//		}
-	//		//球と球
-	//		else if (boss->GetBaseAction()->GetUseCollision() == BaseAction::UseCollision::sphere) {
-	//			std::vector<Sphere> bossAttackDatas;
-	//			boss->GetBaseAction()->GetAttackCollisionSphere(bossAttackDatas);
+				for (auto& i : bossAttackDatas) {
+					if (Collision::CheckSphere2Box(playerSphere, i)) {
+						player->Damage(10, i.point1);
+						camera->ShakeStart(10, 10);
+						boss->GetBaseAction()->SetIsCollision(false);
+						break;
+					}
+				}
+			}
+			//球と球
+			else if (boss->GetBaseAction()->GetUseCollision() == BaseAction::UseCollision::sphere) {
+				std::vector<Sphere> bossAttackDatas;
+				boss->GetBaseAction()->GetAttackCollisionSphere(bossAttackDatas);
 
-	//			for (auto& i : bossAttackDatas) {
-	//				if (Collision::CheckSphere2Sphere(playerSphere, i)) {
-	//					player->Damage(10, { i.center.m128_f32[0],i.center.m128_f32[1] ,i.center.m128_f32[2] });
-	//					camera->ShakeStart(10, 10);
-	//					break;
-	//				}
-	//			}
-	//		}
-	//		//球とカプセル
-	//		else if (boss->GetBaseAction()->GetUseCollision() == BaseAction::UseCollision::capsule) {
-	//			std::vector<Capsule> bossAttackDatas;
-	//			boss->GetBaseAction()->GetAttackCollisionCapsule(bossAttackDatas);
+				for (auto& i : bossAttackDatas) {
+					if (Collision::CheckSphere2Sphere(playerSphere, i)) {
+						player->Damage(10, { i.center.m128_f32[0],i.center.m128_f32[1] ,i.center.m128_f32[2] });
+						camera->ShakeStart(10, 10);
+						boss->GetBaseAction()->SetIsCollision(false);
+						break;
+					}
+				}
+			}
+			//球とカプセル
+			else if (boss->GetBaseAction()->GetUseCollision() == BaseAction::UseCollision::capsule) {
+				std::vector<Capsule> bossAttackDatas;
+				boss->GetBaseAction()->GetAttackCollisionCapsule(bossAttackDatas);
 
-	//			for (auto& i : bossAttackDatas) {
-	//				if (Collision::CheckSphereCapsule(playerSphere, i, nullptr)) {
-	//					player->Damage(10, i.startPosition);
-	//					camera->ShakeStart(10, 10);
-	//					break;
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
+				for (auto& i : bossAttackDatas) {
+					if (Collision::CheckSphereCapsule(playerSphere, i, nullptr)) {
+						player->Damage(10, i.startPosition);
+						camera->ShakeStart(10, 10);
+						boss->GetBaseAction()->SetIsCollision(false);
+						break;
+					}
+				}
+			}
+		}
+	}
 #pragma endregion
 
 #pragma region プレイヤーの攻撃と敵の衝突判定
@@ -291,7 +295,7 @@ void Scene1::CollisionCheck()
 		if (player->GetAttackAction()) {
 			Sphere enemySphere;
 			enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
-			enemySphere.radius = boss->GetCenter()->GetScale().x * 1000;
+			enemySphere.radius = boss->GetHitScale();
 
 			Sphere attackSphere;
 			attackSphere.center = player->GetAttackAction()->GetAttackCollisionData().center;

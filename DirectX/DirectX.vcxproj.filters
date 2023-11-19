@@ -424,6 +424,9 @@
     <ClCompile Include="game\cutscene\Boss1Defeat.cpp">
       <Filter>ゲームシステム\cutScene</Filter>
     </ClCompile>
+    <ClCompile Include="game\field\FieldLine.cpp">
+      <Filter>ゲームシステム\Field</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -510,6 +513,8 @@
     <FxCompile Include="Resources\Shaders\FbxLightViewVS.hlsl">
       <Filter>シェーダーファイル\FbxLightView</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\InstanceObjectLightViewPS.hlsl" />
+    <FxCompile Include="Resources\Shaders\InstanceObjectLightViewVS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite.hlsli">
@@ -551,6 +556,7 @@
     <None Include="Resources\Shaders\FbxLightView.hlsli">
       <Filter>シェーダーファイル\FbxLightView</Filter>
     </None>
+    <None Include="Resources\Shaders\InstanceObjectLightView.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\particle\ParticleManager.h">
@@ -876,6 +882,9 @@
     </ClInclude>
     <ClInclude Include="game\cutscene\Boss1Defeat.h">
       <Filter>ゲームシステム\cutScene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\field\FieldLine.h">
+      <Filter>ゲームシステム\Field</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

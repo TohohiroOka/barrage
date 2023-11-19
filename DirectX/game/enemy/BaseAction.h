@@ -2,6 +2,7 @@
 #include <vector>
 #include "Math/Vector3.h"
 #include "../Object/3d/collider/CollisionPrimitive.h"
+#include "Math/Timer.h"
 
 class BaseBoss;
 
@@ -29,8 +30,13 @@ public:
 	virtual void GetAttackCollisionCapsule(std::vector<Capsule>& _info) = 0;
 
 	bool End() { return isEnd; }
-	void SetUseCollision(UseCollision _useCollision) { useCollision = _useCollision; }
+	void SetUseCollision(const UseCollision _useCollision) { useCollision = _useCollision; }
 	UseCollision GetUseCollision() { return useCollision; }
+	void SetIsCollision(const bool _isCollision) {
+		isCollision = _isCollision;
+		hitTimer->Reset();
+	}
+	bool GetIsCollision() { return isCollision; }
 
 	static void SetBossPtr(BaseBoss* _boss) { boss = _boss; }
 
@@ -41,6 +47,10 @@ protected:
 	//行動終了
 	bool isEnd = false;
 	//どの当たり判定を使用するか
-	UseCollision useCollision= UseCollision::box;
+	UseCollision useCollision = UseCollision::box;
+	//判定を行うか
+	bool isCollision = false;
+	//判定を行わない時間
+	std::unique_ptr<Engine::Timer> hitTimer;
 };
 

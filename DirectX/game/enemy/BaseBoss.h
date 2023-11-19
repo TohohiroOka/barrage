@@ -30,6 +30,7 @@ public:
 	void Collider();
 
 	Base3D* GetCenter() { return bossModel->GetObjectInst(); }
+	float GetHitScale() { return hitScale; }
 	void SetMoveVec(const Vector3& _moveVec) { moveVec = _moveVec; }
 	BaseAction* GetBaseAction() { return action.get(); }
 	void SetTargetPos(const Vector3& _targetPos) { targetPos = _targetPos; }
@@ -64,5 +65,7 @@ protected:
 	//ˆÚ“®s“®‚ğs‚Á‚½‚©
 	bool isMove;
 
+	//”»’è—p‚Ì‘å‚«‚³
+	float hitScale;
 };
 
