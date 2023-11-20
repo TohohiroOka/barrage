@@ -59,6 +59,20 @@ void Boss1Bullet1::GetAttackCollisionSphere(std::vector<Sphere>& _info)
 	}
 }
 
+void Boss1Bullet1::DeleteBullet(std::vector<int> _deleteNum)
+{
+	int num = -1;
+	int vecNum = 0;
+	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
+		it != bullet.end(); it++) {
+		num++;
+		if (num != _deleteNum[vecNum]) { continue; }
+		it->isAlive = false;
+		vecNum++;
+		if (_deleteNum.size() == vecNum) { break; }
+	}
+}
+
 void Boss1Bullet1::AddBullet()
 {
 	Vector3 bossPos = boss->GetCenter()->GetPosition();

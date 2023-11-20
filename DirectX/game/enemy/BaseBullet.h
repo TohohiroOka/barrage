@@ -26,6 +26,8 @@ public:
 
 	virtual void GetAttackCollisionCapsule(std::vector<Capsule>& _info) override {};
 
+	virtual void DeleteBullet(std::vector<int> _deleteNum) override {};
+
 protected:
 	static const int instanceNum = 5;
 	//’e•`‰æ—p

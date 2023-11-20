@@ -42,6 +42,8 @@ public:
 
 	void GetAttackCollisionCapsule(std::vector<Capsule>& _info) override {};
 
+	void DeleteBullet(std::vector<int> _deleteNum) override {};
+
 private:
 
 	void StartMove();
@@ -63,6 +65,7 @@ private:
 	State state;
 	//全体タイマー
 	std::unique_ptr<Engine::Timer> timer;
+	float oldtime;
 	//出現する場所（中心からの距離）
 	float dist;
 };

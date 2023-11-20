@@ -29,6 +29,8 @@ public:
 
 	virtual void GetAttackCollisionCapsule(std::vector<Capsule>& _info) = 0;
 
+	virtual void DeleteBullet(std::vector<int> _deleteNum) = 0;
+
 	bool End() { return isEnd; }
 	void SetUseCollision(const UseCollision _useCollision) { useCollision = _useCollision; }
 	UseCollision GetUseCollision() { return useCollision; }
@@ -37,6 +39,7 @@ public:
 		hitTimer->Reset();
 	}
 	bool GetIsCollision() { return isCollision; }
+	float GetPower() { return power; }
 
 	static void SetBossPtr(BaseBoss* _boss) { boss = _boss; }
 
@@ -52,5 +55,8 @@ protected:
 	bool isCollision = false;
 	//”»’è‚ğs‚í‚È‚¢ŠÔ
 	std::unique_ptr<Engine::Timer> hitTimer;
+	//ˆĞ—Í
+	float power;
+
 };
 

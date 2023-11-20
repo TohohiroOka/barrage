@@ -17,6 +17,7 @@ Boss1NearAttack1::Boss1NearAttack1()
 	state = State::start;
 
 	timer = std::make_unique<Engine::Timer>();
+	oldtime = timer->GetTime() - 1.0f;
 	isEnd = false;
 
 	hitTimer = std::make_unique<Engine::Timer>();
@@ -43,7 +44,7 @@ void Boss1NearAttack1::Update()
 	if (!isCollision) {
 		hitTimer->Update();
 		//”»’è‚ğæ‚ç‚È‚¢ŠÔˆÈã‚É‚È‚Á‚½‚ç–ß‚·
-		if (*hitTimer.get() > 10) {
+		if (*hitTimer.get() > 20) {
 			isCollision = true;
 		}
 	}
@@ -83,6 +84,14 @@ void Boss1NearAttack1::StartMove()
 void Boss1NearAttack1::Attack()
 {
 	timer->Update();
+
+	//1•b—§‚Á‚Ä‚¢‚È‚¢‚È‚çoŒ»‚³‚¹‚È‚¢
+	if ((*timer.get() - oldtime) < 1.0f) {
+		return;
+	}
+	
+	oldtime = timer->GetTime();
+
 	if (*timer.get() % 5 != 0) { return; }
 	//oŒ»”
 	XMFLOAT3 pos = boss->GetCenter()->GetPosition();

@@ -32,6 +32,8 @@ public:
 
 	void GetAttackCollisionCapsule(std::vector<Capsule>& _info) override {};
 
+	void DeleteBullet(std::vector<int> _deleteNum) override;
+
 	void AddBullet(bool _easing);
 
 	void BulletUpdate(BulletInfo& _bullet);

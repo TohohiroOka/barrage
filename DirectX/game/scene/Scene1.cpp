@@ -247,12 +247,15 @@ void Scene1::CollisionCheck()
 			if (boss->GetBaseAction()->GetUseCollision() == BaseAction::UseCollision::box) {
 				std::vector<Box> bossAttackDatas;
 				boss->GetBaseAction()->GetAttackCollisionBox(bossAttackDatas);
-
+				
+				int num = -1;
 				for (auto& i : bossAttackDatas) {
+					num++;
 					if (Collision::CheckSphere2Box(playerSphere, i)) {
 						player->Damage(10, i.point1);
 						camera->ShakeStart(10, 10);
 						boss->GetBaseAction()->SetIsCollision(false);
+						boss->GetBaseAction()->DeleteBullet({ num });
 						break;
 					}
 				}
@@ -262,11 +265,14 @@ void Scene1::CollisionCheck()
 				std::vector<Sphere> bossAttackDatas;
 				boss->GetBaseAction()->GetAttackCollisionSphere(bossAttackDatas);
 
+				int num = -1;
 				for (auto& i : bossAttackDatas) {
+					num++;
 					if (Collision::CheckSphere2Sphere(playerSphere, i)) {
 						player->Damage(10, { i.center.m128_f32[0],i.center.m128_f32[1] ,i.center.m128_f32[2] });
 						camera->ShakeStart(10, 10);
 						boss->GetBaseAction()->SetIsCollision(false);
+						boss->GetBaseAction()->DeleteBullet({ num });
 						break;
 					}
 				}
@@ -276,11 +282,14 @@ void Scene1::CollisionCheck()
 				std::vector<Capsule> bossAttackDatas;
 				boss->GetBaseAction()->GetAttackCollisionCapsule(bossAttackDatas);
 
+				int num = -1;
 				for (auto& i : bossAttackDatas) {
+					num++;
 					if (Collision::CheckSphereCapsule(playerSphere, i, nullptr)) {
 						player->Damage(10, i.startPosition);
 						camera->ShakeStart(10, 10);
 						boss->GetBaseAction()->SetIsCollision(false);
+						boss->GetBaseAction()->DeleteBullet({ num });
 						break;
 					}
 				}

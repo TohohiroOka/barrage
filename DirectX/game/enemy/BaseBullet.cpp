@@ -14,6 +14,14 @@ void BaseBullet::Update()
 	if (predictionLine) {
 		predictionLine->Update();
 	}
+
+	if (!isCollision) {
+		hitTimer->Update();
+		//”»’è‚ðŽæ‚ç‚È‚¢ŽžŠÔˆÈã‚É‚È‚Á‚½‚ç–ß‚·
+		if (*hitTimer.get() > 2) {
+			isCollision = true;
+		}
+	}
 }
 
 void BaseBullet::Draw()

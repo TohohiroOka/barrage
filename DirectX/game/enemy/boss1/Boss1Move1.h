@@ -24,6 +24,8 @@ public:
 
 	void GetAttackCollisionCapsule(std::vector<Capsule>& _info) override {};
 
+	void DeleteBullet(std::vector<int> _deleteNum) override {};
+
 	/// <summary>
 	/// ˆÚ“®•ûŒü
 	/// </summary>
