@@ -150,7 +150,7 @@ void SceneManager::Update()
 		{
 			scene.reset();
 			Sprite::SceneFinalize();
-			//ParticleManager::SceneFinalize();
+			ParticleManager::SceneFinalize();
 		}
 
 		//ƒV[ƒ“Ø‚è‘Ö‚¦
