@@ -62,17 +62,25 @@ void TitleScene::Update()
 	lightCamera->Update();
 
 	if (isPressed) {
-		if (IsUp() && selecting != PLAYER_SELECT::SELECT_STARTGAME) {
-			selecting = PLAYER_SELECT(int(selecting) - 1);
-		}
-		else if (IsDown() && selecting != PLAYER_SELECT::SELECT_EXIT) {
-			selecting = PLAYER_SELECT(int(selecting) + 1);
+		if (!isSelected) {
+			if (IsUp() && selecting != PLAYER_SELECT::SELECT_STARTGAME) {
+				selecting = PLAYER_SELECT(int(selecting) - 1);
+			}
+			else if (IsDown() && selecting != PLAYER_SELECT::SELECT_EXIT) {
+				selecting = PLAYER_SELECT(int(selecting) + 1);
+			}
 		}
 
 		choiceDrawer.SetEmphasisPos(1500.f / 2.f, OPTIONS_START_Y + (OPTIONS_DISTANCE_Y * float(selecting)), 550.f, 80.f);
 
 		//決定キーが押されたら
 		if (IsEnter()) {
+			choiceDrawer.PlayChoiseAnimation();
+			//カーソル移動をロック
+			isSelected = true;
+		}
+
+		if (choiceDrawer.IsChooseAnimEnd()) {
 			Scene1* gameScene = nullptr;
 			switch (selecting)
 			{
@@ -122,7 +130,9 @@ void TitleScene::NonPostEffectDraw(const int _cameraNum)
 		configSprite->Draw();
 		exitgameSprite->Draw();
 	}
-	else{ pressAnyButtonSprite->Draw(); }
+	else{ 
+		pressAnyButtonSprite->Draw(); 
+	}
 
 
 }
@@ -159,8 +169,10 @@ bool TitleScene::IsDown()
 
 bool TitleScene::IsEnter()
 {
-	return DirectInput::GetInstance()->TriggerKey(DIK_SPACE) ||
+	bool isEnter = DirectInput::GetInstance()->TriggerKey(DIK_SPACE) ||
 		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B);
+
+	return isEnter;
 }
 
 void TitleScene::ChoiceEmphasisDrawer::Initialize()
@@ -174,6 +186,33 @@ void TitleScene::ChoiceEmphasisDrawer::Initialize()
 
 void TitleScene::ChoiceEmphasisDrawer::Update()
 {
+	static bool isAdd = true;
+	static int frame = 0;
+	if (frame > ALPHA_ANIM_FRAME) { 
+		isAdd = false; 
+		frame = ALPHA_ANIM_FRAME;
+	}
+	if (frame < 0) { 
+		isAdd = true; 
+		frame = 0;
+	}
+	if (isAdd) {frame++;}
+	else {frame--;}
+	float rate = float(frame) / float(ALPHA_ANIM_FRAME);
+
+	//1F前
+	isChooseOld = isChoose;
+	//決定時アニメーション
+	if (isChoose) {
+		choiceAnimFrame++;
+		if (choiceAnimFrame > CHOICE_ANIM_FRAME) {
+			choiceAnimFrame = 0;
+			ALPHA_ANIM_FRAME = 90;
+			isChoose = false;
+		}
+	}
+
+	emphasisSprite->SetColor({ 1.f,1.f,1.f,rate });
 	emphasisSprite->Update();
 }
 
@@ -186,4 +225,15 @@ void TitleScene::ChoiceEmphasisDrawer::SetEmphasisPos(float posX, float posY, fl
 {
 	emphasisSprite->SetPosition({ posX,posY });
 	emphasisSprite->SetSize({ sizeX,sizeY });
+}
+
+void TitleScene::ChoiceEmphasisDrawer::PlayChoiseAnimation()
+{
+	ALPHA_ANIM_FRAME = 10;
+	isChoose = true;
+}
+
+bool TitleScene::ChoiceEmphasisDrawer::IsChooseAnimEnd()
+{
+	return isChoose == false && isChooseOld == true;
 }

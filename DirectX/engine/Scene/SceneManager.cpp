@@ -1,5 +1,5 @@
 #include "SceneManager.h"
-#include "Scene/Scene1.h"
+#include "Scene/TitleScene.h"
 #include "Object/2d/PostEffect/PostEffect.h"
 #include "Object/2d/PostEffect/BasePostEffect.h"
 #include "Loader/JsonLoader.h"
@@ -64,9 +64,9 @@ void SceneManager::Initialize()
 	light->SetDirLightDir(0, { 0.0f, 0.0f, 1.0f, 0 });
 
 	//Å‰‚ÌƒV[ƒ“Ý’è
-	Scene1* firstScene = new Scene1();
+	TitleScene* firstScene = new TitleScene();
 	firstScene->Initialize();
-	scene = std::unique_ptr<Scene1>(firstScene);
+	scene = std::unique_ptr<TitleScene>(firstScene);
 }
 
 void SceneManager::CreatePipeline()

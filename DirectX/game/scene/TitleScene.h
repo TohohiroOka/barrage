@@ -30,12 +30,22 @@ private:// エイリアス
 
 		void SetEmphasisPos(float posX, float posY, float sizeX, float sizeY);
 
+		void PlayChoiseAnimation();
+
+		bool IsChooseAnimEnd();
+
 	private:
 		//強調用ぼかし
 		std::unique_ptr<Sprite> emphasisSprite;
 
 		//時間
-		const int ALPHA_ANIM_FRAME = 90;
+		int ALPHA_ANIM_FRAME = 90;
+
+		bool isChoose = false;
+		bool isChooseOld = false;
+
+		const int CHOICE_ANIM_FRAME = 60;
+		int choiceAnimFrame = 0;
 	};
 
 public:
@@ -95,6 +105,7 @@ private:
 	PLAYER_SELECT selecting = PLAYER_SELECT::SELECT_STARTGAME;
 
 	bool isPressed = false;
+	bool isSelected = false;
 
 	ChoiceEmphasisDrawer choiceDrawer;
 	//表示座標系
