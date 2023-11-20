@@ -309,7 +309,8 @@ void Scene1::CollisionCheck()
 				//毎フレーム多段ヒットするのを防ぐため、この攻撃の衝突判定をoffにしておく。
 				player->GetAttackAction()->AttackCollision();
 
-				GameHelper::Instance()->SetSlow(0.1f, 2000);
+				//ヒットストップ
+				GameHelper::Instance()->SetSlow(0, 10);
 			}
 		}
 	}

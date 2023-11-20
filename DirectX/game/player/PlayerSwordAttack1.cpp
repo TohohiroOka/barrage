@@ -53,13 +53,6 @@ void PlayerSwordAttack1::Draw()
 	object->Draw();
 }
 
-void PlayerSwordAttack1::DrawLightView()
-{
-	if (state == NONE) { return; }
-
-	object->DrawLightView();
-}
-
 bool PlayerSwordAttack1::NextAttack(int endurance)
 {
 	if (attackNum >= maxAttackNum) { return false; }

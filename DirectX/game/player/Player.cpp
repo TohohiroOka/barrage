@@ -14,8 +14,8 @@ using namespace DirectX;
 
 const XMFLOAT3 Player::moveMinPos = { 0,0,0 };
 const XMFLOAT3 Player::moveMaxPos = { 510,0,510 };
-float Player::jumpPower = 3.0f;
-float Player::gravityAccel = -0.015f;
+float Player::jumpPower = 2.0f;
+float Player::gravityAccel = -0.01f;
 const float Player::moveSpeedMax = 1;
 const float Player::dashSpeedMax = 2;
 
@@ -122,10 +122,6 @@ void Player::Update()
 void Player::Draw()
 {
 	object->Draw();
-
-	if (attackAction) {
-		attackAction->Draw();
-	}
 }
 
 void Player::DrawSprite()
@@ -148,10 +144,6 @@ void Player::ImguiDraw()
 void Player::DrawLightView()
 {
 	object->DrawLightView();
-
-	if (attackAction) {
-		attackAction->DrawLightView();
-	}
 }
 
 void Player::Damage(int damageNum, const Vector3& subjectPos)
@@ -430,11 +422,11 @@ void Player::AvoidStart()
 void Player::Avoid()
 {
 	//タイマー更新
-	const float avoidTime = 60;
+	const float avoidTime = 35;
 	avoidTimer->Update();
 	const float time = *avoidTimer.get() / avoidTime;
 
-	const float power = Easing::OutCirc(8, 1, time);
+	const float power = Easing::OutCirc(5, 1, time);
 
 	velocity = moveVec.normalize() * power;
 
@@ -494,11 +486,11 @@ void Player::BlinkStart()
 void Player::Blink()
 {
 	//タイマー更新
-	const float blinkTime = 90;
+	const float blinkTime = 35;
 	blinkTimer->Update();
 	const float time = *blinkTimer.get() / blinkTime;
 
-	const float power = Easing::OutCirc(8, 1, time);
+	const float power = Easing::OutCirc(7, 1, time);
 
 	velocity = moveVec.normalize() * power;
 

@@ -25,11 +25,6 @@ public: //ƒƒ“ƒoŠÖ”
 	virtual void Draw() = 0;
 
 	/// <summary>
-	/// ŒõŒ¹‹“_‚Å‚Ì•`‰æ
-	/// </summary>
-	virtual void DrawLightView() = 0;
-
-	/// <summary>
 	/// Ÿ‚ÌUŒ‚‚É‘JˆÚ
 	/// </summary>
 	virtual bool NextAttack(int endurance) = 0;

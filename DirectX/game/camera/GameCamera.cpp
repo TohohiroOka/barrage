@@ -10,7 +10,7 @@ Player* GameCamera::player = nullptr;
 const float GameCamera::rotateXMin = -45;
 const float GameCamera::rotateXMax = 70;
 const float GameCamera::rotateXBase = 7;
-const float GameCamera::rotateCenterDistanceNormal = 25.0f;
+const float GameCamera::rotateCenterDistanceNormal = 35.0f;
 const Vector3 GameCamera::targetDistanceNormal = { 0, 5, 0 };
 
 GameCamera::GameCamera() :
@@ -312,7 +312,7 @@ void GameCamera::UpdatePosition()
 
 	//ターゲットへの追従を指定したフレームの分遅らせる
 	targetPositionsKeep.push_back(player->GetPosition());
-	const int frame = 2;
+	const int frame = 5;
 	if (targetPositionsKeep.size() > frame) {
 		targetPositionsKeep.pop_front();
 	}
