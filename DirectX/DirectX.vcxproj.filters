@@ -146,6 +146,12 @@
     <Filter Include="ゲームシステム\cutScene">
       <UniqueIdentifier>{c3e76316-062d-4a44-846c-e4af45b42aa1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ゲームシステム\Player\Action">
+      <UniqueIdentifier>{b0b243e4-7ab2-4360-89de-399b580cd1ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ゲームシステム\Player\Attack">
+      <UniqueIdentifier>{59befbde-6773-411b-8a91-ddae424e5227}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -361,9 +367,6 @@
     <ClCompile Include="game\enemy\PredictionLine.cpp">
       <Filter>ゲームシステム\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="game\player\PlayerSwordAttack1.cpp">
-      <Filter>ゲームシステム\Player</Filter>
-    </ClCompile>
     <ClCompile Include="engine\Camera\LightCamera.cpp">
       <Filter>Engine\Camera</Filter>
     </ClCompile>
@@ -426,6 +429,33 @@
     </ClCompile>
     <ClCompile Include="game\field\FieldLine.cpp">
       <Filter>ゲームシステム\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="game\player\PlayerSwordAttack1.cpp">
+      <Filter>ゲームシステム\Player\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="game\player\PlayerActionMoveNormal.cpp">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="game\player\PlayerData.cpp">
+      <Filter>ゲームシステム\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="game\player\PlayerActionKnockback.cpp">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="game\player\PlayerActionAvoid.cpp">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="game\player\PlayerActionBlink.cpp">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="game\player\PlayerActionAttack.cpp">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="game\player\PlayerActionBase.cpp">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="game\player\PlayerActionJump.cpp">
+      <Filter>ゲームシステム\Player\Action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -814,12 +844,6 @@
     <ClInclude Include="game\enemy\PredictionLine.h">
       <Filter>ゲームシステム\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="game\player\BasePlayerAttack.h">
-      <Filter>ゲームシステム\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="game\player\PlayerSwordAttack1.h">
-      <Filter>ゲームシステム\Player</Filter>
-    </ClInclude>
     <ClInclude Include="engine\Camera\LightCamera.h">
       <Filter>Engine\Camera</Filter>
     </ClInclude>
@@ -885,6 +909,36 @@
     </ClInclude>
     <ClInclude Include="game\field\FieldLine.h">
       <Filter>ゲームシステム\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\BasePlayerAttack.h">
+      <Filter>ゲームシステム\Player\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerSwordAttack1.h">
+      <Filter>ゲームシステム\Player\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerActionBase.h">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerActionMoveNormal.h">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerData.h">
+      <Filter>ゲームシステム\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerActionKnockback.h">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerActionAvoid.h">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerActionBlink.h">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerActionAttack.h">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerActionJump.h">
+      <Filter>ゲームシステム\Player\Action</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

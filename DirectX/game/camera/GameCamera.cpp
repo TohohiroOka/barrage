@@ -10,7 +10,7 @@ Player* GameCamera::player = nullptr;
 const float GameCamera::rotateXMin = -45;
 const float GameCamera::rotateXMax = 70;
 const float GameCamera::rotateXBase = 7;
-const float GameCamera::rotateCenterDistanceNormal = 25.0f;
+const float GameCamera::rotateCenterDistanceNormal = 35.0f;
 const Vector3 GameCamera::targetDistanceNormal = { 0, 5, 0 };
 
 GameCamera::GameCamera() :
@@ -161,9 +161,9 @@ void GameCamera::UpdateLockonTargetDistance()
 	//プレイヤーの速度に応じてロックオンターゲットから離す距離を算出
 	const float multNum = 10;
 	//プレイヤーとロックオン対象との距離を計算
-	const float playerLockonTargetDistance = sqrtf((player->GetPosition().x - lockonTarget->GetPosition().x) * (player->GetPosition().x - lockonTarget->GetPosition().x) +
-		(player->GetPosition().z - lockonTarget->GetPosition().z) * (player->GetPosition().z - lockonTarget->GetPosition().z));
-	const Vector3 lockonTargetDistanceNum = player->GetVelocity() * multNum * (playerLockonTargetDistance / 100);
+	const float playerLockonTargetDistance = sqrtf((player->GetData()->pos.x - lockonTarget->GetPosition().x) * (player->GetData()->pos.x - lockonTarget->GetPosition().x) +
+		(player->GetData()->pos.z - lockonTarget->GetPosition().z) * (player->GetData()->pos.z - lockonTarget->GetPosition().z));
+	const Vector3 lockonTargetDistanceNum = player->GetData()->velocity * multNum * (playerLockonTargetDistance / 100);
 
 	//プレイヤーとロックオン対象との距離が一定数以下の場合はy軸回転を止める
 	const float rotYStopDistanceNum = 3.0f;
@@ -197,7 +197,7 @@ void GameCamera::UpdateLockonTargetDistance()
 void GameCamera::UpdateLockonRotate()
 {
 	//プレイヤーとロックオンターゲットの角度を取得(0～360に調整)
-	Vector3 moveRotaVelocity = VelocityRotate((((Vector3)lockonTarget->GetPosition() + lockonTargetDistance) - targetDistance) - (player->GetPosition() + targetDistance));
+	Vector3 moveRotaVelocity = VelocityRotate((((Vector3)lockonTarget->GetPosition() + lockonTargetDistance) - targetDistance) - (player->GetData()->pos + targetDistance));
 	//回転角を0～360以内に収まるようにする
 	Rotate360(moveRotaVelocity.y);
 	Rotate360(moveRotaVelocity.x);
@@ -311,8 +311,8 @@ void GameCamera::UpdatePosition()
 	radian.y = floorf(radian.y * divNum) / divNum;
 
 	//ターゲットへの追従を指定したフレームの分遅らせる
-	targetPositionsKeep.push_back(player->GetPosition());
-	const int frame = 2;
+	targetPositionsKeep.push_back(player->GetData()->pos);
+	const int frame = 5;
 	if (targetPositionsKeep.size() > frame) {
 		targetPositionsKeep.pop_front();
 	}
@@ -340,7 +340,7 @@ void GameCamera::PositionCollision()
 
 		//押し戻しの分、X,Zの同じ量移動させる
 		Vector2 posXZ = { position.x, position.z };
-		Vector2 targetPosXZ = { player->GetPosition().x, player->GetPosition().z };
+		Vector2 targetPosXZ = { player->GetData()->pos.x, player->GetData()->pos.z };
 		Vector2 vec = targetPosXZ - posXZ;
 		vec.normalize();
 

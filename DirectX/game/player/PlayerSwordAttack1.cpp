@@ -1,23 +1,28 @@
 #include "PlayerSwordAttack1.h"
+#include "Player.h"
 #include "Input/DirectInput.h"
 #include "Input/XInputManager.h"
 #include "engine/Math/Easing/Easing.h"
 
+
 const DirectX::XMFLOAT4 PlayerSwordAttack1::attackColor = { 1, 0, 0, 0.3f };
 const DirectX::XMFLOAT4 PlayerSwordAttack1::nonAttackColor = { 0, 0, 1, 0.3f };
+const float PlayerSwordAttack1::attackStartMoveSpeedMax = 1.5f;
+const float PlayerSwordAttack1::attackStartMoveSpeedMin = 0.5f;
 
-PlayerSwordAttack1::PlayerSwordAttack1(std::function<DirectX::XMFLOAT3()> getSwordPos)
+PlayerSwordAttack1::PlayerSwordAttack1(Player* player)
 {
-	getSwordPos_ = getSwordPos;
+	//プレイヤーをセット
+	this->player = player;
 
+	//当たり判定可視化用オブジェクト生成
 	model = Model::CreateFromOBJ("NormalCube");
 
 	object = Object3d::Create(model.get());
 	object->SetScale({ 2.5f, 2.5f, 2.5f });
 	object->SetColor(nonAttackColor);
 
-	attackCollisionData.power = 50;
-
+	//タイマー初期化
 	timer = std::make_unique<Engine::Timer>();
 
 	//持久力の使用料をセット
@@ -40,7 +45,7 @@ void PlayerSwordAttack1::Update()
 	object->Update();
 
 	//衝突判定用変数の更新
-	DirectX::XMFLOAT3 objectPos = getSwordPos_();
+	DirectX::XMFLOAT3 objectPos = player->GetFbxObject()->GetAttachPos();
 	object->SetPosition(objectPos);
 	attackCollisionData.center = { objectPos.x, objectPos.y, objectPos.z, 1 };
 	attackCollisionData.radius = object->GetScale().x;
@@ -53,22 +58,16 @@ void PlayerSwordAttack1::Draw()
 	object->Draw();
 }
 
-void PlayerSwordAttack1::DrawLightView()
+bool PlayerSwordAttack1::NextAttack()
 {
-	if (state == NONE) { return; }
-
-	object->DrawLightView();
-}
-
-bool PlayerSwordAttack1::NextAttack(int endurance)
-{
+	//攻撃行動を最大数まで行っていたら抜ける
 	if (attackNum >= maxAttackNum) { return false; }
 
 	//連続攻撃回数を増やす
 	attackNum++;
 
 	//持久力が足りなかったら次の攻撃ができずに抜ける
-	if (endurance < useEnduranceNum) {
+	if (player->GetData()->endurance < useEnduranceNum) {
 		//何もしていない初期段階なら攻撃自体を終了する
 		if (state == NONE) { isAttackActionEnd = true; }
 
@@ -79,20 +78,49 @@ bool PlayerSwordAttack1::NextAttack(int endurance)
 		//攻撃1へ
 		state = State::ATTACK1;
 
+		//攻撃力変更
 		attackCollisionData.power = 50;
+
+		//攻撃で移動するとき用に移動スピードをセット(既にスピードがある場合は変更しない)
+		player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, attackStartMoveSpeedMax);
+		player->GetData()->moveSpeed = max(player->GetData()->moveSpeed, attackStartMoveSpeedMin);
+		attackStartMoveSpeed = player->GetData()->moveSpeed;
+
+		//アニメーションリセット
+		player->GetFbxObject()->AnimationReset();
+		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_RIGHT_ANIMATION);
 	}
 	else if (attackNum == 2) {
 		//攻撃2へ
 		state = State::ATTACK2;
+
+		//攻撃で移動するとき用に移動スピードをセット(既にスピードがある場合は変更しない)
+		player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, attackStartMoveSpeedMax);
+		player->GetData()->moveSpeed = max(player->GetData()->moveSpeed, attackStartMoveSpeedMin);
+		attackStartMoveSpeed = player->GetData()->moveSpeed;
+
+		//アニメーションリセット
+		player->GetFbxObject()->AnimationReset();
+		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_RIGHT_ANIMATION);
 	}
 	else if (attackNum == 3) {
 		//攻撃3へ
 		state = State::ATTACK3;
 
+		//攻撃力変更
 		attackCollisionData.power = 100;
+
+		//攻撃で移動するとき用に移動スピードをセット(既にスピードがある場合は変更しない)
+		player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, attackStartMoveSpeedMax);
+		player->GetData()->moveSpeed = max(player->GetData()->moveSpeed, attackStartMoveSpeedMin);
+		attackStartMoveSpeed = player->GetData()->moveSpeed;
+
+		//アニメーションリセット
+		player->GetFbxObject()->AnimationReset();
+		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_RIGHT_ANIMATION);
 	}
 
-	isNextAttackInput = false;
+	isNextActionInput = false;
 	timer->Reset();
 	object->SetColor(nonAttackColor);
 	isCollisionValid = true;
@@ -111,18 +139,19 @@ void PlayerSwordAttack1::AttackCollision()
 
 void PlayerSwordAttack1::AttackAction1()
 {
-	//攻撃1にかかる時間
-	const int attack1Time = 130;
+	//タイマー更新
 	timer->Update();
 
-	//次の攻撃を入力可能にする
-	const int nextAttackInputTime = attack1Time - 20;
-	if (*timer.get() == nextAttackInputTime) {
-		isNextAttackInput = true;
+	//攻撃に合わせてプレイヤーを動かす
+	MovePlayer(actionChangeStartTime);
+
+	//次の行動を入力可能にする
+	if (*timer.get() == actionChangeStartTime) {
+		isNextActionInput = true;
 	}
 
 	//タイマーが指定した時間になったら
-	if (*timer.get() >= attack1Time) {
+	if (*timer.get() >= attackTime) {
 		//攻撃行動終了
 		isAttackActionEnd = true;
 	}
@@ -130,18 +159,19 @@ void PlayerSwordAttack1::AttackAction1()
 
 void PlayerSwordAttack1::AttackAction2()
 {
-	//攻撃2にかかる時間
-	const int attack2Time = 130;
+	//タイマー更新
 	timer->Update();
 
-	//次の攻撃を入力可能にする
-	const int nextAttackInputTime = attack2Time - 20;
-	if (*timer.get() == nextAttackInputTime) {
-		isNextAttackInput = true;
+	//攻撃に合わせてプレイヤーを動かす
+	MovePlayer(actionChangeStartTime);
+
+	//次の行動を入力可能にする
+	if (*timer.get() == actionChangeStartTime) {
+		isNextActionInput = true;
 	}
 
 	//タイマーが指定した時間になったら
-	if (*timer.get() >= attack2Time) {
+	if (*timer.get() >= attackTime) {
 		//攻撃行動終了
 		isAttackActionEnd = true;
 	}
@@ -149,13 +179,34 @@ void PlayerSwordAttack1::AttackAction2()
 
 void PlayerSwordAttack1::AttackAction3()
 {
-	//攻撃3にかかる時間
-	const int attack3Time = 130;
+	//タイマー更新
 	timer->Update();
 
+	//攻撃に合わせてプレイヤーを動かす
+	MovePlayer(actionChangeStartTime);
+
+	//次の行動を入力可能にする
+	if (*timer.get() == actionChangeStartTime) {
+		isNextActionInput = true;
+	}
+
 	//タイマーが指定した時間になったら
-	if (*timer.get() >= attack3Time) {
+	if (*timer.get() >= attackTime) {
 		//攻撃行動終了
 		isAttackActionEnd = true;
 	}
+}
+
+void PlayerSwordAttack1::MovePlayer(int moveTime)
+{
+	//移動時間を過ぎていたら抜ける
+	if (*timer.get() > moveTime) { return; }
+
+	//スピードを落としていく
+	const float easeTime = *timer.get() / (float)moveTime;
+	player->GetData()->moveSpeed = Easing::OutSine(attackStartMoveSpeed, 0, easeTime);
+
+	//速度をセット
+	player->GetData()->velocity.x = player->GetData()->moveVec.x * player->GetData()->moveSpeed;
+	player->GetData()->velocity.z = player->GetData()->moveVec.z * player->GetData()->moveSpeed;
 }

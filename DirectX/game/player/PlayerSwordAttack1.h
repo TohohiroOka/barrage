@@ -20,7 +20,7 @@ public: //ステート
 	};
 
 public: //メンバ関数
-	PlayerSwordAttack1(std::function<DirectX::XMFLOAT3()> getSwordPos);
+	PlayerSwordAttack1(Player* player);
 	~PlayerSwordAttack1();
 
 	/// <summary>
@@ -34,14 +34,9 @@ public: //メンバ関数
 	void Draw() override;
 
 	/// <summary>
-	/// 光源視点での描画
-	/// </summary>
-	void DrawLightView() override;
-
-	/// <summary>
 	/// 次の攻撃に遷移
 	/// </summary>
-	bool NextAttack(int endurance) override;
+	bool NextAttack() override;
 
 	/// <summary>
 	/// 攻撃が当たった場合の処理
@@ -49,18 +44,34 @@ public: //メンバ関数
 	void AttackCollision() override;
 
 private: //メンバ関数
+	//攻撃挙動
 	void AttackAction1();
 	void AttackAction2();
 	void AttackAction3();
+
+	/// <summary>
+	/// プレイヤーを攻撃に合わせて動かす
+	/// </summary>
+	void MovePlayer(int moveTime);
 
 private: //静的メンバ変数
 	//この攻撃の持久力使用料
 	static const int attackUseEnduranceNum = 20;
 	//最大連続攻撃回数
 	static const int maxAttackNum = 3;
+	//攻撃にかかる時間
+	static const int attackTime = 130;
+	//先行入力を開始する時間
+	static const int actionChangeStartTime = 80;
 	//色
 	static const DirectX::XMFLOAT4 attackColor;
 	static const DirectX::XMFLOAT4 nonAttackColor;
+
+private: //静的メンバ変数
+	//攻撃開始時の移動スピード最高値
+	static const float attackStartMoveSpeedMax;
+	//攻撃開始時の移動スピード最低値
+	static const float attackStartMoveSpeedMin;
 
 private: //メンバ変数
 	//行動
@@ -70,11 +81,11 @@ private: //メンバ変数
 	//各行動の動き
 	std::vector<std::function<void()>> func_;
 
-	//剣の座標取得用関数ポインタ
-	std::function<DirectX::XMFLOAT3()> getSwordPos_;
-
 	//連続攻撃回数
 	int attackNum = 0;
+
+	//攻撃開始時の移動スピード
+	float attackStartMoveSpeed;
 
 	//攻撃判定可視化用オブジェクト
 	std::unique_ptr<Model> model;
