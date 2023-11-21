@@ -69,8 +69,8 @@ void Scene1::Update()
 
 	if (!isInputConfigMode) {
 		player->Update();
-		field->Update(player->GetPosition());
-		boss->SetTargetPos(player->GetPosition());
+		field->Update(player->GetData()->pos);
+		boss->SetTargetPos(player->GetData()->pos);
 		boss->Update();
 
 		//撃破演出再生
@@ -173,7 +173,7 @@ void Scene1::Finalize()
 
 void Scene1::ImguiDraw()
 {
-	Vector3 ppos = player->GetPosition();
+	Vector3 ppos = player->GetData()->pos;
 	XMFLOAT3 cameraPos = {};
 	XMFLOAT3 cameraTarget = {};
 	if (isNormalCamera) {
@@ -194,7 +194,7 @@ void Scene1::ImguiDraw()
 	if (camera->GetisLockon()) { ImGui::Text("lockon  true"); }
 	else { ImGui::Text("lockon  false"); }
 	ImGui::Text("Player Boss Length [ %f ]", boss->GetLength());
-	ImGui::Text("%d : %d ", player->GetJumpMaxNum(), player->GetJumpCount());
+	ImGui::Text("%d : %d ", player->GetData()->jumpMaxNum, player->GetData()->jumpCount);
 
 	player->ImguiDraw();
 
@@ -217,9 +217,10 @@ void Scene1::CollisionCheck()
 {
 #pragma region プレイヤーと敵の衝突判定
 	{
+		const Vector3 ppos = player->GetData()->pos;
 		Sphere playerSphere;
-		playerSphere.center = { player->GetPosition().x, player->GetPosition().y,player->GetPosition().z, 1.0f };
-		playerSphere.radius = player->GetObject3d()->GetScale().x;
+		playerSphere.center = { ppos.x, ppos.y, ppos.z, 1.0f };
+		playerSphere.radius = player->GetFbxObject()->GetScale().x;
 
 		Sphere enemySphere;
 		enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
@@ -238,10 +239,11 @@ void Scene1::CollisionCheck()
 	{
 		//プレイヤーが回避またはブリンクをしていなければ衝突判定
 		//攻撃の判定を行わない時間なら判定を取らない
-		if ((!(player->GetIsAvoid() || player->GetIsBlink())) && boss->GetBaseAction()->GetIsCollision()) {
+		if ((!player->GetData()->isNoDamage) && boss->GetBaseAction()->GetIsCollision()) {
+			const Vector3 ppos = player->GetData()->pos;
 			Sphere playerSphere;
-			playerSphere.center = { player->GetPosition().x, player->GetPosition().y,player->GetPosition().z, 1.0f };
-			playerSphere.radius = player->GetObject3d()->GetScale().x;
+			playerSphere.center = { ppos.x, ppos.y, ppos.z, 1.0f };
+			playerSphere.radius = player->GetFbxObject()->GetScale().x;
 
 			//球とボックス
 			if (boss->GetBaseAction()->GetUseCollision() == BaseAction::UseCollision::box) {
@@ -292,22 +294,22 @@ void Scene1::CollisionCheck()
 #pragma region プレイヤーの攻撃と敵の衝突判定
 	{
 		//プレイヤーの攻撃がある場合のみ判定 
-		if (player->GetAttackAction()) {
+		if (player->GetData()->attackAction) {
 			Sphere enemySphere;
 			enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
 			enemySphere.radius = boss->GetHitScale();
 
 			Sphere attackSphere;
-			attackSphere.center = player->GetAttackAction()->GetAttackCollisionData().center;
-			attackSphere.radius = player->GetAttackAction()->GetAttackCollisionData().radius * 2;
+			attackSphere.center = player->GetData()->attackAction->GetAttackCollisionData().center;
+			attackSphere.radius = player->GetData()->attackAction->GetAttackCollisionData().radius * 2;
 
 			//攻撃が判定を有効にしていたら判定を取る
-			if (Collision::CheckSphere2Sphere(enemySphere, attackSphere) && player->GetAttackAction()->GetIsCollisionValid()) {
+			if (Collision::CheckSphere2Sphere(enemySphere, attackSphere) && player->GetData()->attackAction->GetIsCollisionValid()) {
 				//敵にダメージ
-				boss->Damage(player->GetAttackAction()->GetAttackCollisionData().power);
+				boss->Damage(player->GetData()->attackAction->GetAttackCollisionData().power);
 
 				//毎フレーム多段ヒットするのを防ぐため、この攻撃の衝突判定をoffにしておく。
-				player->GetAttackAction()->AttackCollision();
+				player->GetData()->attackAction->AttackCollision();
 
 				//ヒットストップ
 				GameHelper::Instance()->SetSlow(0, 10);
