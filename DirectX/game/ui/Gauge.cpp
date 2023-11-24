@@ -46,25 +46,18 @@ void Gauge::Draw()
 
 void Gauge::ChangeLength(int newGaugeNum, bool isDecreaseDiffMode)
 {
-	//ゲージ減少量を表示状態にする
-	if ((!this->isDecreaseDiffMode) && isDecreaseDiffMode) {
-		this->isDecreaseDiffMode = isDecreaseDiffMode;
-
-		const int decreaseStartLagTime = 20;
-		decreaseStartLagTimer = decreaseStartLagTime;
-	}
-
 	//ゲージ量を更新してバーの長さを変更
 	const float newGaugeLength = (float)newGaugeNum / maxGaugeNum * length;
 	gaugeBar->SetSize({ newGaugeLength, thickness });
 
 	//減少量バーの長さを変更
-	if (this->isDecreaseDiffMode) {
+	if (this->isDecreaseDiffMode || isDecreaseDiffMode) {
 		//減少量の差分を計算
 		const int decreaseNum = gaugeNum - newGaugeNum;
 		//変更前のゲージの長さを計算
 		const float beforeGaugeLength = (float)gaugeNum / maxGaugeNum * length;
 		//減少中のゲージが余っている可能性があるので計算
+		if (!this->isDecreaseDiffMode) { gaugeDecreaseDiff->SetPosition(gaugeBar->GetPosition()); }
 		float beforeDecreaseLengthSurplus = (float)(gaugeDecreaseDiff->GetPosition().x + gaugeDecreaseDiff->GetSize().x) - (gaugeBar->GetPosition().x + beforeGaugeLength);
 		beforeDecreaseLengthSurplus = max(beforeDecreaseLengthSurplus, 0);
 
@@ -76,6 +69,14 @@ void Gauge::ChangeLength(int newGaugeNum, bool isDecreaseDiffMode)
 
 	//変更前のゲージ量を更新
 	gaugeNum = newGaugeNum;
+
+	//ゲージ減少量を表示状態にする
+	if ((!this->isDecreaseDiffMode) && isDecreaseDiffMode) {
+		this->isDecreaseDiffMode = isDecreaseDiffMode;
+
+		const int decreaseStartLagTime = 50;
+		decreaseStartLagTimer = decreaseStartLagTime;
+	}
 }
 
 void Gauge::ChangeDecreaseDiffLength()
@@ -86,7 +87,7 @@ void Gauge::ChangeDecreaseDiffLength()
 	if (decreaseStartLagTimer > 0) { return; }
 
 	//ゲージ減少
-	const float damageGaugeChangeSpeed = 4.0f;
+	const float damageGaugeChangeSpeed = 1.5f;
 	DirectX::XMFLOAT2 gaugeDecreaseLength = gaugeDecreaseDiff->GetSize();
 	gaugeDecreaseLength.x -= damageGaugeChangeSpeed;
 	gaugeDecreaseLength.x = max(gaugeDecreaseLength.x, 0);

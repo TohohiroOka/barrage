@@ -9,7 +9,7 @@ using namespace DirectX;
 PlayerActionAttack::PlayerActionAttack(Player* player)
 	: PlayerActionBase(player)
 {
-	player->UseEndurance(player->GetData()->attackAction->GetUseEndranceNum(), 30, true); //持久力を使用
+	player->UseEndurance(player->GetData()->attackAction->GetUseEndranceNum(), 60, true); //持久力を使用
 
 	//予め次の行動を設定しておく(終了後は通常移動)
 	nextAction = PlayerActionName::MOVENORMAL;
@@ -102,7 +102,7 @@ void PlayerActionAttack::NextAttack()
 	if (GameInputManager::TriggerInputAction(GameInputManager::Attack)) {
 		if (!player->GetData()->attackAction->NextAttack()) { return; }
 
-		player->UseEndurance(player->GetData()->attackAction->GetUseEndranceNum(), 30, true); //持久力を使用
+		player->UseEndurance(player->GetData()->attackAction->GetUseEndranceNum(), 60, true); //持久力を使用
 
 		//予め次の行動を設定しておく(終了後は通常移動)
 		nextAction = PlayerActionName::MOVENORMAL;

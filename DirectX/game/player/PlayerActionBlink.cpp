@@ -5,7 +5,7 @@
 PlayerActionBlink::PlayerActionBlink(Player* player)
 	: PlayerActionBase(player)
 {
-	player->UseEndurance(blinkUseEndurance, 30, true); //持久力を使用
+	player->UseEndurance(blinkUseEndurance, 60, true); //持久力を使用
 
 	//ブリンク回数を増やす(地面に着けばリセット)
 	player->GetData()->blinkCount++;
@@ -49,7 +49,7 @@ void PlayerActionBlink::Blink()
 	const float time = *blinkTimer.get() / (float)blinkTime;
 
 	//イージングで速度を落としていく
-	const float power = Easing::OutCirc(7, 1, time);
+	const float power = Easing::OutCirc(4, 1, time);
 	player->GetData()->velocity = player->GetData()->avoidBlinkMoveVec.normalize() * power;
 
 	//タイマーが指定した時間になったら行動変更先行入力
