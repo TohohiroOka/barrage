@@ -5,6 +5,7 @@ PlayerData::PlayerData()
 	action = PlayerActionName::MOVENORMAL;
 
 	pos = { 100.0f,50.0f,100.0f };
+	moveVec = { 0, 0, 1 };
 
 	onGround = false;
 	fallSpeed = 0;
@@ -21,7 +22,7 @@ PlayerData::PlayerData()
 	maxHP = 100;
 	HP = maxHP;
 	
-	maxEndurance = 200;
+	maxEndurance = 300;
 	endurance = maxEndurance;
 
 	isNoGravity = false;

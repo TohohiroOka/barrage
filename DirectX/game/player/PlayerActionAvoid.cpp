@@ -5,7 +5,7 @@
 PlayerActionAvoid::PlayerActionAvoid(Player* player)
 	: PlayerActionBase(player)
 {
-	player->UseEndurance(avoidUseEndurance, 30, true); //持久力を使用
+	player->UseEndurance(avoidUseEndurance, 60, true); //持久力を使用
 
 	//タイマー生成
 	avoidTimer = std::make_unique<Engine::Timer>();
@@ -42,7 +42,7 @@ void PlayerActionAvoid::Avoid()
 	const float time = *avoidTimer.get() / (float)avoidTime;
 
 	//イージングで速度を落としていく
-	const float power = Easing::OutCirc(5, 1, time);
+	const float power = Easing::OutCirc(2, 0.5f, time);
 	player->GetData()->velocity = player->GetData()->avoidBlinkMoveVec.normalize() * power;
 
 
