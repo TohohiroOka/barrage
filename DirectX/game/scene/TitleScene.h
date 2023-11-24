@@ -106,6 +106,8 @@ private:
 
 	bool isPressed = false;
 	bool isSelected = false;
+	
+	bool isSceneChangeWait = false;
 
 	ChoiceEmphasisDrawer choiceDrawer;
 	//ï\é¶ç¿ïWån

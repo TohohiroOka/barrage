@@ -21,9 +21,6 @@ void BaseDefeatDirection::Update()
 	if (!isCommonEnded){ commonDirectFrame++; }
 	if (isFadeInEnd && isDisplayEnd && isFadeOutEnd) { 
 		isCommonEnded = true; 
-		//シーン遷移実行
-		TitleScene* titleScene = new TitleScene;
-		SceneManager::SetNextScene(titleScene);
 	}
 	//共通の勝利演出の更新
 
