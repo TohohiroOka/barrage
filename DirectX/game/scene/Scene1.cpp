@@ -254,7 +254,7 @@ void Scene1::CollisionCheck()
 				for (auto& i : bossAttackDatas) {
 					num++;
 					if (Collision::CheckSphere2Box(playerSphere, i)) {
-						player->Damage(10, i.point1);
+						player->Damage(boss->GetBaseAction()->GetDamage(), i.point1);
 						camera->ShakeStart(10, 10);
 						boss->GetBaseAction()->SetIsCollision(false);
 						boss->GetBaseAction()->DeleteBullet({ num });
@@ -271,7 +271,7 @@ void Scene1::CollisionCheck()
 				for (auto& i : bossAttackDatas) {
 					num++;
 					if (Collision::CheckSphere2Sphere(playerSphere, i)) {
-						player->Damage(10, { i.center.m128_f32[0],i.center.m128_f32[1] ,i.center.m128_f32[2] });
+						player->Damage(boss->GetBaseAction()->GetDamage(), { i.center.m128_f32[0],i.center.m128_f32[1] ,i.center.m128_f32[2] });
 						camera->ShakeStart(10, 10);
 						boss->GetBaseAction()->SetIsCollision(false);
 						boss->GetBaseAction()->DeleteBullet({ num });
@@ -288,7 +288,7 @@ void Scene1::CollisionCheck()
 				for (auto& i : bossAttackDatas) {
 					num++;
 					if (Collision::CheckSphereCapsule(playerSphere, i, nullptr)) {
-						player->Damage(10, i.startPosition);
+						player->Damage(boss->GetBaseAction()->GetDamage(), i.startPosition);
 						camera->ShakeStart(10, 10);
 						boss->GetBaseAction()->SetIsCollision(false);
 						boss->GetBaseAction()->DeleteBullet({ num });

@@ -1,25 +1,12 @@
 #pragma once
 #include "../BaseAction.h"
-#include <DirectXMath.h>
-#include "../Math/Timer.h"
-#include <functional>
+#include "Math/Timer.h"
 
-/// <summary>
-/// 壁際の時に中央寄りに移動する
-/// </summary>
-class Boss1Move2 : public BaseAction
+class Boss1Wince : public BaseAction
 {
-private:
-
-	enum class State {
-		up,
-		side,
-		size,
-	};
-
 public:
-	Boss1Move2();
-	~Boss1Move2() {};
+	Boss1Wince();
+	~Boss1Wince() {};
 
 	void Update() override;
 
@@ -37,20 +24,8 @@ public:
 
 	int GetDamage()override { return 0; }
 
-	void UpMove();
-
-	void SideMove();
-
 private:
 
-	//開始地点
-	DirectX::XMFLOAT3 startPos;
-	//移動後地点
-	DirectX::XMFLOAT3 endPos;
-	//イージングタイマー
 	std::unique_ptr<Engine::Timer> timer;
-	//現在の動き
-	State state;
-	std::vector<std::function<void()>> func_;
-
 };
+

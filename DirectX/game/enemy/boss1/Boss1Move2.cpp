@@ -31,6 +31,11 @@ Boss1Move2::Boss1Move2()
 
 void Boss1Move2::Update()
 {
+	if (boss->GetIsWince()) {
+		return;
+		isEnd = true;
+	}
+
 	if (state < State::size) {
 		func_[int(state)]();
 	}

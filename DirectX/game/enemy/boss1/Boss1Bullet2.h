@@ -34,6 +34,8 @@ public:
 
 	void DeleteBullet(std::vector<int> _deleteNum) override;
 
+	int GetDamage()override { return 5; }
+
 	void AddBullet(bool _easing);
 
 	void BulletUpdate(BulletInfo& _bullet);

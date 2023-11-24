@@ -9,6 +9,8 @@
 #include "Boss1Bullet2.h"
 #include "Boss1Bullet3.h"
 
+#include "Boss1Wince.h"
+
 Boss1::Boss1()
 {
 	maxHP = 1000;
@@ -27,8 +29,14 @@ Boss1::Boss1()
 
 void Boss1::Update()
 {
+	if (winceValue >= 100) {
+		isWince = true;
+		winceValue = 0.0f;
+		winceAction = std::make_unique<Boss1Wince>();
+	}
+
 	//アクションが終わり次第次に行く
-	if (action->End()) {
+	if (action->End() && !isWince) {
 		SetAction();
 	}
 

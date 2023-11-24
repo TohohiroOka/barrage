@@ -460,6 +460,9 @@
     <ClCompile Include="game\player\PlayerActionJump.cpp">
       <Filter>ゲームシステム\Player\Action</Filter>
     </ClCompile>
+    <ClCompile Include="game\enemy\boss1\Boss1Wince.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -948,6 +951,9 @@
     </ClInclude>
     <ClInclude Include="game\player\PlayerActionJump.h">
       <Filter>ゲームシステム\Player\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\Boss1Wince.h">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

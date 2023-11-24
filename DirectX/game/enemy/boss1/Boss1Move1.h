@@ -26,6 +26,8 @@ public:
 
 	void DeleteBullet(std::vector<int> _deleteNum) override {};
 
+	int GetDamage()override { return 0; }
+
 	/// <summary>
 	/// ˆÚ“®•ûŒü
 	/// </summary>

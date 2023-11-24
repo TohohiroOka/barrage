@@ -25,13 +25,14 @@ void Boss1Bullet2::Update()
 {
 	const float maxTimer = 100.0f;
 
-	if (*timer.get() % 5 == 0 && *timer.get() < maxTimer) {
-		for (int i = 0; i < 4; i++) {
-			bool easing = (i % 2) == 0;
-			AddBullet(easing);
+	if (!boss->GetIsWince()) {
+		if (*timer.get() % 5 == 0 && *timer.get() < maxTimer) {
+			for (int i = 0; i < 4; i++) {
+				bool easing = (i % 2) == 0;
+				AddBullet(easing);
+			}
 		}
 	}
-
 	//XVˆ—
 	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
 		it != bullet.end(); it++) {

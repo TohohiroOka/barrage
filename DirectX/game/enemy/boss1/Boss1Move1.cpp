@@ -18,6 +18,11 @@ Boss1Move1::Boss1Move1()
 
 void Boss1Move1::Update()
 {
+	if (boss->GetIsWince()) {
+		return;
+		isEnd = true;
+	}
+
 	const float maxTimer = 100.0f;
 
 	boss->SetMoveVec(boss->GetBaseModel()->GetModelMove());
