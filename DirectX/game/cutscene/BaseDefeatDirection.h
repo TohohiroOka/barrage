@@ -62,8 +62,17 @@ protected:
 private:
 	//全シーンで使用する演出
 	int commonDirectFrame = 0;
-	//再生時間
-	const int COMMON_DIRECTION_MAXFRAME = 150;
+	//フェードイン時間
+	const int TEXT_FADEIN_MAXFRAME = 30;
+	bool isFadeInEnd = false;
+	//持続時間
+	const int TEXT_DISPLAY_MAXFRAME = 120;
+	bool isDisplayEnd = false;
+	//フェードアウト時間
+	const int TEXT_FADEOUT_MAXFRAME = 30;
+	bool isFadeOutEnd = false;
+	//演出の合計時間
+	const int COMMON_DIRECTION_MAXFRAME = TEXT_FADEIN_MAXFRAME + TEXT_FADEOUT_MAXFRAME + TEXT_DISPLAY_MAXFRAME;
 	//全シーン共通演出中
 	bool isCommonDirecting = false;
 	//全シーン共通演出終了

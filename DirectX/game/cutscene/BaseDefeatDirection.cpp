@@ -1,5 +1,7 @@
 #include "BaseDefeatDirection.h"
 #include "WindowApp.h"
+#include "scene/TitleScene.h"
+#include "Scene/SceneManager.h"
 
 #include "Math/Easing/Easing.h"
 
@@ -17,16 +19,43 @@ void BaseDefeatDirection::Update()
 {
 	if (!isCommonDirecting) { return; }
 	if (!isCommonEnded){ commonDirectFrame++; }
-	if (commonDirectFrame >= COMMON_DIRECTION_MAXFRAME) { isCommonEnded = true; }
+	if (isFadeInEnd && isDisplayEnd && isFadeOutEnd) { 
+		isCommonEnded = true; 
+		//シーン遷移実行
+		TitleScene* titleScene = new TitleScene;
+		SceneManager::SetNextScene(titleScene);
+	}
 	//共通の勝利演出の更新
 
 
-	if (commonDirectFrame < 30) {
-		float t = float(commonDirectFrame) / 30.f;
+	if (!isFadeInEnd) {
+		float t = float(commonDirectFrame) / float(TEXT_FADEIN_MAXFRAME);
 		float rate = Easing::InCubic(1.5f, 1.f, t);
 		victoryTextUpper->SetSize({ 512.f * rate,64.f * rate });
 		victoryTextUpper->SetColor({ 1.0f,1.0f,1.0f,1.0f * t });
 		victoryTextUpper->Update();
+		if (commonDirectFrame > TEXT_FADEIN_MAXFRAME) {
+			commonDirectFrame = 0;
+			isFadeInEnd = true;
+		}
+	}
+	else if (!isDisplayEnd) {
+		if (commonDirectFrame > TEXT_DISPLAY_MAXFRAME) {
+			commonDirectFrame = 0;
+			isDisplayEnd = true;
+		}
+	}
+	else if (!isFadeOutEnd) {
+		float t = float(commonDirectFrame) / float(TEXT_FADEOUT_MAXFRAME);
+		float rate = Easing::OutCubic(1.f, 1.5f, t);
+		float alphaRate = Easing::OutCubic(1.f, 0.f, t);
+		victoryTextUpper->SetSize({ 512.f * rate,64.f * rate });
+		victoryTextUpper->SetColor({ 1.0f,1.0f,1.0f,alphaRate });
+		victoryTextUpper->Update();
+		if (commonDirectFrame > TEXT_FADEOUT_MAXFRAME) {
+			commonDirectFrame = 0;
+			isFadeOutEnd = true;
+		}
 	}
 	
 }
