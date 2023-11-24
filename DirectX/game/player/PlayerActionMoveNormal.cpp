@@ -12,8 +12,8 @@ const float PlayerActionMoveNormal::dashSpeedMax = 2;
 PlayerActionMoveNormal::PlayerActionMoveNormal(Player* player)
 	: PlayerActionBase(player)
 {
-	//ジャンプ中以外なら待機アニメーションに変更
-	if (player->GetData()->action == PlayerActionName::JUMP) { return; }
+	//ジャンプアニメーション以外なら待機アニメーションに変更
+	if (player->GetFbxObject()->GetUseAnimation() == PlayerAnimationName::JUMP_ANIMATION) { return; }
 	player->GetFbxObject()->AnimationReset();
 	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::STAY_ANIMATION);
 }
