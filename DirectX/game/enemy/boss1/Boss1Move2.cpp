@@ -1,4 +1,5 @@
 #include "Boss1Move2.h"
+#include "../boss1/Boss1Model.h"
 #include "../BaseBoss.h"
 #include "GameHelper.h"
 #include "Math/Easing/Easing.h"
@@ -7,7 +8,7 @@ Boss1Move2::Boss1Move2()
 {
 	//アニメーションセット
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(0);
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::walk));
 
 	Vector3 target = boss->GetTargetPos();
 	startPos = boss->GetCenter()->GetPosition();

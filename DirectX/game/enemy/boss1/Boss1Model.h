@@ -14,6 +14,14 @@ private:
 		cone,
 		size,
 	};
+	
+public:
+
+	enum class Movement {
+		standBy = 0,
+		attack1 = 1,
+		walk = 3,
+	};
 
 public:
 

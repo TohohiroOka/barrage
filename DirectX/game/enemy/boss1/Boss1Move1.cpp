@@ -1,4 +1,5 @@
 #include "Boss1Move1.h"
+#include "../boss1/Boss1Model.h"
 #include "../BaseBoss.h"
 #include "Math/Easing/Easing.h"
 #include "GameHelper.h"
@@ -6,7 +7,7 @@
 Boss1Move1::Boss1Move1()
 {
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(0);
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::walk));
 	DirectX::XMFLOAT3 rota = {};
 	SetMoveRotation(rota);
 	boss->GetCenter()->SetRotation(rota);
