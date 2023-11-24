@@ -152,6 +152,9 @@
     <Filter Include="ゲームシステム\Player\Attack">
       <UniqueIdentifier>{59befbde-6773-411b-8a91-ddae424e5227}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\InstanceObjectLightView">
+      <UniqueIdentifier>{0f97af0b-1a6a-4487-9548-19fb3828ffbd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -543,8 +546,12 @@
     <FxCompile Include="Resources\Shaders\FbxLightViewVS.hlsl">
       <Filter>シェーダーファイル\FbxLightView</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\InstanceObjectLightViewPS.hlsl" />
-    <FxCompile Include="Resources\Shaders\InstanceObjectLightViewVS.hlsl" />
+    <FxCompile Include="Resources\Shaders\InstanceObjectLightViewPS.hlsl">
+      <Filter>シェーダーファイル\InstanceObjectLightView</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\InstanceObjectLightViewVS.hlsl">
+      <Filter>シェーダーファイル\InstanceObjectLightView</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite.hlsli">
@@ -586,7 +593,9 @@
     <None Include="Resources\Shaders\FbxLightView.hlsli">
       <Filter>シェーダーファイル\FbxLightView</Filter>
     </None>
-    <None Include="Resources\Shaders\InstanceObjectLightView.hlsli" />
+    <None Include="Resources\Shaders\InstanceObjectLightView.hlsli">
+      <Filter>シェーダーファイル\InstanceObjectLightView</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\particle\ParticleManager.h">

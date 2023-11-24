@@ -1,4 +1,5 @@
 #include "Boss1NearAttack1.h"
+#include "../boss1/Boss1Model.h"
 #include "../BaseBoss.h"
 #include "GameHelper.h"
 #include "../Math/Easing/Easing.h"
@@ -8,7 +9,7 @@ using namespace DirectX;
 Boss1NearAttack1::Boss1NearAttack1()
 {
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(0);
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::walk));
 	useCollision = UseCollision::box;
 	model = Model::CreateFromOBJ("cone");
 	for (auto& i : instanceObject) {

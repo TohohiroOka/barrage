@@ -1,4 +1,5 @@
 #include "Boss1Bullet2.h"
+#include "../boss1/Boss1Model.h"
 #include "GameHelper.h"
 #include "../BaseBoss.h"
 #include "Math/Easing/Easing.h"
@@ -7,7 +8,7 @@
 Boss1Bullet2::Boss1Bullet2()
 {
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(0);
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1));
 	useCollision = UseCollision::sphere;
 	model = Model::CreateFromOBJ("bullet");
 	for (auto& i : instanceObject) {

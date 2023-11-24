@@ -2,10 +2,10 @@
 
 Boss1Model::Boss1Model()
 {
-	objModel[int(ObjectType::cube)] = Model::CreateFromOBJ("NormalCube");
+	objModel[int(ObjectType::cube)] = Model::CreateFromOBJ("core");
 	objModel[int(ObjectType::cone)] = Model::CreateFromOBJ("feet");
 
-	model = FbxModel::Create("walk","Hips");
+	model = FbxModel::Create("boss1","Hips");
 	fbxObject = Fbx::Create(model.get());
 	fbxObject->SetScale({ 0.001f,0.001f ,0.001f });
 	fbxObject->SetLight(true);
