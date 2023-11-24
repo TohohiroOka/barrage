@@ -23,9 +23,11 @@ void Boss1Bullet1::Update()
 {
 	const float l_maxTimer = 100.0f;
 
-	if (*timer.get() % 5 == 0 && *timer.get() < l_maxTimer) {
-		for (int i = 0; i < 1; i++) {
-			AddBullet();
+	if (!boss->GetIsWince()) {
+		if (*timer.get() % 5 == 0 && *timer.get() < l_maxTimer) {
+			for (int i = 0; i < 1; i++) {
+				AddBullet();
+			}
 		}
 	}
 

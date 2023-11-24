@@ -44,6 +44,8 @@ public:
 
 	void DeleteBullet(std::vector<int> _deleteNum) override {};
 
+	int GetDamage()override { return 3; }
+
 private:
 
 	void StartMove();

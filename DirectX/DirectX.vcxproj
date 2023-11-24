@@ -175,6 +175,7 @@
     <ClCompile Include="game\enemy\boss1\Boss1Move1.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1NearAttack1.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1Move2.cpp" />
+    <ClCompile Include="game\enemy\boss1\Boss1Wince.cpp" />
     <ClCompile Include="game\enemy\PredictionLine.cpp" />
     <ClCompile Include="game\field\BackGround.cpp" />
     <ClCompile Include="game\field\Field.cpp" />
@@ -491,6 +492,7 @@
     <ClInclude Include="game\enemy\boss1\Boss1Move1.h" />
     <ClInclude Include="game\enemy\boss1\Boss1NearAttack1.h" />
     <ClInclude Include="game\enemy\boss1\Boss1Move2.h" />
+    <ClInclude Include="game\enemy\boss1\Boss1Wince.h" />
     <ClInclude Include="game\enemy\PredictionLine.h" />
     <ClInclude Include="game\field\BackGround.h" />
     <ClInclude Include="game\field\Field.h" />

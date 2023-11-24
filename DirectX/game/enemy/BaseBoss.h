@@ -38,6 +38,7 @@ public:
 	float GetLength() { return (targetPos - Vector3(bossModel->GetObjectInst()->GetPosition())).length(); }
 	BaseBossModel* GetBaseModel() { return bossModel.get(); }
 	bool GetBossIsAlive() { return HP <= 0; }
+	bool GetIsWince() { return isWince; }
 
 protected:
 
@@ -68,5 +69,12 @@ protected:
 
 	//判定用の大きさ
 	float hitScale;
+
+	//怯み値
+	float winceValue;
+	//怯み
+	bool isWince;
+	//怯みアクション
+	std::unique_ptr<BaseAction> winceAction;
 };
 

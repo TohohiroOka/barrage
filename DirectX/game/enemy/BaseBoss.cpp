@@ -20,6 +20,15 @@ void BaseBoss::Update()
 	action->Update();
 
 	bossModel->Update();
+
+	if (winceAction) {
+		if (!winceAction->End()) {
+			winceAction->Update();
+		} else {
+			isWince = false;
+			winceAction.reset();
+		}
+	}
 }
 
 void BaseBoss::Draw()
@@ -40,6 +49,9 @@ void BaseBoss::DrawSprite()
 
 void BaseBoss::Damage(int damageNum)
 {
+	//‹¯‚İ‰ÁZ
+	winceValue += damageNum;
+
 	//HP‚©‚çƒ_ƒ[ƒW—Ê‚ğˆø‚­
 	HP -= damageNum;
 	HP = max(HP, 0);

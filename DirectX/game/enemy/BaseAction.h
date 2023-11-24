@@ -31,6 +31,8 @@ public:
 
 	virtual void DeleteBullet(std::vector<int> _deleteNum) = 0;
 
+	virtual int GetDamage() = 0;
+
 	bool End() { return isEnd; }
 	void SetUseCollision(const UseCollision _useCollision) { useCollision = _useCollision; }
 	UseCollision GetUseCollision() { return useCollision; }
