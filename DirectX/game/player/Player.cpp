@@ -191,7 +191,7 @@ void Player::UseEndurance(const int enduranceUseNum, const int enduranceRecovery
 void Player::ObjectUpdate()
 {
 	//速度を加算して座標更新
-	data->pos += data->velocity * GameHelper::Instance()->GetGameSpeed();
+	data->pos += data->velocity * GameHelper::Instance()->GetGameSpeed() + (Vector3)object->GetModelMove();
 
 	//壁判定
 	data->pos.x = max(data->pos.x, moveMinPos.x);
