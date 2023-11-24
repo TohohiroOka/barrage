@@ -75,7 +75,8 @@ void Scene1::Update()
 
 		//撃破演出再生
 		//デバッグ用再生
-		if (DirectInput::GetInstance()->TriggerKey(DIK_H)) { defeatDirection.StartDefeatDirection(boss->GetCenter()->GetPosition()); }
+		//if (DirectInput::GetInstance()->TriggerKey(DIK_H)) { defeatDirection.StartDefeatDirection(boss->GetCenter()->GetPosition()); }
+		if(boss->GetBossIsAlive()){ defeatDirection.StartDefeatDirection(boss->GetCenter()->GetPosition()); }
 
 		CollisionCheck();
 
