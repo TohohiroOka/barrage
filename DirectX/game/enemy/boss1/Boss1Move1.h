@@ -4,7 +4,7 @@
 #include "../Math/Timer.h"
 
 /// <summary>
-/// 歩き
+/// 後退
 /// </summary>
 class Boss1Move1 : public BaseAction
 {
@@ -28,15 +28,12 @@ public:
 
 	int GetDamage()override { return 0; }
 
-	/// <summary>
-	/// 移動方向
-	/// </summary>
-	/// <param name="_rota"></param>
-	void SetMoveRotation(DirectX::XMFLOAT3& _rota);
-
 private:
 
 	//イージングタイマー
 	std::unique_ptr<Engine::Timer> moveTime;
+	//移動方向
+	Vector3 moveV; 
+
 };
 

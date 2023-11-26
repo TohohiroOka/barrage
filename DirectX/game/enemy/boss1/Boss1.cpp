@@ -128,8 +128,8 @@ void Boss1::SetShortMoveAction()
 	isMove = true;
 
 	//•Ç‚Æ‚Ì‹——£‚ª‹ß‚©‚Á‚½ê‡‚Ì“®‚«
-	const float l_size = GameHelper::Instance()->GetStageSize();
-	const float l_specifiedValue = 20.0f;
+	const float l_size = GameHelper::Instance()->GetStageSize() * 2.0f;
+	const float l_specifiedValue = 60.0f;
 	if (targetPos.x >= l_size - l_specifiedValue || targetPos.z >= l_size - l_specifiedValue ||
 		targetPos.x <= l_specifiedValue || targetPos.z <= l_specifiedValue) {
 		action = std::make_unique<Boss1Move2>();

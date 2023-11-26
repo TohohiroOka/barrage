@@ -9,6 +9,7 @@ Boss1Wince::Boss1Wince()
 	//アニメーションセット
 	boss->GetBaseModel()->AnimationReset();
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::standBy));
+	boss->GetBaseModel()->SetIsRoop(true);
 
 	timer = std::make_unique<Engine::Timer>();
 

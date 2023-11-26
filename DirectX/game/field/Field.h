@@ -17,6 +17,7 @@ public:
 	void Draw();
 
 	void FrameReset() {
+		enclosure->FrameReset();
 		backGround->FrameReset();
 		FieldLine::FrameReset();
 	}
@@ -38,5 +39,9 @@ private:
 	//”wŒi‚Ìü
 	std::unique_ptr<Engine::Timer> timer;
 	std::forward_list<std::unique_ptr<FieldLine>> line;
+
+	std::unique_ptr<Model> blockModel;
+	std::unique_ptr<InstanceObject> enclosure;
+	std::array<DirectX::XMMATRIX, 4> enclosureWorld;
 };
 
