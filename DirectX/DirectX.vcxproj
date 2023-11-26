@@ -162,6 +162,7 @@
     <ClCompile Include="game\cutscene\BaseOnStageDirection.cpp" />
     <ClCompile Include="game\cutscene\Boss1Defeat.cpp" />
     <ClCompile Include="game\cutscene\Boss1OnStage.cpp" />
+    <ClCompile Include="game\cutscene\SceneChangeDirection.cpp" />
     <ClCompile Include="game\effect\BulletEffect.cpp" />
     <ClCompile Include="game\enemy\BaseAction.cpp" />
     <ClCompile Include="game\enemy\BaseBoss.cpp" />
@@ -479,6 +480,7 @@
     <ClInclude Include="game\cutscene\BaseOnStageDirection.h" />
     <ClInclude Include="game\cutscene\Boss1Defeat.h" />
     <ClInclude Include="game\cutscene\Boss1OnStage.h" />
+    <ClInclude Include="game\cutscene\SceneChangeDirection.h" />
     <ClInclude Include="game\effect\BulletEffect.h" />
     <ClInclude Include="game\enemy\BaseAction.h" />
     <ClInclude Include="game\enemy\BaseBoss.h" />

@@ -12,6 +12,7 @@
 #include "scene/TitleScene.h"
 #include "effect/BulletEffect.h"
 #include "scene/OnStageTest.h"
+#include "cutscene/SceneChangeDirection.h"
 
 using namespace DirectX;
 
@@ -59,6 +60,8 @@ void Scene1::Initialize()
 	BulletEffect::LoadResources();
 
 	defeatDirection.Init();
+
+	SceneChangeDirection::Init();
 }
 
 void Scene1::Update()
@@ -75,7 +78,9 @@ void Scene1::Update()
 
 		//撃破演出再生
 		//デバッグ用再生
-		//if (DirectInput::GetInstance()->TriggerKey(DIK_H)) { defeatDirection.StartDefeatDirection(boss->GetCenter()->GetPosition()); }
+		if (DirectInput::GetInstance()->TriggerKey(DIK_H)) { 
+			defeatDirection.StartDefeatDirection(boss->GetCenter()->GetPosition()); 
+		}
 		if(boss->GetBossIsAlive()){ defeatDirection.StartDefeatDirection(boss->GetCenter()->GetPosition()); }
 
 		CollisionCheck();
@@ -129,6 +134,19 @@ void Scene1::Update()
 	}
 
 	defeatDirection.Update();
+
+
+
+	if (defeatDirection.GetDirectionEnd() && isSceneChangeWait == false) {
+		isSceneChangeWait = true;
+		SceneChangeDirection::PlayFadeOut();
+	}
+	if (isSceneChangeWait && SceneChangeDirection::IsDirectionEnd()) {
+		TitleScene* titleScene = new TitleScene;
+		SceneManager::SetNextScene(titleScene);
+	}
+
+	SceneChangeDirection::Update();
 }
 
 void Scene1::Draw(const int _cameraNum)
@@ -166,6 +184,8 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 	}
 
 	defeatDirection.Draw2D();
+
+	SceneChangeDirection::Draw();
 }
 
 void Scene1::Finalize()

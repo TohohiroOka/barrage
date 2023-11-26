@@ -98,4 +98,7 @@ private:
 	float rate;
 
 	bool stop;
+
+	//ƒV[ƒ“‘JˆÚ‘Ò‹@’†‚©
+	bool isSceneChangeWait = false;
 };

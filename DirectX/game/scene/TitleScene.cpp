@@ -3,6 +3,7 @@
 #include "Input/XInputManager.h"
 #include "engine/Scene/SceneManager.h"
 #include "scene/Scene1.h"
+#include "cutscene/SceneChangeDirection.h"
 
 void TitleScene::Initialize()
 {
@@ -50,6 +51,9 @@ void TitleScene::Initialize()
 
 	//強調表示初期化
 	choiceDrawer.Initialize();
+
+	//遷移初期化
+	SceneChangeDirection::Init();
 }
 
 void TitleScene::Update()
@@ -81,12 +85,11 @@ void TitleScene::Update()
 		}
 
 		if (choiceDrawer.IsChooseAnimEnd()) {
-			Scene1* gameScene = nullptr;
 			switch (selecting)
 			{
 			case TitleScene::PLAYER_SELECT::SELECT_STARTGAME:
-				gameScene = new Scene1;
-				SceneManager::SetNextScene(gameScene);
+				isSceneChangeWait = true;
+				SceneChangeDirection::PlayFadeOut();
 				break;
 			case TitleScene::PLAYER_SELECT::SELECT_CONFIG:
 				break;
@@ -96,6 +99,13 @@ void TitleScene::Update()
 				break;
 			}
 		}
+
+		if (isSceneChangeWait && SceneChangeDirection::IsDirectionEnd()) {
+			Scene1* gameScene = nullptr;
+			gameScene = new Scene1;
+			SceneManager::SetNextScene(gameScene);
+		}
+
 	}
 	else {
 		//なにかしらのボタンが押されたら選択肢表示
@@ -109,6 +119,8 @@ void TitleScene::Update()
 	}
 
 	choiceDrawer.Update();
+
+	SceneChangeDirection::Update();
 }
 
 void TitleScene::Draw(const int _cameraNum)
@@ -134,7 +146,7 @@ void TitleScene::NonPostEffectDraw(const int _cameraNum)
 		pressAnyButtonSprite->Draw(); 
 	}
 
-
+	SceneChangeDirection::Draw();
 }
 
 void TitleScene::Finalize()
