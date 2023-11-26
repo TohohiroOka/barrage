@@ -8,7 +8,7 @@ FieldLine::FieldLine()
 {
 	spos = {};
 	direction = MoveDirection(RandomInt(360) % int(MoveDirection::size));
-	float size = 510.0f;
+	float size = GameHelper::Instance()->GetStageSize() * 2.0f;
 	if (direction == MoveDirection::x) {
 		spos.x = RandomFloat(size * 5.0f) / 10.0f;
 		spos.y = RandomFloat(size * 10.0f) / 10.0f;

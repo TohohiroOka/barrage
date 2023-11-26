@@ -8,6 +8,8 @@ Boss1Bullet3::Boss1Bullet3()
 {
 	boss->GetBaseModel()->AnimationReset();
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1));
+	boss->GetBaseModel()->SetIsRoop(false);
+
 	useCollision = UseCollision::sphere;
 	model = Model::CreateFromOBJ("bullet");
 	for (auto& i : instanceObject) {

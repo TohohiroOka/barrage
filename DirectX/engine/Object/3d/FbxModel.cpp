@@ -642,7 +642,7 @@ std::unique_ptr<FbxModel> FbxModel::Create(const std::string fileName, const std
 	return std::unique_ptr<FbxModel>(instance);
 }
 
-void FbxModel::Update(const int _animationNum)
+void FbxModel::Update(const int _animationNum, const bool _isRoop)
 {
 	HRESULT result;
 
@@ -666,7 +666,7 @@ void FbxModel::Update(const int _animationNum)
 	data->fbxUpdate[_animationNum].nowTime += frameTime;
 
 	//ÅŒã‚Ü‚Ås‚Á‚½‚çæ“ª‚É–ß‚·
-	if (data->fbxUpdate[_animationNum].nowTime > data->fbxUpdate[_animationNum].stopTime)
+	if (data->fbxUpdate[_animationNum].nowTime > data->fbxUpdate[_animationNum].stopTime && _isRoop)
 	{
 		data->fbxUpdate[_animationNum].nowTime = data->fbxUpdate[_animationNum].startTime;
 		beforePos = data->fbxUpdate[0].startPos;
@@ -732,7 +732,7 @@ void FbxModel::Update(const int _animationNum)
 	boneMatWorld[baseBoneName] = boneMatWorld000;
 }
 
-void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _rate2, const int _animationNum)
+void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _rate2, const int _animationNum, const bool _isRoop)
 {
 	HRESULT result;
 
@@ -758,7 +758,7 @@ void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _r
 	data->fbxUpdate[_animationNum].nowTime += frameTime;
 
 	//ÅŒã‚Ü‚Ås‚Á‚½‚çæ“ª‚É–ß‚·
-	if (data->fbxUpdate[_animationNum].nowTime > data->fbxUpdate[_animationNum].stopTime)
+	if (data->fbxUpdate[_animationNum].nowTime > data->fbxUpdate[_animationNum].stopTime && _isRoop)
 	{
 		data->fbxUpdate[_animationNum].nowTime = data->fbxUpdate[_animationNum].startTime;
 	}

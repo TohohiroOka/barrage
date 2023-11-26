@@ -270,15 +270,12 @@ void ParticleManager::ParticlAllDelete()
 
 void ParticleManager::SceneFinalize()
 {
-	for (auto itr = texture.begin(); itr != texture.end(); ++itr) {
-		if ((*itr).second.isDelete)
-		{
-			(*itr).second.instance.reset();
-			auto deleteItr = itr;
-			itr--;
-			texture.erase(deleteItr);
-			if (itr == texture.end()) { break; }
+	for (auto itr = texture.begin(); itr != texture.end();) {
+		if (!(*itr).second.isDelete) {
+			++itr;
+			continue;
 		}
+		itr = texture.erase(itr);
 	}
 }
 

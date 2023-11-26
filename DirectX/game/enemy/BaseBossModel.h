@@ -18,6 +18,7 @@ public:
 	Base3D* GetObjectInst() { return fbxObject.get(); }
 	void RrameReset() { fbxObject->FrameReset(); }
 	void SetMovement(const int _number) { fbxObject->SetUseAnimation(_number); };
+	void SetIsRoop(const bool _isRoop) { fbxObject->SetIsRoop(_isRoop); }
 
 protected:
 	

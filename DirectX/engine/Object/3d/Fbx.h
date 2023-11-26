@@ -173,6 +173,8 @@ private://メンバ変数
 	int useAnimation;
 	//アニメーションの移動距離
 	XMFLOAT3 animationMove;
+	//ループアニメーション
+	bool isRoop = true;
 
 	//ボーン描画
 	bool isBoneDraw;
@@ -200,6 +202,7 @@ public:
 	void SetAnimation(bool isAnimation) { model->isAnimation = isAnimation; }
 	void SetIsBoneDraw(bool _isBoneDraw) { isBoneDraw = _isBoneDraw; }
 	void SetAttachName(const std::string& _name) { attachName = _name; }
+	void SetIsRoop(const bool _isRoop) { isRoop = _isRoop; }
 	void SetBaseColor(const XMFLOAT3& baseColor) {
 		this->baseColor = baseColor;
 		isTransferMaterial = true;

@@ -10,6 +10,8 @@ Boss1NearAttack1::Boss1NearAttack1()
 {
 	boss->GetBaseModel()->AnimationReset();
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::walk));
+	boss->GetBaseModel()->SetIsRoop(true);
+
 	useCollision = UseCollision::box;
 	model = Model::CreateFromOBJ("cone");
 	for (auto& i : instanceObject) {

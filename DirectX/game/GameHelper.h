@@ -48,13 +48,14 @@ public:
 	float GetGameSpeed() { return gameSpeed; }
 	float GetStageSize() { return stageSize; }
 
+private:
 	//ゲーム速度
 	float gameSpeed = 1;
 	//スロウ処理を何フレーム行うか
 	float slowTimer;
 
 	//ステージの大きさ
-	const float stageSize = 256;
+	const float stageSize = 256 / 2;
 };
 
 /// <summary>

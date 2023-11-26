@@ -2,6 +2,9 @@
 #include "../BaseAction.h"
 #include "Math/Timer.h"
 
+/// <summary>
+/// ‹¯‚Ý
+/// </summary>
 class Boss1Wince : public BaseAction
 {
 public:

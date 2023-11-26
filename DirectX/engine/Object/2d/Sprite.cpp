@@ -279,15 +279,13 @@ void Sprite::TransferVerticesNoTex()
 
 void Sprite::SceneFinalize()
 {
-	for (auto itr = texture.begin(); itr != texture.end(); itr++) {
-		if (!(*itr).second.isDelete) { continue; }
-		(*itr).second.instance.reset();
-		auto deleteItr = itr;
-		itr--;
-		texture.erase(deleteItr);
+	for (auto itr = texture.begin(); itr != texture.end();) {
+		if (!(*itr).second.isDelete) {
+			++itr;
+			continue;
+		}
+		itr = texture.erase(itr);
 	}
-
-	int a = 0;
 }
 
 void Sprite::Finalize()

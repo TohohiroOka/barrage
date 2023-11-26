@@ -18,9 +18,13 @@ private:
 public:
 
 	enum class Movement {
-		standBy = 0,
-		attack1 = 1,
-		walk = 3,
+		attack1 = 0,
+		back_end = 1,
+		back_start = 2,
+		front_end = 3,
+		front_start = 4,
+		standBy = 5,
+		walk = 6,
 	};
 
 public:

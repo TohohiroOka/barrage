@@ -10,7 +10,7 @@ Boss1Model::Boss1Model()
 	fbxObject->SetScale({ 0.001f,0.001f ,0.001f });
 	fbxObject->SetLight(true);
 	fbxObject->SetAnimation(true);
-	fbxObject->SetPosition({ 255.0f / 2.0f,10.0f ,255.0f / 2.0f });
+	fbxObject->SetPosition({ GameHelper::Instance()->GetStageSize() / 2.0f,10.0f ,GameHelper::Instance()->GetStageSize() / 2.0f });
 	fbxObject->SetIsModelDraw(false);
 	fbxObject->SetIsBoneDraw(true);
 
@@ -37,7 +37,7 @@ Boss1Model::Boss1Model()
 	using namespace DirectX;
 	for (int i = 0; i < bone.size(); i++) {
 		XMMATRIX world = DirectX::XMMatrixIdentity();
-		XMMATRIX matScale = XMMatrixScaling(5.0f, 5.0f, 5.0f);
+		XMMATRIX matScale = XMMatrixScaling(6.0f, 6.0f, 6.0f);
 		world *= matScale;
 		fbxObject->SetBoneObject(bone[i], "normal", objModel[int(ObjectType::cube)].get(), world);
 	}
@@ -45,10 +45,10 @@ Boss1Model::Boss1Model()
 	for (int i = 0; i < 4; i++) {
 		XMMATRIX world = DirectX::XMMatrixIdentity();
 		if (i < 2) {
-			XMMATRIX matScale = XMMatrixScaling(5.0f, 9.0f, 5.0f);
+			XMMATRIX matScale = XMMatrixScaling(6.0f, 9.0f, 6.0f);
 			world *= matScale;
 		} else if (i == 2) {
-			XMMATRIX matScale = XMMatrixScaling(3.0f, 5.0f, 3.0f);
+			XMMATRIX matScale = XMMatrixScaling(4.0f, 5.0f, 4.0f);
 			XMMATRIX matRot = XMMatrixIdentity();
 			matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
 			matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
@@ -59,7 +59,7 @@ Boss1Model::Boss1Model()
 			world *= matRot;
 			world *= matTrans;
 		} else if (i == 3) {
-			XMMATRIX matScale = XMMatrixScaling(3.0f, 5.0f, 3.0f);
+			XMMATRIX matScale = XMMatrixScaling(4.0f, 5.0f, 4.0f);
 			XMMATRIX matRot = XMMatrixIdentity();
 			matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
 			matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));

@@ -4,6 +4,8 @@
 #include "Object/3d/collider/MeshCollider.h"
 #include "Object/3d/collider/CollisionAttribute.h"
 
+using namespace DirectX;
+
 Field::Field()
 {
 	//地面
@@ -12,7 +14,7 @@ Field::Field()
 
 	const float scale = GameHelper::Instance()->GetStageSize();
 	groundObject = Object3d::Create(groundModel.get());
-	groundObject->SetPosition({ 255.0f,1.0f,255.0f });
+	groundObject->SetPosition({ scale,1.0f,scale });
 	groundObject->SetScale({ scale,scale,scale });
 	groundObject->SetColor({ 1.0f,1.0f ,1.0f,1.0f });
 	groundObject->UpdateWorldMatrix();
@@ -29,8 +31,8 @@ Field::Field()
 	//壁
 	const float distPos = scale - 1.0f;
 	float distPosY = distPos / 1.9f;
-	const std::array<DirectX::XMFLOAT3, 4> pos = { DirectX::XMFLOAT3{distPos,distPosY,0.0f},{distPos,distPosY,distPos * 2.0f} ,{distPos * 2.0f,distPosY,distPos},{0.0f,distPosY,distPos} };
-	const std::array<DirectX::XMFLOAT3, 4> rota = { DirectX::XMFLOAT3{90.0f,0.0f,0.0f},{-90.0f,0.0f,0.0f} ,{0.0f,0.0f,90.0f} ,{0.0f,0.0f,-90.0f} };
+	const std::array<XMFLOAT3, 4> pos = { XMFLOAT3{distPos,distPosY,0.0f},{distPos,distPosY,distPos * 2.0f} ,{distPos * 2.0f,distPosY,distPos},{0.0f,distPosY,distPos} };
+	const std::array<XMFLOAT3, 4> rota = { XMFLOAT3{90.0f,0.0f,0.0f},{-90.0f,0.0f,0.0f} ,{0.0f,0.0f,90.0f} ,{0.0f,0.0f,-90.0f} };
 	for (int i = 0; i < 4; i++) {
 		wallObject[i] = Object3d::Create(wallModel.get());
 		wallObject[i]->SetRotation(rota[i]);
@@ -49,6 +51,32 @@ Field::Field()
 
 	timer = std::make_unique<Engine::Timer>();
 	FieldLine::StaticInitialize();
+
+	//壁（段差）
+	blockModel = Model::CreateFromOBJ("NormalCube");
+	enclosure = InstanceObject::Create(blockModel.get());
+	enclosure->SetLight(false);
+
+	const float wallScale = 5.0f;
+	const std::array<XMFLOAT3, 4> enclosurePos = { 
+	XMFLOAT3{scale,wallScale,-wallScale*1.5f},{scale,wallScale,scale * 2.0f + wallScale * 1.5f},{-wallScale * 1.5f,wallScale,scale},{scale * 2.0f + wallScale * 1.5f,wallScale,scale} };
+	const std::array<XMFLOAT3, 4> enclosureScale =
+	{ XMFLOAT3{scale + 10.0f,wallScale,wallScale},
+	{scale + 10.0f,wallScale,wallScale},
+	{wallScale,wallScale,scale + 10.0f},
+	{wallScale,wallScale,scale + 10.0f}
+	};
+
+	for (int i = 0; i < 4; i++) {
+		XMMATRIX matScale = XMMatrixScaling(enclosureScale[i].x, enclosureScale[i].y, enclosureScale[i].z);
+		XMMATRIX matRot = XMMatrixIdentity();
+		XMMATRIX matTrans = XMMatrixTranslation(enclosurePos[i].x, enclosurePos[i].y, enclosurePos[i].z);
+
+		enclosureWorld[i] = XMMatrixIdentity();
+		enclosureWorld[i] *= matScale;
+		enclosureWorld[i] *= matRot;
+		enclosureWorld[i] *= matTrans;
+	}
 }
 
 void Field::Update(const DirectX::XMFLOAT3& _playerPos)
@@ -80,6 +108,11 @@ void Field::Update(const DirectX::XMFLOAT3& _playerPos)
 		}
 	);
 
+	for (int i = 0; i < 4; i++) {
+		enclosure->DrawInstance(enclosureWorld[i], { 0.5f,0.5f ,0.5f ,1.0f });
+	}
+	enclosure->Update();
+
 	FieldLine::StaticUpdate();
 }
 
@@ -87,5 +120,6 @@ void Field::Draw()
 {
 	groundObject->Draw();
 	backGround->Draw();
+	enclosure->Draw();
 	FieldLine::StaticDraw();
 }
