@@ -85,7 +85,6 @@ void Boss1NearAttack1::StartMove()
 {
 	if (!boss->GetBaseModel()->GetIsAnimationEnd()) { return; }
 	state = State::attack;
-
 }
 
 void Boss1NearAttack1::Attack()

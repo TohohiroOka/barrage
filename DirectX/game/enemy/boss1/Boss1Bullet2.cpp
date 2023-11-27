@@ -7,9 +7,14 @@
 
 Boss1Bullet2::Boss1Bullet2()
 {
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1));
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_start));
+	boss->GetBaseModel()->AnimationReset();
+
 	boss->GetBaseModel()->SetIsRoop(false);
+
+	state = State::start;
 
 	useCollision = UseCollision::sphere;
 	model = Model::CreateFromOBJ("bullet");
@@ -27,34 +32,42 @@ void Boss1Bullet2::Update()
 {
 	const float maxTimer = 100.0f;
 
-	if (!boss->GetIsWince()) {
-		if (*timer.get() % 5 == 0 && *timer.get() < maxTimer) {
-			for (int i = 0; i < 4; i++) {
-				bool easing = (i % 2) == 0;
-				AddBullet(easing);
+	if (state == State::start) {
+		Start();
+	} else if (state == State::attack) {
+		if (!boss->GetIsWince()) {
+			if (*timer.get() % 5 == 0 && *timer.get() < maxTimer) {
+				for (int i = 0; i < 4; i++) {
+					bool easing = (i % 2) == 0;
+					AddBullet(easing);
+				}
 			}
+
+			if (*timer.get() > maxTimer - 30.0f) {
+				boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
+			}
+			//更新処理
+			for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
+				it != bullet.end(); it++) {
+				BulletUpdate(*it);
+			}
+
+			//falseなら消す
+			bullet.remove_if([](BulletInfo& x) {
+				return !x.isAlive;
+				}
+			);
+
+			//終了
+			if (std::distance(bullet.begin(), bullet.end()) <= 0 && *timer.get() > maxTimer) {
+				isEnd = true;
+			}
+
+			timer->Update();
+
+			BaseBullet::Update();
 		}
 	}
-	//更新処理
-	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
-		it != bullet.end(); it++) {
-		BulletUpdate(*it);
-	}
-
-	//falseなら消す
-	bullet.remove_if([](BulletInfo& x) {
-		return !x.isAlive;
-		}
-	);
-
-	//終了
-	if (std::distance(bullet.begin(), bullet.end()) <= 0) {
-		isEnd = true;
-	}
-
-	timer->Update();
-
-	BaseBullet::Update();
 }
 
 void Boss1Bullet2::GetAttackCollisionSphere(std::vector<Sphere>& _info)
@@ -82,6 +95,12 @@ void Boss1Bullet2::DeleteBullet(std::vector<int> _deleteNum)
 	}
 }
 
+void Boss1Bullet2::Start()
+{
+	if (!boss->GetBaseModel()->GetIsAnimationEnd()) { return; }
+	state = State::attack;
+}
+
 void Boss1Bullet2::AddBullet(bool _easing)
 {
 	Vector3 bossPos = boss->GetCenter()->GetPosition();
@@ -106,8 +125,6 @@ void Boss1Bullet2::AddBullet(bool _easing)
 	add.moveVec = {};
 	add.timer=std::make_unique<Engine::Timer>();
 	add.predictionLinePoint.emplace_back(bossPos);
-
-
 }
 
 void Boss1Bullet2::BulletUpdate(BulletInfo& _bullet)
