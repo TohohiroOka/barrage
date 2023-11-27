@@ -8,7 +8,7 @@ private:
 	
 	//‰“‹——£s“®
 	enum class LongAction {
-		move1,
+		move3,
 		middle,//ˆÚ“®‚ÆUŒ‚‚ÌŠÔ
 		bullet1,
 		bullet2,
@@ -18,8 +18,9 @@ private:
 	//’†‹——£s“®
 	enum class MediumAction {
 		move1,
+		move3,
 		middle,//ˆÚ“®‚ÆUŒ‚‚ÌŠÔ
-		bullet3,
+		bullet2,
 		size,
 	};
 

@@ -1,10 +1,11 @@
 #include "PlayerData.h"
+#include "GameHelper.h"
 
 PlayerData::PlayerData()
 {
 	action = PlayerActionName::MOVENORMAL;
 
-	pos = { 100.0f,50.0f,100.0f };
+	pos = { GameHelper::Instance()->GetStageSize(),50.0f,GameHelper::Instance()->GetStageSize() / 5.0f };
 	moveVec = { 0, 0, 1 };
 
 	onGround = false;

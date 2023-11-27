@@ -5,6 +5,7 @@
 #include "Boss1NearAttack1.h"
 #include "Boss1Move1.h"
 #include "Boss1Move2.h"
+#include "Boss1Move3.h"
 #include "Boss1Bullet1.h"
 #include "Boss1Bullet2.h"
 #include "Boss1Bullet3.h"
@@ -22,7 +23,7 @@ Boss1::Boss1()
 
 	BaseAction::SetBossPtr(this);
 
-	action = std::make_unique<Boss1Move2>();
+	action = std::make_unique<Boss1Move1>();
 
 	hitScale = bossModel->GetObjectInst()->GetScale().y * 5000.0f;
 }
@@ -62,7 +63,7 @@ void Boss1::SetAction()
 
 	//プレイヤーが遠距離にいる
 	if (dist.length() > 100.0f) {
-		bool actionRand = RandomInt(1);
+		bool actionRand = RandomInt(100) > 80;
 		//前回移動なら必ず攻撃を行う
 		//攻撃行動
 		if (isMove|| actionRand) {
@@ -78,35 +79,38 @@ void Boss1::SetAction()
 		else {
 			isMove = true;
 			actionNumber = RandomInt(0, int(LongAction::middle) - 1);
-			if (actionNumber == int(LongAction::move1)) {
-				action = std::make_unique<Boss1Move1>();
+			if (actionNumber == int(LongAction::move3)) {
+				action = std::make_unique<Boss1Move3>();
 			}
 		}
 	}
-	////プレイヤーが中距離にいる
-	//else if (dist.length() > 50.0f) {
-	//	bool actionRand = RandomInt(1);
-	//	//前回移動なら必ず攻撃を行う
-	//	//攻撃行動
-	//	if (isMove || actionRand) {
-	//		isMove = false;
-	//		actionNumber = RandomInt(int(MediumAction::middle) + 1, int(MediumAction::size) - 1);
-	//		if (actionNumber == int(MediumAction::bullet3)) {
-	//			action = std::make_unique<Boss1Bullet3>();
-	//		}
-	//	}
-	//	//移動行動
-	//	else {
-	//		isMove = true;
-	//		actionNumber =RandomInt(0, int(MediumAction::middle) - 1);
-	//		if (actionNumber == int(MediumAction::move1)) {
-	//			action = std::make_unique<Boss1Move1>();
-	//		}
-	//	}
-	//}
+	//プレイヤーが中距離にいる
+	else if (dist.length() > 50.0f) {
+		bool actionRand = RandomInt(100) > 50;
+		//前回移動なら必ず攻撃を行う
+		//攻撃行動
+		if (isMove || actionRand) {
+			isMove = false;
+			actionNumber = RandomInt(int(MediumAction::middle) + 1, int(MediumAction::size) - 1);
+			if (actionNumber == int(MediumAction::bullet2)) {
+				action = std::make_unique<Boss1Bullet3>();
+			}
+		}
+		//移動行動
+		else {
+			isMove = true;
+			actionNumber =RandomInt(0, int(MediumAction::middle) - 1);
+			if (actionNumber == int(MediumAction::move1)) {
+				action = std::make_unique<Boss1Move1>();
+			}else if (actionNumber == int(MediumAction::move3)) {
+				action = std::make_unique<Boss1Move1>();
+			}
+
+		}
+	}
 	//プレイヤーが近距離にいる
 	else {
-		bool actionRand = RandomInt(1);
+		bool actionRand = RandomInt(100) > 50;
 		//前回移動なら必ず攻撃を行う
 		//攻撃行動
 		if (isMove || actionRand) {
