@@ -114,6 +114,10 @@ void Boss1::SetAction()
 			actionNumber = RandomInt(int(ShortAction::middle) + 1, int(ShortAction::others) - 1);
 			if (actionNumber == int(ShortAction::attack1)) {
 				action = std::make_unique<Boss1NearAttack1>();
+			}else if (actionNumber == int(ShortAction::bullet1)) {
+				action = std::make_unique<Boss1Bullet1>();
+			} else if (actionNumber == int(ShortAction::bullet3)) {
+				action = std::make_unique<Boss1Bullet3>();
 			}
 		}
 		//à⁄ìÆçsìÆ

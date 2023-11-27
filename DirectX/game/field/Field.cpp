@@ -57,7 +57,7 @@ Field::Field()
 	enclosure = InstanceObject::Create(blockModel.get());
 	enclosure->SetLight(false);
 
-	const float wallScale = 5.0f;
+	const float wallScale = 1.0f;
 	const std::array<XMFLOAT3, 4> enclosurePos = { 
 	XMFLOAT3{scale,wallScale,-wallScale*1.5f},{scale,wallScale,scale * 2.0f + wallScale * 1.5f},{-wallScale * 1.5f,wallScale,scale},{scale * 2.0f + wallScale * 1.5f,wallScale,scale} };
 	const std::array<XMFLOAT3, 4> enclosureScale =
@@ -67,10 +67,10 @@ Field::Field()
 	{wallScale,wallScale,scale + 10.0f}
 	};
 
-	for (int i = 0; i < 4; i++) {
-		XMMATRIX matScale = XMMatrixScaling(enclosureScale[i].x, enclosureScale[i].y, enclosureScale[i].z);
+	for (int i = 0; i < 8; i++) {
+		XMMATRIX matScale = XMMatrixScaling(enclosureScale[i % 4].x, enclosureScale[i % 4].y, enclosureScale[i % 4].z);
 		XMMATRIX matRot = XMMatrixIdentity();
-		XMMATRIX matTrans = XMMatrixTranslation(enclosurePos[i].x, enclosurePos[i].y, enclosurePos[i].z);
+		XMMATRIX matTrans = XMMatrixTranslation(enclosurePos[i % 4].x, enclosurePos[i % 4].y * (1 + 4 * (i / 4)), enclosurePos[i % 4].z);
 
 		enclosureWorld[i] = XMMatrixIdentity();
 		enclosureWorld[i] *= matScale;
@@ -79,7 +79,7 @@ Field::Field()
 	}
 }
 
-void Field::Update(const DirectX::XMFLOAT3& _playerPos)
+void Field::Update(const DirectX::XMFLOAT3& _playerPos, const DirectX::XMFLOAT3& _cameraPos)
 {
 	groundObject->Update();
 
@@ -108,9 +108,7 @@ void Field::Update(const DirectX::XMFLOAT3& _playerPos)
 		}
 	);
 
-	for (int i = 0; i < 4; i++) {
-		enclosure->DrawInstance(enclosureWorld[i], { 0.5f,0.5f ,0.5f ,1.0f });
-	}
+	WallDrawSet(_playerPos, _cameraPos);
 	enclosure->Update();
 
 	FieldLine::StaticUpdate();
@@ -122,4 +120,39 @@ void Field::Draw()
 	backGround->Draw();
 	enclosure->Draw();
 	FieldLine::StaticDraw();
+}
+
+void Field::WallDrawSet(const DirectX::XMFLOAT3& _playerPos, const DirectX::XMFLOAT3& _cameraPos)
+{
+	const XMFLOAT3 c_p = _playerPos - _cameraPos;
+	//ç∂
+	if (c_p.x <= 0 || _playerPos.x > 30.0f) {
+		enclosure->DrawInstance(enclosureWorld[2], { 0.5f,0.5f ,0.5f ,1.0f });
+		enclosure->DrawInstance(enclosureWorld[6], { 0.5f,0.5f ,0.5f ,1.0f });
+	}
+	if (c_p.x >= 0 || _playerPos.x < GameHelper::Instance()->GetStageSize() * 2.0f - 30.0f) {
+		enclosure->DrawInstance(enclosureWorld[3], { 0.5f,0.5f ,0.5f ,1.0f });
+		enclosure->DrawInstance(enclosureWorld[7], { 0.5f,0.5f ,0.5f ,1.0f });
+	}
+	if (c_p.z <= 0 || _playerPos.z > 30.0f) {
+		enclosure->DrawInstance(enclosureWorld[0], { 0.5f,0.5f ,0.5f ,1.0f });
+		enclosure->DrawInstance(enclosureWorld[4], { 0.5f,0.5f ,0.5f ,1.0f });
+	}
+	if (c_p.z >= 0 || _playerPos.z < GameHelper::Instance()->GetStageSize() * 2.0f - 30.0f) {
+		enclosure->DrawInstance(enclosureWorld[1], { 0.5f,0.5f ,0.5f ,1.0f });
+		enclosure->DrawInstance(enclosureWorld[5], { 0.5f,0.5f ,0.5f ,1.0f });
+	}
+}
+
+float Field::SetAlpha(const float _c_p, const float _p)
+{
+	float alpha = 1.0;
+
+	if (_p > 40.0f) { return 1.0f; }
+	if (fabs(_c_p) > 10) { return 0.0f; }
+
+	alpha = fabs(_c_p) / 10.0f;
+	alpha *= _p / 41.0f;
+
+	return alpha;
 }

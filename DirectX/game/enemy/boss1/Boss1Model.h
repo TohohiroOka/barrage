@@ -23,8 +23,10 @@ public:
 		back_start = 2,
 		front_end = 3,
 		front_start = 4,
-		standBy = 5,
-		walk = 6,
+		nearAttak_end = 5,
+		nearAttak_start = 6,
+		standBy = 7,
+		walk = 8,
 	};
 
 public:

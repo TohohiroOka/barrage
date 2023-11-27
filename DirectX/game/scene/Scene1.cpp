@@ -72,7 +72,7 @@ void Scene1::Update()
 
 	if (!isInputConfigMode) {
 		player->Update();
-		field->Update(player->GetData()->pos);
+		field->Update(player->GetData()->pos, camera->GetEye());
 		boss->SetTargetPos(player->GetData()->pos);
 		boss->Update();
 
@@ -151,13 +151,13 @@ void Scene1::Update()
 
 void Scene1::Draw(const int _cameraNum)
 {
-	field->Draw();
 	//gobject->ColliderDraw();
 
 	player->Draw();
 	boss->Draw();
 
 	defeatDirection.Draw();
+	field->Draw();
 }
 
 void Scene1::DrawLightView(const int _cameraNum)

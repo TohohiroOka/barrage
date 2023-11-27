@@ -86,9 +86,9 @@ void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 	}
 
 	if (_motionBlendRate1 >= 2.0f) {
-		model->Update(useAnimation, isRoop);
+		isAnimationEnd = model->Update(useAnimation, isRoop);
 	} else {
-		model->Update(motionBlendModel, _motionBlendRate1, _motionBlendRate2, useAnimation, isRoop);
+		isAnimationEnd = model->Update(motionBlendModel, _motionBlendRate1, _motionBlendRate2, useAnimation, isRoop);
 	}
 
 	//ƒ‚ƒfƒ‹Ž©‘Ì‚ÌˆÚ“®ŒvŽZ

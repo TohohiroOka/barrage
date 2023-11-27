@@ -8,9 +8,11 @@ using namespace DirectX;
 
 Boss1NearAttack1::Boss1NearAttack1()
 {
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::nearAttak_end));
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::walk));
-	boss->GetBaseModel()->SetIsRoop(true);
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::nearAttak_start));
+	boss->GetBaseModel()->AnimationReset();
+	boss->GetBaseModel()->SetIsRoop(false);
 
 	useCollision = UseCollision::box;
 	model = Model::CreateFromOBJ("cone");
@@ -81,7 +83,9 @@ void Boss1NearAttack1::GetAttackCollisionBox(std::vector<Box>& _info)
 
 void Boss1NearAttack1::StartMove()
 {
+	if (!boss->GetBaseModel()->GetIsAnimationEnd()) { return; }
 	state = State::attack;
+
 }
 
 void Boss1NearAttack1::Attack()
@@ -124,6 +128,10 @@ void Boss1NearAttack1::Attack()
 	dist += 3.0f;
 
 	const float maxTimer = 100.0f;
+	if (*timer.get() > maxTimer - 5.0f) {
+		boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::nearAttak_end));
+	}
+
 	if (*timer.get() < maxTimer) { return; }
 	state = State::finish;
 

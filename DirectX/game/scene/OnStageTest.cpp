@@ -28,7 +28,7 @@ void OnStageTestScene::Initialize()
 
 void OnStageTestScene::Update()
 {
-	field->Update(debugCamera->GetEye());
+	field->Update(debugCamera->GetEye(), { 0,0,0 });
 
 	lightCamera->Update();
 
