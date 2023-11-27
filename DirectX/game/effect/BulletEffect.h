@@ -10,7 +10,7 @@ class BulletEffect
 {
 public:
 	BulletEffect() = default;
-	~BulletEffect() = default;
+	~BulletEffect() {};
 
 	static void LoadResources();
 

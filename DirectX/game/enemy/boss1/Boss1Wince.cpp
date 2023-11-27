@@ -7,9 +7,9 @@
 Boss1Wince::Boss1Wince()
 {
 	//アニメーションセット
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::fear));
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::standBy));
-	boss->GetBaseModel()->SetIsRoop(true);
+	boss->GetBaseModel()->SetIsRoop(false);
 
 	timer = std::make_unique<Engine::Timer>();
 
@@ -18,8 +18,6 @@ Boss1Wince::Boss1Wince()
 
 void Boss1Wince::Update()
 {
-	timer->Update();
-	if (*timer.get() > 20) {
-		isEnd = true;
-	}
+	if (!boss->GetBaseModel()->GetIsAnimationEnd()) { return; }
+	isEnd = true;
 }

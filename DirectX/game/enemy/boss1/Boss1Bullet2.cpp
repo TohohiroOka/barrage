@@ -23,7 +23,8 @@ Boss1Bullet2::Boss1Bullet2()
 	}
 	predictionLine = std::make_unique<PredictionLine>();
 	timer = std::make_unique<Engine::Timer>();
-	bulletEffect.Init();
+	bulletEffect = std::make_unique<BulletEffect>();
+	bulletEffect->Init();
 
 	hitTimer = std::make_unique<Engine::Timer>();
 }
@@ -189,5 +190,5 @@ void Boss1Bullet2::BulletUpdate(BulletInfo& _bullet)
 	DirectX::XMFLOAT4 bulletColor = { 0.f,0.f,0.f,1.0f };
 	DirectX::XMFLOAT4 effectColor = { 0.2f,0.2f,0.8f,1.0f };
 	float effectScale = 5.f;
-	bulletEffect.AddBulletEffect(_bullet.nowPos, bulletColor, effectScale, effectColor);
+	bulletEffect->AddBulletEffect(_bullet.nowPos, bulletColor, effectScale, effectColor);
 }

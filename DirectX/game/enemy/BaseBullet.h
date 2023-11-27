@@ -32,7 +32,7 @@ protected:
 	static const int instanceNum = 5;
 	//’e•`‰æ—p
 	std::array<std::unique_ptr<InstanceObject>, instanceNum> instanceObject;
-	BulletEffect bulletEffect;
+	std::unique_ptr<BulletEffect> bulletEffect;
 
 	//’e“¹•`‰æ—p
 	std::unique_ptr<PredictionLine> predictionLine;
