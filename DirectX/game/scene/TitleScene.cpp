@@ -122,10 +122,7 @@ void TitleScene::Update()
 	else {
 		//なにかしらのボタンが押されたら選択肢表示
 		if (DirectInput::GetInstance()->ReleaseKey(DIK_SPACE) ||
-			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A) ||
-			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B) ||
-			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_X) ||
-			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_Y)) {
+			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A)) {
 			isPressed = true;
 		}
 	}
