@@ -19,7 +19,7 @@ PlayerSwordAttack1::PlayerSwordAttack1(Player* player)
 	model = Model::CreateFromOBJ("NormalCube");
 
 	object = Object3d::Create(model.get());
-	object->SetScale({ 2.5f, 2.5f, 2.5f });
+	object->SetScale({ 1.5f, 1.5f, 1.5f });
 	object->SetColor(nonAttackColor);
 
 	//タイマー初期化
@@ -88,7 +88,7 @@ bool PlayerSwordAttack1::NextAttack()
 
 		//アニメーションリセット
 		player->GetFbxObject()->AnimationReset();
-		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_RIGHT_ANIMATION);
+		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_LEFT_ANIMATION);
 	}
 	else if (attackNum == 2) {
 		//攻撃2へ
@@ -101,7 +101,7 @@ bool PlayerSwordAttack1::NextAttack()
 
 		//アニメーションリセット
 		player->GetFbxObject()->AnimationReset();
-		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_RIGHT_ANIMATION);
+		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_LEFT_ANIMATION);
 	}
 	else if (attackNum == 3) {
 		//攻撃3へ
@@ -117,7 +117,7 @@ bool PlayerSwordAttack1::NextAttack()
 
 		//アニメーションリセット
 		player->GetFbxObject()->AnimationReset();
-		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_RIGHT_ANIMATION);
+		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_LEFT_ANIMATION);
 	}
 
 	isNextActionInput = false;

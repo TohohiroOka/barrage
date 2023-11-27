@@ -342,7 +342,7 @@ void Scene1::CollisionCheck()
 				player->GetData()->attackAction->AttackCollision();
 
 				//ヒットストップ
-				GameHelper::Instance()->SetSlow(0, 10);
+				GameHelper::Instance()->SetSlow(0, 5);
 			}
 		}
 	}
