@@ -196,6 +196,7 @@ public:
 	float GetSpecular() { return specular; }
 	float GetRoughness() { return roughness; }
 	int GetUseAnimation() { return useAnimation; }
+	InstanceObject* GetBrneObject(const std::string& _name) { return boneObject[_name].get(); }
 	XMFLOAT3 GetModelMove() { return animationMove; }
 	XMFLOAT3 GetAttachPos() { return attachPos; }
 	bool GetIsAnimationEnd() { return isAnimationEnd; }

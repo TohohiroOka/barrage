@@ -29,7 +29,7 @@ Outline::Outline()
 	:BasePostEffect()
 {
 	//アウトラインの太さ初期化
-	outlineWidth = 1.0f;
+	outlineWidth = 0.2f;
 }
 
 std::unique_ptr<Outline> Outline::Create()

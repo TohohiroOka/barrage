@@ -34,9 +34,7 @@ private:
 		unsigned int isToon;//トゥーンの有無
 		unsigned int isOutline;//アウトラインの有無
 		unsigned int isLight;//ライティングの有無
-		float pad;
 		XMFLOAT3 outlineColor;
-		float pad1;
 	};
 
 	//影用

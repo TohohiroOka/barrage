@@ -7,24 +7,12 @@ Boss1Model::Boss1Model()
 
 	model = FbxModel::Create("boss1","Hips");
 	fbxObject = Fbx::Create(model.get());
-	fbxObject->SetScale({ 0.001f,0.001f ,0.001f });
+	fbxObject->SetScale({ 0.0011f,0.0011f ,0.0011f });
 	fbxObject->SetLight(true);
 	fbxObject->SetAnimation(true);
 	fbxObject->SetPosition({ GameHelper::Instance()->GetStageSize(),10.0f ,GameHelper::Instance()->GetStageSize() });
 	fbxObject->SetIsModelDraw(false);
 	fbxObject->SetIsBoneDraw(true);
-
-	//std::array<std::string, 5> bone = {
-	//"mixamorig:HeadTop_End","mixamorig:Head","mixamorig:Spine1","mixamorig:Spine","mixamorig:Hips",
-	////"mixamorig:LeftShoulder",
-	////"mixamorig:RightShoulder",
-	////"mixamorig:LeftUpLeg",
-	////"mixamorig:RightUpLeg"
-	//};
-
-	//std::array<std::string, 4> boneT = {
-	//	"mixamorig:RightLeg","mixamorig:LeftLeg","mixamorig:LeftForeArm","mixamorig:RightForeArm"
-	//};
 
 	std::array<std::string, 2> bone = {
 		"Hips","Spine"
@@ -72,6 +60,12 @@ Boss1Model::Boss1Model()
 		}
 		fbxObject->SetBoneObject(boneT[i], "cube", objModel[int(ObjectType::cone)].get(), world);
 	}
+
+	fbxObject->GetBrneObject("normal")->SetOutline(true);
+	fbxObject->GetBrneObject("cube")->SetOutline(true);
+	fbxObject->GetBrneObject("normal")->SetOutlineColor({0.9f,0.1f,0.1f});
+	fbxObject->GetBrneObject("cube")->SetOutlineColor({ 0.9f,0.1f,0.1f });
+
 }
 
 void Boss1Model::Update()

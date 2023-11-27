@@ -83,17 +83,17 @@ void OnStageTestScene::Finalize()
 void OnStageTestScene::ImguiDraw()
 {
 
-	if (isNormalCamera) {
-		onStageDirection.ImguiDraw();
-	}
-	else {
-		ImGui::Begin("debug imgui");
+	//if (isNormalCamera) {
+	//	onStageDirection.ImguiDraw();
+	//}
+	//else {
+	//	ImGui::Begin("debug imgui");
 
-		ImGui::Text("Camera Pos    [ %f : %f : %f ]", debugCamera->GetEye().x, debugCamera->GetEye().y, debugCamera->GetEye().z);
-		ImGui::Text("Camera Target [ %f : %f : %f ]", debugCamera->GetTarget().x, debugCamera->GetTarget().x, debugCamera->GetTarget().x);
+	//	ImGui::Text("Camera Pos    [ %f : %f : %f ]", debugCamera->GetEye().x, debugCamera->GetEye().y, debugCamera->GetEye().z);
+	//	ImGui::Text("Camera Target [ %f : %f : %f ]", debugCamera->GetTarget().x, debugCamera->GetTarget().x, debugCamera->GetTarget().x);
 
-		ImGui::End();
-	}
+	//	ImGui::End();
+	//}
 
 
 

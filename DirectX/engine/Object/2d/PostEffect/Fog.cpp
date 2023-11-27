@@ -33,8 +33,8 @@ Fog::Fog()
 	//ƒtƒHƒO‚Ì‹­‚³
 	strength = 1.5f;
 	blendRate = 0.0f;
-	color1 = { 1.0f,1.0f,1.0f };
-	color2 = { 1.0f,1.0f,1.0f };
+	color1 = { 0.0f,0.0f,0.0f };
+	color2 = { 0.0f,0.0f,0.0f };
 }
 
 std::unique_ptr<Fog> Fog::Create()
