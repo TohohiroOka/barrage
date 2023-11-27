@@ -6,10 +6,14 @@
 
 Boss1Bullet3::Boss1Bullet3()
 {
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1));
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_start));
+	boss->GetBaseModel()->AnimationReset();
+
 	boss->GetBaseModel()->SetIsRoop(false);
 
+	state = State::start;
 	useCollision = UseCollision::sphere;
 	model = Model::CreateFromOBJ("bullet");
 	for (auto& i : instanceObject) {
@@ -24,25 +28,34 @@ Boss1Bullet3::Boss1Bullet3()
 
 void Boss1Bullet3::Update()
 {
-	const float maxTimer = 100.0f;
-	//更新処理
-	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
-		it != bullet.end(); it++) {
-		BulletUpdate(*it);
+	if (state == State::start) {
+		Start();
 	}
-
-	//falseなら消す
-	bullet.remove_if([](BulletInfo& x) {
-		return !x.isAlive;
+	else if (state == State::attack) {
+		const float maxTimer = 100.0f;
+		//更新処理
+		for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
+			it != bullet.end(); it++) {
+			BulletUpdate(*it);
 		}
-	);
 
-	//終了
-	if (std::distance(bullet.begin(), bullet.end()) <= 0) {
-		isEnd = true;
+		//falseなら消す
+		bullet.remove_if([](BulletInfo& x) {
+			return !x.isAlive;
+			}
+		);
+
+		//終了
+		if (std::distance(bullet.begin(), bullet.end()) <= 0 && *timer.get() > maxTimer) {
+			isEnd = true;
+		}
+
+		BaseBullet::Update();
+
+		if (*timer.get() > maxTimer - 30.0f) {
+			boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
+		}
 	}
-
-	BaseBullet::Update();
 }
 
 void Boss1Bullet3::GetAttackCollisionSphere(std::vector<Sphere>& _info)
@@ -68,6 +81,12 @@ void Boss1Bullet3::DeleteBullet(std::vector<int> _deleteNum)
 		vecNum++;
 		if (_deleteNum.size() == vecNum) { break; }
 	}
+}
+
+void Boss1Bullet3::Start()
+{
+	if (!boss->GetBaseModel()->GetIsAnimationEnd()) { return; }
+	state = State::attack;
 }
 
 void Boss1Bullet3::AddBullet()

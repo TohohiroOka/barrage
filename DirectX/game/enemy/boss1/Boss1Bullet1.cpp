@@ -5,9 +5,14 @@
 
 Boss1Bullet1::Boss1Bullet1()
 {
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1));
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_start));
+	boss->GetBaseModel()->AnimationReset();
+
 	boss->GetBaseModel()->SetIsRoop(false);
+
+	state = State::start;
 
 	useCollision = UseCollision::sphere;
 	model = Model::CreateFromOBJ("bullet");
@@ -25,32 +30,38 @@ void Boss1Bullet1::Update()
 {
 	const float l_maxTimer = 100.0f;
 
-	if (!boss->GetIsWince()) {
-		if (*timer.get() % 5 == 0 && *timer.get() < l_maxTimer) {
-			for (int i = 0; i < 1; i++) {
+	if (state == State::start) {
+		Start();
+	}
+	else if (state == State::attack) {
+		if (!boss->GetIsWince()) {
+			if (*timer.get() % 5 == 0 && *timer.get() < l_maxTimer) {
 				AddBullet();
 			}
+
+			if (*timer.get() > l_maxTimer - 30.0f) {
+				boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
+			}
 		}
-	}
-
-	//更新処理
-	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
-		it != bullet.end(); it++) {
-		BulletUpdate(*it);
-	}
-
-	//falseなら消す
-	bullet.remove_if([](BulletInfo& x) {
-		return !x.isAlive;
+		//更新処理
+		for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
+			it != bullet.end(); it++) {
+			BulletUpdate(*it);
 		}
-	);
 
-	//終了
-	if (std::distance(bullet.begin(), bullet.end()) <= 0) {
-		isEnd = true;
+		//falseなら消す
+		bullet.remove_if([](BulletInfo& x) {
+			return !x.isAlive;
+			}
+		);
+
+		//終了
+		if (std::distance(bullet.begin(), bullet.end()) <= 0 && *timer.get() > l_maxTimer) {
+			isEnd = true;
+		}
+
+		BaseBullet::Update();
 	}
-
-	BaseBullet::Update();
 }
 
 void Boss1Bullet1::GetAttackCollisionSphere(std::vector<Sphere>& _info)
@@ -76,6 +87,12 @@ void Boss1Bullet1::DeleteBullet(std::vector<int> _deleteNum)
 		vecNum++;
 		if (_deleteNum.size() == vecNum) { break; }
 	}
+}
+
+void Boss1Bullet1::Start()
+{
+	if (!boss->GetBaseModel()->GetIsAnimationEnd()) { return; }
+	state = State::attack;
 }
 
 void Boss1Bullet1::AddBullet()

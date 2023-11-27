@@ -20,6 +20,14 @@ public:
 		std::vector<Vector3> predictionLinePoint;
 	};
 
+private:
+
+	enum class State {
+		start,
+		attack,
+		non,
+	};
+
 public:
 	Boss1Bullet2();
 	~Boss1Bullet2() {};
@@ -36,11 +44,16 @@ public:
 
 	int GetDamage()override { return 5; }
 
+	void Start();
+
 	void AddBullet(bool _easing);
 
 	void BulletUpdate(BulletInfo& _bullet);
 
 private:
+
+	//èÛë‘
+	State state;
 
 	std::forward_list<BulletInfo> bullet;
 
