@@ -20,6 +20,8 @@ public:
 	//ƒV[ƒ“I—¹
 	static void PlayFadeOut();
 
+	static void Reset() { isDirectionEnd = false; }
+
 	static bool IsDirectionEnd() { return isDirectionEnd; }
 
 

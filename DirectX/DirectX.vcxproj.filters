@@ -466,6 +466,9 @@
     <ClCompile Include="game\cutscene\SceneChangeDirection.cpp">
       <Filter>ゲームシステム\cutScene</Filter>
     </ClCompile>
+    <ClCompile Include="game\ui\ChoiceEmphasisDrawer.cpp">
+      <Filter>ゲームシステム\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -960,6 +963,9 @@
     </ClInclude>
     <ClInclude Include="game\cutscene\SceneChangeDirection.h">
       <Filter>ゲームシステム\cutScene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\ui\ChoiceEmphasisDrawer.h">
+      <Filter>ゲームシステム\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
