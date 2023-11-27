@@ -75,7 +75,7 @@ void TitleScene::Update()
 				if (IsUp() && selecting != PLAYER_SELECT::SELECT_STARTGAME) {
 					selecting = PLAYER_SELECT(int(selecting) - 1);
 				}
-				else if (IsDown() && selecting != PLAYER_SELECT::SELECT_EXIT) {
+				else if (IsDown() && selecting != PLAYER_SELECT::SELECT_CONFIG) {
 					selecting = PLAYER_SELECT(int(selecting) + 1);
 				}
 			}
