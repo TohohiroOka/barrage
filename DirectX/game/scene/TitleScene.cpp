@@ -67,7 +67,8 @@ void TitleScene::Update()
 			//“ü—ÍÝ’èXV
 			actionInputConfig->Update();
 			if (actionInputConfig->GetIsInputConfigEnd()) { 
-				isConfigMode = false; 
+				isConfigMode = false;
+				isSelected = false;
 			}
 		}
 		else {
