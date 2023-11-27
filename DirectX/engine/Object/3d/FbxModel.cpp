@@ -642,7 +642,7 @@ std::unique_ptr<FbxModel> FbxModel::Create(const std::string fileName, const std
 	return std::unique_ptr<FbxModel>(instance);
 }
 
-void FbxModel::Update(const int _animationNum, const bool _isRoop)
+bool FbxModel::Update(const int _animationNum, const bool _isRoop)
 {
 	HRESULT result;
 
@@ -657,7 +657,8 @@ void FbxModel::Update(const int _animationNum, const bool _isRoop)
 	}
 
 	//アニメーションしない場合
-	if (!isAnim) { return; }
+	if (!isAnim) { return true; }
+	bool isAnimEnd = false;
 
 	//アニメーション
 	const float a = GameHelper::Instance()->GetGameSpeed();
@@ -666,10 +667,13 @@ void FbxModel::Update(const int _animationNum, const bool _isRoop)
 	data->fbxUpdate[_animationNum].nowTime += frameTime;
 
 	//最後まで行ったら先頭に戻す
-	if (data->fbxUpdate[_animationNum].nowTime > data->fbxUpdate[_animationNum].stopTime && _isRoop)
+	if (data->fbxUpdate[_animationNum].nowTime > data->fbxUpdate[_animationNum].stopTime)
 	{
-		data->fbxUpdate[_animationNum].nowTime = data->fbxUpdate[_animationNum].startTime;
-		beforePos = data->fbxUpdate[0].startPos;
+		if (_isRoop) {
+			data->fbxUpdate[_animationNum].nowTime = data->fbxUpdate[_animationNum].startTime;
+			beforePos = data->fbxUpdate[0].startPos;
+		}
+		isAnimEnd = true;
 	}
 
 	FbxAnimStack* pStack = data->fbxScene->GetSrcObject<FbxAnimStack>(_animationNum);
@@ -730,9 +734,11 @@ void FbxModel::Update(const int _animationNum, const bool _isRoop)
 			boneMatWorld[baseBoneName].r[3].m128_f32[2] };
 
 	boneMatWorld[baseBoneName] = boneMatWorld000;
+
+	return isAnimEnd;
 }
 
-void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _rate2, const int _animationNum, const bool _isRoop)
+bool FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _rate2, const int _animationNum, const bool _isRoop)
 {
 	HRESULT result;
 
@@ -749,7 +755,9 @@ void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _r
 	}
 
 	//アニメーションしない場合
-	if (!isAnim) { return; }
+	if (!isAnim) { return true; }
+	bool isAnimEnd = false;
+
 	float a = GameHelper::Instance()->GetGameSpeed();
 	if (a != 1.0) {
 		frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
@@ -758,9 +766,13 @@ void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _r
 	data->fbxUpdate[_animationNum].nowTime += frameTime;
 
 	//最後まで行ったら先頭に戻す
-	if (data->fbxUpdate[_animationNum].nowTime > data->fbxUpdate[_animationNum].stopTime && _isRoop)
+	if (data->fbxUpdate[_animationNum].nowTime > data->fbxUpdate[_animationNum].stopTime)
 	{
-		data->fbxUpdate[_animationNum].nowTime = data->fbxUpdate[_animationNum].startTime;
+		if (_isRoop) {
+			data->fbxUpdate[_animationNum].nowTime = data->fbxUpdate[_animationNum].startTime;
+			beforePos = data->fbxUpdate[0].startPos;
+		}
+		isAnimEnd = true;
 	}
 
 	XMMATRIX boneMatWorld000 = {};
@@ -823,6 +835,8 @@ void FbxModel::Update(FbxModel* _motionBlend, const float _rate1, const float _r
 			boneMatWorld[baseBoneName].r[3].m128_f32[2] };
 
 	boneMatWorld[baseBoneName] = boneMatWorld000;
+
+	return isAnimEnd;
 }
 
 void FbxModel::Draw(ID3D12GraphicsCommandList* cmdList)

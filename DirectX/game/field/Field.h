@@ -12,9 +12,16 @@ public:
 	Field();
 	~Field(){};
 
-	void Update(const DirectX::XMFLOAT3& _playerPos);
+	void Update(const DirectX::XMFLOAT3& _playerPos, const DirectX::XMFLOAT3& _cameraPos);
 
 	void Draw();
+
+	/// <summary>
+	/// •Ç‚Ì•`‰æƒZƒbƒg
+	/// </summary>
+	void WallDrawSet(const DirectX::XMFLOAT3& _playerPos, const DirectX::XMFLOAT3& _cameraPos);
+
+	float SetAlpha(const float _c_p,const float _p);
 
 	void FrameReset() {
 		enclosure->FrameReset();
@@ -42,6 +49,6 @@ private:
 
 	std::unique_ptr<Model> blockModel;
 	std::unique_ptr<InstanceObject> enclosure;
-	std::array<DirectX::XMMATRIX, 4> enclosureWorld;
+	std::array<DirectX::XMMATRIX, 8> enclosureWorld;
 };
 

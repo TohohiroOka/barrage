@@ -28,6 +28,8 @@ private:
 		move1,
 		middle,//ˆÚ“®‚ÆUŒ‚‚ÌŠÔ
 		attack1,
+		bullet1,
+		bullet3,
 		others,
 		move2,
 		size,

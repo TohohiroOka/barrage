@@ -138,6 +138,7 @@ public:
 
 	void AnimationReset() {
 		model->AnimationReset(useAnimation);
+		isAnimationEnd=false;
 	}
 
 private://メンバ変数
@@ -175,7 +176,8 @@ private://メンバ変数
 	XMFLOAT3 animationMove;
 	//ループアニメーション
 	bool isRoop = true;
-
+	//アニメーションが終了したか
+	bool isAnimationEnd;
 	//ボーン描画
 	bool isBoneDraw;
 	std::vector<BoneObjectInfo> boneObjectInfo;
@@ -196,6 +198,7 @@ public:
 	int GetUseAnimation() { return useAnimation; }
 	XMFLOAT3 GetModelMove() { return animationMove; }
 	XMFLOAT3 GetAttachPos() { return attachPos; }
+	bool GetIsAnimationEnd() { return isAnimationEnd; }
 	void SetIsModelDraw(bool _isModelDraw) { isModelDraw = _isModelDraw; }
 	void SetModel(FbxModel* model) { this->model = model; }
 	void SetMotionBlendModel(FbxModel* _model) { motionBlendModel = _model; }

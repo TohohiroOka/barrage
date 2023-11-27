@@ -19,6 +19,7 @@ public:
 	void RrameReset() { fbxObject->FrameReset(); }
 	void SetMovement(const int _number) { fbxObject->SetUseAnimation(_number); };
 	void SetIsRoop(const bool _isRoop) { fbxObject->SetIsRoop(_isRoop); }
+	bool GetIsAnimationEnd() { return fbxObject->GetIsAnimationEnd(); }
 
 protected:
 	

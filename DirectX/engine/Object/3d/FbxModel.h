@@ -227,7 +227,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update(const int _animationNum = 0, const bool _isRoop = true);
+	bool Update(const int _animationNum = 0, const bool _isRoop = true);
 
 	/// <summary>
 	/// 更新
@@ -235,7 +235,7 @@ public:
 	/// <param name="_motionBlend">blend用モデル</param>
 	/// <param name="_rate1">現在のモデルの比率</param>
 	/// <param name="_rate2">ブレンドするモデルの比率</param>
-	void Update(FbxModel* _motionBlend, const float _rate1, const float _rate2, const int _animationNum = 0, const bool _isRoop = true);
+	bool Update(FbxModel* _motionBlend, const float _rate1, const float _rate2, const int _animationNum = 0, const bool _isRoop = true);
 
 	/// <summary>
 	/// 描画
