@@ -4,6 +4,7 @@
 #include "engine/Camera/LightCamera.h"
 
 #include "ui/ChoiceEmphasisDrawer.h"
+#include "system/ActionInputConfig.h"
 
 #include <memory>
 
@@ -94,7 +95,9 @@ private:
 	//時間
 	const int FADEIN_FRAME = 150;
 	int fadeinFrame = 0;
-
+	//コンフィグ
+	std::unique_ptr<ActionInputConfig> actionInputConfig;
+	bool isConfigMode = false;
 
 	//入力判定用
 	bool IsUp();

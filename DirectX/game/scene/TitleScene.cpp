@@ -52,69 +52,84 @@ void TitleScene::Initialize()
 
 	//遷移初期化
 	SceneChangeDirection::Init();
+
+	actionInputConfig = std::make_unique<ActionInputConfig>();
 }
 
 void TitleScene::Update()
 {
-	//インスタンス取得
-	DirectInput* dinput = DirectInput::GetInstance();
-	XInputManager* xinput = XInputManager::GetInstance();
 	//カメラ更新
 	debugCamera->Update();
 	lightCamera->Update();
 
 	if (isPressed) {
-		if (!isSelected) {
-			if (IsUp() && selecting != PLAYER_SELECT::SELECT_STARTGAME) {
-				selecting = PLAYER_SELECT(int(selecting) - 1);
-			}
-			else if (IsDown() && selecting != PLAYER_SELECT::SELECT_EXIT) {
-				selecting = PLAYER_SELECT(int(selecting) + 1);
-			}
-		}
-
-		choiceDrawer.SetEmphasisPos(1500.f / 2.f, OPTIONS_START_Y + (OPTIONS_DISTANCE_Y * float(selecting)), 550.f, 80.f);
-
-		//決定キーが押されたら
-		if (IsEnter()) {
-			choiceDrawer.PlayChoiseAnimation();
-			//カーソル移動をロック
-			isSelected = true;
-		}
-
-		if (choiceDrawer.IsChooseAnimEnd()) {
-			switch (selecting)
-			{
-			case TitleScene::PLAYER_SELECT::SELECT_STARTGAME:
-				isSceneChangeWait = true;
-				SceneChangeDirection::PlayFadeOut();
-				break;
-			case TitleScene::PLAYER_SELECT::SELECT_CONFIG:
-				break;
-			case TitleScene::PLAYER_SELECT::SELECT_EXIT:
-				break;
-			default:
-				break;
+		if (isConfigMode) {
+			//入力設定更新
+			actionInputConfig->Update();
+			if (actionInputConfig->GetIsInputConfigEnd()) { 
+				isConfigMode = false; 
 			}
 		}
+		else {
+			if (!isSelected) {
+				if (IsUp() && selecting != PLAYER_SELECT::SELECT_STARTGAME) {
+					selecting = PLAYER_SELECT(int(selecting) - 1);
+				}
+				else if (IsDown() && selecting != PLAYER_SELECT::SELECT_EXIT) {
+					selecting = PLAYER_SELECT(int(selecting) + 1);
+				}
+			}
 
-		if (isSceneChangeWait && SceneChangeDirection::IsDirectionEnd()) {
-			Scene1* gameScene = nullptr;
-			gameScene = new Scene1;
-			SceneManager::SetNextScene(gameScene);
+			choiceDrawer.SetEmphasisPos(1500.f / 2.f, OPTIONS_START_Y + (OPTIONS_DISTANCE_Y * float(selecting)), 550.f, 80.f);
+
+			//決定キーが押されたら
+			if (IsEnter()) {
+				choiceDrawer.PlayChoiseAnimation();
+				//カーソル移動をロック
+				isSelected = true;
+			}
+
+			if (choiceDrawer.IsChooseAnimEnd()) {
+				switch (selecting)
+				{
+				case TitleScene::PLAYER_SELECT::SELECT_STARTGAME:
+					isSceneChangeWait = true;
+					SceneChangeDirection::PlayFadeOut();
+					break;
+				case TitleScene::PLAYER_SELECT::SELECT_CONFIG:
+					isConfigMode = true;
+					actionInputConfig->Reset();
+					break;
+				case TitleScene::PLAYER_SELECT::SELECT_EXIT:
+
+					break;
+				default:
+					break;
+				}
+			}
+
+			if (isSceneChangeWait && SceneChangeDirection::IsDirectionEnd()) {
+				Scene1* gameScene = nullptr;
+				gameScene = new Scene1;
+				SceneManager::SetNextScene(gameScene);
+			}
 		}
+
+
 
 	}
 	else {
 		//なにかしらのボタンが押されたら選択肢表示
-		if (dinput->ReleaseKey(DIK_SPACE) ||
-			xinput->TriggerButton(xinput->PAD_A) ||
-			xinput->TriggerButton(xinput->PAD_B) ||
-			xinput->TriggerButton(xinput->PAD_X) ||
-			xinput->TriggerButton(xinput->PAD_Y)) {
+		if (DirectInput::GetInstance()->ReleaseKey(DIK_SPACE) ||
+			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A) ||
+			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B) ||
+			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_X) ||
+			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_Y)) {
 			isPressed = true;
 		}
 	}
+
+
 
 	choiceDrawer.Update();
 
@@ -134,14 +149,19 @@ void TitleScene::NonPostEffectDraw(const int _cameraNum)
 {
 	titleLogoSprite->Draw();
 
-	if(isPressed){ 
-		choiceDrawer.Draw();
-		gamestartSprite->Draw();
-		configSprite->Draw();
-		exitgameSprite->Draw();
+	if (!isConfigMode) {
+		if (isPressed) {
+			choiceDrawer.Draw();
+			gamestartSprite->Draw();
+			configSprite->Draw();
+			exitgameSprite->Draw();
+		}
+		else {
+			pressAnyButtonSprite->Draw();
+		}
 	}
-	else{ 
-		pressAnyButtonSprite->Draw(); 
+	else {
+		actionInputConfig->Draw();
 	}
 
 	SceneChangeDirection::Draw();
@@ -179,8 +199,8 @@ bool TitleScene::IsDown()
 
 bool TitleScene::IsEnter()
 {
-	bool isEnter = DirectInput::GetInstance()->TriggerKey(DIK_SPACE) ||
-		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B);
+	bool isEnter = (DirectInput::GetInstance()->TriggerKey(DIK_SPACE) ||
+		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A));
 
 	return isEnter;
 }

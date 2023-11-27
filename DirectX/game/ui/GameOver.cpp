@@ -169,6 +169,7 @@ void GameOver::Draw()
 
 void GameOver::StartGameOverUI()
 {
+	if (phase != GAMEOVER_PHASE::PHASE_STANDBY) { return; }
 	phase = GAMEOVER_PHASE::PHASE_MODELFADE;
 	frame = 0;
 }
