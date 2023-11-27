@@ -60,11 +60,11 @@ private: //静的メンバ変数
 	//最大連続攻撃回数
 	static const int maxAttackNum = 3;
 	//攻撃にかかる時間
-	static const int attackTime = 130;
+	static const int attackTime = 75;
 	//先行入力を開始する時間
-	static const int actionChangeStartTime = 80;
+	static const int actionChangeStartTime = 50;
 	//衝突判定が有効に切り替わる時間
-	static const int collisionValidStartTime = 42;
+	static const int collisionValidStartTime = 10;
 	//色
 	static const DirectX::XMFLOAT4 attackColor;
 	static const DirectX::XMFLOAT4 nonAttackColor;
