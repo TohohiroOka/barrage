@@ -6,8 +6,10 @@
 
 Boss1Move1::Boss1Move1()
 {
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::back_end));
 	boss->GetBaseModel()->AnimationReset();
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::back_start));
+	boss->GetBaseModel()->AnimationReset();
 	boss->GetBaseModel()->SetIsRoop(false);
 
 	Vector3 target = boss->GetTargetPos();

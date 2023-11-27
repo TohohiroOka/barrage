@@ -467,8 +467,13 @@
       <Filter>ゲームシステム\cutScene</Filter>
     </ClCompile>
     <ClCompile Include="game\player\PlayerActionDead.cpp" />
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClCompile>
     <ClCompile Include="game\ui\ChoiceEmphasisDrawer.cpp">
       <Filter>ゲームシステム\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\Boss1Move3.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -964,6 +969,12 @@
     </ClInclude>
     <ClInclude Include="game\cutscene\SceneChangeDirection.h">
       <Filter>ゲームシステム\cutScene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerActionDead.h">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\Boss1Move3.h">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -114,7 +114,7 @@ void Boss1Bullet1::AddBullet()
 	BulletInfo& add = bullet.front();
 	add.isAlive = true;
 	add.pos = bossPos;
-	add.moveVec = normalVec * 20.0f;
+	add.moveVec = normalVec * 15.0f;
 	add.timer = std::make_unique<Engine::Timer>();
 	add.predictionLinePoint = bossPos;
 
