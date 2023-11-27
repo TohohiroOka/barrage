@@ -14,10 +14,8 @@ void TitleScene::Initialize()
 	Sprite::LoadTexture("config", "Resources/SpriteTexture/config.png");
 	Sprite::LoadTexture("exitgame", "Resources/SpriteTexture/exitgame.png");
 	//スプライト生成
-	titleLogoSprite = Sprite::Create("titleLogo", {}, { 640.f / 1.0f,64.f / 1.0f });
-	titleLogoSprite->SetTexSize({ 640.f,64.0f });
-	titleLogoSprite->SetSize({ 640.f * 1.5f,64.0f * 1.5f });
-	titleLogoSprite->SetAnchorpoint({ 0.5f, 0.5f });
+	titleLogoSprite = Sprite::Create("titleLogo", {}, { 0.5f,0.5f });
+	titleLogoSprite->SetSize({ 252.f * 1.5f,59.0f * 1.5f });
 	titleLogoSprite->SetPosition({ 1500.f / 2.f,200.f });
 	titleLogoSprite->Update();
 	pressAnyButtonSprite = Sprite::Create("pab", {}, { 512.f,32.f });

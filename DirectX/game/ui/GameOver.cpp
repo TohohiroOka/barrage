@@ -64,7 +64,9 @@ void GameOver::Update()
 			frame = 0;
 		}
 		rate = float(frame) / float(PLAYER_FADE_FRAME);
-		if (playerObject) { playerObject->SetColor({ 1,1,1,1 - rate }); }
+		if (playerObject) { 
+			playerObject->SetColor({ 1,1,1,1 - rate }); 
+		}
 		break;
 	case GameOver::GAMEOVER_PHASE::PHASE_UI_FADEIN:
 		if (frame > UI_FADEIN_FRAME) {

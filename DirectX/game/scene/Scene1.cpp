@@ -53,6 +53,7 @@ void Scene1::Initialize()
 	stop = false;
 
 	gameoverUi.Initialize();
+	gameoverUi.SetPlayerObject(player->GetFbxObject());
 
 
 	actionInputConfig = std::make_unique<ActionInputConfig>();
