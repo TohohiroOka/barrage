@@ -118,8 +118,8 @@ void Scene1::Update()
 		//体力0でゲームオーバー表示
 		//デバッグ用ゲームオーバー表示
 		if (DirectInput::GetInstance()->TriggerKey(DIK_F4)) { gameoverUi.ResetGameOverUI(); }
-		//if (DirectInput::GetInstance()->TriggerKey(DIK_4)) { gameoverUi.StartGameOverUI(); }
-		//if (player->GetIsDead() && !gameoverUi.GetIsGameOver()) { gameoverUi.StartGameOverUI(); }
+		if (DirectInput::GetInstance()->TriggerKey(DIK_4)) { gameoverUi.StartGameOverUI(); }
+		if (player->GetData()->isDead && !gameoverUi.GetIsGameOver()) { gameoverUi.StartGameOverUI(); }
 
 		if (DirectInput::GetInstance()->TriggerKey(DIK_TAB) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_START)) {
 			isInputConfigMode = true;

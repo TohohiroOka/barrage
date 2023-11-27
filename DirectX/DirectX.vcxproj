@@ -187,6 +187,7 @@
     <ClCompile Include="game\player\PlayerActionAvoid.cpp" />
     <ClCompile Include="game\player\PlayerActionBase.cpp" />
     <ClCompile Include="game\player\PlayerActionBlink.cpp" />
+    <ClCompile Include="game\player\PlayerActionDead.cpp" />
     <ClCompile Include="game\player\PlayerActionJump.cpp" />
     <ClCompile Include="game\player\PlayerActionKnockback.cpp" />
     <ClCompile Include="game\player\PlayerActionMoveNormal.cpp" />
@@ -506,6 +507,7 @@
     <ClInclude Include="game\player\PlayerActionAvoid.h" />
     <ClInclude Include="game\player\PlayerActionBase.h" />
     <ClInclude Include="game\player\PlayerActionBlink.h" />
+    <ClInclude Include="game\player\PlayerActionDead.h" />
     <ClInclude Include="game\player\PlayerActionJump.h" />
     <ClInclude Include="game\player\PlayerActionKnockback.h" />
     <ClInclude Include="game\player\PlayerActionMoveNormal.h" />

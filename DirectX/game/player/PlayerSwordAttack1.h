@@ -63,6 +63,8 @@ private: //静的メンバ変数
 	static const int attackTime = 130;
 	//先行入力を開始する時間
 	static const int actionChangeStartTime = 80;
+	//衝突判定が有効に切り替わる時間
+	static const int collisionValidStartTime = 42;
 	//色
 	static const DirectX::XMFLOAT4 attackColor;
 	static const DirectX::XMFLOAT4 nonAttackColor;
@@ -83,6 +85,9 @@ private: //メンバ変数
 
 	//連続攻撃回数
 	int attackNum = 0;
+
+	//攻撃がヒットしたか
+	bool isHitAttack = false;
 
 	//攻撃開始時の移動スピード
 	float attackStartMoveSpeed;

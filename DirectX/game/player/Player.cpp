@@ -9,6 +9,7 @@
 #include "PlayerActionAvoid.h"
 #include "PlayerActionBlink.h"
 #include "PlayerActionKnockback.h"
+#include "PlayerActionDead.h"
 #include "engine/Math/Easing/Easing.h"
 #include "PlayerSwordAttack1.h"
 #include <imgui.h>
@@ -68,6 +69,9 @@ void Player::Update()
 		ActionChange();
 	}
 
+	//待機モデルなしのための応急処置
+	if (!(object->GetUseAnimation() == PlayerAnimationName::STAY_ANIMATION)) { object->SetAnimation(true); }
+
 	//重力落下
 	if (!data->isNoGravity) {
 		Fall();
@@ -123,14 +127,17 @@ void Player::Damage(int damageNum, const Vector3& subjectPos)
 	//回復中なら回復を中断
 	isHeal = false;
 
-	//ノックバック状態にする
-	data->action = PlayerActionName::KNOCKBACK;
-	action = std::make_unique<PlayerActionKnockback>(this, subjectPos, damageNum);
-
 	//HPが0以下なら死亡
-	if (!(data->HP <= 0)) { return; }
+	if (data->HP <= 0) {
+		data->action = PlayerActionName::DEAD;
+		action = std::make_unique<PlayerActionDead>(this);
+	}
+	//それ以外ならノックバック状態にする
+	else {
+		data->action = PlayerActionName::KNOCKBACK;
+		action = std::make_unique<PlayerActionKnockback>(this, subjectPos, damageNum);
+	}
 
-	data->isDead = true;
 }
 
 void Player::Heal(int healNum)
@@ -191,7 +198,9 @@ void Player::UseEndurance(const int enduranceUseNum, const int enduranceRecovery
 void Player::ObjectUpdate()
 {
 	//速度を加算して座標更新
-	data->pos += data->velocity * GameHelper::Instance()->GetGameSpeed() + (Vector3)object->GetModelMove();
+	Vector3 modelMove = (Vector3)object->GetModelMove();
+	if (object->GetUseAnimation() == PlayerAnimationName::STAY_ANIMATION) { modelMove = { 0,0,0 }; }
+	data->pos += data->velocity * GameHelper::Instance()->GetGameSpeed() + modelMove;
 
 	//壁判定
 	data->pos.x = max(data->pos.x, moveMinPos.x + object->GetScale().x);
@@ -223,6 +232,9 @@ void Player::ObjectUpdate()
 
 	//オブジェクト更新
 	object->Update();
+
+	//待機モデルなしのための応急処置
+	if (object->GetUseAnimation() == PlayerAnimationName::STAY_ANIMATION) { object->SetAnimation(false); }
 }
 
 void Player::ActionChange()
@@ -249,7 +261,7 @@ void Player::ActionChange()
 		action = std::make_unique<PlayerActionBlink>(this);
 		break;
 
-	default :
+	default:
 		assert(0);
 		break;
 	}

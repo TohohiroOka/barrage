@@ -14,6 +14,7 @@ enum PlayerActionName
 	AVOID,	//回避
 	BLINK,	//ブリンク
 	KNOCKBACK,//ノックバック
+	DEAD,	//死亡
 };
 
 /// <summary>

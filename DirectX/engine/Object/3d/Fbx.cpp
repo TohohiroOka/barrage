@@ -111,7 +111,7 @@ void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 	// 定数バッファ1へデータ転送
 	ConstBufferDataB0* constMap = nullptr;
 	HRESULT result = constBuffB0->Map(0, nullptr, (void**)&constMap);
-	constMap->color = { 1,1,1,1 };
+	constMap->color = color;
 	if (camera) {
 		constMap->viewproj = camera->GetView() * camera->GetProjection();
 		constMap->cameraPos = camera->GetEye();

@@ -466,6 +466,7 @@
     <ClCompile Include="game\cutscene\SceneChangeDirection.cpp">
       <Filter>ゲームシステム\cutScene</Filter>
     </ClCompile>
+    <ClCompile Include="game\player\PlayerActionDead.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -960,6 +961,9 @@
     </ClInclude>
     <ClInclude Include="game\cutscene\SceneChangeDirection.h">
       <Filter>ゲームシステム\cutScene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerActionDead.h">
+      <Filter>ゲームシステム\Player\Action</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

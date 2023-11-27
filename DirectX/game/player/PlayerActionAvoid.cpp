@@ -5,7 +5,7 @@
 PlayerActionAvoid::PlayerActionAvoid(Player* player)
 	: PlayerActionBase(player)
 {
-	player->UseEndurance(avoidUseEndurance, 60, true); //持久力を使用
+	player->UseEndurance(avoidUseEndurance, 45, true); //持久力を使用
 
 	//タイマー生成
 	avoidTimer = std::make_unique<Engine::Timer>();

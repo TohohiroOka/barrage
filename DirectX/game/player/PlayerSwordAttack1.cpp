@@ -123,7 +123,8 @@ bool PlayerSwordAttack1::NextAttack()
 	isNextActionInput = false;
 	timer->Reset();
 	object->SetColor(nonAttackColor);
-	isCollisionValid = true;
+	isCollisionValid = false;
+	isHitAttack = false;
 	object->SetColor(attackColor);
 
 	return true;
@@ -133,6 +134,9 @@ void PlayerSwordAttack1::AttackCollision()
 {
 	//毎フレーム攻撃が当たるとおかしいので衝突判定フラグを下げる
 	isCollisionValid = false;
+
+	//攻撃が当たった
+	isHitAttack = true;
 
 	object->SetColor(nonAttackColor);
 }
@@ -144,6 +148,11 @@ void PlayerSwordAttack1::AttackAction1()
 
 	//攻撃に合わせてプレイヤーを動かす
 	MovePlayer(actionChangeStartTime);
+
+	//攻撃判定をONにする
+	if (*timer.get() == collisionValidStartTime && !isHitAttack) {
+		isCollisionValid = true;
+	}
 
 	//次の行動を入力可能にする
 	if (*timer.get() == actionChangeStartTime) {
@@ -165,6 +174,11 @@ void PlayerSwordAttack1::AttackAction2()
 	//攻撃に合わせてプレイヤーを動かす
 	MovePlayer(actionChangeStartTime);
 
+	//攻撃判定をONにする
+	if (*timer.get() == collisionValidStartTime && !isHitAttack) {
+		isCollisionValid = true;
+	}
+
 	//次の行動を入力可能にする
 	if (*timer.get() == actionChangeStartTime) {
 		isNextActionInput = true;
@@ -184,6 +198,11 @@ void PlayerSwordAttack1::AttackAction3()
 
 	//攻撃に合わせてプレイヤーを動かす
 	MovePlayer(actionChangeStartTime);
+
+	//攻撃判定をONにする
+	if (*timer.get() == collisionValidStartTime && !isHitAttack) {
+		isCollisionValid = true;
+	}
 
 	//次の行動を入力可能にする
 	if (*timer.get() == actionChangeStartTime) {

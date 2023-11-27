@@ -6,7 +6,7 @@ float PlayerActionJump::jumpPower = 2.0f;
 PlayerActionJump::PlayerActionJump(Player* player)
 	: PlayerActionBase(player)
 {
-	player->UseEndurance(jumpUseEndurance, 60, true); //持久力を使用
+	player->UseEndurance(jumpUseEndurance, 45, true); //持久力を使用
 
 	player->GetData()->onGround = false; //地面との接地を解除
 	player->GetData()->isInputJump = true; //ジャンプ入力状態にする
