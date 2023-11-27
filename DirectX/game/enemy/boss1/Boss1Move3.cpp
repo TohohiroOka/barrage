@@ -103,20 +103,20 @@ void Boss1Move3::Attack()
 	timer->Update();
 	const float maxTimer = 20.0f;
 
-	if (*timer.get() < 20.0f) {
+	if (*timer.get() < maxTimer) {
 		const float rate = *timer.get() / maxTimer;
 		Vector3 pos = object->GetPosition();
 		pos.y = Easing::OutCubic(-20.0f, 10.0f, rate);
 
 		object->SetPosition(pos);
 	} else {
-		const float rate = *timer.get() - 20.0f / maxTimer;
+		const float rate = (*timer.get() - maxTimer) / maxTimer;
 		float alp = Easing::OutCubic(1.0f, 0.0f, rate);
 		object->SetColor({ 1.0f,1.0f, 1.0f,alp });
 	}
 	object->Update();
 
-	if (*timer.get() < 20.0f) { return; }
+	if (*timer.get() < maxTimer * 2.0f) { return; }
 	timer->Reset();
 	isEnd = true;
 }

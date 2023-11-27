@@ -30,7 +30,7 @@ Boss1::Boss1()
 
 void Boss1::Update()
 {
-	if (winceValue >= 100) {
+	if (winceValue >= 400) {
 		isWince = true;
 		winceValue = 0.0f;
 		winceAction = std::make_unique<Boss1Wince>();

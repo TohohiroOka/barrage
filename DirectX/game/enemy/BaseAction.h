@@ -34,6 +34,7 @@ public:
 	virtual int GetDamage() = 0;
 
 	bool End() { return isEnd; }
+	void SetEnd() { isEnd = true; }
 	void SetUseCollision(const UseCollision _useCollision) { useCollision = _useCollision; }
 	UseCollision GetUseCollision() { return useCollision; }
 	void SetIsCollision(const bool _isCollision) {

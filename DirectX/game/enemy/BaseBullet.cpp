@@ -4,7 +4,7 @@ void BaseBullet::Update()
 {
 	//タイマー加算
 	timer->Update();
-	bulletEffect.Update();
+	bulletEffect->Update();
 
 	for (auto& i : instanceObject) {
 		if (i->GetInstanceDrawNum() == 0) { continue; }
@@ -31,7 +31,7 @@ void BaseBullet::Draw()
 		i->Draw();
 	}
 
-	bulletEffect.Draw();
+	bulletEffect->Draw();
 
 	if (predictionLine) {
 		predictionLine->Draw();

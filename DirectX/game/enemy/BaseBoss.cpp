@@ -26,6 +26,7 @@ void BaseBoss::Update()
 			winceAction->Update();
 		} else {
 			isWince = false;
+			action->SetEnd();
 			winceAction.reset();
 		}
 	}
@@ -50,7 +51,9 @@ void BaseBoss::DrawSprite()
 void BaseBoss::Damage(int damageNum)
 {
 	//‹¯‚İ‰ÁZ
-	winceValue += damageNum;
+	if (!isWince) {
+		winceValue += damageNum;
+	}
 
 	//HP‚©‚çƒ_ƒ[ƒW—Ê‚ğˆø‚­
 	HP -= damageNum;
