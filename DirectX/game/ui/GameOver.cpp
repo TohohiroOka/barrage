@@ -101,7 +101,7 @@ void GameOver::Update()
 		}
 		//Œˆ’è
 		if (DirectInput::GetInstance()->TriggerKey(DIK_SPACE) ||
-			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B)) {
+			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A)) {
 			choiceDrawer.PlayChoiseAnimation();
 			phase = GAMEOVER_PHASE::PHASE_DECISION;
 		}

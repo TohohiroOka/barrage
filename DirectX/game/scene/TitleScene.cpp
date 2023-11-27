@@ -155,7 +155,7 @@ void TitleScene::NonPostEffectDraw(const int _cameraNum)
 			choiceDrawer.Draw();
 			gamestartSprite->Draw();
 			configSprite->Draw();
-			exitgameSprite->Draw();
+			//exitgameSprite->Draw();
 		}
 		else {
 			pressAnyButtonSprite->Draw();
