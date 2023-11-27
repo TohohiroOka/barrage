@@ -1,6 +1,9 @@
 #pragma once
 #include "engine/Object/2d/Sprite.h"
+#include "engine/Object/3d/Fbx.h"
 #include "engine/Math/Vector2.h"
+
+#include "ui/ChoiceEmphasisDrawer.h"
 
 #include <memory>
 
@@ -32,16 +35,35 @@ public:
 
 	bool GetIsGameOver() { return isGameOver; }
 
+	void SetPlayerObject(Fbx* playerObject);
+
 private:
 	//表示開始フラグ
 	bool isGameOver = false;
 	//プレイヤー選択中の選択肢
 	PlayerSelect playerSelecting = PlayerSelect::SELECT_CONTINUE;
 
+	ChoiceEmphasisDrawer choiceDrawer;
+
+
+	//演出フェーズ
+	enum class GAMEOVER_PHASE
+	{
+		PHASE_STANDBY,
+		PHASE_MODELFADE,	//モデルが消える
+		PHASE_UI_FADEIN,	//UIがフェードインする
+		PHASE_UI_SHOW,		//UIが選択可能になる
+		PHASE_DECISION,		//選択肢が決定される
+	};
+	GAMEOVER_PHASE phase = GAMEOVER_PHASE::PHASE_STANDBY;
+
 #pragma region time
 
 	int			frame = 0;
-	const int	GAMEOVER_DIRECTION_FRAME = 300;
+	//プレイヤー消滅にかかる時間
+	const int	UI_FADEIN_FRAME = 60;
+	//フェードインにかかる時間
+	const int	PLAYER_FADE_FRAME = 60;
 
 #pragma endregion
 
@@ -51,7 +73,7 @@ private:
 	const int GAMEOVERTEXT_WIDTH	= 512;
 	const int CONTINUE_EXIT_WIDTH	= 448;
 	//表示座標
-	const Vector2 GAMEOVERTEXT_LT	= Vector2(WINDOW_WIDTH / 2.f - GAMEOVERTEXT_WIDTH / 2.f, 200.f);
+	const Vector2 GAMEOVERTEXT_LT	= Vector2(WINDOW_WIDTH / 2.f, 300.f);
 	const Vector2 CONTINUE_POS		= Vector2(WINDOW_WIDTH / 4.f, 600.f);
 	const Vector2 EXIT_POS			= Vector2((WINDOW_WIDTH / 4.f) * 3.f, 600.f);
 
@@ -62,6 +84,14 @@ private:
 	std::unique_ptr<Sprite> gameoverText;
 	std::unique_ptr<Sprite> continueText;
 	std::unique_ptr<Sprite> exitText;
+	std::unique_ptr<Sprite> gameoverBack;
+
+#pragma endregion
+
+#pragma region ref
+
+	//プレイヤーのモデルデータを参照
+	Fbx* playerObject = nullptr;
 
 #pragma endregion
 

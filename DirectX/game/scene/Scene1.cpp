@@ -53,6 +53,7 @@ void Scene1::Initialize()
 	stop = false;
 
 	gameoverUi.Initialize();
+	gameoverUi.SetPlayerObject(player->GetFbxObject());
 
 
 	actionInputConfig = std::make_unique<ActionInputConfig>();
@@ -134,9 +135,6 @@ void Scene1::Update()
 	}
 
 	defeatDirection.Update();
-
-
-
 	if (defeatDirection.GetDirectionEnd() && isSceneChangeWait == false) {
 		isSceneChangeWait = true;
 		SceneChangeDirection::PlayFadeOut();

@@ -36,7 +36,6 @@ void SceneChangeDirection::Update()
 	if (isFadein) {
 		frame--;
 		if (frame <= 0) {
-			isDirectionEnd = true;
 			isPlayingDirection = false;
 		}
 	}
@@ -51,6 +50,7 @@ void SceneChangeDirection::Update()
 
 void SceneChangeDirection::Draw()
 {
+
 	float rate = float(frame) / float(CHANGE_FADE_FRAME);
 	if (rate < 0.01f) { return; }
 	fadeSprite->Draw();

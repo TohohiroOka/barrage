@@ -14,10 +14,8 @@ void TitleScene::Initialize()
 	Sprite::LoadTexture("config", "Resources/SpriteTexture/config.png");
 	Sprite::LoadTexture("exitgame", "Resources/SpriteTexture/exitgame.png");
 	//スプライト生成
-	titleLogoSprite = Sprite::Create("titleLogo", {}, { 640.f / 1.0f,64.f / 1.0f });
-	titleLogoSprite->SetTexSize({ 640.f,64.0f });
-	titleLogoSprite->SetSize({ 640.f * 1.5f,64.0f * 1.5f });
-	titleLogoSprite->SetAnchorpoint({ 0.5f, 0.5f });
+	titleLogoSprite = Sprite::Create("titleLogo", {}, { 0.5f,0.5f });
+	titleLogoSprite->SetSize({ 252.f * 1.5f,59.0f * 1.5f });
 	titleLogoSprite->SetPosition({ 1500.f / 2.f,200.f });
 	titleLogoSprite->Update();
 	pressAnyButtonSprite = Sprite::Create("pab", {}, { 512.f,32.f });
@@ -185,67 +183,4 @@ bool TitleScene::IsEnter()
 		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B);
 
 	return isEnter;
-}
-
-void TitleScene::ChoiceEmphasisDrawer::Initialize()
-{
-	Sprite::LoadTexture("emphasis", "Resources/SpriteTexture/selectgradation.png");
-	emphasisSprite = Sprite::Create("emphasis", {}, { 384.f,96.f });
-	emphasisSprite->SetTexSize({ 384.f,96.f });
-	emphasisSprite->SetAnchorpoint({ 0.5f,0.5f });
-	emphasisSprite->Update();
-}
-
-void TitleScene::ChoiceEmphasisDrawer::Update()
-{
-	static bool isAdd = true;
-	static int frame = 0;
-	if (frame > ALPHA_ANIM_FRAME) { 
-		isAdd = false; 
-		frame = ALPHA_ANIM_FRAME;
-	}
-	if (frame < 0) { 
-		isAdd = true; 
-		frame = 0;
-	}
-	if (isAdd) {frame++;}
-	else {frame--;}
-	float rate = float(frame) / float(ALPHA_ANIM_FRAME);
-
-	//1F前
-	isChooseOld = isChoose;
-	//決定時アニメーション
-	if (isChoose) {
-		choiceAnimFrame++;
-		if (choiceAnimFrame > CHOICE_ANIM_FRAME) {
-			choiceAnimFrame = 0;
-			ALPHA_ANIM_FRAME = 90;
-			isChoose = false;
-		}
-	}
-
-	emphasisSprite->SetColor({ 1.f,1.f,1.f,rate });
-	emphasisSprite->Update();
-}
-
-void TitleScene::ChoiceEmphasisDrawer::Draw()
-{
-	emphasisSprite->Draw();
-}
-
-void TitleScene::ChoiceEmphasisDrawer::SetEmphasisPos(float posX, float posY, float sizeX, float sizeY)
-{
-	emphasisSprite->SetPosition({ posX,posY });
-	emphasisSprite->SetSize({ sizeX,sizeY });
-}
-
-void TitleScene::ChoiceEmphasisDrawer::PlayChoiseAnimation()
-{
-	ALPHA_ANIM_FRAME = 10;
-	isChoose = true;
-}
-
-bool TitleScene::ChoiceEmphasisDrawer::IsChooseAnimEnd()
-{
-	return isChoose == false && isChooseOld == true;
 }
