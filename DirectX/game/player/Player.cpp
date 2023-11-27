@@ -50,10 +50,10 @@ Player::Player()
 	ActionChange();
 
 	//体力ゲージ
-	hpGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 20.0f, 50.0f }), 600.0f, data->maxHP, data->HP, DirectX::XMFLOAT4({ 0.6f, 0.1f, 0.1f, 1.0f }));
+	hpGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 20.0f, 50.0f }), 600.0f, data->maxHP, data->HP, 2.0f, DirectX::XMFLOAT4({ 0.6f, 0.1f, 0.1f, 1.0f }));
 
 	//持久力ゲージ
-	enduranceGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 20.0f, 90.0f }), 600.0f, data->maxEndurance, data->endurance, DirectX::XMFLOAT4({ 0.1f, 0.6f, 0.1f, 1.0f }));
+	enduranceGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 20.0f, 90.0f }), 600.0f, data->maxEndurance, data->endurance, 1.5f, DirectX::XMFLOAT4({ 0.1f, 0.6f, 0.1f, 1.0f }));
 
 	//タイマー生成
 	healTimer = std::make_unique<Engine::Timer>();
@@ -194,10 +194,10 @@ void Player::ObjectUpdate()
 	data->pos += data->velocity * GameHelper::Instance()->GetGameSpeed() + (Vector3)object->GetModelMove();
 
 	//壁判定
-	data->pos.x = max(data->pos.x, moveMinPos.x);
-	data->pos.x = min(data->pos.x, moveMaxPos.x);
-	data->pos.z = max(data->pos.z, moveMinPos.z);
-	data->pos.z = min(data->pos.z, moveMaxPos.z);
+	data->pos.x = max(data->pos.x, moveMinPos.x + object->GetScale().x);
+	data->pos.x = min(data->pos.x, moveMaxPos.x - object->GetScale().x);
+	data->pos.z = max(data->pos.z, moveMinPos.z + object->GetScale().z);
+	data->pos.z = min(data->pos.z, moveMaxPos.z - object->GetScale().z);
 
 	//地面に接地判定
 	const float modelHeight = 1; //スケール1のときのモデルの高さ

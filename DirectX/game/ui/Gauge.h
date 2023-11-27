@@ -7,7 +7,7 @@
 class Gauge
 {
 public: //メンバ変数
-	Gauge(const DirectX::XMFLOAT2& position, float length, int maxGaugeNum, int gaugeNum, const DirectX::XMFLOAT4& color);
+	Gauge(const DirectX::XMFLOAT2& position, float length, int maxGaugeNum, int gaugeNum, float decreaseGaugeLengthChangeSpeed, const DirectX::XMFLOAT4& color);
 	~Gauge();
 
 	/// <summary>
@@ -23,10 +23,11 @@ public: //メンバ変数
 	/// <summary>
 	/// ゲージの長さ変更
 	/// </summary>
-	/// <param name="decreaseNum">減少量</param>
+	/// <param name="newGaugeNum">新たに設定するゲージ量</param>
 	/// <param name="isDecreaseDiffMode">ゲージの減少量を表示するか</param>
 	void ChangeLength(int newGaugeNum, bool isDecreaseDiffMode);
 
+	//getter
 	bool GetIsDecreaseDiffMode() { return isDecreaseDiffMode; }
 
 private: //メンバ関数	
@@ -50,5 +51,6 @@ private: //メンバ変数
 	int gaugeNum;
 
 	int decreaseStartLagTimer = 0;
+	float decreaseLengthChangeSpeed = 0;
 	bool isDecreaseDiffMode = false;
 };

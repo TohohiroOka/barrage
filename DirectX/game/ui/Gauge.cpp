@@ -2,11 +2,12 @@
 
 const float Gauge::thickness = 16.0f;
 
-Gauge::Gauge(const DirectX::XMFLOAT2& position, float length, int maxGaugeNum, int gaugeNum, const DirectX::XMFLOAT4& color)
+Gauge::Gauge(const DirectX::XMFLOAT2& position, float length, int maxGaugeNum, int gaugeNum, float decreaseGaugeLengthChangeSpeed, const DirectX::XMFLOAT4& color)
 {
 	this->length = length;
 	this->maxGaugeNum = maxGaugeNum;
 	this->gaugeNum = gaugeNum;
+	this->decreaseLengthChangeSpeed = decreaseGaugeLengthChangeSpeed;
 
 	const std::string textureName = "gauge";
 	
@@ -87,9 +88,8 @@ void Gauge::ChangeDecreaseDiffLength()
 	if (decreaseStartLagTimer > 0) { return; }
 
 	//ƒQ[ƒWŒ¸­
-	const float damageGaugeChangeSpeed = 1.5f;
 	DirectX::XMFLOAT2 gaugeDecreaseLength = gaugeDecreaseDiff->GetSize();
-	gaugeDecreaseLength.x -= damageGaugeChangeSpeed;
+	gaugeDecreaseLength.x -= decreaseLengthChangeSpeed;
 	gaugeDecreaseLength.x = max(gaugeDecreaseLength.x, 0);
 	gaugeDecreaseDiff->SetSize(gaugeDecreaseLength);
 
