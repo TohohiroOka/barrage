@@ -92,17 +92,17 @@ void Boss1::SetAction()
 		if (isMove || actionRand) {
 			isMove = false;
 			actionNumber = RandomInt(int(MediumAction::middle) + 1, int(MediumAction::size) - 1);
-			if (actionNumber == int(MediumAction::bullet2)) {
-				action = std::make_unique<Boss1Bullet3>();
+			if (actionNumber == int(MediumAction::bullet1)) {
+				action = std::make_unique<Boss1Bullet1>();
+			}else if (actionNumber == int(MediumAction::bullet2)) {
+				action = std::make_unique<Boss1Bullet2>();
 			}
 		}
 		//à⁄ìÆçsìÆ
 		else {
 			isMove = true;
 			actionNumber =RandomInt(0, int(MediumAction::middle) - 1);
-			if (actionNumber == int(MediumAction::move1)) {
-				action = std::make_unique<Boss1Move1>();
-			}else if (actionNumber == int(MediumAction::move3)) {
+			if (actionNumber == int(MediumAction::move3)) {
 				action = std::make_unique<Boss1Move1>();
 			}
 

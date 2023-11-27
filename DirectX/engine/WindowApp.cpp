@@ -99,7 +99,7 @@ void WindowApp::Initialize(int _windowWidth, int _windowHeight,const wchar_t* _g
 		nullptr);// オプション
 
 	// ウィンドウ表示
-	ShowWindow(hwnd, SW_SHOW);
+	ShowWindow(hwnd, SW_SHOWMAXIMIZED);
 }
 
 bool WindowApp::Update()
