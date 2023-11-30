@@ -2,8 +2,8 @@
 #include "WindowApp.h"
 
 void (ActionInputConfig::* ActionInputConfig::phaseFuncTable[])() = {
-	&ActionInputConfig::Select,
-	&ActionInputConfig::InputChange,
+	&ActionInputConfig::SelectModeUpdate,
+	&ActionInputConfig::InputChangeModeUpdate,
 };
 
 DirectX::XMFLOAT4 ActionInputConfig::normalColor = { 1,1,1,1 };
@@ -13,7 +13,7 @@ DirectX::XMFLOAT4 ActionInputConfig::selectColor = { 1, 1, 0.5f, 1 };
 void ActionInputConfig::LoadTexture()
 {
 	//仮置き背景用テクスチャ
-	Sprite::LoadTexture("white1x1", "Resources/SubTexture/white1x1.png",false);
+	Sprite::LoadTexture("white1x1", "Resources/SubTexture/white1x1.png", false);
 
 	//フレームテクスチャ読み込み
 	Sprite::LoadTexture("inputFrame", "Resources/SpriteTexture/inputFrame.png", false);
@@ -119,6 +119,11 @@ void ActionInputConfig::LoadTexture()
 	//カメラ回転用「ノーマル」「リバース」テクスチャ読み込み
 	Sprite::LoadTexture("normal", "Resources/SpriteTexture/normal.png", false);
 	Sprite::LoadTexture("reverse", "Resources/SpriteTexture/reverse.png", false);
+
+	//操作方法用テキストテクスチャ読み込み
+	Sprite::LoadTexture("select", "Resources/SpriteTexture/action/Select.png", false);
+	Sprite::LoadTexture("back", "Resources/SpriteTexture/action/Back.png", false);
+	Sprite::LoadTexture("buttonSelect", "Resources/SpriteTexture/action/ButtonSelect.png", false);
 }
 
 void ActionInputConfig::LoadActionNameTexture(int actionName, const std::string& fileName)
@@ -156,16 +161,14 @@ ActionInputConfig::~ActionInputConfig()
 void ActionInputConfig::Initialize()
 {
 	//仮置き背景スプライト初期化
-	backSprite = std::make_unique<Sprite>();
-	backSprite->Initialize("white1x1", { 0,0 }, {}, { 0,0,0,0.7f });
+	backSprite = Sprite::Create("white1x1", { 0,0 }, {}, { 0,0,0,0.7f });
 	backSprite->SetSize({ (float)WindowApp::GetWindowWidth(), (float)WindowApp::GetWindowHeight() });
 
 	//行動名スプライト初期化
 	for (int i = 0; i < actionNameSprites.size(); i++) {
-		actionNameSprites[i] = std::make_unique<Sprite>();
 		const std::string name = "action_" + std::to_string(i);
 		const DirectX::XMFLOAT2 pos = { 100, 100 + (float)i * 55 };
-		actionNameSprites[i]->Initialize(name, pos, { 0, 0.5f });
+		actionNameSprites[i] = Sprite::Create(name, pos, { 0, 0.5f });
 	}
 
 
@@ -177,7 +180,6 @@ void ActionInputConfig::Initialize()
 
 		for (int j = 0; j < loopNum; j++) {
 			//入力スプライト初期化
-			std::unique_ptr<Sprite> newConfigSprite = std::make_unique<Sprite>();
 			std::string name;
 			const DirectX::XMFLOAT2 leftTopPos = { 820, 100 };
 			const DirectX::XMFLOAT2 posInterval = { 250, 55 };
@@ -203,16 +205,21 @@ void ActionInputConfig::Initialize()
 					pos.y = leftTopPos.y + (float)GameInputManager::CameraLeftRota * posInterval.y + posInterval.y / 2;
 				}
 			}
-
-			newConfigSprite->Initialize(name, pos, { 0.5f, 0.5f }, color);
+			std::unique_ptr<Sprite> newConfigSprite = Sprite::Create(name, pos, { 0.5f, 0.5f }, color);
 			configSprites[i].push_back(std::move(newConfigSprite));
 
 			//フレームスプライト初期化
-			std::unique_ptr<Sprite> newFrameSprite = std::make_unique<Sprite>();
-			newFrameSprite->Initialize("inputFrame", pos, { 0.5f, 0.5f }, color);
+			std::unique_ptr<Sprite> newFrameSprite = Sprite::Create("inputFrame", pos, { 0.5f, 0.5f }, color);
 			frameSprites[i].push_back(std::move(newFrameSprite));
 		}
 	}
+
+	//説明スプライト初期化
+	infoSprites[InfoName::A_Button] = Sprite::Create("pad_" + std::to_string(XInputManager::PAD_A), { 1210, 780 }, { 0.5f, 0.5f });
+	infoSprites[InfoName::Select] = Sprite::Create("select", { 1280, 780 }, { 0.5f, 0.5f });
+	infoSprites[InfoName::B_Button] = Sprite::Create("pad_" + std::to_string(XInputManager::PAD_B), { 1355, 780 }, { 0.5f, 0.5f });
+	infoSprites[InfoName::Back] = Sprite::Create("back", { 1415, 780 }, { 0.5f, 0.5f });
+	infoSprites[InfoName::SelectButton] = Sprite::Create("buttonSelect", { 1305, 780 }, { 0.5f, 0.5f });
 
 	//選択中のスプライトの枠の色を黄色くする
 	frameSprites[selectInputType][selectAction]->SetColor(selectColor);
@@ -243,6 +250,11 @@ void ActionInputConfig::Update()
 			configSprites[i][j]->Update();
 		}
 	}
+
+	//説明スプライト更新
+	for (int i = 0; i < infoSprites.size(); i++) {
+		infoSprites[i]->Update();
+	}
 }
 
 void ActionInputConfig::Draw()
@@ -266,6 +278,16 @@ void ActionInputConfig::Draw()
 		for (int j = 0; j < configSprites[i].size(); j++) {
 			configSprites[i][j]->Draw();
 		}
+	}
+
+	//説明スプライト描画
+	if (phase == Phase::SelectMode || selectInputType == CameraRota) {
+		for (int i = 0; i <= InfoName::Back; i++) {
+			infoSprites[i]->Draw();
+		}
+	}
+	else {
+		infoSprites[InfoName::SelectButton]->Draw();
 	}
 }
 
@@ -297,7 +319,7 @@ void ActionInputConfig::Reset()
 	}
 }
 
-void ActionInputConfig::Select()
+void ActionInputConfig::SelectModeUpdate()
 {
 	//選択入力形態変更
 	if (selectInputType < CameraRota && (DirectInput::GetInstance()->TriggerKey(DIK_RIGHT) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_RIGHT))) {
@@ -389,7 +411,7 @@ void ActionInputConfig::Select()
 	}
 }
 
-void ActionInputConfig::InputChange()
+void ActionInputConfig::InputChangeModeUpdate()
 {
 	//キー
 	if (selectInputType == Key) {

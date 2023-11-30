@@ -40,6 +40,19 @@ public: //enum
 		CameraRotaTypeNum,
 	};
 
+	/// <summary>
+	/// 説明役割名
+	/// </summary>
+	enum InfoName
+	{
+		A_Button,
+		Select,
+		B_Button,
+		Back,
+		SelectButton,
+		InfoNameNum,
+	};
+
 public: //静的メンバ関数
 	/// <summary>
 	/// テクスチャ読み込み
@@ -93,12 +106,12 @@ private: //メンバ関数
 	/// <summary>
 	/// 選択
 	/// </summary>
-	void Select();
+	void SelectModeUpdate();
 
 	/// <summary>
 	/// 入力変更
 	/// </summary>
-	void InputChange();
+	void InputChangeModeUpdate();
 
 public: //静的メンバ変数
 	//フェーズの挙動関数
@@ -120,6 +133,8 @@ private: //メンバ変数
 	std::array<std::vector<std::unique_ptr<Sprite>>, InputTypeNum> configSprites;
 	//フレームスプライト
 	std::array<std::vector<std::unique_ptr<Sprite>>, InputTypeNum> frameSprites;
+	//説明スプライト
+	std::array<std::unique_ptr<Sprite>, InfoNameNum> infoSprites;
 
 	//選択中の行動番号
 	int selectAction = 0;
