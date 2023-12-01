@@ -79,7 +79,7 @@ private:
 	
 	bool isSceneChangeWait = false;
 
-	ChoiceEmphasisDrawer choiceDrawer;
+	std::unique_ptr<ChoiceEmphasisDrawer> choiceDrawer;
 	//ï\é¶ç¿ïWån
 	const float OPTIONS_START_Y = 550.f;
 	const float OPTIONS_DISTANCE_Y = 50.f;

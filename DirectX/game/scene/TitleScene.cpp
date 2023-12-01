@@ -48,7 +48,8 @@ void TitleScene::Initialize()
 	Base3D::SetLightCamera(lightCamera.get());
 
 	//強調表示初期化
-	choiceDrawer.Initialize();
+	choiceDrawer=std::make_unique<ChoiceEmphasisDrawer>();
+	choiceDrawer->Initialize();
 
 	//遷移初期化
 	SceneChangeDirection::Init();
@@ -81,16 +82,16 @@ void TitleScene::Update()
 				}
 			}
 
-			choiceDrawer.SetEmphasisPos(1500.f / 2.f, OPTIONS_START_Y + (OPTIONS_DISTANCE_Y * float(selecting)), 550.f, 80.f);
+			choiceDrawer->SetEmphasisPos(1500.f / 2.f, OPTIONS_START_Y + (OPTIONS_DISTANCE_Y * float(selecting)), 550.f, 80.f);
 
 			//決定キーが押されたら
 			if (IsEnter()) {
-				choiceDrawer.PlayChoiseAnimation();
+				choiceDrawer->PlayChoiseAnimation();
 				//カーソル移動をロック
 				isSelected = true;
 			}
 
-			if (choiceDrawer.IsChooseAnimEnd()) {
+			if (choiceDrawer->IsChooseAnimEnd()) {
 				switch (selecting)
 				{
 				case TitleScene::PLAYER_SELECT::SELECT_STARTGAME:
@@ -129,7 +130,7 @@ void TitleScene::Update()
 
 
 
-	choiceDrawer.Update();
+	choiceDrawer->Update();
 
 	SceneChangeDirection::Update();
 }
@@ -149,7 +150,7 @@ void TitleScene::NonPostEffectDraw(const int _cameraNum)
 
 	if (!isConfigMode) {
 		if (isPressed) {
-			choiceDrawer.Draw();
+			choiceDrawer->Draw();
 			gamestartSprite->Draw();
 			configSprite->Draw();
 			//exitgameSprite->Draw();
