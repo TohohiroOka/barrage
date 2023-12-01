@@ -119,8 +119,8 @@ void Player::ImguiDraw()
 
 	ImGui::SliderInt("swordAttackPower", &PlayerSwordAttack1::attackPower, 0, 1000);
 
-	ImGui::SliderFloat("moveSpeedMax", &PlayerActionMoveNormal::moveSpeedMax, 0.0f, 100.0f);
-	ImGui::SliderFloat("dashSpeedMax", &PlayerActionMoveNormal::dashSpeedMax, 0.0f, 200.0f);
+	ImGui::SliderFloat("moveSpeedMax", &PlayerActionMoveNormal::moveSpeedMax, 0.0f, 10.0f);
+	ImGui::SliderFloat("dashSpeedMax", &PlayerActionMoveNormal::dashSpeedMax, 0.0f, 20.0f);
 
 	ImGui::SliderInt("jumpMaxNum", &data->jumpMaxNum, 1, 5);
 	ImGui::SliderFloat("playerFallAccel", &gravityAccel, 0.0f, -0.5f);
