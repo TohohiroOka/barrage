@@ -95,9 +95,8 @@ private:
 	//行動入力設定中か
 	bool isInputConfigMode = false;
 
-	float rate;
-
-	bool stop;
+	//ヒットストップフレーム数
+	int hitStopFrame = 5;
 
 	//シーン遷移待機中か
 	bool isSceneChangeWait = false;

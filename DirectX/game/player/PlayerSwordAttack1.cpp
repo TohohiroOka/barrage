@@ -5,6 +5,8 @@
 #include "engine/Math/Easing/Easing.h"
 
 
+int PlayerSwordAttack1::attackUseEnduranceNum = 20;
+int PlayerSwordAttack1::attackPower = 50;
 const DirectX::XMFLOAT4 PlayerSwordAttack1::attackColor = { 1, 0, 0, 0.3f };
 const DirectX::XMFLOAT4 PlayerSwordAttack1::nonAttackColor = { 0, 0, 1, 0.3f };
 const float PlayerSwordAttack1::attackStartMoveSpeedMax = 1.5f;
@@ -79,7 +81,7 @@ bool PlayerSwordAttack1::NextAttack()
 		state = State::ATTACK1;
 
 		//攻撃力変更
-		attackCollisionData.power = 50;
+		attackCollisionData.power = attackPower;
 
 		//攻撃で移動するとき用に移動スピードをセット(既にスピードがある場合は変更しない)
 		player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, attackStartMoveSpeedMax);
@@ -108,7 +110,7 @@ bool PlayerSwordAttack1::NextAttack()
 		state = State::ATTACK3;
 
 		//攻撃力変更
-		attackCollisionData.power = 100;
+		//attackCollisionData.power = 100;
 
 		//攻撃で移動するとき用に移動スピードをセット(既にスピードがある場合は変更しない)
 		player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, attackStartMoveSpeedMax);

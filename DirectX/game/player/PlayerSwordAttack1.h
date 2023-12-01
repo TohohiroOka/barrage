@@ -54,11 +54,13 @@ private: //メンバ関数
 	/// </summary>
 	void MovePlayer(int moveTime);
 
-private: //静的メンバ変数
-	//この攻撃の持久力使用料
-	static const int attackUseEnduranceNum = 20;
+public: //静的メンバ変数 (変更しやすいようにpublic)
 	//最大連続攻撃回数
 	static const int maxAttackNum = 3;
+	//この攻撃の持久力使用料
+	static int attackUseEnduranceNum;
+	//この攻撃の攻撃力
+	static int attackPower;
 	//攻撃にかかる時間
 	static const int attackTime = 75;
 	//先行入力を開始する時間
@@ -68,8 +70,6 @@ private: //静的メンバ変数
 	//色
 	static const DirectX::XMFLOAT4 attackColor;
 	static const DirectX::XMFLOAT4 nonAttackColor;
-
-private: //静的メンバ変数
 	//攻撃開始時の移動スピード最高値
 	static const float attackStartMoveSpeedMax;
 	//攻撃開始時の移動スピード最低値

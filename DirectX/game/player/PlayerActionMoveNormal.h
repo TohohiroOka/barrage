@@ -31,11 +31,11 @@ private: //メンバ関数
 	/// </summary>
 	void NextActionStart();
 
-private: //静的メンバ変数
+public: //静的メンバ変数 (変更しやすいようにpublic)
 	//最大移動スピード
-	static const float moveSpeedMax;
+	static float moveSpeedMax;
 	//最大ダッシュスピード
-	static const float dashSpeedMax;
+	static float dashSpeedMax;
 
 private: //メンバ変数
 	//ダッシュしているか

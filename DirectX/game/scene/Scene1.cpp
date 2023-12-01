@@ -41,16 +41,9 @@ void Scene1::Initialize()
 	Base3D::SetCamera(camera.get());
 	Base3D::SetLightCamera(lightCamera.get());
 
-	/*Sprite::LoadTexture("amm", "Resources/amm.jpg");
-	sprite = Sprite::Create("amm", {}, { 1059.0f / 5.0f,1500.0f / 5.0f });
-	sprite->SetTexSize({ 1059.0f,1500.0f });
-	sprite->Update();*/
-
 	boss = std::make_unique<Boss1>();
 
 	ParticleManager::SetCamera(camera.get());
-
-	stop = false;
 
 	gameoverUi.Initialize();
 	gameoverUi.SetPlayerObject(player->GetFbxObject());
@@ -192,37 +185,14 @@ void Scene1::Finalize()
 
 void Scene1::ImguiDraw()
 {
-	//Vector3 ppos = player->GetData()->pos;
-	//XMFLOAT3 cameraPos = {};
-	//XMFLOAT3 cameraTarget = {};
-	//if (isNormalCamera) {
-	//	cameraPos = camera->GetEye();
-	//	cameraTarget = camera->GetTarget();
-	//}
-	//else {
-	//	cameraPos = debugCamera->GetEye();
-	//	cameraTarget = debugCamera->GetTarget();
-	//}
+	ImGui::Begin("debug imgui");
 
-	//ImGui::Begin("debug imgui");
-	//ImGui::SetWindowSize(ImVec2(300, 300), ImGuiCond_::ImGuiCond_FirstUseEver);
+	ImGui::SetWindowSize(ImVec2(300, 300), ImGuiCond_::ImGuiCond_FirstUseEver);
+	player->ImguiDraw();
 
-	//ImGui::Text("Camera Pos    [ %f : %f : %f ]", cameraPos.x, cameraPos.y, cameraPos.z);
-	//ImGui::Text("Camera Target [ %f : %f : %f ]", cameraTarget.x, cameraTarget.y, cameraTarget.z);
-	//ImGui::Text("Player Pos    [ %f : %f : %f ]", ppos.x, ppos.y, ppos.z);
-	//if (camera->GetisLockon()) { ImGui::Text("lockon  true"); }
-	//else { ImGui::Text("lockon  false"); }
-	//ImGui::Text("Player Boss Length [ %f ]", boss->GetLength());
-	//ImGui::Text("%d : %d ", player->GetData()->jumpMaxNum, player->GetData()->jumpCount);
+	ImGui::SliderInt("HitStopNum", &hitStopFrame, 0, 20);
 
-	//player->ImguiDraw();
-
-	//ImGui::SliderFloat("blend rate", &rate, 0.0f, 1.0f);
-	//ImGui::Checkbox("stop", &stop);
-
-	//ImGui::End();
-
-	//GameHelper::Instance()->SetStop(stop);
+	ImGui::End();
 }
 
 void Scene1::FrameReset()
@@ -340,7 +310,7 @@ void Scene1::CollisionCheck()
 				player->GetData()->attackAction->AttackCollision();
 
 				//ヒットストップ
-				GameHelper::Instance()->SetSlow(0, 5);
+				GameHelper::Instance()->SetSlow(0, hitStopFrame);
 			}
 		}
 	}

@@ -48,13 +48,6 @@ protected: //メンバ関数
 	/// <returns></returns>
 	bool BlinkStart();
 
-protected: //静的メンバ変数
-	//各行動で使用する持久力
-	static const int dashUseEndurance = 1;
-	static const int avoidUseEndurance = 10;
-	static const int jumpUseEndurance = 10;
-	static const int blinkUseEndurance = 10;
-
 protected: //メンバ変数
 	//行動させる対象のプレイヤー
 	Player* player;

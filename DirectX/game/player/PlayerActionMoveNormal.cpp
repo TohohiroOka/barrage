@@ -6,8 +6,8 @@
 
 using namespace DirectX;
 
-const float PlayerActionMoveNormal::moveSpeedMax = 0.5f;
-const float PlayerActionMoveNormal::dashSpeedMax = 1.0f;
+float PlayerActionMoveNormal::moveSpeedMax = 0.5f;
+float PlayerActionMoveNormal::dashSpeedMax = 1.0f;
 
 PlayerActionMoveNormal::PlayerActionMoveNormal(Player* player)
 	: PlayerActionBase(player)
@@ -133,7 +133,7 @@ void PlayerActionMoveNormal::Dash()
 	else {
 		//移動 & 入力中はダッシュ状態を維持
 		if ((player->GetData()->isMoveKey || player->GetData()->isMovePad) && player->GetData()->endurance > 0 && GameInputManager::PushInputAction(GameInputManager::Avoid_Blink_Dash)) {
-			player->UseEndurance(dashUseEndurance, 10, false); //持久力を使用
+			player->UseEndurance(PlayerData::dashUseEndurance, 10, false); //持久力を使用
 		}
 		//入力が途切れたときにダッシュを終了する
 		else {
