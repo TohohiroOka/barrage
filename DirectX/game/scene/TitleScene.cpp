@@ -7,7 +7,6 @@
 
 TitleScene::~TitleScene()
 {
-	titleLogoSprite.reset();
 }
 
 void TitleScene::Initialize()
