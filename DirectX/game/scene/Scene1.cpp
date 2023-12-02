@@ -45,7 +45,7 @@ void Scene1::Initialize()
 
 	ParticleManager::SetCamera(camera.get());
 
-	stop = false;
+	//stop = false;
 
 	gameoverUi = std::make_unique<GameOver>();
 	gameoverUi->Initialize();

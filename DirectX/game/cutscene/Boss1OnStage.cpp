@@ -29,24 +29,25 @@ void Boss1OnStage::Init()
 	letterBoxUnder->SetColor({ 0,0,0,1 });
 
 	//演出用カメラワーク初期化
-	camera.Init();
+	camera = std::make_unique<CutSceneCamera>();
+	camera->Init();
 	//フィールド全域撮影
-	camera.SetPan({ 100,15,60 }, { 500,15,200 }, { 0,-100,+300 }, 180, CutSceneCamera::EASE_LERP);
+	camera->SetPan({ 100,15,60 }, { 500,15,200 }, { 0,-100,+300 }, 180, CutSceneCamera::EASE_LERP);
 	//プレイヤーキャラクターをズーム表示
-	camera.SetZoom({ 250,15,100 }, { 250,0,50 }, { 250,10,30 }, 180, CutSceneCamera::EASE_LERP);
+	camera->SetZoom({ 250,15,100 }, { 250,0,50 }, { 250,10,30 }, 180, CutSceneCamera::EASE_LERP);
 	//敵をズーム表示
-	camera.SetZoom({ 250,50,400 }, { 250,50,450 }, { 250,60,450 }, 60, CutSceneCamera::EASE_LERP);
+	camera->SetZoom({ 250,50,400 }, { 250,50,450 }, { 250,60,450 }, 60, CutSceneCamera::EASE_LERP);
 	//敵全体表示&ボスの名前表示
-	camera.SetTrack({ 250,60,450 }, { 250,50,400 }, { 250,10,250 }, 15, CutSceneCamera::EASE_IN_QUAD);
-	camera.SetTrack({ 250,60,450 }, { 250,10,250 }, { 250,5,200 }, 120, CutSceneCamera::EASE_LERP);
+	camera->SetTrack({ 250,60,450 }, { 250,50,400 }, { 250,10,250 }, 15, CutSceneCamera::EASE_IN_QUAD);
+	camera->SetTrack({ 250,60,450 }, { 250,10,250 }, { 250,5,200 }, 120, CutSceneCamera::EASE_LERP);
 }
 
 void Boss1OnStage::Update()
 {
-	if (camera.GetIsCameraMoveEnd()) { return; }
-	camera.Update();
+	if (camera->GetIsCameraMoveEnd()) { return; }
+	camera->Update();
 
-	if (camera.GetUsingCameraNum() == 3) { isDisplayBossText = true; }
+	if (camera->GetUsingCameraNum() == 3) { isDisplayBossText = true; }
 
 	if (isDisplayBossText) {
 		if (frame < TEXTANIM_MAXFRAME) { frame++; }
@@ -75,19 +76,19 @@ void Boss1OnStage::Draw()
 
 void Boss1OnStage::SetBase3DCamera()
 {
-	Base3D::SetCamera(camera.GetCamera());
+	Base3D::SetCamera(camera->GetCamera());
 }
 
 void Boss1OnStage::StartDirection()
 {
-	camera.StartCameraMove();
+	camera->StartCameraMove();
 	frame = 0;
 	isDisplayBossText = false;
 }
 
 void Boss1OnStage::Reset()
 {
-	camera.StartCameraMove();
+	camera->StartCameraMove();
 	frame = 0;
 	isDisplayBossText = false;
 }

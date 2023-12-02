@@ -19,7 +19,7 @@ public:
 
 	void StartDirection();
 
-	bool GetIsDirectEnd() { return camera.GetIsCameraMoveEnd(); }
+	bool GetIsDirectEnd() { return camera->GetIsCameraMoveEnd(); }
 
 	void Reset();
 

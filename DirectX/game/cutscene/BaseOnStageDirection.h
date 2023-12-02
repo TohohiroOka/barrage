@@ -29,6 +29,6 @@ protected:
 	std::unique_ptr<Sprite> firstName;
 	std::unique_ptr<Sprite> secondName;
 	//ƒJƒƒ‰
-	CutSceneCamera camera;
+	std::unique_ptr<CutSceneCamera> camera;
 
 };
