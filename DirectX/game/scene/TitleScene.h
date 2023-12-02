@@ -20,6 +20,9 @@ private:// エイリアス
 
 public:
 
+	TitleScene() = default;
+	~TitleScene();
+
 	/// <summary>
 	/// 初期化
 	/// </summary>

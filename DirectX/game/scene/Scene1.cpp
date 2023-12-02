@@ -52,15 +52,17 @@ void Scene1::Initialize()
 
 	stop = false;
 
-	gameoverUi.Initialize();
-	gameoverUi.SetPlayerObject(player->GetFbxObject());
+	gameoverUi = std::make_unique<GameOver>();
+	gameoverUi->Initialize();
+	gameoverUi->SetPlayerObject(player->GetFbxObject());
 
 
 	actionInputConfig = std::make_unique<ActionInputConfig>();
 
 	BulletEffect::LoadResources();
 
-	defeatDirection.Init();
+	defeatDirection = std::make_unique<Boss1Defeat>();
+	defeatDirection->Init();
 
 	SceneChangeDirection::Init();
 }
@@ -80,9 +82,9 @@ void Scene1::Update()
 		//撃破演出再生
 		//デバッグ用再生
 		if (DirectInput::GetInstance()->TriggerKey(DIK_H)) { 
-			defeatDirection.StartDefeatDirection(boss->GetCenter()->GetPosition()); 
+			defeatDirection->StartDefeatDirection(boss->GetCenter()->GetPosition()); 
 		}
-		if(boss->GetBossIsAlive()){ defeatDirection.StartDefeatDirection(boss->GetCenter()->GetPosition()); }
+		if(boss->GetBossIsAlive()){ defeatDirection->StartDefeatDirection(boss->GetCenter()->GetPosition()); }
 
 		CollisionCheck();
 
@@ -115,12 +117,12 @@ void Scene1::Update()
 			SceneManager::SetNextScene(titleScene);
 		}
 
-		gameoverUi.Update();
+		gameoverUi->Update();
 		//体力0でゲームオーバー表示
 		//デバッグ用ゲームオーバー表示
-		if (DirectInput::GetInstance()->TriggerKey(DIK_F4)) { gameoverUi.ResetGameOverUI(); }
-		if (DirectInput::GetInstance()->TriggerKey(DIK_4)) { gameoverUi.StartGameOverUI(); }
-		if (player->GetData()->isDead && !gameoverUi.GetIsGameOver()) { gameoverUi.StartGameOverUI(); }
+		if (DirectInput::GetInstance()->TriggerKey(DIK_F4)) { gameoverUi->ResetGameOverUI(); }
+		if (DirectInput::GetInstance()->TriggerKey(DIK_4)) { gameoverUi->StartGameOverUI(); }
+		if (player->GetData()->isDead && !gameoverUi->GetIsGameOver()) { gameoverUi->StartGameOverUI(); }
 
 		if (DirectInput::GetInstance()->TriggerKey(DIK_TAB) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_START)) {
 			isInputConfigMode = true;
@@ -134,8 +136,8 @@ void Scene1::Update()
 		if (actionInputConfig->GetIsInputConfigEnd()) { isInputConfigMode = false; }
 	}
 
-	defeatDirection.Update();
-	if (defeatDirection.GetDirectionEnd() && isSceneChangeWait == false) {
+	defeatDirection->Update();
+	if (defeatDirection->GetDirectionEnd() && isSceneChangeWait == false) {
 		isSceneChangeWait = true;
 		SceneChangeDirection::PlayFadeOut();
 	}
@@ -154,7 +156,7 @@ void Scene1::Draw(const int _cameraNum)
 	player->Draw();
 	boss->Draw();
 
-	defeatDirection.Draw();
+	defeatDirection->Draw();
 	field->Draw();
 }
 
@@ -174,14 +176,14 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 
 	player->DrawSprite();
 	boss->DrawSprite();
-	gameoverUi.Draw();
+	gameoverUi->Draw();
 
 	//入力設定描画
 	if (isInputConfigMode) {
 		actionInputConfig->Draw();
 	}
 
-	defeatDirection.Draw2D();
+	defeatDirection->Draw2D();
 
 	SceneChangeDirection::Draw();
 }

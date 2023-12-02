@@ -85,10 +85,10 @@ private:
 	std::unique_ptr<Boss1>boss;
 
 	//ゲームオーバーUI
-	GameOver gameoverUi;
+	std::unique_ptr<GameOver> gameoverUi;
 
 	//死亡演出
-	Boss1Defeat defeatDirection;
+	std::unique_ptr<Boss1Defeat> defeatDirection;
 
 	//行動入力設定
 	std::unique_ptr<ActionInputConfig> actionInputConfig;

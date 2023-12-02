@@ -5,6 +5,11 @@
 #include "scene/Scene1.h"
 #include "cutscene/SceneChangeDirection.h"
 
+TitleScene::~TitleScene()
+{
+	titleLogoSprite.reset();
+}
+
 void TitleScene::Initialize()
 {
 	//スプライトのリソースのロード

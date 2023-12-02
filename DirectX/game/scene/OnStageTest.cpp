@@ -8,8 +8,9 @@
 
 void OnStageTestScene::Initialize()
 {
-	onStageDirection.Init();
-	onStageDirection.StartDirection();
+	onStageDirection = std::make_unique<Boss1OnStage>();
+	onStageDirection->Init();
+	onStageDirection->StartDirection();
 
 	//ínå`ê∂ê¨
 	field = std::make_unique<Field>();
@@ -20,7 +21,7 @@ void OnStageTestScene::Initialize()
 	lightCamera->SetProjectionNum({ projectionSize * (float)WindowApp::GetWindowWidth() / 5, projectionSize * (float)WindowApp::GetWindowHeight() / 5 },
 		{ -projectionSize * (float)WindowApp::GetWindowWidth() / 5, -projectionSize * (float)WindowApp::GetWindowHeight() / 5 });
 
-	onStageDirection.SetBase3DCamera();
+	onStageDirection->SetBase3DCamera();
 	Base3D::SetLightCamera(lightCamera.get());
 
 	debugCamera = DebugCamera::Create({ 300, 40, 0 });
@@ -38,16 +39,16 @@ void OnStageTestScene::Update()
 			Base3D::SetCamera(debugCamera.get());
 		}  
 
-		onStageDirection.Update();
-		onStageDirection.SetBase3DCamera();
-		if (onStageDirection.GetIsDirectEnd()) {
+		onStageDirection->Update();
+		onStageDirection->SetBase3DCamera();
+		if (onStageDirection->GetIsDirectEnd()) {
 			if (DirectInput::GetInstance()->TriggerKey(DIK_SPACE)) {
 				InterfaceScene* newScene = nullptr;
 				newScene = new Scene1;
 				if (newScene) { SceneManager::SetNextScene(newScene); }
 			}
 			else if (DirectInput::GetInstance()->TriggerKey(DIK_R)) {
-				onStageDirection.StartDirection();
+				onStageDirection->StartDirection();
 			}
 		}
 	}
@@ -56,7 +57,7 @@ void OnStageTestScene::Update()
 		Base3D::SetCamera(debugCamera.get());
 		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
 			isNormalCamera = !isNormalCamera;
-			onStageDirection.SetBase3DCamera();
+			onStageDirection->SetBase3DCamera();
 		}
 	}
 
@@ -73,7 +74,7 @@ void OnStageTestScene::DrawLightView(const int _cameraNum)
 
 void OnStageTestScene::NonPostEffectDraw(const int _cameraNum)
 {
-	onStageDirection.Draw();
+	onStageDirection->Draw();
 }
 
 void OnStageTestScene::Finalize()

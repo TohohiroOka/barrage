@@ -23,6 +23,9 @@ private:
 
 public:
 
+	GameOver() = default;
+	~GameOver() = default;
+
 	void Initialize();
 
 	void Update();
@@ -43,7 +46,7 @@ private:
 	//プレイヤー選択中の選択肢
 	PlayerSelect playerSelecting = PlayerSelect::SELECT_CONTINUE;
 
-	ChoiceEmphasisDrawer choiceDrawer;
+	std::unique_ptr<ChoiceEmphasisDrawer> choiceDrawer;
 
 
 	//演出フェーズ

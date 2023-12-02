@@ -23,8 +23,8 @@ protected:
 
 
 public:
-	BaseDefeatDirection() {};
-	~BaseDefeatDirection() {};
+	BaseDefeatDirection() = default;
+	virtual ~BaseDefeatDirection() = default;
 
 	virtual void Init();
 
@@ -54,8 +54,6 @@ protected:
 	bool isDirecting = false;
 	//終了フラグ
 	bool isEnded = false;
-	//カットシーンカメラ
-	CutSceneCamera camera;
 	//ボスの座標を保持
 	DirectX::XMFLOAT3 bossPosition;
 

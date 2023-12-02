@@ -38,14 +38,15 @@ void GameOver::Initialize()
 	continueText->Update();
 	exitText->Update();
 
-	choiceDrawer.Initialize();
+	choiceDrawer = std::make_unique<ChoiceEmphasisDrawer>();
+	choiceDrawer->Initialize();
 }
 
 void GameOver::Update()
 {
 	if (phase == GAMEOVER_PHASE::PHASE_STANDBY) { return; }
 
-	choiceDrawer.Update();
+	choiceDrawer->Update();
 
 	frame++;
 
@@ -102,13 +103,13 @@ void GameOver::Update()
 		//Œˆ’è
 		if (DirectInput::GetInstance()->TriggerKey(DIK_SPACE) ||
 			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A)) {
-			choiceDrawer.PlayChoiseAnimation();
+			choiceDrawer->PlayChoiseAnimation();
 			phase = GAMEOVER_PHASE::PHASE_DECISION;
 		}
 
 		break;
 	case GameOver::GAMEOVER_PHASE::PHASE_DECISION:
-		if (choiceDrawer.IsChooseAnimEnd()) {
+		if (choiceDrawer->IsChooseAnimEnd()) {
 			SceneChangeDirection::PlayFadeOut();
 		}
 		if (SceneChangeDirection::IsDirectionEnd()) {
@@ -134,10 +135,10 @@ void GameOver::Update()
 	switch (playerSelecting)
 	{
 	case GameOver::PlayerSelect::SELECT_CONTINUE:
-		choiceDrawer.SetEmphasisPos(CONTINUE_POS.x, CONTINUE_POS.y, 600, 120);
+		choiceDrawer->SetEmphasisPos(CONTINUE_POS.x, CONTINUE_POS.y, 600, 120);
 		break;
 	case GameOver::PlayerSelect::SELECT_EXIT:
-		choiceDrawer.SetEmphasisPos(EXIT_POS.x, EXIT_POS.y, 600, 120);
+		choiceDrawer->SetEmphasisPos(EXIT_POS.x, EXIT_POS.y, 600, 120);
 		break;
 	default:
 		break;
@@ -163,7 +164,7 @@ void GameOver::Draw()
 
 	if (phase == GAMEOVER_PHASE::PHASE_UI_SHOW ||
 		phase == GAMEOVER_PHASE::PHASE_DECISION) {
-		choiceDrawer.Draw();
+		choiceDrawer->Draw();
 	}
 }
 

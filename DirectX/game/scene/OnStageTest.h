@@ -17,6 +17,9 @@ private:// エイリアス
 
 public:
 
+	OnStageTestScene() = default;
+	~OnStageTestScene() = default;
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -68,7 +71,7 @@ private:
 	std::unique_ptr<LightCamera> lightCamera;
 	std::unique_ptr<DebugCamera> debugCamera;
 
-	Boss1OnStage onStageDirection;
+	std::unique_ptr<Boss1OnStage> onStageDirection;
 
 	bool isNormalCamera = true;
 };

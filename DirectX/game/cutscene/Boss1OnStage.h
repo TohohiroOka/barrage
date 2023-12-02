@@ -5,6 +5,9 @@
 class Boss1OnStage : public BaseOnStageDirection
 {
 public:
+	Boss1OnStage() = default;
+	~Boss1OnStage() = default;
+
 
 	void Init() override;
 

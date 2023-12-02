@@ -9,6 +9,9 @@
 class BaseOnStageDirection
 {
 public:
+	BaseOnStageDirection() = default;
+	virtual ~BaseOnStageDirection() = default;
+
 	virtual void Init() {};
 
 	virtual void Update() {};

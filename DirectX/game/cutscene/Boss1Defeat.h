@@ -9,6 +9,9 @@
 class Boss1Defeat : public BaseDefeatDirection
 {
 public:
+	Boss1Defeat() = default;
+	~Boss1Defeat() = default;
+
 	void Init() override;
 
 	void Update() override;
