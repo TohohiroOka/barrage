@@ -27,7 +27,7 @@ public:
 	/// </summary>
 	/// <param name="_gameSpeed">ゲーム速度</param>
 	/// <param name="_timer">処理時間</param>
-	void SetSlow(float _gameSpeed, float _timer) {
+	void SetSlow(float _gameSpeed, int _timer) {
 		gameSpeed = _gameSpeed;
 		slowTimer = _timer;
 	}
@@ -52,7 +52,7 @@ private:
 	//ゲーム速度
 	float gameSpeed = 1;
 	//スロウ処理を何フレーム行うか
-	float slowTimer;
+	int slowTimer;
 
 	//ステージの大きさ
 	const float stageSize = 256 / 2;

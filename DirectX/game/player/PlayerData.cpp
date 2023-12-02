@@ -1,6 +1,11 @@
 #include "PlayerData.h"
 #include "GameHelper.h"
 
+int PlayerData::dashUseEndurance = 1;
+int PlayerData::avoidUseEndurance = 10;
+int PlayerData::jumpUseEndurance = 10;
+int PlayerData::blinkUseEndurance = 10;
+
 PlayerData::PlayerData()
 {
 	action = PlayerActionName::MOVENORMAL;

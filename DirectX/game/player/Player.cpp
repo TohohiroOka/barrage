@@ -108,6 +108,21 @@ void Player::DrawSprite()
 
 void Player::ImguiDraw()
 {
+	ImGui::SliderInt("maxHP", &data->maxHP, 0, 1000);
+
+	ImGui::SliderInt("maxEndurance", &data->maxEndurance, 0, 1000);
+	ImGui::SliderInt("dashUseEndurance", &PlayerData::dashUseEndurance, 0, 100);
+	ImGui::SliderInt("avoidUseEndurance", &PlayerData::avoidUseEndurance, 0, 100);
+	ImGui::SliderInt("jumpUseEndurance", &PlayerData::jumpUseEndurance, 0, 100);
+	ImGui::SliderInt("blinkUseEndurance", &PlayerData::blinkUseEndurance, 0, 100);
+	ImGui::SliderInt("swordAttackUseEnduranceNum", &PlayerSwordAttack1::attackUseEnduranceNum, 0, 100);
+
+	ImGui::SliderInt("swordAttackPower", &PlayerSwordAttack1::attackPower, 0, 1000);
+
+	ImGui::SliderFloat("moveSpeedMax", &PlayerActionMoveNormal::moveSpeedMax, 0.0f, 10.0f);
+	ImGui::SliderFloat("dashSpeedMax", &PlayerActionMoveNormal::dashSpeedMax, 0.0f, 20.0f);
+
+	ImGui::SliderInt("jumpMaxNum", &data->jumpMaxNum, 1, 5);
 	ImGui::SliderFloat("playerFallAccel", &gravityAccel, 0.0f, -0.5f);
 }
 

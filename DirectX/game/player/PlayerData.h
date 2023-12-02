@@ -39,6 +39,13 @@ public: //メンバ関数
 	PlayerData();
 	~PlayerData();
 
+public: //静的メンバ変数 (変更しやすいようにpublic)
+	//各行動で使用する持久力
+	static int dashUseEndurance;
+	static int avoidUseEndurance;
+	static int jumpUseEndurance;
+	static int blinkUseEndurance;
+
 public: //メンバ変数 (変更しやすいようにpublic)
 	PlayerActionName action; //プレイヤーの行動
 
