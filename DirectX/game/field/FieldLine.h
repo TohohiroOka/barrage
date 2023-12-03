@@ -21,7 +21,6 @@ public:
 	FieldLine();
 	~FieldLine(){};
 
-
 	static void StaticInitialize();
 
 	void Update();
@@ -32,6 +31,10 @@ public:
 
 	static void FrameReset() {
 		object->ResetVertex();
+	}
+
+	static void Delete() {
+		object.reset();
 	}
 
 	bool GetIsEnd() { return isEnd; }

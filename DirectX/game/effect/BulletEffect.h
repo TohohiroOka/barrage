@@ -27,6 +27,4 @@ public:
 private:
 	//弾描画用インスタンシングオブジェクト
 	std::unique_ptr<Emitter> emitter;
-
-
 };

@@ -1,27 +1,22 @@
 #include "SceneChangeDirection.h"
 #include "WindowApp.h"
 
-std::unique_ptr<Sprite> SceneChangeDirection::fadeSprite;
-bool SceneChangeDirection::isDirectionEnd = false;
-bool SceneChangeDirection::isLoaded = false;
-bool SceneChangeDirection::isFadein = false;
-bool SceneChangeDirection::isPlayingDirection = false;
-const int SceneChangeDirection::CHANGE_FADE_FRAME = 60;
-int SceneChangeDirection::frame = 0;
-
 void SceneChangeDirection::Create()
 {
-	if (!isLoaded) {
-		Sprite::LoadTexture("fadetex", "Resources/SubTexture/white1x1.png", false);
-		fadeSprite = Sprite::Create("fadetex", {}, {});
-		fadeSprite->SetSize({ float(WindowApp::GetWindowWidth()), float(WindowApp::GetWindowHeight()) });
-		isLoaded = true;
-	}
+	Sprite::LoadTexture("fadetex", "Resources/SubTexture/white1x1.png", false);
+	fadeSprite = Sprite::Create("fadetex", {}, {});
+	fadeSprite->SetSize({ float(WindowApp::GetWindowWidth()), float(WindowApp::GetWindowHeight()) });
+	isLoaded = true;
 }
 
 void SceneChangeDirection::Init()
 {
-	Create();
+	isDirectionEnd = false;
+	isLoaded = false;
+	isFadein = false;
+	isPlayingDirection = false;
+	frame = 0;
+
 	PlayFadeIn();
 }
 
@@ -72,4 +67,9 @@ void SceneChangeDirection::PlayFadeOut()
 	isFadein = false;
 	frame = 0;
 	isPlayingDirection = true;
+}
+
+void SceneChangeDirection::Delete()
+{
+	fadeSprite.reset();
 }

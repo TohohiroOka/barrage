@@ -26,6 +26,10 @@ Fbx::~Fbx()
 {
 	constBuffB0.Reset();
 	constBuffB1.Reset();
+	for (auto& i : boneObject) {
+		i.second.reset();
+	}
+	boneObject.clear();
 }
 
 void Fbx::Initialize()

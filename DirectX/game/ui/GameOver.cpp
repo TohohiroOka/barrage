@@ -110,9 +110,9 @@ void GameOver::Update()
 		break;
 	case GameOver::GAMEOVER_PHASE::PHASE_DECISION:
 		if (choiceDrawer->IsChooseAnimEnd()) {
-			SceneChangeDirection::PlayFadeOut();
+			SceneChangeDirection::Instance()->PlayFadeOut();
 		}
-		if (SceneChangeDirection::IsDirectionEnd()) {
+		if (SceneChangeDirection::Instance()->IsDirectionEnd()) {
 			switch (playerSelecting)
 			{
 			case GameOver::PlayerSelect::SELECT_CONTINUE:

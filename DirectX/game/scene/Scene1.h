@@ -23,6 +23,9 @@ private:// エイリアス
 
 public:
 
+	Scene1(){};
+	~Scene1(){};
+
 	/// <summary>
 	/// 初期化
 	/// </summary>

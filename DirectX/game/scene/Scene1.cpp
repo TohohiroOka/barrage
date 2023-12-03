@@ -59,7 +59,7 @@ void Scene1::Initialize()
 	defeatDirection = std::make_unique<Boss1Defeat>();
 	defeatDirection->Init();
 
-	SceneChangeDirection::Init();
+	SceneChangeDirection::Instance()->Init();
 }
 
 void Scene1::Update()
@@ -134,14 +134,14 @@ void Scene1::Update()
 	defeatDirection->Update();
 	if (defeatDirection->GetDirectionEnd() && isSceneChangeWait == false) {
 		isSceneChangeWait = true;
-		SceneChangeDirection::PlayFadeOut();
+		SceneChangeDirection::Instance()->PlayFadeOut();
 	}
-	if (isSceneChangeWait && SceneChangeDirection::IsDirectionEnd()) {
+	if (isSceneChangeWait && SceneChangeDirection::Instance()->IsDirectionEnd()) {
 		TitleScene* titleScene = new TitleScene;
 		SceneManager::SetNextScene(titleScene);
 	}
 
-	SceneChangeDirection::Update();
+	SceneChangeDirection::Instance()->Update();
 }
 
 void Scene1::Draw(const int _cameraNum)
@@ -180,7 +180,7 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 
 	defeatDirection->Draw2D();
 
-	SceneChangeDirection::Draw();
+	SceneChangeDirection::Instance()->Draw();
 }
 
 void Scene1::Finalize()

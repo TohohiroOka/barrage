@@ -10,7 +10,9 @@ class Field
 {
 public:
 	Field();
-	~Field(){};
+	~Field(){
+		FieldLine::Delete();
+	};
 
 	void Update(const DirectX::XMFLOAT3& _playerPos, const DirectX::XMFLOAT3& _cameraPos);
 
@@ -35,10 +37,10 @@ private:
 	std::unique_ptr<Model> wallModel;
 	std::unique_ptr<Model> groundModel;
 	//オブジェクト
-	std::shared_ptr<Object3d> groundObject;
+	std::unique_ptr<Object3d> groundObject;
 
 	//外に行かないようにする為の壁
-	std::array<std::shared_ptr<Object3d>,4> wallObject;
+	std::array<std::unique_ptr<Object3d>,4> wallObject;
 
 	//背景
 	std::unique_ptr<BackGround> backGround;

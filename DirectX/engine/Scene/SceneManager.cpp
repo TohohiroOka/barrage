@@ -3,6 +3,7 @@
 #include "Object/2d/PostEffect/PostEffect.h"
 #include "Object/2d/PostEffect/BasePostEffect.h"
 #include "Loader/JsonLoader.h"
+#include "cutscene/SceneChangeDirection.h"
 
 std::unique_ptr<InterfaceScene> SceneManager::scene = nullptr;
 InterfaceScene* SceneManager::nextScene = nullptr;
@@ -48,6 +49,7 @@ void SceneManager::SetPipeline(const std::string& name,std::vector<GraphicsPipel
 
 SceneManager::~SceneManager()
 {
+	SceneChangeDirection::Instance()->Delete();
 	scene.reset();
 }
 
@@ -62,6 +64,8 @@ void SceneManager::Initialize()
 	light->SetDirLightActive(0, true);
 	light->SetDirLightColor(0, { 1,1,1 });
 	light->SetDirLightDir(0, { 0.0f, 0.0f, 1.0f, 0 });
+
+	SceneChangeDirection::Instance()->Create();
 
 	//Å‰‚ÌƒV[ƒ“İ’è
 	TitleScene* firstScene = new TitleScene();

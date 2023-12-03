@@ -1,47 +1,47 @@
 #pragma once
 #include "Object/2d/Sprite.h"
+#include "Singleton.h"
 
-class SceneChangeDirection
+class SceneChangeDirection : public Singleton<SceneChangeDirection>
 {
+	friend class Singleton<SceneChangeDirection>;
+
 public:
-	SceneChangeDirection() = default;
-	~SceneChangeDirection() = default;
+	SceneChangeDirection(){};
+	~SceneChangeDirection() {};
 
-	static void Create();
+	void Create();
 
-	static void Init();
+	void Init();
 
-	static void Update();
+	void Update();
 
-	static void Draw();
+	void Draw();
 
 	//シーン開始
-	static void PlayFadeIn();
+	void PlayFadeIn();
 	//シーン終了
-	static void PlayFadeOut();
+	void PlayFadeOut();
 
-	static void Reset() { isDirectionEnd = false; }
+	void Reset() { isDirectionEnd = false; }
 
-	static bool IsDirectionEnd() { return isDirectionEnd; }
+	bool IsDirectionEnd() { return isDirectionEnd; }
 
+	void Delete();
 
 private:
 	
-	static int frame;
+	int frame;
 	//ロード済か否か
-	static bool isLoaded;
+	bool isLoaded;
 	//フェードインか
-	static bool isFadein;
+	bool isFadein;
 	// 遷移にかかる時間
-	static const int CHANGE_FADE_FRAME;
+	const int CHANGE_FADE_FRAME = 60;
 	//遷移完了フラグ
-	static bool isDirectionEnd;
+	bool isDirectionEnd;
 	//塗りつぶすやつ
-	static std::unique_ptr<Sprite> fadeSprite;
+	std::unique_ptr<Sprite> fadeSprite;
 	//演出再生中か
-	static bool isPlayingDirection;
-
-
-
-
+	bool isPlayingDirection;
 };

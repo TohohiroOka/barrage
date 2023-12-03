@@ -56,7 +56,7 @@ void TitleScene::Initialize()
 	choiceDrawer->Initialize();
 
 	//‘JˆÚ‰Šú‰»
-	SceneChangeDirection::Init();
+	SceneChangeDirection::Instance()->Init();
 
 	actionInputConfig = std::make_unique<ActionInputConfig>();
 }
@@ -100,7 +100,7 @@ void TitleScene::Update()
 				{
 				case TitleScene::PLAYER_SELECT::SELECT_STARTGAME:
 					isSceneChangeWait = true;
-					SceneChangeDirection::PlayFadeOut();
+					SceneChangeDirection::Instance()->PlayFadeOut();
 					break;
 				case TitleScene::PLAYER_SELECT::SELECT_CONFIG:
 					isConfigMode = true;
@@ -114,7 +114,7 @@ void TitleScene::Update()
 				}
 			}
 
-			if (isSceneChangeWait && SceneChangeDirection::IsDirectionEnd()) {
+			if (isSceneChangeWait && SceneChangeDirection::Instance()->IsDirectionEnd()) {
 				Scene1* gameScene = nullptr;
 				gameScene = new Scene1;
 				SceneManager::SetNextScene(gameScene);
@@ -136,7 +136,7 @@ void TitleScene::Update()
 
 	choiceDrawer->Update();
 
-	SceneChangeDirection::Update();
+	SceneChangeDirection::Instance()->Update();
 }
 
 void TitleScene::Draw(const int _cameraNum)
@@ -167,7 +167,7 @@ void TitleScene::NonPostEffectDraw(const int _cameraNum)
 		actionInputConfig->Draw();
 	}
 
-	SceneChangeDirection::Draw();
+	SceneChangeDirection::Instance()->Draw();
 }
 
 void TitleScene::Finalize()
