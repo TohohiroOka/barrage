@@ -1,6 +1,7 @@
 #include "PlayerActionAvoid.h"
 #include "player.h"
 #include "Math/Easing/Easing.h"
+#include "engine/Audio/Audio.h"
 
 PlayerActionAvoid::PlayerActionAvoid(Player* player)
 	: PlayerActionBase(player)
@@ -23,6 +24,9 @@ PlayerActionAvoid::PlayerActionAvoid(Player* player)
 
 	//—\‚ßŽŸ‚Ìs“®‚ðÝ’è‚µ‚Ä‚¨‚­(I—¹Œã‚Í’ÊíˆÚ“®)
 	nextAction = PlayerActionName::MOVENORMAL;
+
+	//‰ñ”ð‰¹Ä¶
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::avoid, false, 0.1f);
 }
 
 PlayerActionAvoid::~PlayerActionAvoid()

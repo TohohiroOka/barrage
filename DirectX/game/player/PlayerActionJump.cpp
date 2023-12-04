@@ -1,5 +1,6 @@
 #include "PlayerActionJump.h"
 #include "Player.h"
+#include "engine/Audio/Audio.h"
 
 float PlayerActionJump::jumpPower = 2.0f;
 
@@ -20,6 +21,9 @@ PlayerActionJump::PlayerActionJump(Player* player)
 
 	//予め次の行動を設定しておく(終了後は通常移動)
 	nextAction = PlayerActionName::MOVENORMAL;
+
+	//ジャンプ音再生
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::jump, false, 0.1f);
 }
 
 PlayerActionJump::~PlayerActionJump()

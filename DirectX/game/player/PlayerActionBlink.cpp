@@ -1,6 +1,7 @@
 #include "PlayerActionBlink.h"
 #include "Player.h"
 #include "Math/Easing/Easing.h"
+#include "engine/Audio/Audio.h"
 
 PlayerActionBlink::PlayerActionBlink(Player* player)
 	: PlayerActionBase(player)
@@ -30,6 +31,9 @@ PlayerActionBlink::PlayerActionBlink(Player* player)
 
 	//—\‚ßŽŸ‚Ìs“®‚ðÝ’è‚µ‚Ä‚¨‚­(I—¹Œã‚Í’ÊíˆÚ“®)
 	nextAction = PlayerActionName::MOVENORMAL;
+
+	//‰ñ”ð‰¹Ä¶
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::avoid, false, 0.1f);
 }
 
 PlayerActionBlink::~PlayerActionBlink()

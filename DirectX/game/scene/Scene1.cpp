@@ -251,6 +251,9 @@ void Scene1::CollisionCheck()
 						camera->ShakeStart(10, 10);
 						boss->GetBaseAction()->SetIsCollision(false);
 						boss->GetBaseAction()->DeleteBullet({ num });
+						//ダメージ音再生
+						Audio::Instance()->SoundPlayWava(Sound::SoundName::damage, false, 0.1f);
+
 						break;
 					}
 				}
@@ -268,6 +271,9 @@ void Scene1::CollisionCheck()
 						camera->ShakeStart(10, 10);
 						boss->GetBaseAction()->SetIsCollision(false);
 						boss->GetBaseAction()->DeleteBullet({ num });
+						//ダメージ音再生
+						Audio::Instance()->SoundPlayWava(Sound::SoundName::damage, false, 0.1f);
+
 						break;
 					}
 				}
@@ -285,6 +291,9 @@ void Scene1::CollisionCheck()
 						camera->ShakeStart(10, 10);
 						boss->GetBaseAction()->SetIsCollision(false);
 						boss->GetBaseAction()->DeleteBullet({ num });
+						//ダメージ音再生
+						Audio::Instance()->SoundPlayWava(Sound::SoundName::damage, false, 0.1f);
+
 						break;
 					}
 				}
@@ -315,6 +324,8 @@ void Scene1::CollisionCheck()
 
 				//ヒットストップ
 				GameHelper::Instance()->SetSlow(0, hitStopFrame);
+				//攻撃ヒット音再生
+				Audio::Instance()->SoundPlayWava(Sound::SoundName::attack_hit, false, 0.1f);
 			}
 		}
 	}

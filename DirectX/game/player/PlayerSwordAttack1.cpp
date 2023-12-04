@@ -3,7 +3,7 @@
 #include "Input/DirectInput.h"
 #include "Input/XInputManager.h"
 #include "engine/Math/Easing/Easing.h"
-
+#include "engine/Audio/Audio.h"
 
 int PlayerSwordAttack1::attackUseEnduranceNum = 20;
 int PlayerSwordAttack1::attackPower = 50;
@@ -82,45 +82,28 @@ bool PlayerSwordAttack1::NextAttack()
 
 		//攻撃力変更
 		attackCollisionData.power = attackPower;
-
-		//攻撃で移動するとき用に移動スピードをセット(既にスピードがある場合は変更しない)
-		player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, attackStartMoveSpeedMax);
-		player->GetData()->moveSpeed = max(player->GetData()->moveSpeed, attackStartMoveSpeedMin);
-		attackStartMoveSpeed = player->GetData()->moveSpeed;
-
-		//アニメーションリセット
-		player->GetFbxObject()->AnimationReset();
-		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_LEFT_ANIMATION);
 	}
 	else if (attackNum == 2) {
 		//攻撃2へ
 		state = State::ATTACK2;
-
-		//攻撃で移動するとき用に移動スピードをセット(既にスピードがある場合は変更しない)
-		player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, attackStartMoveSpeedMax);
-		player->GetData()->moveSpeed = max(player->GetData()->moveSpeed, attackStartMoveSpeedMin);
-		attackStartMoveSpeed = player->GetData()->moveSpeed;
-
-		//アニメーションリセット
-		player->GetFbxObject()->AnimationReset();
-		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_LEFT_ANIMATION);
 	}
+
 	else if (attackNum == 3) {
 		//攻撃3へ
 		state = State::ATTACK3;
-
-		//攻撃力変更
-		//attackCollisionData.power = 100;
-
-		//攻撃で移動するとき用に移動スピードをセット(既にスピードがある場合は変更しない)
-		player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, attackStartMoveSpeedMax);
-		player->GetData()->moveSpeed = max(player->GetData()->moveSpeed, attackStartMoveSpeedMin);
-		attackStartMoveSpeed = player->GetData()->moveSpeed;
-
-		//アニメーションリセット
-		player->GetFbxObject()->AnimationReset();
-		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_LEFT_ANIMATION);
 	}
+
+	//攻撃で移動するとき用に移動スピードをセット(既にスピードがある場合は変更しない)
+	player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, attackStartMoveSpeedMax);
+	player->GetData()->moveSpeed = max(player->GetData()->moveSpeed, attackStartMoveSpeedMin);
+	attackStartMoveSpeed = player->GetData()->moveSpeed;
+
+	//アニメーションリセット
+	player->GetFbxObject()->AnimationReset();
+	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_LEFT_ANIMATION);
+
+	//攻撃音再生
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::attack, false, 0.1f);
 
 	isNextActionInput = false;
 	timer->Reset();
