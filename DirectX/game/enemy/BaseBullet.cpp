@@ -1,4 +1,8 @@
 #include "BaseBullet.h"
+#include "GameHelper.h"
+
+const DirectX::XMFLOAT3 BaseBullet::moveMaxPos = {
+GameHelper::Instance()->GetStageSize(),GameHelper::Instance()->GetStageSize(),GameHelper::Instance()->GetStageSize() };
 
 void BaseBullet::Update()
 {

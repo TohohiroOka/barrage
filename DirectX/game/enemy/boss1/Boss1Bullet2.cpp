@@ -157,10 +157,10 @@ void Boss1Bullet2::BulletUpdate(BulletInfo& _bullet)
 		_bullet.nowPos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
 	}
 
-	const float dist = 10;
-	if (_bullet.nowPos.x < -dist || _bullet.nowPos.x > 510.0f + dist ||
-		_bullet.nowPos.y < -dist || _bullet.nowPos.y > 255 + dist ||
-		_bullet.nowPos.z < -dist || _bullet.nowPos.z > 510.0f + dist) {
+	const float dist = 10.0f;
+	if (_bullet.nowPos.x < -dist || _bullet.nowPos.x > moveMaxPos.x + dist ||
+		_bullet.nowPos.y < -dist || _bullet.nowPos.y > moveMaxPos.y + dist ||
+		_bullet.nowPos.z < -dist || _bullet.nowPos.z > moveMaxPos.z + dist) {
 		_bullet.isAlive = false;
 		return;
 	}

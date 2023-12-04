@@ -1,38 +1,20 @@
 #include "Audio.h"
 #include <fstream>
 #include <cassert>
-
 #pragma comment(lib,"xaudio2.lib")
-
-std::vector<Audio::SOUND_DATA*> Audio::soundData;
-Microsoft::WRL::ComPtr<IXAudio2>Audio::xAudio2;
-IXAudio2MasteringVoice* Audio::masterVoice;
 
 Audio::Audio()
 {
 	XAudio2Create(&xAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);//XAudioエンジンのインスタンス生成
 	xAudio2->CreateMasteringVoice(&masterVoice);//マスターボイス生成
-	masterVoice->SetVolume(0.1f);//全体の音量}
+
+	for (auto& i : Sound::SoundNameStr) {
+		SoundLoadWave("Resources/sound/" + i + ".wav");
+	}
 }
 
 Audio::~Audio()
 {
-	//xAudio2解放
-	xAudio2.Reset();
-
-	const int size = (UINT)soundData.size();
-
-	//バッファのメモリを解放
-	for (int i = 0; i < size; i++)
-	{
-		delete[] soundData[i]->pBuffer;
-
-		soundData[i]->pBuffer = 0;
-		soundData[i]->bufferSize = 0;
-		soundData[i]->wfex = {};
-	}
-
-	soundData.clear();
 }
 
 int Audio::SoundLoadWave(const std::string& fileName)
@@ -130,12 +112,15 @@ void Audio::CreateSoundData(SOUND_DATA& soundData) {
 	assert(SUCCEEDED(result));
 }
 
-bool Audio::SoundPlayWava(int number, bool roop)
+bool Audio::SoundPlayWava(const Sound::SoundName _number, const bool _roop, const float _volume)
 {
 	HRESULT result;
 
+	int number = int(_number);
+
 	XAUDIO2_VOICE_STATE xa3state;
 	soundData[number]->pSourceVoice->GetState(&xa3state);
+
 	//0でないなら音楽が再生中になるためスルーする
 	if (xa3state.BuffersQueued != 0)
 	{
@@ -146,13 +131,16 @@ bool Audio::SoundPlayWava(int number, bool roop)
 	CreateSoundData(*soundData[number]);
 
 	//再生する波形データの設定
+	XAUDIO2_BUFFER buf{};
 	buf.pAudioData = soundData[number]->pBuffer;
 	buf.AudioBytes = soundData[number]->bufferSize;
 	buf.Flags = XAUDIO2_END_OF_STREAM;
-	if (roop == true)
+	if (_roop == true)
 	{
 		buf.LoopCount = XAUDIO2_LOOP_INFINITE;
 	}
+
+	soundData[number]->pSourceVoice->SetVolume(_volume);
 
 	//波形データの再生
 	result = soundData[number]->pSourceVoice->SubmitSourceBuffer(&buf);
@@ -165,9 +153,17 @@ bool Audio::SoundPlayWava(int number, bool roop)
 	return true;
 }
 
-void Audio::StopSound(int number)
+void Audio::StopSound(const Sound::SoundName _number)
 {
 	HRESULT result;
+
+	int number = int(_number);
+
+	//再生する波形データの設定
+	XAUDIO2_BUFFER buf{};
+	buf.pAudioData = soundData[number]->pBuffer;
+	buf.AudioBytes = soundData[number]->bufferSize;
+	buf.Flags = XAUDIO2_END_OF_STREAM;
 
 	result = soundData[number]->pSourceVoice->Stop(0);
 	assert(SUCCEEDED(result));
@@ -175,4 +171,24 @@ void Audio::StopSound(int number)
 	assert(SUCCEEDED(result));
 	result = soundData[number]->pSourceVoice->SubmitSourceBuffer(&buf);
 	assert(SUCCEEDED(result));
+}
+
+void Audio::Delete()
+{
+	//xAudio2解放
+	xAudio2.Reset();
+
+	const int size = (UINT)soundData.size();
+
+	//バッファのメモリを解放
+	for (int i = 0; i < size; i++)
+	{
+		delete[] soundData[i]->pBuffer;
+
+		soundData[i]->pBuffer = 0;
+		soundData[i]->bufferSize = 0;
+		soundData[i]->wfex = {};
+	}
+
+	soundData.clear();
 }
