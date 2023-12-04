@@ -40,6 +40,18 @@ void PlayerActionAttack::Update()
 		//予約していた次の行動をセット
 		player->GetData()->action = nextAction;
 	}
+
+	//いつでも回避で攻撃を中断できる
+	if (AvoidStart()) {
+		isActionEnd = true;
+
+		//回避のベクトルを設定
+		player->GetData()->avoidBlinkMoveVec = player->GetData()->moveVec;
+
+		//次の行動を回避にセット
+		nextAction = PlayerActionName::AVOID;
+		player->GetData()->action = nextAction;
+	}
 }
 
 void PlayerActionAttack::ChangeRotate()
@@ -107,8 +119,8 @@ void PlayerActionAttack::NextAttack()
 		//予め次の行動を設定しておく(終了後は通常移動)
 		nextAction = PlayerActionName::MOVENORMAL;
 	}
-	else {
-		if (JumpStart()) { nextAction = PlayerActionName::JUMP; }
-		if (AvoidStart()) { nextAction = PlayerActionName::AVOID; player->GetData()->avoidBlinkMoveVec = player->GetData()->moveVec; }
+	//ジャンプの先行入力も受け付ける
+	else if (JumpStart()) {
+		nextAction = PlayerActionName::JUMP;
 	}
 }
