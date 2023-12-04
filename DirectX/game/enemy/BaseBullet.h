@@ -29,6 +29,9 @@ public:
 	virtual void DeleteBullet(std::vector<int> _deleteNum) override {};
 
 protected:
+
+	static const DirectX::XMFLOAT3 moveMaxPos;
+
 	static const int instanceNum = 5;
 	//’e•`‰æ—p
 	std::array<std::unique_ptr<InstanceObject>, instanceNum> instanceObject;

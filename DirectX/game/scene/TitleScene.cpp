@@ -4,6 +4,7 @@
 #include "engine/Scene/SceneManager.h"
 #include "scene/Scene1.h"
 #include "cutscene/SceneChangeDirection.h"
+#include "Audio/Audio.h"
 
 TitleScene::~TitleScene()
 {
@@ -11,6 +12,8 @@ TitleScene::~TitleScene()
 
 void TitleScene::Initialize()
 {
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::msp_bgm, true, 0.1f);
+
 	//スプライトのリソースのロード
 	Sprite::LoadTexture("titleLogo", "Resources/SpriteTexture/titleLogo.png");
 	Sprite::LoadTexture("pab", "Resources/SpriteTexture/pressanybutton.png");

@@ -172,6 +172,7 @@
     <ClCompile Include="game\enemy\boss1\Boss1Bullet1.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1Bullet2.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1Bullet3.cpp" />
+    <ClCompile Include="game\enemy\boss1\Boss1Bullet4.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1Model.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1Move1.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1Move3.cpp" />
@@ -493,6 +494,7 @@
     <ClInclude Include="game\enemy\boss1\Boss1Bullet1.h" />
     <ClInclude Include="game\enemy\boss1\Boss1Bullet2.h" />
     <ClInclude Include="game\enemy\boss1\Boss1Bullet3.h" />
+    <ClInclude Include="game\enemy\boss1\Boss1Bullet4.h" />
     <ClInclude Include="game\enemy\boss1\Boss1Model.h" />
     <ClInclude Include="game\enemy\boss1\Boss1Move1.h" />
     <ClInclude Include="game\enemy\boss1\Boss1Move3.h" />
@@ -521,6 +523,7 @@
     <ClInclude Include="game\scene\TitleScene.h" />
     <ClInclude Include="game\system\ActionInputConfig.h" />
     <ClInclude Include="game\system\GameInputManager.h" />
+    <ClInclude Include="game\system\Sound.h" />
     <ClInclude Include="game\ui\ChoiceEmphasisDrawer.h" />
     <ClInclude Include="game\ui\GameOver.h" />
     <ClInclude Include="game\ui\Gauge.h" />

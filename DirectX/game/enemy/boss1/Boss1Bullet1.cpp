@@ -148,11 +148,10 @@ void Boss1Bullet1::BulletRotate(BulletInfo& _bullet)
 void Boss1Bullet1::BulletUpdate(BulletInfo& _bullet)
 {
 	_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
-
-	const float dist = 10;
-	if (_bullet.pos.x < -dist || _bullet.pos.x > 510.0f + dist ||
-		_bullet.pos.y < -dist || _bullet.pos.y > 255.0f + dist ||
-		_bullet.pos.z < -dist || _bullet.pos.z > 510.0f + dist) {
+	const float dist = 10.0f;
+	if (_bullet.pos.x < -dist || _bullet.pos.x > moveMaxPos.x + dist ||
+		_bullet.pos.y < -dist || _bullet.pos.y > moveMaxPos.y + dist ||
+		_bullet.pos.z < -dist || _bullet.pos.z > moveMaxPos.z + dist) {
 		_bullet.isAlive = false;
 		return;
 	}
