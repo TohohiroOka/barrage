@@ -17,7 +17,7 @@
 using namespace DirectX;
 
 const XMFLOAT3 Player::moveMinPos = { 0,0,0 };
-const XMFLOAT3 Player::moveMaxPos = { GameHelper::Instance()->GetStageSize() * 2.0f,0,GameHelper::Instance()->GetStageSize() * 2.0f };
+const XMFLOAT3 Player::moveMaxPos = { GameHelper::Instance()->GetStageSize(),0.0f,GameHelper::Instance()->GetStageSize() };
 float Player::gravityAccel = -0.01f;
 
 Player::Player()

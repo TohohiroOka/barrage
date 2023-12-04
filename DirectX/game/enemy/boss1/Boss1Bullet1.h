@@ -1,5 +1,6 @@
 #pragma once
 #include "../BaseBullet.h"
+#include <functional>
 
 /// <summary>
 /// プレイヤー対しまっすぐ進む弾（乱数により少し散らばる）
@@ -10,10 +11,13 @@ public:
 
 	struct BulletInfo {
 		bool isAlive;//出現しているか
+		bool isShot;//発射されているか
 		Vector3 pos;//座標
+		float angle;
 		Vector3 moveVec;//移動方向
-		std::unique_ptr<Engine::Timer> timer;//出現時間
-		Vector3 predictionLinePoint;
+		std::unique_ptr<Engine::Timer> timer;
+		int nowIntTime;
+		std::array<Vector3, 3> predictionLinePoint;
 	};
 
 private:
@@ -21,6 +25,7 @@ private:
 	enum class State {
 		start,
 		attack,
+		end,
 		non,
 	};
 
@@ -40,9 +45,15 @@ public:
 
 	int GetDamage()override { return 5; }
 
+private:
+
 	void Start();
 
-	void AddBullet();
+	void Attack();
+
+	void End();
+
+	void BulletRotate(BulletInfo& _bullet);
 
 	void BulletUpdate(BulletInfo& _bullet);
 
@@ -50,8 +61,11 @@ private:
 
 	//状態
 	State state;
+	std::vector<std::function<void()>> func_;
 
-	std::forward_list<BulletInfo> bullet;
+	static const int maxBulletNum = 20;
+	int addBulletNum;
+	std::array<BulletInfo, maxBulletNum> bullet;
 
 	DirectX::XMFLOAT4 bulletColor = { 1.0f,1.0f,1.0f,1.0f };
 	DirectX::XMFLOAT4 effectColor = { 1.0f,0.3f,0.3f,0.3f };

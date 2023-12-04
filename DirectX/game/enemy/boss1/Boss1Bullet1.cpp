@@ -19,6 +19,7 @@ Boss1Bullet1::Boss1Bullet1()
 	for (auto& i : instanceObject) {
 		i = InstanceObject::Create(model.get());
 	}
+
 	predictionLine = std::make_unique<PredictionLine>();
 	timer = std::make_unique<Engine::Timer>();
 	
@@ -26,52 +27,37 @@ Boss1Bullet1::Boss1Bullet1()
 	bulletEffect->Init();
 
 	hitTimer = std::make_unique<Engine::Timer>();
+
+	addBulletNum = 0;
+
+	func_.emplace_back([this] {return Start(); });
+	func_.emplace_back([this] {return Attack(); });
+	func_.emplace_back([this] {return End(); });
 }
 
 void Boss1Bullet1::Update()
 {
-	const float l_maxTimer = 100.0f;
-
-	if (state == State::start) {
-		Start();
+	if (int(state) >= 0 && int(state) <= int(State::non)&& !boss->GetIsWince()) {
+		func_[int(state)]();
 	}
-	else if (state == State::attack) {
-		if (!boss->GetIsWince()) {
-			if (*timer.get() % 5 == 0 && *timer.get() < l_maxTimer) {
-				AddBullet();
-			}
 
-			if (*timer.get() > l_maxTimer - 30.0f) {
-				boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
-			}
+	for (auto& i : bullet) {
+		if (!i.isAlive) { continue; }
+		for (auto& inst : instanceObject) {
+			if (!inst->GetInstanceDrawCheck()) { continue; }
+			inst->DrawInstance(i.pos, { 1.0f ,1.0f ,1.0f }, { 0.0f ,0.0f ,0.0f }, { 1,1,1,1 });
 		}
-		//更新処理
-		for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
-			it != bullet.end(); it++) {
-			BulletUpdate(*it);
-		}
-
-		//falseなら消す
-		bullet.remove_if([](BulletInfo& x) {
-			return !x.isAlive;
-			}
-		);
-
-		//終了
-		if (std::distance(bullet.begin(), bullet.end()) <= 0 && *timer.get() > l_maxTimer) {
-			isEnd = true;
-		}
-
-		BaseBullet::Update();
 	}
+
+	BaseBullet::Update();
 }
 
 void Boss1Bullet1::GetAttackCollisionSphere(std::vector<Sphere>& _info)
 {
-	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
-		it != bullet.end(); it++) {
+	for (auto& i : bullet) {
+	if(i.isShot){}
 		Sphere add;
-		add.center = { it->pos.x,it->pos.y ,it->pos.z };
+		add.center = { i.pos.x, i.pos.y , i.pos.z };
 		add.radius = 1.0f;
 		_info.emplace_back(add);
 	}
@@ -79,47 +65,84 @@ void Boss1Bullet1::GetAttackCollisionSphere(std::vector<Sphere>& _info)
 
 void Boss1Bullet1::DeleteBullet(std::vector<int> _deleteNum)
 {
-	int num = -1;
-	int vecNum = 0;
-	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
-		it != bullet.end(); it++) {
-		num++;
-		if (num != _deleteNum[vecNum]) { continue; }
-		it->isAlive = false;
-		vecNum++;
-		if (_deleteNum.size() == vecNum) { break; }
+	for (auto& i : _deleteNum) {
+		bullet[i].isAlive = false;
 	}
 }
 
 void Boss1Bullet1::Start()
 {
-	if (!boss->GetBaseModel()->GetIsAnimationEnd()) { return; }
+	if ((*timer.get() / 2.0f) >= addBulletNum && addBulletNum < maxBulletNum) {
+		bullet[addBulletNum].isAlive = true;
+		bullet[addBulletNum].isShot = false;
+		bullet[addBulletNum].angle = 0.0f;
+		bullet[addBulletNum].pos = {};
+		bullet[addBulletNum].timer = std::make_unique<Engine::Timer>();
+		bullet[addBulletNum].nowIntTime = 0;
+		addBulletNum++;
+	}
+
+	for (auto& i : bullet) {
+		if (!i.isAlive) { continue; }
+		BulletRotate(i);
+	}
+
+	if (*timer.get() < 100.0f) { return; }
+	addBulletNum = 0;
+	timer->Reset();
 	state = State::attack;
 }
 
-void Boss1Bullet1::AddBullet()
+void Boss1Bullet1::Attack()
 {
-	Vector3 bossPos = boss->GetCenter()->GetPosition();
 	Vector3 targetPos = boss->GetTargetPos();
 
-	//収束範囲
-	float randomX = float(RandomInt(300) - 150) / 10.0f;
-	float randomZ = float(RandomInt(300) - 150) / 10.0f;
+	if (*timer.get() >= addBulletNum) {
+		bullet[addBulletNum].isShot = true;
+		float radius = DirectX::XMConvertToRadians(bullet[addBulletNum].angle);
+		bullet[addBulletNum].moveVec = Vector3(targetPos - bullet[addBulletNum].pos).normalize() * 10.0f;
+		bullet[addBulletNum].predictionLinePoint[0] = bullet[addBulletNum].pos;
+		addBulletNum++;
+	}
 
-	bossPos += {0.0f, 30.0f, 0.0f};
-	targetPos += {randomX, 0.0f, randomZ};
-	Vector3 vec = targetPos - bossPos;
-	Vector3 normalVec = vec.normalize();
+	for (auto& i : bullet) {
+		if (!i.isAlive) { continue; }
+		if (i.isShot) {
+			BulletUpdate(i);
+		} else {
+			BulletRotate(i);
+		}
+	}
 
-	//一つ追加
-	bullet.emplace_front();
-	BulletInfo& add = bullet.front();
-	add.isAlive = true;
-	add.pos = bossPos;
-	add.moveVec = normalVec * 15.0f;
-	add.timer = std::make_unique<Engine::Timer>();
-	add.predictionLinePoint = bossPos;
+	if (addBulletNum < maxBulletNum) { return; }
+	addBulletNum = 0;
+	timer->Reset();
+	state = State::end;
+}
 
+void Boss1Bullet1::End(){
+	int num = 0;
+	for (auto& i : bullet) {
+		if (!i.isAlive|| !i.isShot) { continue; }
+		BulletUpdate(i);
+		num++;
+	}
+
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
+	if (num != 0) { return; }
+	isEnd = true;
+}
+
+void Boss1Bullet1::BulletRotate(BulletInfo& _bullet)
+{
+	Vector3 bossPos = boss->GetCenter()->GetPosition();
+
+	_bullet.angle += 10.0f;
+	if (_bullet.angle >= 360) {
+		_bullet.angle -= 360.0f;
+	}
+	float radius = DirectX::XMConvertToRadians(_bullet.angle);
+	_bullet.pos = bossPos + Vector3(sinf(radius) * 15.0f, 15.0f, cosf(radius) * 15.0f);
 }
 
 void Boss1Bullet1::BulletUpdate(BulletInfo& _bullet)
@@ -134,20 +157,33 @@ void Boss1Bullet1::BulletUpdate(BulletInfo& _bullet)
 		return;
 	}
 
-	_bullet.timer->Update();
-
 	//エフェクト追加
 	DirectX::XMFLOAT4 bulletColor = { 0.f,0.f,0.f,1.0f };
 	DirectX::XMFLOAT4 effectColor = { 0.2f,0.2f,0.8f,1.0f };
 	float effectScale = 7.5f;
 	bulletEffect->AddBulletEffect(_bullet.pos, bulletColor, effectScale, effectColor);
 
-	for (auto& i : instanceObject) {
-		if (!i->GetInstanceDrawCheck()) { continue; }
-		i->DrawInstance(_bullet.pos, { 1.0f ,1.0f ,1.0f }, { 0.0f ,0.0f ,0.0f }, { 1,1,1,1 });
+	//弾道
+	{
+		if (_bullet.nowIntTime >= 1.0f) {
+			for (int i = 1; i < _bullet.predictionLinePoint.size(); i++) {
+				_bullet.predictionLinePoint[i] = _bullet.predictionLinePoint[i - 1];
+			}
+		}
+
+		int nowline = _bullet.nowIntTime;
+		if (*_bullet.timer.get() >= _bullet.nowIntTime) {
+			_bullet.predictionLinePoint[0] = _bullet.pos;
+			_bullet.nowIntTime++;
+		}
+
+		if (nowline >= _bullet.predictionLinePoint.size()) {
+			nowline = int(_bullet.predictionLinePoint.size()) - 2;
+		}
+		_bullet.timer->Update();
+
+		for (int i = 0; i < nowline; i++) {
+			predictionLine->AddLine(_bullet.predictionLinePoint[i], _bullet.predictionLinePoint[i + 1], 1.0f, { 1.0f,1.0f,1.0f,0.5f });
+		}
 	}
-	if (*_bullet.timer.get() > 10.0f) {
-		_bullet.predictionLinePoint += _bullet.moveVec;
-	}
-	predictionLine->AddLine(_bullet.pos, _bullet.predictionLinePoint, 1.0f, { 1.0f,1.0f,1.0f,0.5f });
 }

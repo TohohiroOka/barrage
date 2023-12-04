@@ -10,7 +10,7 @@ PlayerData::PlayerData()
 {
 	action = PlayerActionName::MOVENORMAL;
 
-	pos = { GameHelper::Instance()->GetStageSize(),50.0f,GameHelper::Instance()->GetStageSize() / 5.0f };
+	pos = { GameHelper::Instance()->GetStageSize() / 2.0f,50.0f,GameHelper::Instance()->GetStageSize() / 5.0f };
 	moveVec = { 0, 0, 1 };
 
 	onGround = false;

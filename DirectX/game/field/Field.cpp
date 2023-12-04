@@ -12,7 +12,7 @@ Field::Field()
 	wallModel = Model::CreateFromOBJ("plane");
 	groundModel = Model::CreateFromOBJ("jimen");
 
-	const float scale = GameHelper::Instance()->GetStageSize();
+	const float scale = GameHelper::Instance()->GetStageSize() / 2.0f;
 	groundObject = Object3d::Create(groundModel.get());
 	groundObject->SetPosition({ scale,1.0f,scale });
 	groundObject->SetScale({ scale,scale,scale });
@@ -130,7 +130,7 @@ void Field::WallDrawSet(const DirectX::XMFLOAT3& _playerPos, const DirectX::XMFL
 		enclosure->DrawInstance(enclosureWorld[2], { 0.5f,0.5f ,0.5f ,1.0f });
 		enclosure->DrawInstance(enclosureWorld[6], { 0.5f,0.5f ,0.5f ,1.0f });
 	}
-	if (c_p.x >= 0 || _playerPos.x < GameHelper::Instance()->GetStageSize() * 2.0f - 30.0f) {
+	if (c_p.x >= 0 || _playerPos.x < GameHelper::Instance()->GetStageSize() - 30.0f) {
 		enclosure->DrawInstance(enclosureWorld[3], { 0.5f,0.5f ,0.5f ,1.0f });
 		enclosure->DrawInstance(enclosureWorld[7], { 0.5f,0.5f ,0.5f ,1.0f });
 	}
@@ -138,7 +138,7 @@ void Field::WallDrawSet(const DirectX::XMFLOAT3& _playerPos, const DirectX::XMFL
 		enclosure->DrawInstance(enclosureWorld[0], { 0.5f,0.5f ,0.5f ,1.0f });
 		enclosure->DrawInstance(enclosureWorld[4], { 0.5f,0.5f ,0.5f ,1.0f });
 	}
-	if (c_p.z >= 0 || _playerPos.z < GameHelper::Instance()->GetStageSize() * 2.0f - 30.0f) {
+	if (c_p.z >= 0 || _playerPos.z < GameHelper::Instance()->GetStageSize() - 30.0f) {
 		enclosure->DrawInstance(enclosureWorld[1], { 0.5f,0.5f ,0.5f ,1.0f });
 		enclosure->DrawInstance(enclosureWorld[5], { 0.5f,0.5f ,0.5f ,1.0f });
 	}

@@ -20,7 +20,7 @@ Boss1Move2::Boss1Move2()
 
 	endPos = Vector3(startPos) + move * 100.0f;
 
-	float scale = GameHelper::Instance()->GetStageSize() * 2.0f;
+	float scale = GameHelper::Instance()->GetStageSize();
 	if (endPos.x < 0 || endPos.x > scale) {
 		endPos.x = startPos.x - move.x * 100.0f;
 	}

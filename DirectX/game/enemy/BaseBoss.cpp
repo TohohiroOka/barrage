@@ -70,7 +70,7 @@ void BaseBoss::Collider()
 	pos += moveVec;
 
 	const XMFLOAT3 moveMinPos = { 0,100,0 };
-	const XMFLOAT3 moveMaxPos = { GameHelper::Instance()->GetStageSize() * 2.0f,0,GameHelper::Instance()->GetStageSize() * 2.0f};
+	const XMFLOAT3 moveMaxPos = { GameHelper::Instance()->GetStageSize(),0.0f,GameHelper::Instance()->GetStageSize() };
 
 	//•Ç”»’è
 	pos.x = max(pos.x, moveMinPos.x);

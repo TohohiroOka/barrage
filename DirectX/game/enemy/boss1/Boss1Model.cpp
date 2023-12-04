@@ -10,7 +10,7 @@ Boss1Model::Boss1Model()
 	fbxObject->SetScale({ 0.0011f,0.0011f ,0.0011f });
 	fbxObject->SetLight(true);
 	fbxObject->SetAnimation(true);
-	fbxObject->SetPosition({ GameHelper::Instance()->GetStageSize(),10.0f ,GameHelper::Instance()->GetStageSize() });
+	fbxObject->SetPosition({ GameHelper::Instance()->GetStageSize() / 2.0f,10.0f ,GameHelper::Instance()->GetStageSize() / 2.0f });
 	fbxObject->SetIsModelDraw(false);
 	fbxObject->SetIsBoneDraw(true);
 
