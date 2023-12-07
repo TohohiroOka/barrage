@@ -9,13 +9,20 @@ class Boss1Bullet1 : public BaseBullet
 {
 public:
 
-	struct BulletInfo {
+	struct BulletAddPointInfo {
 		bool isAlive;//出現しているか
-		bool isShot;//発射されているか
+		float alpha;
 		Vector3 pos;//座標
 		float angle;
-		Vector3 moveVec;//移動方向
-		std::unique_ptr<Engine::Timer> timer;
+	};
+
+	struct BulletInfo {
+		bool isAlive;//出現しているか
+		float alpha;
+		Vector3 pos;//座標
+		Vector3 rota;
+		Vector3 moveVec;
+		std::unique_ptr<Engine::Timer> timer;//出現時間
 		int nowIntTime;
 		std::array<Vector3, 3> predictionLinePoint;
 	};
@@ -31,7 +38,7 @@ private:
 
 public:
 	Boss1Bullet1();
-	~Boss1Bullet1() {};
+	~Boss1Bullet1();
 
 	void Update() override;
 
@@ -53,19 +60,31 @@ private:
 
 	void End();
 
-	void BulletRotate(BulletInfo& _bullet);
+	void AddBullet(const Vector3& _pos);
+
+	void BulletRotate(BulletAddPointInfo& _bullet);
 
 	void BulletUpdate(BulletInfo& _bullet);
 
 private:
 
+	std::unique_ptr<Model> bulletModel;
+
 	//状態
 	State state;
 	std::vector<std::function<void()>> func_;
 
-	static const int maxBulletNum = 20;
+	//弾の出現ポイント
+	static const int maxBulletNum = 12;
 	int addBulletNum;
-	std::array<BulletInfo, maxBulletNum> bullet;
+	std::array<BulletAddPointInfo, maxBulletNum> bulletAddPoint;
+	float angleSpeed;
+
+	//弾配列
+	std::forward_list<BulletInfo> bullet;
+
+	//使用ポイント番号
+	std::array<int, 2> usePoint;
 
 	DirectX::XMFLOAT4 bulletColor = { 1.0f,1.0f,1.0f,1.0f };
 	DirectX::XMFLOAT4 effectColor = { 1.0f,0.3f,0.3f,0.3f };

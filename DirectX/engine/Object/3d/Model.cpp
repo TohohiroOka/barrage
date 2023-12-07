@@ -80,7 +80,8 @@ void Model::Initialize(const std::string& _modelname, bool _smoothing)
 
 void Model::LoadModel(const std::string& _modelname, bool _smoothing)
 {
-	const string filename = _modelname + ".obj";
+	
+	const string filename = ExtractFileName(_modelname) + ".obj";
 	const string directoryPath = baseDirectory + _modelname + "/";
 
 	// ファイルストリーム
@@ -404,4 +405,26 @@ void Model::VIDraw(ID3D12GraphicsCommandList* _cmdList)
 	for (auto& mesh : meshes) {
 		mesh->VIDraw(_cmdList);
 	}
+}
+
+std::string Model::ExtractFileName(const std::string& path)
+{
+	size_t pos1;
+
+	//区切り文字'\\'が出てくる一番最後の部分を検索
+
+	pos1 = path.rfind('\\');
+	if (pos1 != std::string::npos)
+	{
+		return path.substr(pos1 + 1, path.size() - pos1 - 1);
+	}
+
+	//区切り文字'/'が出てくる一番最後の部分を検索
+	pos1 = path.rfind('/');
+	if (pos1 != std::string::npos)
+	{
+		return path.substr(pos1 + 1, path.size() - pos1 - 1);
+	}
+
+	return path;
 }

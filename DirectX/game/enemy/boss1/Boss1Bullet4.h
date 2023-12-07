@@ -12,7 +12,7 @@ public:
 		bool isAlive;//oŒ»‚µ‚Ä‚¢‚é‚©
 		Vector3 pos;//À•W
 		Vector3 moveVec;//ˆÚ“®•ûŒü
-		float angle; 
+		Vector3 rota; 
 	};
 
 private:

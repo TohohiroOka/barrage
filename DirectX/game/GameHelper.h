@@ -98,7 +98,7 @@ static float GetAngle(const DirectX::XMFLOAT2& _startPoint, const DirectX::XMFLO
 static int RandomInt(int _range) {
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
-	std::uniform_int_distribution<> rand100(0, _range);
+	std::uniform_int_distribution<> rand100(0, abs(_range));
 
 	return rand100(mt);
 }
@@ -113,7 +113,7 @@ static int RandomInt(int _range) {
 static int RandomInt(int _range1, int _range2) {
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
-	std::uniform_int_distribution<> rand100(_range1, _range2);
+	std::uniform_int_distribution<> rand100(abs(_range1), abs(_range2));
 
 	return rand100(mt);
 }
@@ -127,7 +127,7 @@ static int RandomInt(int _range1, int _range2) {
 static float RandomFloat(float _range) {
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
-	std::uniform_int_distribution<> rand100(0, int(_range));
+	std::uniform_int_distribution<> rand100(0, abs(int(_range)));
 
 	return float(rand100(mt));
 }
@@ -142,9 +142,7 @@ static float RandomFloat(float _range) {
 static float RandomFloat(float _range1, float _range2) {
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
-	int range1 = int(_range1);
-	int range2 = int(_range2);
-	std::uniform_int_distribution<> rand100(range1, range2);
+	std::uniform_int_distribution<> rand100(abs(int(_range1)), abs(int(_range2)));
 
 	return float(rand100(mt));
 }

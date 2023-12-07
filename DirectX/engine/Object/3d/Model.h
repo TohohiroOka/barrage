@@ -125,4 +125,8 @@ private: // メンバ関数
 	/// </summary>
 	void LoadTextures();
 
+	/// <summary>
+	/// ファイル名検索
+	/// </summary>
+	std::string ExtractFileName(const std::string& path);
 };

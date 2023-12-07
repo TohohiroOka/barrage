@@ -24,7 +24,7 @@ Boss1Move3::Boss1Move3()
 	useCollision = UseCollision::box;
 
 	//攻撃用オブジェクト
-	cube = Model::CreateFromOBJ("runAttackBlock");
+	cube = Model::CreateFromOBJ("boss1/runAttackBlock");
 	object = Object3d::Create(cube.get());
 	object->SetScale({ 10.0f ,20.0f ,10.0f });
 

@@ -64,7 +64,8 @@ void Boss1Bullet4::Start()
 		Vector3 normal= target - pos;
 		normal.y = 0.0f;
 		object[i].moveVec = normal.normalize() * bulletSpeed;
-		object[i].angle = GetAngle({ pos.x,pos.z }, { target.x,target.z });
+		object[i].rota = VelocityRotate(object[i].moveVec);
+		object[i].rota.y += 90;
 	}
 
 	state = State::attack;
@@ -89,15 +90,15 @@ void Boss1Bullet4::Attack()
 			return;
 		}
 
-		float angleX = 0.0f;
+		float angle2 = 0.0f;
 		if (objectNumber == 1) {
-			angleX = 90.0f;
+			angle2 = 90.0f;
 		}
-		instanceObject->DrawInstance(i.pos, { 1.0f,1.5f,1.0f }, { angleX,i.angle,0.0f }, { 0.4f,0.2f ,0.5f ,1.0f });
+		instanceObject->DrawInstance(i.pos, { 1.0f,1.5f,1.0f }, { i.rota.x+ angle2,i.rota.y,i.rota.z }, { 0.4f,0.2f ,0.5f ,1.0f });
 		
 		for (int num = 0; num < 3; num++) {
 			float colorRate = (float(num + 1) / 9.0f) + 1.0f;
-			instanceObject->DrawInstance(i.pos - i.moveVec * ((num * (1.0f/bulletSpeed)) + 0.5f), { 1.0f,1.5f,1.0f }, { angleX,i.angle,0.0f }, { 0.4f * colorRate,0.2f * colorRate ,0.5f * colorRate ,0.4f / colorRate });
+			instanceObject->DrawInstance(i.pos - i.moveVec * ((num * (1.0f/bulletSpeed)) + 0.5f), { 1.0f,1.5f,1.0f }, {i.rota.x + angle2, i.rota.y,i.rota.z }, { 0.4f * colorRate,0.2f * colorRate ,0.5f * colorRate ,0.4f / colorRate });
 		}
 
 		objectNumber++;
