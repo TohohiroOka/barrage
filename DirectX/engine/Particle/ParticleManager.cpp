@@ -2,6 +2,7 @@
 #include <DirectXTex.h>
 #include"Camera/Camera.h"
 #include "../Math/DirectXMathHelper.h"
+#include "GameHelper.h"
 
 using namespace DirectX;
 
@@ -81,7 +82,7 @@ std::unique_ptr<ParticleManager> ParticleManager::Create(const std::string& _nam
 	return std::unique_ptr<ParticleManager>(instance);
 }
 
-void ParticleManager::Add(int _maxFrame, const XMFLOAT3& _position, const XMFLOAT3& _velocity,
+void ParticleManager::Add(float _maxFrame, const XMFLOAT3& _position, const XMFLOAT3& _velocity,
 	const XMFLOAT3& _accel, float _startScale, float _endScale, const XMFLOAT4& _startColor, const XMFLOAT4& _endColor)
 {
 	//リストに要素を追加
@@ -201,11 +202,11 @@ void ParticleManager::Update()
 	for (std::forward_list<PARTICLE>::iterator it = particle.begin();
 		it != particle.end(); it++) {
 		//経過フレーム数をカウント
-		it->frame++;
+		it->frame += 1.0f * GameHelper::Instance()->GetGameSpeed();
 		//速度に加速度を加算
-		it->velocity = it->velocity + it->accel;
+		it->velocity = it->velocity + (it->accel) * GameHelper::Instance()->GetGameSpeed();
 		//速度による移動
-		it->position = it->position + it->velocity;
+		it->position = it->position + it->velocity * GameHelper::Instance()->GetGameSpeed();
 		//大きさの変更
 		it->scale = it->scale - (it->startScale - it->endScale) / it->numFrame;
 		//色の変更

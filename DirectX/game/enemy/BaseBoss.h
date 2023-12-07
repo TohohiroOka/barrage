@@ -4,6 +4,7 @@
 #include "BaseBossModel.h"
 #include "Math/Vector3.h"
 #include "ui/Gauge.h"
+#include "../effect/AllHitEffect.h"
 
 class BaseBoss
 {
@@ -31,19 +32,23 @@ public:
 
 	Base3D* GetCenter() { return bossModel->GetObjectInst(); }
 	float GetHitScale() { return hitScale; }
-	void SetMoveVec(const Vector3& _moveVec) { moveVec = _moveVec; }
 	BaseAction* GetBaseAction() { return action.get(); }
-	void SetTargetPos(const Vector3& _targetPos) { targetPos = _targetPos; }
 	Vector3 GetTargetPos() { return targetPos; }
 	float GetLength() { return (targetPos - Vector3(bossModel->GetObjectInst()->GetPosition())).length(); }
 	BaseBossModel* GetBaseModel() { return bossModel.get(); }
 	bool GetBossIsAlive() { return HP <= 0; }
 	bool GetIsWince() { return isWince; }
+	void SetTargetPos(const Vector3& _targetPos) { targetPos = _targetPos; }
+	void SetMoveVec(const Vector3& _moveVec) { moveVec = _moveVec; }
+	void SetAllHitEffect(const Vector3& _pos) { allHitEffect->AddParticle(_pos); }
 
 protected:
 
 	//ターゲット座標
 	Vector3 targetPos;
+
+	//何かに当たった時のエフェクト
+	std::unique_ptr<AllHitEffect> allHitEffect;
 
 	//ボスのモデル情報
 	std::unique_ptr<BaseBossModel> bossModel;

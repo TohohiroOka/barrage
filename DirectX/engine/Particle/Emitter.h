@@ -43,7 +43,7 @@ public://メンバ関数
 	/// <param name="_endScale">最終サイズ</param>
 	/// <param name="_startColor">初期カラー</param>
 	/// <param name="_endColor">最終カラー</param>
-	void InEmitter(int _maxFrame, const XMFLOAT3& _position, const XMFLOAT3& _velocity,
+	void InEmitter(float _maxFrame, const XMFLOAT3& _position, const XMFLOAT3& _velocity,
 		const XMFLOAT3& _accel, float _startScale, float _endScale, const XMFLOAT4& _startColor, const XMFLOAT4& _endColor);
 
 	/// <summary>

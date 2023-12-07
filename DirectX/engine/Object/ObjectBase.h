@@ -19,7 +19,7 @@ protected:// エイリアス
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-protected:
+public:
 
 	enum class DrawMode {
 		alpha,

@@ -7,7 +7,7 @@
 
 struct ParticleGrainState
 {
-	int aliveFrame = 0;
+	float aliveFrame = 0;
 	DirectX::XMFLOAT3 pos;
 	DirectX::XMFLOAT3 vel;
 	DirectX::XMFLOAT3 acc;

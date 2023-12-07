@@ -45,9 +45,9 @@ public: // サブクラス
 		//加速度
 		XMFLOAT3 accel = {};
 		//現在フレーム
-		int frame = 0;
+		float frame = 0;
 		//終了フレーム
-		int numFrame = 0;
+		float numFrame = 0;
 		//スケール
 		float scale = 1.0f;
 		//初期値
@@ -137,7 +137,7 @@ public: // メンバ関数
 	/// <param name="_endScale">最終サイズ</param>
 	/// <param name="_startColor">初期カラー</param>
 	/// <param name="_endColor">最終カラー</param>
-	void Add(int _maxFrame, const XMFLOAT3& _position, const XMFLOAT3& _velocity, const XMFLOAT3& _accel,
+	void Add(float _maxFrame, const XMFLOAT3& _position, const XMFLOAT3& _velocity, const XMFLOAT3& _accel,
 		float _startScale, float _endScale, const XMFLOAT4& _startColor, const XMFLOAT4& _endColor);
 
 	/// <summary>

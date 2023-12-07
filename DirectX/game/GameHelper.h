@@ -55,7 +55,7 @@ private:
 	int slowTimer;
 
 	//ステージの大きさ
-	const float stageSize = 150;
+	const float stageSize = 180;
 };
 
 /// <summary>
