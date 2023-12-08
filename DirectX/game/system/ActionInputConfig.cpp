@@ -25,7 +25,8 @@ void ActionInputConfig::LoadTexture()
 	LoadActionNameTexture(GameInputManager::MoveRight, "MoveRight.png");
 	LoadActionNameTexture(GameInputManager::Avoid_Blink_Dash, "Avoid_Blink_Dash.png");
 	LoadActionNameTexture(GameInputManager::Jump, "Jump.png");
-	LoadActionNameTexture(GameInputManager::Attack, "Attack.png");
+	LoadActionNameTexture(GameInputManager::LightAttack, "LightAttack.png");
+	LoadActionNameTexture(GameInputManager::StrongAttack, "StrongAttack.png");
 	LoadActionNameTexture(GameInputManager::CameraUpRota, "CameraUpRota.png");
 	LoadActionNameTexture(GameInputManager::CameraDownRota, "CameraDownRota.png");
 	LoadActionNameTexture(GameInputManager::CameraLeftRota, "CameraLeftRota.png");

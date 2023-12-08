@@ -3,6 +3,7 @@
 #include "system/GameInputManager.h"
 #include "Object/3d/Fbx.h"
 #include "PlayerSwordAttack1.h"
+#include "PlayerSwordAttack2.h"
 
 PlayerActionBase::PlayerActionBase(Player* player)
 {
@@ -26,13 +27,19 @@ bool PlayerActionBase::JumpStart()
 	return true;
 }
 
-bool PlayerActionBase::AttackStart()
+bool PlayerActionBase::LightAttackStart()
 {
-	//UŒ‚“ü—Í‚ª‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î”²‚¯‚é
-	if (!GameInputManager::TriggerInputAction(GameInputManager::Attack)) { return false; }
-
 	//Ž‹v—Í‚ªUŒ‚‚ÅŽg—p‚·‚é’lˆÈ‰º‚È‚ç”²‚¯‚é
 	player->GetData()->attackAction = std::make_unique<PlayerSwordAttack1>(player);
+	if (!player->GetData()->attackAction->NextAttack()) { return false; }
+
+	return true;
+}
+
+bool PlayerActionBase::StrongAttackStart()
+{
+	//Ž‹v—Í‚ªUŒ‚‚ÅŽg—p‚·‚é’lˆÈ‰º‚È‚ç”²‚¯‚é
+	player->GetData()->attackAction = std::make_unique<PlayerSwordAttack2>(player);
 	if (!player->GetData()->attackAction->NextAttack()) { return false; }
 
 	return true;

@@ -31,10 +31,16 @@ protected: //メンバ関数
 	bool JumpStart();
 
 	/// <summary>
-	/// 攻撃開始できる状態か
+	/// 弱攻撃開始できる状態か
 	/// </summary>
 	/// <returns></returns>
-	bool AttackStart();
+	bool LightAttackStart();
+
+	/// <summary>
+	/// 強攻撃開始できる状態か
+	/// </summary>
+	/// <returns></returns>
+	bool StrongAttackStart();
 
 	/// <summary>
 	/// 回避開始できる状態か

@@ -5,7 +5,8 @@
 #include "game/camera/GameCamera.h"
 #include "PlayerActionMoveNormal.h"
 #include "PlayerActionJump.h"
-#include "PlayerActionAttack.h"
+#include "PlayerActionLightAttack.h"
+#include "PlayerActionStrongAttack.h"
 #include "PlayerActionAvoid.h"
 #include "PlayerActionBlink.h"
 #include "PlayerActionKnockback.h"
@@ -264,8 +265,12 @@ void Player::ActionChange()
 		action = std::make_unique<PlayerActionJump>(this);
 		break;
 
-	case PlayerActionName::ATTACK:
-		action = std::make_unique<PlayerActionAttack>(this);
+	case PlayerActionName::LIGHTATTACK:
+		action = std::make_unique<PlayerActionLightAttack>(this);
+		break;
+
+	case PlayerActionName::STRONGATTACK:
+		action = std::make_unique<PlayerActionStrongAttack>(this);
 		break;
 
 	case PlayerActionName::AVOID:

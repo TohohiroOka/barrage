@@ -4,27 +4,22 @@
 #include <memory>
 
 /// <summary>
-/// プレイヤー攻撃行動
+/// プレイヤー攻撃行動基底クラス
 /// </summary>
-class PlayerActionAttack : public PlayerActionBase
+class PlayerActionBaseAttack : public PlayerActionBase
 {
 public: //メンバ関数
-	PlayerActionAttack(Player* player);
-	~PlayerActionAttack();
+	PlayerActionBaseAttack(Player* player);
+	~PlayerActionBaseAttack();
 
 	/// <summary>
 	/// 更新
 	/// </summary>
 	void Update() override;
 
-private: //メンバ関数
-	/// <summary>
-	/// 攻撃中にの角度を変更
-	/// </summary>
-	void ChangeRotate();
-
+protected: //メンバ関数
 	/// <summary>
 	/// 次の攻撃を入力
 	/// </summary>
-	void NextAttack();
+	virtual void NextAttack() = 0;
 };

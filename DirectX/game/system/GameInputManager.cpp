@@ -15,7 +15,8 @@ void GameInputManager::Initialize()
 	keyInputActions[MoveRight] = { DIK_D, true };
 	keyInputActions[Avoid_Blink_Dash] = { DIK_Z, true };
 	keyInputActions[Jump] = { DIK_SPACE, true };
-	keyInputActions[Attack] = { DIK_Q, true };
+	keyInputActions[LightAttack] = { DIK_Q, true };
+	keyInputActions[StrongAttack] = { DIK_E, true };
 	keyInputActions[CameraUpRota] = { DIK_UP, false };
 	keyInputActions[CameraDownRota] = { DIK_DOWN, false };
 	keyInputActions[CameraLeftRota] = { DIK_LEFT, false };
@@ -32,7 +33,8 @@ void GameInputManager::Initialize()
 	padInputActions[MoveRight] = { LStickNum, false };
 	padInputActions[Avoid_Blink_Dash] = { XInputManager::PAD_B, true };
 	padInputActions[Jump] = { XInputManager::PAD_A, true };
-	padInputActions[Attack] = { XInputManager::PAD_RB, true };
+	padInputActions[LightAttack] = { XInputManager::PAD_RB, true };
+	padInputActions[StrongAttack] = { XInputManager::PAD_RT, true };
 	padInputActions[CameraUpRota] = { RStickNum, false };
 	padInputActions[CameraDownRota] = { RStickNum, false };
 	padInputActions[CameraLeftRota] = { RStickNum, false };

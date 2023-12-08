@@ -451,7 +451,7 @@
     <ClCompile Include="game\player\PlayerActionBlink.cpp">
       <Filter>ゲームシステム\Player\Action</Filter>
     </ClCompile>
-    <ClCompile Include="game\player\PlayerActionAttack.cpp">
+    <ClCompile Include="game\player\PlayerActionBaseAttack.cpp">
       <Filter>ゲームシステム\Player\Action</Filter>
     </ClCompile>
     <ClCompile Include="game\player\PlayerActionBase.cpp">
@@ -480,6 +480,14 @@
     </ClCompile>
     <ClCompile Include="game\effect\AllHitEffect.cpp">
       <Filter>ゲームシステム\Effect</Filter>
+    <ClCompile Include="game\player\PlayerSwordAttack2.cpp">
+      <Filter>ゲームシステム\Player\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="game\player\PlayerActionLightAttack.cpp">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="game\player\PlayerActionStrongAttack.cpp">
+      <Filter>ゲームシステム\Player\Action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -964,7 +972,7 @@
     <ClInclude Include="game\player\PlayerActionBlink.h">
       <Filter>ゲームシステム\Player\Action</Filter>
     </ClInclude>
-    <ClInclude Include="game\player\PlayerActionAttack.h">
+    <ClInclude Include="game\player\PlayerActionBaseAttack.h">
       <Filter>ゲームシステム\Player\Action</Filter>
     </ClInclude>
     <ClInclude Include="game\player\PlayerActionJump.h">
@@ -991,8 +999,19 @@
     <ClInclude Include="game\system\Sound.h">
       <Filter>ゲームシステム</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="game\effect\AllHitEffect.h">
       <Filter>ゲームシステム\Effect</Filter>
+=======
+    <ClInclude Include="game\player\PlayerSwordAttack2.h">
+      <Filter>ゲームシステム\Player\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerActionLightAttack.h">
+      <Filter>ゲームシステム\Player\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerActionStrongAttack.h">
+      <Filter>ゲームシステム\Player\Action</Filter>
+>>>>>>> player
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -10,7 +10,8 @@ enum PlayerActionName
 {
 	MOVENORMAL,	//通常移動(入力に制限がかからない)
 	JUMP,	//ジャンプ(1フレーム)
-	ATTACK,	//攻撃
+	LIGHTATTACK,	//弱攻撃
+	STRONGATTACK,	//強攻撃
 	AVOID,	//回避
 	BLINK,	//ブリンク
 	KNOCKBACK,//ノックバック

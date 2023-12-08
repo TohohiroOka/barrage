@@ -21,7 +21,8 @@ public: //enum
 		MoveRight,		//移動(右)
 		Avoid_Blink_Dash,//回避&ブリンク&ダッシュ
 		Jump,			//ジャンプ
-		Attack,			//攻撃
+		LightAttack,	//弱攻撃
+		StrongAttack,	//強攻撃
 		CameraUpRota,	//カメラ回転(上)
 		CameraDownRota,	//カメラ回転(下)
 		CameraLeftRota,	//カメラ回転(左)
