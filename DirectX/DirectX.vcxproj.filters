@@ -997,9 +997,6 @@
     <ClInclude Include="game\enemy\boss1\Boss1Bullet4.h">
       <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClInclude>
-    <ClInclude Include="game\system\Sound.h">
-      <Filter>ゲームシステム</Filter>
-    </ClInclude>
     <ClInclude Include="game\effect\AllHitEffect.h">
       <Filter>ゲームシステム\Effect</Filter>
     </ClInclude>
@@ -1011,6 +1008,9 @@
     </ClInclude>
     <ClInclude Include="game\player\PlayerActionStrongAttack.h">
       <Filter>ゲームシステム\Player\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="game\system\Sound.h">
+      <Filter>ゲームシステム\system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
