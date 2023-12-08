@@ -480,6 +480,7 @@
     </ClCompile>
     <ClCompile Include="game\effect\AllHitEffect.cpp">
       <Filter>ゲームシステム\Effect</Filter>
+    </ClCompile>
     <ClCompile Include="game\player\PlayerSwordAttack2.cpp">
       <Filter>ゲームシステム\Player\Attack</Filter>
     </ClCompile>
@@ -999,10 +1000,9 @@
     <ClInclude Include="game\system\Sound.h">
       <Filter>ゲームシステム</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="game\effect\AllHitEffect.h">
       <Filter>ゲームシステム\Effect</Filter>
-=======
+    </ClInclude>
     <ClInclude Include="game\player\PlayerSwordAttack2.h">
       <Filter>ゲームシステム\Player\Attack</Filter>
     </ClInclude>
@@ -1011,7 +1011,6 @@
     </ClInclude>
     <ClInclude Include="game\player\PlayerActionStrongAttack.h">
       <Filter>ゲームシステム\Player\Action</Filter>
->>>>>>> player
     </ClInclude>
   </ItemGroup>
 </Project>
