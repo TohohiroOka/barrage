@@ -55,8 +55,11 @@ public: //メンバ関数
 	/// ダメージ
 	/// </summary>
 	/// <param name="damageNum">ダメージ量</param>
-	/// <param name="subjectPos">ダメージ対象の座標</param>
-	void Damage(int damageNum, const Vector3& subjectPos);
+	/// <param name="knockbackVec">ノックバックベクトル</param>
+	/// <param name="knockbackPower">ノックバックの強さ</param>
+	/// <param name="knockbackTime">ノックバックをする時間</param>
+	/// <param name="isKnockbackStart">ノックバックを開始するか</param>
+	void Damage(int damageNum, const Vector3& knockbackVec, int knockbackPower, int knockbackTime, bool isKnockbackStart);
 
 	/// <summary>
 	/// 回復

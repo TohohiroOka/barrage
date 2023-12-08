@@ -1,13 +1,14 @@
 #include "PlayerActionKnockback.h"
 #include "Player.h"
+#include "Math/Easing/Easing.h"
 
-PlayerActionKnockback::PlayerActionKnockback(Player* player, const Vector3& subjectPos, int power)
+PlayerActionKnockback::PlayerActionKnockback(Player* player, const Vector3& knockbackVec, int knockbackTime, int knockbackPower)
 	: PlayerActionBase(player)
 {
-	//攻撃対象と自分のベクトルを算出
-	knockbackVec = player->GetData()->pos - subjectPos;
-	//ノックバックの強さをセット(仮で食らったダメージ量 / 10)
-	knockbackPower = (float)power / 10;
+	//ノックバック情報をセット
+	this->knockbackVec = knockbackVec;
+	this->knockbackTime = knockbackTime;
+	this->knockbackPower = (float)knockbackPower;
 
 	//予め次の行動を設定しておく(終了後は通常移動)
 	nextAction = PlayerActionName::MOVENORMAL;
@@ -26,13 +27,15 @@ void PlayerActionKnockback::Update()
 void PlayerActionKnockback::Knockback()
 {
 	//ノックバック
-	player->GetData()->velocity = knockbackVec.normalize() * knockbackPower;
+	const float easeTime = (float)knockbackTimer / (float)knockbackTime;
+	const float power = Easing::OutSine(knockbackPower, 0, easeTime);
+	player->GetData()->velocity = knockbackVec.normalize() * power;
 
-	//ノックバックを弱くしていく
-	knockbackPower -= 0.05f * GameHelper::Instance()->GetGameSpeed();
+	//タイマー更新
+	knockbackTimer++;
 
-	//ノックバックによる移動がなくなったらノックバック行動終了
-	if (knockbackPower < 0) {
+	//タイマーが指定した時間になったらノックバック行動終了
+	if (knockbackTimer >= knockbackTime) {
 		isActionEnd = true;
 
 		//予約していた次の行動をセット

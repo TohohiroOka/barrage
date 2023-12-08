@@ -8,7 +8,7 @@
 class PlayerActionKnockback : public PlayerActionBase
 {
 public: //メンバ関数
-	PlayerActionKnockback(Player* player, const Vector3& subjectPos, int power);
+	PlayerActionKnockback(Player* player, const Vector3& knockbackVec, int knockbackTime, int knockbackPower);
 	~PlayerActionKnockback();
 
 	/// <summary>
@@ -25,6 +25,10 @@ private: //メンバ関数
 private: //メンバ変数
 	//ノックバックベクトル
 	Vector3 knockbackVec;
+	//ノックバックにかかる時間
+	int knockbackTime;
+	//ノックバックタイマー
+	int knockbackTimer = 0;
 	//ノックバックの強さ
 	float knockbackPower;
 };

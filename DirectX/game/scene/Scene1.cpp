@@ -76,10 +76,10 @@ void Scene1::Update()
 
 		//撃破演出再生
 		//デバッグ用再生
-		if (DirectInput::GetInstance()->TriggerKey(DIK_H)) { 
-			defeatDirection->StartDefeatDirection(boss->GetCenter()->GetPosition()); 
+		if (DirectInput::GetInstance()->TriggerKey(DIK_H)) {
+			defeatDirection->StartDefeatDirection(boss->GetCenter()->GetPosition());
 		}
-		if(boss->GetBossIsAlive()){ defeatDirection->StartDefeatDirection(boss->GetCenter()->GetPosition()); }
+		if (boss->GetBossIsAlive()) { defeatDirection->StartDefeatDirection(boss->GetCenter()->GetPosition()); }
 
 		CollisionCheck();
 
@@ -242,12 +242,13 @@ void Scene1::CollisionCheck()
 			if (boss->GetBaseAction()->GetUseCollision() == BaseAction::UseCollision::box) {
 				std::vector<Box> bossAttackDatas;
 				boss->GetBaseAction()->GetAttackCollisionBox(bossAttackDatas);
-				
+
 				int num = -1;
 				for (auto& i : bossAttackDatas) {
 					num++;
 					if (Collision::CheckSphere2Box(playerSphere, i)) {
-						player->Damage(boss->GetBaseAction()->GetDamage(), i.point1);
+						Vector3 knockbackVec = ppos - (Vector3)i.point1;
+						player->Damage(boss->GetBaseAction()->GetDamage(), knockbackVec, 3, 10, true);
 						camera->ShakeStart(10, 10);
 						boss->GetBaseAction()->SetIsCollision(false);
 						boss->GetBaseAction()->DeleteBullet({ num });
@@ -267,7 +268,8 @@ void Scene1::CollisionCheck()
 				for (auto& i : bossAttackDatas) {
 					num++;
 					if (Collision::CheckSphere2Sphere(playerSphere, i)) {
-						player->Damage(boss->GetBaseAction()->GetDamage(), { i.center.m128_f32[0],i.center.m128_f32[1] ,i.center.m128_f32[2] });
+						Vector3 knockbackVec = ppos - Vector3{ i.center.m128_f32[0],i.center.m128_f32[1], i.center.m128_f32[2] };
+						player->Damage(boss->GetBaseAction()->GetDamage(), knockbackVec, 3, 1, true);
 						camera->ShakeStart(10, 10);
 						boss->GetBaseAction()->SetIsCollision(false);
 						boss->GetBaseAction()->DeleteBullet({ num });
@@ -287,7 +289,8 @@ void Scene1::CollisionCheck()
 				for (auto& i : bossAttackDatas) {
 					num++;
 					if (Collision::CheckSphereCapsule(playerSphere, i, nullptr)) {
-						player->Damage(boss->GetBaseAction()->GetDamage(), i.startPosition);
+						Vector3 knockbackVec = ppos - i.startPosition;
+						player->Damage(boss->GetBaseAction()->GetDamage(), knockbackVec, 3, 10, true);
 						camera->ShakeStart(10, 10);
 						boss->GetBaseAction()->SetIsCollision(false);
 						boss->GetBaseAction()->DeleteBullet({ num });
