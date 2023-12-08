@@ -6,12 +6,11 @@
 
 Boss1Bullet3::Boss1Bullet3()
 {
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
+	boss->SetPlayerDirection();
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack2_end));
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_start));
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack2_start));
 	boss->GetBaseModel()->AnimationReset();
-
-	boss->GetBaseModel()->SetIsRoop(false);
 
 	state = State::start;
 	useCollision = UseCollision::sphere;
@@ -26,38 +25,25 @@ Boss1Bullet3::Boss1Bullet3()
 	bulletEffect->Init();
 
 	hitTimer = std::make_unique<Engine::Timer>();
+
+	func_.emplace_back([this] {return Start(); });
+	func_.emplace_back([this] {return Attack(); });
+	func_.emplace_back([this] {return End(); });
 }
 
 void Boss1Bullet3::Update()
 {
-	if (state == State::start) {
-		Start();
+	if (int(state) >= 0 && int(state) <= int(State::non) && !boss->GetIsWince()) {
+		func_[int(state)]();
 	}
-	else if (state == State::attack) {
-		const float maxTimer = 100.0f;
-		//更新処理
-		for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
-			it != bullet.end(); it++) {
-			BulletUpdate(*it);
+
+	//falseなら消す
+	bullet.remove_if([](BulletInfo& x) {
+		return !x.isAlive;
 		}
+	);
 
-		//falseなら消す
-		bullet.remove_if([](BulletInfo& x) {
-			return !x.isAlive;
-			}
-		);
-
-		//終了
-		if (std::distance(bullet.begin(), bullet.end()) <= 0 && *timer.get() > maxTimer) {
-			isEnd = true;
-		}
-
-		BaseBullet::Update();
-
-		if (*timer.get() > maxTimer - 30.0f) {
-			boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
-		}
-	}
+	BaseBullet::Update();
 }
 
 void Boss1Bullet3::GetAttackCollisionSphere(std::vector<Sphere>& _info)
@@ -89,6 +75,26 @@ void Boss1Bullet3::Start()
 {
 	if (!boss->GetBaseModel()->GetIsAnimationEnd()) { return; }
 	state = State::attack;
+}
+
+void Boss1Bullet3::Attack()
+{
+	const float maxTimer = 100.0f;
+	//更新処理
+	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
+		it != bullet.end(); it++) {
+		BulletUpdate(*it);
+	}
+
+	if (*timer.get() > maxTimer - 30.0f) {
+		boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack2_end));
+	}
+
+	//終了
+	if (std::distance(bullet.begin(), bullet.end()) <= 0 && *timer.get() > maxTimer) {
+		isEnd = true;
+		state = State::non;
+	}
 }
 
 void Boss1Bullet3::AddBullet()

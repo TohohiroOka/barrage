@@ -14,7 +14,7 @@ private:
 	enum class State {
 		up,
 		side,
-		size,
+		non,
 	};
 
 public:

@@ -1,5 +1,6 @@
 #pragma once
 #include "../BaseBullet.h"
+#include <functional>
 
 /// <summary>
 /// 外側に出てからプレイヤーに追従する
@@ -25,6 +26,7 @@ private:
 	enum class State {
 		start,
 		attack,
+		end,
 		non,
 	};
 
@@ -46,6 +48,10 @@ public:
 
 	void Start();
 
+	void Attack();
+
+	void End();
+
 	void AddBullet(bool _easing);
 
 	void BulletUpdate(BulletInfo& _bullet);
@@ -54,6 +60,7 @@ private:
 
 	//状態
 	State state;
+	std::vector<std::function<void()>> func_;
 
 	std::forward_list<BulletInfo> bullet;
 

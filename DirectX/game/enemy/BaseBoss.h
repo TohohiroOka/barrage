@@ -30,6 +30,8 @@ public:
 
 	void Collider();
 
+	void SetPlayerDirection();
+
 	Base3D* GetCenter() { return bossModel->GetObjectInst(); }
 	float GetHitScale() { return hitScale; }
 	BaseAction* GetBaseAction() { return action.get(); }

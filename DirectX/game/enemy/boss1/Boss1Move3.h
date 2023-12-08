@@ -3,6 +3,9 @@
 #include <functional>
 #include "Object/3d/Object3d.h"
 
+/// <summary>
+/// ƒvƒŒƒCƒ„[‚É‹ß‚Ã‚¢‚ÄUŒ‚
+/// </summary>
 class Boss1Move3 : public BaseAction
 {
 private:

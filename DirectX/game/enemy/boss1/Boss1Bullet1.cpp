@@ -6,12 +6,11 @@
 
 Boss1Bullet1::Boss1Bullet1()
 {
+	boss->SetPlayerDirection();
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
 	boss->GetBaseModel()->AnimationReset();
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_start));
 	boss->GetBaseModel()->AnimationReset();
-
-	boss->GetBaseModel()->SetIsRoop(false);
 
 	state = State::start;
 
@@ -49,7 +48,7 @@ Boss1Bullet1::~Boss1Bullet1()
 
 void Boss1Bullet1::Update()
 {
-	if (int(state) >= 0 && int(state) <= int(State::non)&& !boss->GetIsWince()) {
+	if (int(state) >= 0 && int(state) < int(State::non)&& !boss->GetIsWince()) {
 		func_[int(state)]();
 	}
 

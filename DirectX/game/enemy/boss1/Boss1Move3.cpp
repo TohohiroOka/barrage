@@ -7,11 +7,10 @@
 Boss1Move3::Boss1Move3()
 {
 	//アニメーションセット
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::back_end));
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::runAttack_end));
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::back_start));
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::runAttack_start));
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetIsRoop(false);
 
 	startPos = boss->GetCenter()->GetPosition();
 	endPos = boss->GetTargetPos();

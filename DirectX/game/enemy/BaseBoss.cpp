@@ -88,3 +88,10 @@ void BaseBoss::Collider()
 	//最終的な座標をセット
 	bossModel->GetObjectInst()->SetPosition(pos);
 }
+
+void BaseBoss::SetPlayerDirection()
+{
+	Vector3 rota = VelocityRotate(targetPos - Vector3(bossModel->GetObjectInst()->GetPosition()));
+	//rota.x += 90.0f;
+	bossModel->GetObjectInst()->SetRotation(rota);
+}

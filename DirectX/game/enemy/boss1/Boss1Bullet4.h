@@ -4,6 +4,9 @@
 #include "../Math/Timer.h"
 #include <functional>
 
+/// <summary>
+/// ”ò‚ÔŽaŒ‚
+/// </summary>
 class Boss1Bullet4 : public BaseAction
 {
 public:
