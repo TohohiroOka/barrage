@@ -13,6 +13,7 @@ Boss1Model::Boss1Model()
 	fbxObject->SetPosition({ GameHelper::Instance()->GetStageSize() / 2.0f,10.0f ,GameHelper::Instance()->GetStageSize() / 2.0f });
 	fbxObject->SetIsModelDraw(false);
 	fbxObject->SetIsBoneDraw(true);
+	fbxObject->SetIsRoop(false);
 
 	std::array<std::string, 2> bone = {
 		"Hips","Spine"

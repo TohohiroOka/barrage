@@ -1,5 +1,6 @@
 #pragma once
 #include "../BaseBullet.h"
+#include <functional>
 
 /// <summary>
 /// ãﬂãóó£Ç…â~èÛÇ≈Ç≈ÇÈíe
@@ -43,6 +44,8 @@ public:
 
 	void Start();
 
+	void Attack();
+
 	void AddBullet();
 
 	void BulletUpdate(BulletInfo& _bullet);
@@ -51,6 +54,7 @@ private:
 
 	//èÛë‘
 	State state;
+	std::vector<std::function<void()>> func_;
 
 	std::forward_list<BulletInfo> bullet;
 };

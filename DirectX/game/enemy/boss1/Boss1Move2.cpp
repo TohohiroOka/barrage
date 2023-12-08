@@ -9,7 +9,6 @@ Boss1Move2::Boss1Move2()
 	//アニメーションセット
 	boss->GetBaseModel()->AnimationReset();
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::standBy));
-	boss->GetBaseModel()->SetIsRoop(false);
 
 	Vector3 target = boss->GetTargetPos();
 	startPos = boss->GetCenter()->GetPosition();
@@ -40,12 +39,14 @@ Boss1Move2::Boss1Move2()
 
 void Boss1Move2::Update()
 {
+	boss->SetPlayerDirection();
+
 	if (boss->GetIsWince()) {
 		return;
 		isEnd = true;
 	}
 
-	if (state < State::size) {
+	if (int(state) >= 0 && int(state) < int(State::non) && !boss->GetIsWince()) {
 		func_[int(state)]();
 	}
 }

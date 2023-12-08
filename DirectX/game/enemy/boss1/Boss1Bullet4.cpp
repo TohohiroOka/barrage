@@ -4,16 +4,15 @@
 #include "../BaseBoss.h"
 #include "Math/Easing/Easing.h"
 
-const float bulletSpeed = 2.0f;
+const float bulletSpeed = 5.0f;
 
 Boss1Bullet4::Boss1Bullet4()
 {
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
+	boss->SetPlayerDirection();
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::crossCut_end));
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_start));
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::crossCut_start));
 	boss->GetBaseModel()->AnimationReset();
-	boss->GetBaseModel()->SetIsRoop(false);
-
 
 	useCollision = UseCollision::sphere;
 	model = Model::CreateFromOBJ("slashing");
@@ -55,6 +54,9 @@ void Boss1Bullet4::GetAttackCollisionSphere(std::vector<Sphere>& _info)
 
 void Boss1Bullet4::Start()
 {
+	boss->SetPlayerDirection();
+	if (!boss->GetBaseModel()->GetIsAnimationEnd()) { return; }
+
 	DirectX::XMFLOAT3 pos = boss->GetCenter()->GetPosition();
 	DirectX::XMFLOAT3 target = boss->GetTargetPos();
 
@@ -71,6 +73,7 @@ void Boss1Bullet4::Start()
 	state = State::attack;
 	timer->Reset();
 	oldtime = 0;
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::runAttack_end));
 }
 
 void Boss1Bullet4::Attack()
