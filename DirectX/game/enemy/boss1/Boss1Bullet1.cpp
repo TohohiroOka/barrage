@@ -2,6 +2,7 @@
 #include "../boss1/Boss1Model.h"
 #include "GameHelper.h"
 #include "../BaseBoss.h"
+#include "Math/Easing/Easing.h"
 
 Boss1Bullet1::Boss1Bullet1()
 {
@@ -16,8 +17,10 @@ Boss1Bullet1::Boss1Bullet1()
 
 	useCollision = UseCollision::sphere;
 	model = Model::CreateFromOBJ("bullet");
-	for (auto& i : instanceObject) {
-		i = InstanceObject::Create(model.get());
+	bulletModel = Model::CreateFromOBJ("boss1/feet");
+	instanceObject[0] = InstanceObject::Create(model.get());
+	for (int i = 1; i < instanceObject.size(); i++) {
+		instanceObject[i] = InstanceObject::Create(bulletModel.get());
 	}
 
 	predictionLine = std::make_unique<PredictionLine>();
@@ -30,9 +33,18 @@ Boss1Bullet1::Boss1Bullet1()
 
 	addBulletNum = 0;
 
+	usePoint = { 0,0 };
+
+	angleSpeed = 15.0f;
+
 	func_.emplace_back([this] {return Start(); });
 	func_.emplace_back([this] {return Attack(); });
 	func_.emplace_back([this] {return End(); });
+}
+
+Boss1Bullet1::~Boss1Bullet1()
+{
+	bullet.clear();
 }
 
 void Boss1Bullet1::Update()
@@ -41,11 +53,22 @@ void Boss1Bullet1::Update()
 		func_[int(state)]();
 	}
 
+	for (auto& i : bulletAddPoint) {
+		if (!i.isAlive || i.alpha < 0.1f) { continue; }
+		instanceObject[0]->DrawInstance(i.pos, { 1.0f ,1.0f ,1.0f }, { 0.0f ,0.0f ,0.0f }, { 1,1,1,i.alpha });
+	}
+
+	//falseなら消す
+	bullet.remove_if([](BulletInfo& x) {
+		return !x.isAlive;
+		}
+	);
+
 	for (auto& i : bullet) {
 		if (!i.isAlive) { continue; }
-		for (auto& inst : instanceObject) {
-			if (!inst->GetInstanceDrawCheck()) { continue; }
-			inst->DrawInstance(i.pos, { 1.0f ,1.0f ,1.0f }, { 0.0f ,0.0f ,0.0f }, { 1,1,1,1 });
+		for (int j = 1; j < instanceObject.size(); j++) {
+			if (!instanceObject[j]->GetInstanceDrawCheck()) { continue; }
+			instanceObject[j]->DrawInstance(i.pos, { 1.0f ,1.0f ,1.0f }, i.rota, { 1,1,1,i.alpha });
 		}
 	}
 
@@ -55,7 +78,7 @@ void Boss1Bullet1::Update()
 void Boss1Bullet1::GetAttackCollisionSphere(std::vector<Sphere>& _info)
 {
 	for (auto& i : bullet) {
-	if(i.isShot){}
+		if (i.alpha < 0.9) { continue; }
 		Sphere add;
 		add.center = { i.pos.x, i.pos.y , i.pos.z };
 		add.radius = 1.0f;
@@ -65,102 +88,174 @@ void Boss1Bullet1::GetAttackCollisionSphere(std::vector<Sphere>& _info)
 
 void Boss1Bullet1::DeleteBullet(std::vector<int> _deleteNum)
 {
-	for (auto& i : _deleteNum) {
-		bullet[i].isAlive = false;
+	int num = -1;
+	int vecNum = 0;
+	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
+		it != bullet.end(); it++) {
+		num++;
+		if (num != _deleteNum[vecNum]) { continue; }
+		it->isAlive = false;
+		vecNum++;
+		if (_deleteNum.size() == vecNum) { break; }
 	}
 }
 
 void Boss1Bullet1::Start()
 {
+	//出現ポイント出し
 	if ((*timer.get() / 2.0f) >= addBulletNum && addBulletNum < maxBulletNum) {
-		bullet[addBulletNum].isAlive = true;
-		bullet[addBulletNum].isShot = false;
-		bullet[addBulletNum].angle = 0.0f;
-		bullet[addBulletNum].pos = {};
-		bullet[addBulletNum].timer = std::make_unique<Engine::Timer>();
-		bullet[addBulletNum].nowIntTime = 0;
+		bulletAddPoint[addBulletNum].isAlive = true;
+		bulletAddPoint[addBulletNum].angle = 0.0f;
+		bulletAddPoint[addBulletNum].pos = {};
+		bulletAddPoint[addBulletNum].alpha = 1.0f;
 		addBulletNum++;
+		if (addBulletNum >= maxBulletNum) {
+			timer->Reset();
+		}
 	}
 
-	for (auto& i : bullet) {
+	for (auto& i : bulletAddPoint) {
 		if (!i.isAlive) { continue; }
 		BulletRotate(i);
 	}
 
-	if (*timer.get() < 100.0f) { return; }
-	addBulletNum = 0;
+	const float maxTime = 50.0f;
+	if (addBulletNum >= maxBulletNum) {
+		angleSpeed = Easing::InExpo(15.0f,-1.0f, *timer.get() / maxTime);
+	}
+
+	if (*timer.get() < maxTime) { return; }
 	timer->Reset();
 	state = State::attack;
 }
 
 void Boss1Bullet1::Attack()
 {
-	Vector3 targetPos = boss->GetTargetPos();
+	for (auto& i : bulletAddPoint) {
+		if (!i.isAlive) { continue; }
+		BulletRotate(i);
+	}
 
-	if (*timer.get() >= addBulletNum) {
-		bullet[addBulletNum].isShot = true;
-		float radius = DirectX::XMConvertToRadians(bullet[addBulletNum].angle);
-		bullet[addBulletNum].moveVec = Vector3(targetPos - bullet[addBulletNum].pos).normalize() * 10.0f;
-		bullet[addBulletNum].predictionLinePoint[0] = bullet[addBulletNum].pos;
-		addBulletNum++;
+	const float maxTime = 120.0f;
+
+	Vector3 targetPos = boss->GetCenter()->GetPosition();
+
+	const float deviationWidth = 20.0f;
+	usePoint[0] = int((*timer.get() / (maxTime - deviationWidth)) * (maxBulletNum - 1));
+	if (*timer.get() > 20.0f) {
+		usePoint[1] = int(((*timer.get() - deviationWidth) / (maxTime - deviationWidth)) * (maxBulletNum - 1));
+	}
+
+	//12以上になったら11に戻す
+	if (usePoint[0] >= 12) {
+		usePoint[0] = 11;
+	}
+	if (usePoint[1] >= 12) {
+		usePoint[1] = 11;
+	}
+
+	for (int i = 0; i < 3; i++) {
+		int inPoint = RandomInt(usePoint[0] - usePoint[1]) + usePoint[1];
+		AddBullet(bulletAddPoint[inPoint].pos);
 	}
 
 	for (auto& i : bullet) {
-		if (!i.isAlive) { continue; }
-		if (i.isShot) {
-			BulletUpdate(i);
-		} else {
-			BulletRotate(i);
-		}
+		BulletUpdate(i);
 	}
 
-	if (addBulletNum < maxBulletNum) { return; }
-	addBulletNum = 0;
+	if ((*timer.get()) <= maxTime) { return; }
 	timer->Reset();
 	state = State::end;
 }
 
-void Boss1Bullet1::End(){
+void Boss1Bullet1::End()
+{
 	int num = 0;
 	for (auto& i : bullet) {
-		if (!i.isAlive|| !i.isShot) { continue; }
 		BulletUpdate(i);
 		num++;
 	}
 
+	const float maxTime = 30.0f;
+	float bulletAddPointAlpha = Easing::InExpo(1.0f, 0.0f, *timer.get() / maxTime);
+
+	for (auto& i : bulletAddPoint) {
+		i.alpha = bulletAddPointAlpha;
+	}
+
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
-	if (num != 0) { return; }
+
+	if (num != 0 || *timer.get() < maxTime) { return; }
 	isEnd = true;
 }
 
-void Boss1Bullet1::BulletRotate(BulletInfo& _bullet)
+void Boss1Bullet1::AddBullet(const Vector3& _pos)
+{
+	Vector3 moveVec = _pos - Vector3(boss->GetCenter()->GetPosition());
+	moveVec.y = 0.0f;
+	moveVec = moveVec.normalize();
+	moveVec.y = -(RandomFloat(20.0f) + 50.0f) / 100.0f;
+
+	//一つ追加
+	bullet.emplace_front();
+	BulletInfo& add = bullet.front();
+	add.isAlive = true;
+	add.pos = _pos;
+	add.alpha = 1.0f;
+	add.moveVec = moveVec * 2.0f;
+	add.timer = std::make_unique<Engine::Timer>();
+	add.rota= VelocityRotate(moveVec);
+	add.rota.x += 90;
+}
+
+void Boss1Bullet1::BulletRotate(BulletAddPointInfo& _bullet)
 {
 	Vector3 bossPos = boss->GetCenter()->GetPosition();
 
-	_bullet.angle += 10.0f;
+	_bullet.angle += angleSpeed;
 	if (_bullet.angle >= 360) {
 		_bullet.angle -= 360.0f;
 	}
 	float radius = DirectX::XMConvertToRadians(_bullet.angle);
-	_bullet.pos = bossPos + Vector3(sinf(radius) * 15.0f, 15.0f, cosf(radius) * 15.0f);
+	_bullet.pos = bossPos + Vector3(cosf(radius) * 15.0f, 15.0f, sinf(radius) * 15.0f);
 }
 
 void Boss1Bullet1::BulletUpdate(BulletInfo& _bullet)
 {
-	_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
-	const float dist = 10.0f;
-	if (_bullet.pos.x < -dist || _bullet.pos.x > moveMaxPos.x + dist ||
-		_bullet.pos.y < -dist || _bullet.pos.y > moveMaxPos.y + dist ||
-		_bullet.pos.z < -dist || _bullet.pos.z > moveMaxPos.z + dist) {
+	//アルファかyが一定以下なら
+	if (_bullet.alpha < 0.1f || _bullet.pos.y < -10.0f) {
 		_bullet.isAlive = false;
 		return;
 	}
+	//壁の中なら
+	else if (_bullet.pos.x > 0.0f && _bullet.pos.x < moveMaxPos.x &&
+		_bullet.pos.y > 0.0f && _bullet.pos.y < moveMaxPos.y &&
+		_bullet.pos.z > 0.0f && _bullet.pos.z < moveMaxPos.z){
+		_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
+	}
+	//壁の中でyが一定以下なら
+	else if (_bullet.pos.x > 0.0f && _bullet.pos.x < moveMaxPos.x &&
+		_bullet.pos.z > 0.0f && _bullet.pos.z < moveMaxPos.z &&
+		_bullet.pos.y <= 0.0f) {
+		_bullet.alpha -= 0.04f;
+	}
+	//壁の外でyが一定以上なら
+	else if ((_bullet.pos.x <= 0.0f || _bullet.pos.x >= moveMaxPos.x ||
+		_bullet.pos.z <= 0.0f || _bullet.pos.z >= moveMaxPos.z) &&
+		_bullet.pos.y <= 0.0f && _bullet.pos.y >= -10.0f) {
+		_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
+	}
 
-	//エフェクト追加
-	DirectX::XMFLOAT4 bulletColor = { 0.f,0.f,0.f,1.0f };
-	DirectX::XMFLOAT4 effectColor = { 0.2f,0.2f,0.8f,1.0f };
-	float effectScale = 7.5f;
-	bulletEffect->AddBulletEffect(_bullet.pos, bulletColor, effectScale, effectColor);
+	////エフェクト追加
+	//DirectX::XMFLOAT4 bulletColor = { 0.f,0.f,0.f,1.0f };
+	//DirectX::XMFLOAT4 effectColor = { 0.2f,0.2f,0.8f,1.0f };
+	//float effectScale = 7.5f;
+	//bulletEffect->AddBulletEffect(_bullet.pos, bulletColor, effectScale, effectColor);
+
+	//アルファが1でないなら移動してないため弾道は出さない
+	if (_bullet.alpha != 1.0) {
+		return;
+	}
 
 	//弾道
 	{

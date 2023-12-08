@@ -21,6 +21,7 @@ private:
 		middle,//ˆÚ“®‚ÆUŒ‚‚ÌŠÔ
 		bullet1,
 		bullet2,
+		bullet4,
 		size,
 	};
 

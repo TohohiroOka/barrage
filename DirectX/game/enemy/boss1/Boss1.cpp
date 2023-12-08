@@ -9,12 +9,15 @@
 #include "Boss1Bullet1.h"
 #include "Boss1Bullet2.h"
 #include "Boss1Bullet3.h"
+#include "Boss1Bullet4.h"
 
 #include "Boss1Wince.h"
 
 Boss1::Boss1()
 {
 	maxHP = 1000;
+
+	allHitEffect = std::make_unique<AllHitEffect>();
 
 	BaseBoss::Initialize();
 
@@ -23,7 +26,7 @@ Boss1::Boss1()
 
 	BaseAction::SetBossPtr(this);
 
-	action = std::make_unique<Boss1Bullet1>();
+	action = std::make_unique<Boss1Bullet4>();
 
 	hitScale = bossModel->GetObjectInst()->GetScale().y * 5000.0f;
 }
@@ -58,8 +61,8 @@ void Boss1::SetAction()
 	Vector3 pos = bossModel->GetObjectInst()->GetPosition();
 	Vector3 dist = targetPos - pos;
 
-	//action = std::make_unique<Boss1Bullet3>();
-	//return;
+	action = std::make_unique<Boss1Bullet4>();
+	return;
 
 	//プレイヤーが遠距離にいる
 	if (dist.length() > 100.0f) {
@@ -96,6 +99,8 @@ void Boss1::SetAction()
 				action = std::make_unique<Boss1Bullet1>();
 			}else if (actionNumber == int(MediumAction::bullet2)) {
 				action = std::make_unique<Boss1Bullet2>();
+			} else if (actionNumber == int(MediumAction::bullet4)) {
+				action = std::make_unique<Boss1Bullet4>();
 			}
 		}
 		//移動行動

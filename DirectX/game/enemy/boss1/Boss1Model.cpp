@@ -2,8 +2,8 @@
 
 Boss1Model::Boss1Model()
 {
-	objModel[int(ObjectType::cube)] = Model::CreateFromOBJ("core");
-	objModel[int(ObjectType::cone)] = Model::CreateFromOBJ("feet");
+	objModel[int(ObjectType::cube)] = Model::CreateFromOBJ("boss1/core");
+	objModel[int(ObjectType::cone)] = Model::CreateFromOBJ("boss1/feet");
 
 	model = FbxModel::Create("boss1","Hips");
 	fbxObject = Fbx::Create(model.get());
