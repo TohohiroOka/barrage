@@ -223,27 +223,27 @@ void Boss1Bullet1::BulletRotate(BulletAddPointInfo& _bullet)
 void Boss1Bullet1::BulletUpdate(BulletInfo& _bullet)
 {
 	//アルファかyが一定以下なら
-	if (_bullet.alpha < 0.1f || _bullet.pos.y < -10.0f) {
+	if (_bullet.alpha < 0.1f) {
 		_bullet.isAlive = false;
 		return;
 	}
-	//壁の中なら
+	//壁の中
 	else if (_bullet.pos.x > 0.0f && _bullet.pos.x < moveMaxPos.x &&
-		_bullet.pos.y > 0.0f && _bullet.pos.y < moveMaxPos.y &&
-		_bullet.pos.z > 0.0f && _bullet.pos.z < moveMaxPos.z){
-		_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
+		_bullet.pos.z > 0.0f && _bullet.pos.z < moveMaxPos.z) {
+		//地面より上
+		if (_bullet.pos.y > 0.0f && _bullet.pos.y < moveMaxPos.y) {
+			_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
+		} else {
+			_bullet.alpha -= 0.04f;
+		}
 	}
-	//壁の中でyが一定以下なら
-	else if (_bullet.pos.x > 0.0f && _bullet.pos.x < moveMaxPos.x &&
-		_bullet.pos.z > 0.0f && _bullet.pos.z < moveMaxPos.z &&
-		_bullet.pos.y <= 0.0f) {
-		_bullet.alpha -= 0.04f;
-	}
-	//壁の外でyが一定以上なら
-	else if ((_bullet.pos.x <= 0.0f || _bullet.pos.x >= moveMaxPos.x ||
-		_bullet.pos.z <= 0.0f || _bullet.pos.z >= moveMaxPos.z) &&
-		_bullet.pos.y <= 0.0f && _bullet.pos.y >= -10.0f) {
-		_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
+	//壁の外
+	else {
+		if (_bullet.pos.y > -10.0f) {
+			_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
+		} else {
+			_bullet.isAlive = false;
+		}
 	}
 
 	////エフェクト追加
