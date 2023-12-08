@@ -132,7 +132,7 @@ void Player::FrameReset()
 	object->FrameReset();
 }
 
-void Player::Damage(int damageNum, const Vector3& subjectPos)
+void Player::Damage(int damageNum, const Vector3& knockbackVec, int knockbackPower, int knockbackTime, bool isKnockbackStart)
 {
 	//HPからダメージ量を引く
 	data->HP -= damageNum;
@@ -148,10 +148,10 @@ void Player::Damage(int damageNum, const Vector3& subjectPos)
 		data->action = PlayerActionName::DEAD;
 		action = std::make_unique<PlayerActionDead>(this);
 	}
-	//それ以外ならノックバック状態にする
-	else {
+	//ノックバックを開始するならノックバック状態にする
+	else if (isKnockbackStart) {
 		data->action = PlayerActionName::KNOCKBACK;
-		action = std::make_unique<PlayerActionKnockback>(this, subjectPos, damageNum);
+		action = std::make_unique<PlayerActionKnockback>(this, knockbackVec, knockbackTime, knockbackPower);
 	}
 
 }
