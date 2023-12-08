@@ -6,9 +6,9 @@
 #include <functional>
 
 /// <summary>
-/// プレイヤー剣攻撃1
+/// プレイヤー剣攻撃2
 /// </summary>
-class PlayerSwordAttack1 : public BasePlayerAttack
+class PlayerSwordAttack2 : public BasePlayerAttack
 {
 public: //ステート
 	enum State
@@ -20,8 +20,8 @@ public: //ステート
 	};
 
 public: //メンバ関数
-	PlayerSwordAttack1(Player* player);
-	~PlayerSwordAttack1();
+	PlayerSwordAttack2(Player* player);
+	~PlayerSwordAttack2();
 
 	/// <summary>
 	/// 更新
@@ -67,11 +67,11 @@ public: //静的メンバ変数 (変更しやすいようにpublic)
 	//この攻撃の攻撃力
 	static int attackPower;
 	//攻撃にかかる時間
-	static const int attackTime = 75;
+	static const int attackTime = 130;
 	//先行入力を開始する時間
-	static const int actionChangeStartTime = 50;
+	static const int actionChangeStartTime = 80;
 	//衝突判定が有効に切り替わる時間
-	static const int collisionValidStartTime = 10;
+	static const int collisionValidStartTime = 42;
 	//色
 	static const DirectX::XMFLOAT4 attackColor;
 	static const DirectX::XMFLOAT4 nonAttackColor;

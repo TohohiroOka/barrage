@@ -1,4 +1,4 @@
-#include "PlayerSwordAttack1.h"
+#include "PlayerSwordAttack2.h"
 #include "Player.h"
 #include "Camera/GameCamera.h"
 #include "Input/DirectInput.h"
@@ -9,14 +9,14 @@
 
 using namespace DirectX;
 
-int PlayerSwordAttack1::attackUseEnduranceNum = 20;
-int PlayerSwordAttack1::attackPower = 50;
-const DirectX::XMFLOAT4 PlayerSwordAttack1::attackColor = { 1, 0, 0, 0.3f };
-const DirectX::XMFLOAT4 PlayerSwordAttack1::nonAttackColor = { 0, 0, 1, 0.3f };
-const float PlayerSwordAttack1::attackStartMoveSpeedMax = 1.5f;
-const float PlayerSwordAttack1::attackStartMoveSpeedMin = 0.5f;
+int PlayerSwordAttack2::attackUseEnduranceNum = 20;
+int PlayerSwordAttack2::attackPower = 75;
+const DirectX::XMFLOAT4 PlayerSwordAttack2::attackColor = { 1, 0, 0, 0.3f };
+const DirectX::XMFLOAT4 PlayerSwordAttack2::nonAttackColor = { 0, 0, 1, 0.3f };
+const float PlayerSwordAttack2::attackStartMoveSpeedMax = 1.5f;
+const float PlayerSwordAttack2::attackStartMoveSpeedMin = 0.5f;
 
-PlayerSwordAttack1::PlayerSwordAttack1(Player* player)
+PlayerSwordAttack2::PlayerSwordAttack2(Player* player)
 {
 	//プレイヤーをセット
 	this->player = player;
@@ -38,11 +38,11 @@ PlayerSwordAttack1::PlayerSwordAttack1(Player* player)
 	func_.emplace_back([this] {return AttackAction3(); });
 }
 
-PlayerSwordAttack1::~PlayerSwordAttack1()
+PlayerSwordAttack2::~PlayerSwordAttack2()
 {
 }
 
-void PlayerSwordAttack1::Update()
+void PlayerSwordAttack2::Update()
 {
 	if (state == NONE) { return; }
 
@@ -64,14 +64,14 @@ void PlayerSwordAttack1::Update()
 	attackCollisionData.radius = object->GetScale().x;
 }
 
-void PlayerSwordAttack1::Draw()
+void PlayerSwordAttack2::Draw()
 {
 	if (state == NONE) { return; }
 
 	object->Draw();
 }
 
-bool PlayerSwordAttack1::NextAttack()
+bool PlayerSwordAttack2::NextAttack()
 {
 	//攻撃行動を最大数まで行っていたら抜ける
 	if (attackNum >= maxAttackNum) { return false; }
@@ -111,7 +111,7 @@ bool PlayerSwordAttack1::NextAttack()
 
 	//アニメーションリセット
 	player->GetFbxObject()->AnimationReset();
-	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_LEFT_ANIMATION);
+	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_RIGHT_ANIMATION);
 
 	//攻撃音再生
 	Audio::Instance()->SoundPlayWava(Sound::SoundName::attack, false, 0.1f);
@@ -126,7 +126,7 @@ bool PlayerSwordAttack1::NextAttack()
 	return true;
 }
 
-void PlayerSwordAttack1::AttackCollision()
+void PlayerSwordAttack2::AttackCollision()
 {
 	//毎フレーム攻撃が当たるとおかしいので衝突判定フラグを下げる
 	isCollisionValid = false;
@@ -137,7 +137,7 @@ void PlayerSwordAttack1::AttackCollision()
 	object->SetColor(nonAttackColor);
 }
 
-void PlayerSwordAttack1::AttackAction1()
+void PlayerSwordAttack2::AttackAction1()
 {
 	//タイマー更新
 	timer->Update();
@@ -162,7 +162,7 @@ void PlayerSwordAttack1::AttackAction1()
 	}
 }
 
-void PlayerSwordAttack1::AttackAction2()
+void PlayerSwordAttack2::AttackAction2()
 {
 	//タイマー更新
 	timer->Update();
@@ -187,7 +187,7 @@ void PlayerSwordAttack1::AttackAction2()
 	}
 }
 
-void PlayerSwordAttack1::AttackAction3()
+void PlayerSwordAttack2::AttackAction3()
 {
 	//タイマー更新
 	timer->Update();
@@ -212,7 +212,7 @@ void PlayerSwordAttack1::AttackAction3()
 	}
 }
 
-void PlayerSwordAttack1::MovePlayer(int moveTime)
+void PlayerSwordAttack2::MovePlayer(int moveTime)
 {
 	//移動時間を過ぎていたら抜ける
 	if (*timer.get() > moveTime) { return; }
@@ -226,7 +226,7 @@ void PlayerSwordAttack1::MovePlayer(int moveTime)
 	player->GetData()->velocity.z = player->GetData()->moveVec.z * player->GetData()->moveSpeed;
 }
 
-void PlayerSwordAttack1::PlayerChangeRotate()
+void PlayerSwordAttack2::PlayerChangeRotate()
 {
 	DirectInput* input = DirectInput::GetInstance();
 

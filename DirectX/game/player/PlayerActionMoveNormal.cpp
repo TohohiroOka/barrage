@@ -146,7 +146,16 @@ void PlayerActionMoveNormal::NextActionStart()
 {
 	//‚¢‚¸‚ê‚©‚Ìs“®‚ðŠJŽn‚Å‚«‚éó‘Ô‚©”»’è
 	if (JumpStart()) { nextAction = PlayerActionName::JUMP; }
-	else if (AttackStart()) { nextAction = PlayerActionName::ATTACK; }
+	else if (GameInputManager::TriggerInputAction(GameInputManager::LightAttack)) {
+		if (LightAttackStart()) {
+			nextAction = PlayerActionName::LIGHTATTACK;
+		}
+	}
+	else if (GameInputManager::TriggerInputAction(GameInputManager::StrongAttack)) {
+		if (StrongAttackStart()) {
+			nextAction = PlayerActionName::STRONGATTACK;
+		}
+	}
 	else if (AvoidStart()) { nextAction = PlayerActionName::AVOID; player->GetData()->avoidBlinkMoveVec = player->GetData()->moveVec; }
 	else if (BlinkStart()) { nextAction = PlayerActionName::BLINK; player->GetData()->avoidBlinkMoveVec = player->GetData()->moveVec; }
 	else { return; }

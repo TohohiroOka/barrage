@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Math/Easing/Easing.h"
 #include "engine/Audio/Audio.h"
+#include "system/GameInputManager.h"
 
 PlayerActionBlink::PlayerActionBlink(Player* player)
 	: PlayerActionBase(player)
@@ -59,12 +60,22 @@ void PlayerActionBlink::Blink()
 	//タイマーが指定した時間になったら行動変更先行入力
 	if (*blinkTimer.get() >= actionChangeStartTime) {
 		if (JumpStart()) { nextAction = PlayerActionName::JUMP; }
-		if (AttackStart()) { nextAction = PlayerActionName::ATTACK; }
+		else if (GameInputManager::TriggerInputAction(GameInputManager::LightAttack)) { nextAction = PlayerActionName::LIGHTATTACK; }
+		else if (GameInputManager::TriggerInputAction(GameInputManager::StrongAttack)) { nextAction = PlayerActionName::STRONGATTACK; }
 	}
 
 	//タイマーが指定した時間になったらブリンク行動終了
 	if (*blinkTimer.get() >= blinkTime) {
 		isActionEnd = true;
+
+		//先行入力で弱攻撃または強攻撃を選択している場合は最終チェック
+		if (nextAction == PlayerActionName::LIGHTATTACK || nextAction == PlayerActionName::STRONGATTACK) {
+			bool isNextActionAttack = false;
+			if (nextAction == PlayerActionName::LIGHTATTACK && LightAttackStart()) { isNextActionAttack = true; }
+			else if (nextAction == PlayerActionName::STRONGATTACK && StrongAttackStart()) { isNextActionAttack = true; }
+
+			if (!isNextActionAttack) { nextAction = PlayerActionName::MOVENORMAL; }
+		}
 
 		//予約していた次の行動をセット
 		player->GetData()->action = nextAction;
