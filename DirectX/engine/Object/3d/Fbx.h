@@ -61,9 +61,11 @@ private://構造体宣言
 	};
 
 	struct BoneObjectInfo {
-		std::string boneName;
-		XMMATRIX matWorld;
-		std::string instanceName;
+		bool isDraw;
+		std::string boneName;//セットするボーン名
+		XMMATRIX matWorld;//セットしたオブジェクトの行列（このオブジェクトのみ）
+		XMMATRIX attachWorld;//セットしたオブジェクトの行列（親含め計算済み）
+		std::string instanceName;//セットするオブジェクト名
 	};
 
 public://静的メンバ関数
@@ -129,10 +131,11 @@ public:
 	/// </summary>
 	/// <param name="_boneName">ボーン名</param>
 	/// <param name="_modelName">モデル名</param>
+	/// <param name="_getObjectName">セットしたオブジェクトの行列を取得する際の名前</param>
 	/// <param name="_model">モデル</param>
 	/// <param name="_matWorld">ワールド行列</param>
-	void SetBoneObject(const std::string& _boneName, const std::string& _modelName,
-		Model* _model = nullptr, const XMMATRIX& _matWorld = DirectX::XMMatrixIdentity());
+	void SetBoneObject(const std::string& _boneName, const std::string& _modelName, Model* _model = nullptr,
+		const XMMATRIX& _matWorld = DirectX::XMMatrixIdentity(), bool _isDraw = true, const std::string& _getObjectName = "null");
 
 	void FrameReset();
 
@@ -180,12 +183,8 @@ private://メンバ変数
 	bool isAnimationEnd;
 	//ボーン描画
 	bool isBoneDraw;
-	std::vector<BoneObjectInfo> boneObjectInfo;
+	std::unordered_map<std::string, BoneObjectInfo> boneObjectInfo;
 	std::unordered_map<std::string, std::unique_ptr<InstanceObject>> boneObject;
-
-	//付属品の座標
-	std::string attachName;
-	XMFLOAT3 attachPos;
 
 public:
 
@@ -198,14 +197,18 @@ public:
 	int GetUseAnimation() { return useAnimation; }
 	InstanceObject* GetBrneObject(const std::string& _name) { return boneObject[_name].get(); }
 	XMFLOAT3 GetModelMove() { return animationMove; }
-	XMFLOAT3 GetAttachPos() { return attachPos; }
+	XMFLOAT3 GetAttachPos(const std::string& _name) {
+		if (boneObjectInfo.find(_name) == boneObjectInfo.end()) { return {}; }
+		return XMFLOAT3{ boneObjectInfo[_name].attachWorld.r[3].m128_f32[0],
+		boneObjectInfo[_name].attachWorld.r[3].m128_f32[1],
+		boneObjectInfo[_name].attachWorld.r[3].m128_f32[2] };
+	}
 	bool GetIsAnimationEnd() { return isAnimationEnd; }
 	void SetIsModelDraw(bool _isModelDraw) { isModelDraw = _isModelDraw; }
 	void SetModel(FbxModel* model) { this->model = model; }
 	void SetMotionBlendModel(FbxModel* _model) { motionBlendModel = _model; }
 	void SetAnimation(bool isAnimation) { model->isAnimation = isAnimation; }
 	void SetIsBoneDraw(bool _isBoneDraw) { isBoneDraw = _isBoneDraw; }
-	void SetAttachName(const std::string& _name) { attachName = _name; }
 	void SetIsRoop(const bool _isRoop) { isRoop = _isRoop; }
 	void SetBaseColor(const XMFLOAT3& baseColor) {
 		this->baseColor = baseColor;

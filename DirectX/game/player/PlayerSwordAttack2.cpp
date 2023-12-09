@@ -58,7 +58,7 @@ void PlayerSwordAttack2::Update()
 	object->Update();
 
 	//Õ“Ë”»’è—p•Ï”‚ÌXV
-	DirectX::XMFLOAT3 objectPos = player->GetFbxObject()->GetAttachPos();
+	DirectX::XMFLOAT3 objectPos = player->GetFbxObject()->GetAttachPos("sword1");
 	object->SetPosition(objectPos);
 	attackCollisionData.center = { objectPos.x, objectPos.y, objectPos.z, 1 };
 	attackCollisionData.radius = object->GetScale().x;

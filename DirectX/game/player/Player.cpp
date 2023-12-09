@@ -43,7 +43,22 @@ Player::Player()
 	world *= matScale;
 	world *= matRot;
 	world *= matTrans;
-	object->SetBoneObject(bone, "rightHand", swordModel.get(), world);
+	object->SetBoneObject(bone, "rightHand", swordModel.get(), world, true, "sword1");
+
+	//剣の長さ図り用
+	{
+		XMMATRIX matScale = XMMatrixScaling(0.0f, 0.0f, 0.0f);
+		XMMATRIX matRot = XMMatrixIdentity();
+		matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
+		matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
+		matRot *= XMMatrixRotationY(XMConvertToRadians(0.0f));
+		DirectX::XMMATRIX matTrans = XMMatrixTranslation(0.0f, 70.0f, 0.0f);
+		DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
+		world *= matScale;
+		world *= matRot;
+		world *= matTrans;
+		object->SetBoneObject(bone, "rightHand", swordModel.get(), world, false, "sword2");
+	}
 	object->SetScale({ 5,5,5 });
 
 	//データ生成
@@ -60,6 +75,8 @@ Player::Player()
 	//タイマー生成
 	healTimer = std::make_unique<Engine::Timer>();
 	enduranceRecoveryStartTimer = std::make_unique<Engine::Timer>();
+
+	swordEffect = std::make_unique<AttachEmitter>("triangle1");
 }
 
 void Player::Update()
@@ -89,10 +106,14 @@ void Player::Update()
 	EnduranceRecovery();
 	hpGauge->Update();
 	enduranceGauge->Update();
+
+	swordEffect->Add(object->GetAttachPos("sword1"), object->GetAttachPos("sword2"));
+	swordEffect->Update();
 }
 
 void Player::Draw()
 {
+	swordEffect->Draw();
 	object->Draw();
 }
 

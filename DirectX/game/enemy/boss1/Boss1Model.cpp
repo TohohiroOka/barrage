@@ -1,5 +1,7 @@
 #include "Boss1Model.h"
 
+const float transformScale = 9.0f;
+
 Boss1Model::Boss1Model()
 {
 	objModel[int(ObjectType::cube)] = Model::CreateFromOBJ("boss1/core");
@@ -31,6 +33,8 @@ Boss1Model::Boss1Model()
 		fbxObject->SetBoneObject(bone[i], "normal", objModel[int(ObjectType::cube)].get(), world);
 	}
 
+	std::string getName = "null";
+
 	for (int i = 0; i < 4; i++) {
 		XMMATRIX world = DirectX::XMMatrixIdentity();
 		if (i < 2) {
@@ -48,7 +52,7 @@ Boss1Model::Boss1Model()
 			world *= matRot;
 			world *= matTrans;
 		} else if (i == 3) {
-			XMMATRIX matScale = XMMatrixScaling(4.0f, 5.0f, 4.0f);
+			XMMATRIX matScale = XMMatrixScaling(4.0f, 10.0f, 4.0f);
 			XMMATRIX matRot = XMMatrixIdentity();
 			matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
 			matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
@@ -58,8 +62,27 @@ Boss1Model::Boss1Model()
 			world *= matScale;
 			world *= matRot;
 			world *= matTrans;
+
+			getName = "larm1";
 		}
-		fbxObject->SetBoneObject(boneT[i], "cube", objModel[int(ObjectType::cone)].get(), world);
+		fbxObject->SetBoneObject(boneT[i], "cube", objModel[int(ObjectType::cone)].get(), world, true, getName);
+	}
+
+	{
+		XMMATRIX matScale = XMMatrixScaling(0.0f, 0.0f, 0.0f);
+		XMMATRIX matRot = XMMatrixIdentity();
+		matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
+		matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
+		matRot *= XMMatrixRotationY(XMConvertToRadians(90.0f));
+		XMMATRIX matTrans = XMMatrixTranslation(0.0f, 10.0f * transformScale, 0.0f);
+
+		XMMATRIX world = DirectX::XMMatrixIdentity();
+		world *= matScale;
+		world *= matRot;
+		world *= matTrans;
+
+		getName = "larm2";
+		fbxObject->SetBoneObject(boneT[3], "cube", objModel[int(ObjectType::cone)].get(), world, false, getName);
 	}
 
 	fbxObject->GetBrneObject("normal")->SetOutline(true);
@@ -67,15 +90,19 @@ Boss1Model::Boss1Model()
 	fbxObject->GetBrneObject("normal")->SetOutlineColor({0.9f,0.1f,0.1f});
 	fbxObject->GetBrneObject("cube")->SetOutlineColor({ 0.9f,0.1f,0.1f });
 
+	swordEffect = std::make_unique<AttachEmitter>("triangle1");
 }
 
 void Boss1Model::Update()
 {
 	fbxObject->Update();
+	swordEffect->Add(fbxObject->GetAttachPos("larm1"), fbxObject->GetAttachPos("larm2"));
+	swordEffect->Update();
 }
 
 void Boss1Model::Draw()
 {
+	swordEffect->Draw();
 	fbxObject->Draw();
 }
 

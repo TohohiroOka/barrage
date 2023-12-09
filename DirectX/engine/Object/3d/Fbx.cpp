@@ -162,9 +162,10 @@ void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 
 	if (!isBoneDraw) { return; }
 	for (auto& i : boneObjectInfo) {
-		XMMATRIX inWorld = i.matWorld * model->GetBornMatWorld(i.boneName) * matWorld;
-		boneObject[i.instanceName]->DrawInstance(inWorld, { 1,1,1,1 });
-		attachPos = XMFLOAT3{ inWorld.r[3].m128_f32[0], inWorld.r[3].m128_f32[1], inWorld.r[3].m128_f32[2]};
+		i.second.attachWorld = i.second.matWorld * model->GetBornMatWorld(i.second.boneName) * matWorld;
+
+		if (!i.second.isDraw) { continue; }
+		boneObject[i.second.instanceName]->DrawInstance(i.second.attachWorld, { 1,1,1,1 });
 	}
 	for (auto& i : boneObject) {
 		if (i.second->GetInstanceDrawNum() == 0) { continue; }
@@ -267,18 +268,28 @@ void Fbx::TransferMaterial()
 }
 
 void Fbx::SetBoneObject(const std::string& _boneName, const std::string& _modelName,
-	Model* _model, const XMMATRIX& _matWorld)
+	Model* _model, const XMMATRIX& _matWorld, bool _isDraw, const std::string& _getObjectName)
 {
 	int modelNuber = 0;
 	if (!boneObject[_modelName]) {
 		boneObject[_modelName] = InstanceObject::Create(_model);
 	}
 
-	BoneObjectInfo add;
-	add.boneName = _boneName;
-	add.instanceName = _modelName;
-	add.matWorld = _matWorld;
-	boneObjectInfo.emplace_back(add);
+	if (boneObjectInfo.find(_getObjectName) != boneObjectInfo.end() || _getObjectName != "null") {
+		boneObjectInfo[_getObjectName].isDraw = _isDraw;
+		boneObjectInfo[_getObjectName].boneName = _boneName;
+		boneObjectInfo[_getObjectName].attachWorld = XMMatrixIdentity();
+		boneObjectInfo[_getObjectName].instanceName = _modelName;
+		boneObjectInfo[_getObjectName].matWorld = _matWorld;
+	}
+	else {
+		const std::string name = std::to_string(int(boneObjectInfo.size()));
+		boneObjectInfo[name].isDraw = _isDraw;
+		boneObjectInfo[name].boneName = _boneName;
+		boneObjectInfo[name].attachWorld = XMMatrixIdentity();
+		boneObjectInfo[name].instanceName = _modelName;
+		boneObjectInfo[name].matWorld = _matWorld;
+	}
 }
 
 void Fbx::FrameReset()

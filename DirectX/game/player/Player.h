@@ -7,6 +7,7 @@
 #include "game/ui/Gauge.h"
 #include "BasePlayerAttack.h"
 #include "Math/Timer.h"
+#include "effect/AttachEmitter.h"
 
 class GameCamera;
 
@@ -169,4 +170,6 @@ private: //メンバ変数
 	std::unique_ptr<Engine::Timer> enduranceRecoveryStartTimer;
 	////持久力ゲージ
 	std::unique_ptr<Gauge> enduranceGauge;
+
+	std::unique_ptr<AttachEmitter> swordEffect;
 };
