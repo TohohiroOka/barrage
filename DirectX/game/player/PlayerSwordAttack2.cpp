@@ -111,7 +111,7 @@ bool PlayerSwordAttack2::NextAttack()
 
 	//アニメーションリセット
 	player->GetFbxObject()->AnimationReset();
-	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_RIGHT_ANIMATION);
+	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK1_ANIMATION);
 
 	//攻撃音再生
 	Audio::Instance()->SoundPlayWava(Sound::SoundName::attack, false, 0.1f);

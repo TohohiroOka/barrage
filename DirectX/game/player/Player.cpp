@@ -32,8 +32,8 @@ Player::Player()
 
 	//剣モデル読み込み
 	swordModel = Model::CreateFromOBJ("sword");
-	std::string bone = "mixamorig:RightHand";
-	XMMATRIX matScale = XMMatrixScaling(50.0f, 50.0f, 50.0f);
+	std::string bone = "hand.R";
+	XMMATRIX matScale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
 	XMMATRIX matRot = XMMatrixIdentity();
 	matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
 	matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
@@ -86,9 +86,6 @@ void Player::Update()
 	if (action->GetIsActionEnd()) {
 		ActionChange();
 	}
-
-	//待機モデルなしのための応急処置
-	if (!(object->GetUseAnimation() == PlayerAnimationName::STAY_ANIMATION)) { object->SetAnimation(true); }
 
 	//重力落下
 	if (!data->isNoGravity) {
@@ -269,9 +266,6 @@ void Player::ObjectUpdate()
 
 	//オブジェクト更新
 	object->Update();
-
-	//待機モデルなしのための応急処置
-	if (object->GetUseAnimation() == PlayerAnimationName::STAY_ANIMATION) { object->SetAnimation(false); }
 }
 
 void Player::ActionChange()

@@ -87,31 +87,39 @@ bool PlayerSwordAttack1::NextAttack()
 		return false;
 	}
 
+	//アニメーションリセット
+	player->GetFbxObject()->AnimationReset();
+
 	if (attackNum == 1) {
 		//攻撃1へ
 		state = State::ATTACK1;
 
 		//攻撃力変更
 		attackCollisionData.power = attackPower;
+
+		//アニメーション変更
+		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK1_ANIMATION);
 	}
 	else if (attackNum == 2) {
 		//攻撃2へ
 		state = State::ATTACK2;
+
+		//アニメーション変更
+		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK2_ANIMATION);
 	}
 
 	else if (attackNum == 3) {
 		//攻撃3へ
 		state = State::ATTACK3;
+
+		//アニメーション変更
+		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK3_ANIMATION);
 	}
 
 	//攻撃で移動するとき用に移動スピードをセット(既にスピードがある場合は変更しない)
 	player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, attackStartMoveSpeedMax);
 	player->GetData()->moveSpeed = max(player->GetData()->moveSpeed, attackStartMoveSpeedMin);
 	attackStartMoveSpeed = player->GetData()->moveSpeed;
-
-	//アニメーションリセット
-	player->GetFbxObject()->AnimationReset();
-	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK_LEFT_ANIMATION);
 
 	//攻撃音再生
 	Audio::Instance()->SoundPlayWava(Sound::SoundName::attack, false, 0.1f);
