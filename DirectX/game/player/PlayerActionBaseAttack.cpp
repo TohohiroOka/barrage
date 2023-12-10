@@ -36,6 +36,9 @@ void PlayerActionBaseAttack::Update()
 
 		//—\–ñ‚µ‚Ä‚¢‚½ŽŸ‚Ìs“®‚ðƒZƒbƒg
 		player->GetData()->action = nextAction;
+
+		//UŒ‚s“®‚ð‰ð•ú‚·‚é
+		player->GetData()->attackAction.reset();
 	}
 
 	//‚¢‚Â‚Å‚à‰ñ”ð‚ÅUŒ‚‚ð’†’f‚Å‚«‚é
@@ -48,5 +51,8 @@ void PlayerActionBaseAttack::Update()
 		//ŽŸ‚Ìs“®‚ð‰ñ”ð‚ÉƒZƒbƒg
 		nextAction = PlayerActionName::AVOID;
 		player->GetData()->action = nextAction;
+
+		//UŒ‚s“®‚ð‰ð•ú‚·‚é
+		player->GetData()->attackAction.reset();
 	}
 }

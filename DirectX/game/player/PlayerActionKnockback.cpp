@@ -10,6 +10,9 @@ PlayerActionKnockback::PlayerActionKnockback(Player* player, const Vector3& knoc
 	this->knockbackTime = knockbackTime;
 	this->knockbackPower = (float)knockbackPower;
 
+	//UŒ‚s“®‚ğ‰ğ•ú‚·‚é
+	player->GetData()->attackAction.reset();
+
 	//—\‚ßŸ‚Ìs“®‚ğİ’è‚µ‚Ä‚¨‚­(I—¹Œã‚Í’ÊíˆÚ“®)
 	nextAction = PlayerActionName::MOVENORMAL;
 }
