@@ -115,6 +115,9 @@ void Player::Draw()
 {
 	swordEffect->Draw();
 	object->Draw();
+
+	if (!data->attackAction) { return; }
+	data->attackAction->Draw();
 }
 
 void Player::DrawLightView()
