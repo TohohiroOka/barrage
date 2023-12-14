@@ -36,11 +36,11 @@ public:
 
 	void FrameReset() override;
 
-	void GetAttackCollisionSphere(std::vector<Sphere>& _info) override;
+	void GetAttackCollisionSphere(std::vector<Sphere>& _info) override{};
 
 	void GetAttackCollisionBox(std::vector<Box>& _info) override {};
 
-	void GetAttackCollisionCapsule(std::vector<Capsule>& _info) override {};
+	void GetAttackCollisionCapsule(std::vector<Capsule>& _info) override;
 
 	void DeleteBullet(std::vector<int> _deleteNum) override {};
 

@@ -11,8 +11,10 @@ class Boss1Move3 : public BaseAction
 private:
 
 	enum class State {
+		start,
 		move,
 		attack,
+		end,
 		size,
 	};
 
@@ -37,9 +39,13 @@ public:
 
 	int GetDamage()override { return 10; }
 
+	void Start();
+
 	void Move();
 
 	void Attack();
+
+	void End();
 
 private:
 
@@ -52,7 +58,6 @@ private:
 	//Œ»İ‚Ì“®‚«
 	State state;
 	std::vector<std::function<void()>> func_;
-
 
 	std::unique_ptr<Model> cube;
 	std::unique_ptr<Object3d> object;

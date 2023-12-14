@@ -76,7 +76,7 @@ Player::Player()
 	healTimer = std::make_unique<Engine::Timer>();
 	enduranceRecoveryStartTimer = std::make_unique<Engine::Timer>();
 
-	swordEffect = std::make_unique<AttachEmitter>("triangle1");
+	swordEffect = std::make_unique<AttachEmitter>("effect");
 }
 
 void Player::Update()

@@ -22,11 +22,10 @@ Boss1::Boss1()
 	BaseBoss::Initialize();
 
 	bossModel = std::make_unique<Boss1Model>();
-	//action = std::make_unique<Boss1Bullet3>();
 
 	BaseAction::SetBossPtr(this);
 
-	action = std::make_unique<Boss1Bullet4>();
+	action = std::make_unique<Boss1Move3>();
 
 	hitScale = bossModel->GetObjectInst()->GetScale().y * 5000.0f;
 }

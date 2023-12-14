@@ -134,8 +134,10 @@ public:
 	/// <param name="_getObjectName">セットしたオブジェクトの行列を取得する際の名前</param>
 	/// <param name="_model">モデル</param>
 	/// <param name="_matWorld">ワールド行列</param>
-	void SetBoneObject(const std::string& _boneName, const std::string& _modelName, Model* _model = nullptr,
+	std::string SetBoneObject(const std::string& _boneName, const std::string& _modelName, Model* _model = nullptr,
 		const XMMATRIX& _matWorld = DirectX::XMMatrixIdentity(), bool _isDraw = true, const std::string& _getObjectName = "null");
+
+	void ChangeBoneObjectInfo(const std::string& _name, const XMMATRIX& _matWorld = DirectX::XMMatrixIdentity());
 
 	void FrameReset();
 
