@@ -193,7 +193,7 @@ void Boss1Bullet1::AddBullet(const Vector3& _pos)
 	Vector3 moveVec = _pos - Vector3(boss->GetCenter()->GetPosition());
 	moveVec.y = 0.0f;
 	moveVec = moveVec.normalize();
-	moveVec.y = -(RandomFloat(20.0f) + 50.0f) / 100.0f;
+	moveVec.y = -(RandomFloat(80.0f) + 2.0f) / 100.0f;
 
 	//ˆê‚Â’Ç‰Á
 	bullet.emplace_front();
@@ -201,7 +201,7 @@ void Boss1Bullet1::AddBullet(const Vector3& _pos)
 	add.isAlive = true;
 	add.pos = _pos;
 	add.alpha = 1.0f;
-	add.moveVec = moveVec * 2.0f;
+	add.moveVec = moveVec * 5.0f;
 	add.timer = std::make_unique<Engine::Timer>();
 	add.rota= VelocityRotate(moveVec);
 	add.rota.x += 90;
