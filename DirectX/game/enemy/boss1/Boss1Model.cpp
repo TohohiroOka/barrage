@@ -108,15 +108,15 @@ Boss1Model::Boss1Model()
 	fbxObject->GetBrneObject("normal")->SetOutlineColor({0.9f,0.1f,0.1f});
 	fbxObject->GetBrneObject("cube")->SetOutlineColor({ 0.9f,0.1f,0.1f });
 
-	swordEffect = std::make_unique<AttachEmitter>("effect");
+	swordEffect = std::make_unique<PlayerSlashEffect>("effect");
 }
 
 void Boss1Model::Update()
 {
 	ChangeInfo();
 	fbxObject->Update();
-	swordEffect->Add(fbxObject->GetAttachPos("larm1"), fbxObject->GetAttachPos("larm2"));
-	swordEffect->Update();
+	//swordEffect->Add(fbxObject->GetAttachPos("larm1"), fbxObject->GetAttachPos("larm2"));
+	//swordEffect->Update();
 }
 
 void Boss1Model::Draw()

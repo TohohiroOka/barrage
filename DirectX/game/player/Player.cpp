@@ -76,7 +76,7 @@ Player::Player()
 	healTimer = std::make_unique<Engine::Timer>();
 	enduranceRecoveryStartTimer = std::make_unique<Engine::Timer>();
 
-	swordEffect = std::make_unique<AttachEmitter>("effect");
+	swordEffect = std::make_unique<PlayerSlashEffect>("effect");
 }
 
 void Player::Update()
@@ -107,8 +107,8 @@ void Player::Update()
 	hpGauge->Update();
 	enduranceGauge->Update();
 
-	swordEffect->Add(object->GetAttachPos("sword1"), object->GetAttachPos("sword2"));
-	swordEffect->Update();
+	//斬撃エフェクト更新
+	swordEffect->Update(object->GetAttachPos("sword1"), object->GetAttachPos("sword2"));
 }
 
 void Player::Draw()
@@ -116,8 +116,8 @@ void Player::Draw()
 	swordEffect->Draw();
 	object->Draw();
 
-	if (!data->attackAction) { return; }
-	data->attackAction->Draw();
+	//if (!data->attackAction) { return; }
+	//data->attackAction->Draw();
 }
 
 void Player::DrawLightView()

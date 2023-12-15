@@ -370,34 +370,25 @@ static Vector2 SplinePosition(const std::vector<Vector2>& points, int startIndex
 /// <param name="t">時間経過</param>
 /// <returns></returns>
 static Vector3 SplinePosition(const std::vector<Vector3>& points, int startIndex, float t) {
-	std::array<int, 4> index;
-	if (startIndex < 1) {
-		index[0] = int(points.size()) - 1;
-	} else {
-		index[0] = startIndex - 1;
-	}
-	index[1] = startIndex;
-	if (startIndex >= int(points.size()) - 1) {
-		index[2] = 0;
-		index[3] = 1;
-	} else if (startIndex >= int(points.size()) - 2) {
-		index[2] = startIndex + 1;
-		index[3] = 0;
-	} else {
-		index[2] = startIndex + 1;
-		index[3] = startIndex + 2;
-	}
+	//補間すべき点の数
+	int n = (int)points.size() - 2;
 
-	//p0~p3の制御点を取得する※p1~p2を補間する
-	Vector3 p0 = points[index[0]];
-	Vector3 p1 = points[index[1]];
-	Vector3 p2 = points[index[2]];
-	Vector3 p3 = points[index[3]];
+	if (n < 2) { return {}; }
+	if (startIndex > n) { return points[n]; } //P0の値を返す
+	if (startIndex < 1) { return points[1]; } //P1の値を返す
 
-	//Catmull-Romの式による補間
-	Vector3 position = (p1 * 2 + (-p0 + p2) * t
-		+ (p0 * 2 - p1 * 5 + p2 * 4 - p3) * t * t
-		+ (-p0 + p1 * 3 - p2 * 3 + p3) * t * t * t) * 0.5;
+	// P0～P3 の制御点を取得する ※ P1～P2 を補間する
+	Vector3 p0 = points[startIndex - 1];
+	Vector3 p1 = points[startIndex];
+	Vector3 p2 = points[startIndex + 1];
+	Vector3 p3 = points[startIndex + 2];
+
+	//Catmull-Rom の式による補間
+	Vector3 position =
+		0.5f * (2 * p1 + (-p0 + p2) * t +
+			(2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t +
+			(-p0 + 3 * p1 - 3 * p2 + p3) * t * t * t);
+
 
 	return position;
 }

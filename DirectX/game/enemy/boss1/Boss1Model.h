@@ -1,6 +1,6 @@
 #pragma once
 #include "../BaseBossModel.h"
-#include "effect/AttachEmitter.h"
+#include "effect/PlayerSlashEffect.h"
 
 /// <summary>
 /// 直線移動（イージングあり）
@@ -77,6 +77,6 @@ public:
 private:
 
 	std::array<std::unique_ptr<Model>, int(ObjectType::size)> objModel;
-	std::unique_ptr<AttachEmitter> swordEffect;
+	std::unique_ptr<PlayerSlashEffect> swordEffect;
 	std::array<bool, int(EffectName::size)>effectAlive;
 };

@@ -490,7 +490,7 @@
     <ClCompile Include="game\player\PlayerActionStrongAttack.cpp">
       <Filter>ゲームシステム\Player\Action</Filter>
     </ClCompile>
-    <ClCompile Include="game\effect\AttachEmitter.cpp">
+    <ClCompile Include="game\effect\PlayerSlashEffect.cpp">
       <Filter>ゲームシステム\Effect</Filter>
     </ClCompile>
     <ClCompile Include="game\enemy\boss1\Boss1HalfAttack.cpp">
@@ -1018,7 +1018,7 @@
     <ClInclude Include="game\system\Sound.h">
       <Filter>ゲームシステム\system</Filter>
     </ClInclude>
-    <ClInclude Include="game\effect\AttachEmitter.h">
+    <ClInclude Include="game\effect\PlayerSlashEffect.h">
       <Filter>ゲームシステム\Effect</Filter>
     </ClInclude>
     <ClInclude Include="game\enemy\boss1\Boss1HalfAttack.h">
