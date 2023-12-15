@@ -312,7 +312,7 @@ void GameCamera::UpdatePosition()
 
 	//ターゲットへの追従を指定したフレームの分遅らせる
 	targetPositionsKeep.push_back(player->GetData()->pos);
-	const int frame = 5;
+	const int frame = 8;
 	if (targetPositionsKeep.size() > frame) {
 		targetPositionsKeep.pop_front();
 	}

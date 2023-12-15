@@ -168,7 +168,7 @@ void ActionInputConfig::Initialize()
 	//行動名スプライト初期化
 	for (int i = 0; i < actionNameSprites.size(); i++) {
 		const std::string name = "action_" + std::to_string(i);
-		const DirectX::XMFLOAT2 pos = { 100, 100 + (float)i * 55 };
+		const DirectX::XMFLOAT2 pos = { 100, 75 + (float)i * 55 };
 		actionNameSprites[i] = Sprite::Create(name, pos, { 0, 0.5f });
 	}
 
@@ -182,7 +182,7 @@ void ActionInputConfig::Initialize()
 		for (int j = 0; j < loopNum; j++) {
 			//入力スプライト初期化
 			std::string name;
-			const DirectX::XMFLOAT2 leftTopPos = { 820, 100 };
+			const DirectX::XMFLOAT2 leftTopPos = { 820, 75 };
 			const DirectX::XMFLOAT2 posInterval = { 250, 55 };
 			DirectX::XMFLOAT2 pos = { leftTopPos.x + (float)i * posInterval.x, leftTopPos.y + (float)j * posInterval.y };
 			DirectX::XMFLOAT4 color = normalColor;
