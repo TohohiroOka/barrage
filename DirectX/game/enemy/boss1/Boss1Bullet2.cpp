@@ -105,7 +105,15 @@ void Boss1Bullet2::Attack()
 
 void Boss1Bullet2::End()
 {
-	if (!boss->GetBaseModel()->GetIsAnimationEnd()) { return; }
+	int num = 0;
+	//XVˆ—
+	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
+		it != bullet.end(); it++) {
+		num++;
+		BulletUpdate(*it);
+	}
+
+	if (!boss->GetBaseModel()->GetIsAnimationEnd() || num != 0) { return; }
 	state = State::non;
 	isEnd = true;
 }

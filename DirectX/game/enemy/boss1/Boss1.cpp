@@ -25,7 +25,7 @@ Boss1::Boss1()
 
 	BaseAction::SetBossPtr(this);
 
-	action = std::make_unique<Boss1Move3>();
+	action = std::make_unique<Boss1Move1>();
 
 	hitScale = bossModel->GetObjectInst()->GetScale().y * 5000.0f;
 }
