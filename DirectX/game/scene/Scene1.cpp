@@ -299,7 +299,9 @@ void Scene1::CollisionCheck()
 				int num = -1;
 				for (auto& i : bossAttackDatas) {
 					num++;
-					if (Collision::CheckSphereCapsule(playerSphere, i)) {
+					float dist;
+					Vector3 collisionPos;
+					if (Collision::CheckSphereCapsule(playerSphere, i, &dist, &collisionPos)) {
 						Vector3 knockbackVec = ppos - i.startPosition;
 						player->Damage(boss->GetBaseAction()->GetDamage(), knockbackVec, 3, 10, true);
 						camera->ShakeStart(10, 10);
