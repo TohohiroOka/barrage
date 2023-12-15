@@ -3,6 +3,7 @@
 #include "GameHelper.h"
 #include "../BaseBoss.h"
 #include "Math/Easing/Easing.h"
+#include "../game/effect/AllHitEffect.h"
 
 const float bulletSpeed = 5.0f;
 
@@ -131,7 +132,7 @@ void Boss1Bullet4::Attack()
 	}
 
 	if ((*timer.get()) / 2.0f >= oldtime) {
-		boss->SetAllHitEffect({ object[0].pos.x,0.0f,object[0].pos.z });
+		AllHitEffect::Instance()->AddParticle({ object[0].pos.x,0.0f,object[0].pos.z });
 		oldtime++;
 	}
 

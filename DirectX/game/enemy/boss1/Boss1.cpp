@@ -17,8 +17,6 @@ Boss1::Boss1()
 {
 	maxHP = 1000;
 
-	allHitEffect = std::make_unique<AllHitEffect>();
-
 	BaseBoss::Initialize();
 
 	bossModel = std::make_unique<Boss1Model>();

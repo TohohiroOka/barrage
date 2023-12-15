@@ -13,6 +13,7 @@
 #include "effect/BulletEffect.h"
 #include "scene/OnStageTest.h"
 #include "cutscene/SceneChangeDirection.h"
+#include "../effect/AllHitEffect.h"
 
 using namespace DirectX;
 
@@ -42,7 +43,6 @@ void Scene1::Initialize()
 	Base3D::SetLightCamera(lightCamera.get());
 
 	boss = std::make_unique<Boss1>();
-	allHitEffect = std::make_unique<AllHitEffect>();
 
 	ParticleManager::SetCamera(camera.get());
 
@@ -77,7 +77,6 @@ void Scene1::Update()
 		field->Update(player->GetData()->pos, camera->GetEye());
 		boss->SetTargetPos(player->GetData()->pos);
 		boss->Update();
-		allHitEffect->Update();
 
 		//撃破演出再生
 		//デバッグ用再生
@@ -149,6 +148,8 @@ void Scene1::Update()
 		SceneManager::SetNextScene(titleScene);
 	}
 
+	AllHitEffect::Instance()->Update();
+
 	SceneChangeDirection::Instance()->Update();
 }
 
@@ -158,7 +159,7 @@ void Scene1::Draw(const int _cameraNum)
 
 	player->Draw();
 	boss->Draw();
-	allHitEffect->Draw();
+	AllHitEffect::Instance()->Draw();
 
 	defeatDirection->Draw();
 	field->Draw();
@@ -334,7 +335,7 @@ void Scene1::CollisionCheck()
 			if (Collision::CheckSphereCapsule(enemySphere, attackCapsule, &dist, &collisionPos)) {
 
 				//敵にヒットエフェクトを出す
-				allHitEffect->AddParticle(collisionPos);
+				AllHitEffect::Instance()->AddParticle(collisionPos);
 
 				//攻撃が判定を有効にしていたらダメージを与える
 				if (player->GetData()->attackAction->GetIsCollisionValid()) {

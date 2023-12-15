@@ -30,15 +30,12 @@ void BaseBoss::Update()
 			winceAction.reset();
 		}
 	}
-
-	allHitEffect->Update();
 }
 
 void BaseBoss::Draw()
 {
 	bossModel->Draw();
 	action->Draw();
-	allHitEffect->Draw();
 }
 
 void BaseBoss::DrawLightView()

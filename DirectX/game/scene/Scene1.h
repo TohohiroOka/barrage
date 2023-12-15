@@ -87,8 +87,6 @@ private:
 
 	//ボス
 	std::unique_ptr<Boss1>boss;
-	//何かに当たった時のエフェクト
-	std::unique_ptr<AllHitEffect> allHitEffect;
 	//ゲームオーバーUI
 	std::unique_ptr<GameOver> gameoverUi;
 
