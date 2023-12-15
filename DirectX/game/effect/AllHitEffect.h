@@ -1,10 +1,13 @@
 #pragma once
 #include "Particle/Emitter.h"
 #include <array>
+#include "Singleton.h"
 
 //通常弾のエフェクト
-class AllHitEffect
+class AllHitEffect : public Singleton<AllHitEffect>
 {
+	friend class Singleton<AllHitEffect>;
+
 public:
 	AllHitEffect();
 	~AllHitEffect() {};
