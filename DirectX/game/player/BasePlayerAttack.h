@@ -13,7 +13,8 @@ class BasePlayerAttack
 {
 public:
 	struct AttackCollisionData {
-		DirectX::XMVECTOR center;
+		Vector3 startPosition;
+		Vector3 endPosition;
 		float radius;
 		int power;
 	};
