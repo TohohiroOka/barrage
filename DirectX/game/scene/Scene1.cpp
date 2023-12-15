@@ -42,6 +42,7 @@ void Scene1::Initialize()
 	Base3D::SetLightCamera(lightCamera.get());
 
 	boss = std::make_unique<Boss1>();
+	allHitEffect = std::make_unique<AllHitEffect>();
 
 	ParticleManager::SetCamera(camera.get());
 
@@ -73,6 +74,7 @@ void Scene1::Update()
 		field->Update(player->GetData()->pos, camera->GetEye());
 		boss->SetTargetPos(player->GetData()->pos);
 		boss->Update();
+		allHitEffect->Update();
 
 		//撃破演出再生
 		//デバッグ用再生
@@ -150,6 +152,7 @@ void Scene1::Draw(const int _cameraNum)
 
 	player->Draw();
 	boss->Draw();
+	allHitEffect->Draw();
 
 	defeatDirection->Draw();
 	field->Draw();
@@ -288,8 +291,7 @@ void Scene1::CollisionCheck()
 				int num = -1;
 				for (auto& i : bossAttackDatas) {
 					num++;
-					float dist;
-					if (Collision::CheckSphereCapsule(playerSphere, i, &dist)) {
+					if (Collision::CheckSphereCapsule(playerSphere, i)) {
 						Vector3 knockbackVec = ppos - i.startPosition;
 						player->Damage(boss->GetBaseAction()->GetDamage(), knockbackVec, 3, 10, true);
 						camera->ShakeStart(10, 10);
@@ -314,22 +316,31 @@ void Scene1::CollisionCheck()
 			enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
 			enemySphere.radius = boss->GetHitScale();
 
-			Sphere attackSphere;
-			attackSphere.center = player->GetData()->attackAction->GetAttackCollisionData().center;
-			attackSphere.radius = player->GetData()->attackAction->GetAttackCollisionData().radius * 2;
+			Capsule attackCapsule;
+			attackCapsule.startPosition = player->GetData()->attackAction->GetAttackCollisionData().startPosition;
+			attackCapsule.endPosition = player->GetData()->attackAction->GetAttackCollisionData().endPosition;
+			attackCapsule.radius = player->GetData()->attackAction->GetAttackCollisionData().radius;
+			
+			float dist;
+			Vector3 collisionPos;
+			if (Collision::CheckSphereCapsule(enemySphere, attackCapsule, &dist, &collisionPos)) {
 
-			//攻撃が判定を有効にしていたら判定を取る
-			if (Collision::CheckSphere2Sphere(enemySphere, attackSphere) && player->GetData()->attackAction->GetIsCollisionValid()) {
-				//敵にダメージ
-				boss->Damage(player->GetData()->attackAction->GetAttackCollisionData().power);
+				//敵にヒットエフェクトを出す
+				allHitEffect->AddParticle(collisionPos);
 
-				//毎フレーム多段ヒットするのを防ぐため、この攻撃の衝突判定をoffにしておく。
-				player->GetData()->attackAction->AttackCollision();
+				//攻撃が判定を有効にしていたらダメージを与える
+				if (player->GetData()->attackAction->GetIsCollisionValid()) {
+					//敵にダメージ
+					boss->Damage(player->GetData()->attackAction->GetAttackCollisionData().power);
 
-				//ヒットストップ
-				GameHelper::Instance()->SetSlow(0, hitStopFrame);
-				//攻撃ヒット音再生
-				Audio::Instance()->SoundPlayWava(Sound::SoundName::attack_hit, false, 0.1f);
+					//毎フレーム多段ヒットするのを防ぐため、この攻撃の衝突判定をoffにしておく。
+					player->GetData()->attackAction->AttackCollision();
+
+					//ヒットストップ
+					GameHelper::Instance()->SetSlow(0, hitStopFrame);
+					//攻撃ヒット音再生
+					Audio::Instance()->SoundPlayWava(Sound::SoundName::attack_hit, false, 0.1f);
+				}
 			}
 		}
 	}

@@ -375,7 +375,7 @@ bool Collision::CheckRay2Sphere(const Segment & lay, const Sphere & sphere, floa
 	return true;
 }
 
-bool Collision::CheckSphereCapsule(const Sphere& sphere, const Capsule& capsule, float* distance)
+bool Collision::CheckSphereCapsule(const Sphere& sphere, const Capsule& capsule, float* distance, Vector3* inter)
 {
 	//1.カプセル内の線分のスタート位置からエンド位置へのベクトルを作る
 	Vector3 vStartToEnd = capsule.endPosition - capsule.startPosition;
@@ -401,17 +401,23 @@ bool Collision::CheckSphereCapsule(const Sphere& sphere, const Capsule& capsule,
 	//0.0以下
 	if (lengthRate < 0.0f)
 	{
-		*distance = (sCenter - capsule.startPosition).length();
+		Vector3 vec = sCenter - capsule.startPosition;
+		*distance = vec.length();
+		*inter = capsule.startPosition + vec.normalize() * (*distance);
 	}
 	//0.0f <= lengthRate <= 1.0f
 	else if (lengthRate <= 1.0f)
 	{
-		*distance = (sCenter - posPn).length();
+		Vector3 vec = sCenter - posPn;
+		*distance = vec.length();
+		*inter = posPn + vec.normalize() * (*distance);
 	}
 	//1.0f < lengthRate
 	else
 	{
-		*distance = (sCenter - capsule.endPosition).length();
+		Vector3 vec = sCenter - capsule.endPosition;
+		*distance = vec.length();
+		*inter = capsule.endPosition + vec.normalize() * (*distance);
 	}
 
 	return *distance < capsule.radius + sphere.radius;

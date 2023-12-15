@@ -123,7 +123,7 @@ public:
 	/// <param name="capsule">カプセル</param>
 	/// <param name="_distance">距離（出力用）</param>
 	/// <returns></returns>
-	static bool CheckSphereCapsule(const Sphere& sphere, const Capsule& capsule, float* distance);
+	static bool CheckSphereCapsule(const Sphere& sphere, const Capsule& capsule, float* distance = nullptr, Vector3* inter = nullptr);
 
 	/// <summary>
 	/// カプセルとカプセル
