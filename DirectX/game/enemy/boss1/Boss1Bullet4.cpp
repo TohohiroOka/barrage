@@ -14,8 +14,8 @@ Boss1Bullet4::Boss1Bullet4()
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::crossCut_start));
 	boss->GetBaseModel()->AnimationReset();
 
-	useCollision = UseCollision::sphere;
-	model = Model::CreateFromOBJ("slashing");
+	useCollision = UseCollision::capsule;
+	model = Model::CreateFromOBJ("boss1/slashing");
 	instanceObject = InstanceObject::Create(model.get());
 	instanceObject->SetBloom(true);
 	instanceObject->SetOutline(true);
@@ -48,8 +48,31 @@ void Boss1Bullet4::FrameReset()
 	instanceObject->FrameReset();
 }
 
-void Boss1Bullet4::GetAttackCollisionSphere(std::vector<Sphere>& _info)
+void Boss1Bullet4::GetAttackCollisionCapsule(std::vector<Capsule>& _info)
 {
+	using namespace DirectX;
+	int num = 0;
+	for (auto& i : object) {
+		Capsule add;
+		// スケール、回転、平行移動行列の計算
+		DirectX::XMMATRIX matRot = XMMatrixIdentity();
+		matRot *= XMMatrixRotationZ(XMConvertToRadians(i.rota.z - object[0].rota.z));
+		matRot *= XMMatrixRotationX(XMConvertToRadians(i.rota.x - object[0].rota.x));
+		matRot *= XMMatrixRotationY(XMConvertToRadians(i.rota.y - object[0].rota.y));
+
+		XMFLOAT3 spos = { i.pos.x - 2.0f,i.pos.y ,i.pos.z + 2.0f };;
+		XMFLOAT3 epos = { i.pos.x - 2.0f,i.pos.y + 20.0f ,i.pos.z + 2.0f };;
+		XMVECTOR matSPos = XMVector3Transform({ spos.x,spos.y,spos.z }, matRot);
+		XMVECTOR matEPos = XMVector3Transform({ epos.x,epos.y,epos.z }, matRot);
+
+		//add.startPosition = spos;
+		//add.endPosition = epos;
+
+		add.startPosition = XMFLOAT3{ matSPos.m128_f32[0], matSPos.m128_f32[1], matSPos.m128_f32[2] };
+		add.endPosition = XMFLOAT3{ matEPos.m128_f32[0], matEPos.m128_f32[1], matEPos.m128_f32[2] };
+		add.radius = 10.0f;
+		_info.emplace_back(add);
+	}
 }
 
 void Boss1Bullet4::Start()
@@ -67,6 +90,9 @@ void Boss1Bullet4::Start()
 		normal.y = 0.0f;
 		object[i].moveVec = normal.normalize() * bulletSpeed;
 		object[i].rota = VelocityRotate(object[i].moveVec);
+		if (i == 1) {
+			object[i].rota.x += 90.0f;
+		}
 		object[i].rota.y += 90;
 	}
 
@@ -74,6 +100,7 @@ void Boss1Bullet4::Start()
 	timer->Reset();
 	oldtime = 0;
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::runAttack_end));
+	isCollision = true;
 }
 
 void Boss1Bullet4::Attack()
@@ -93,15 +120,11 @@ void Boss1Bullet4::Attack()
 			return;
 		}
 
-		float angle2 = 0.0f;
-		if (objectNumber == 1) {
-			angle2 = 90.0f;
-		}
-		instanceObject->DrawInstance(i.pos, { 1.0f,1.5f,1.0f }, { i.rota.x+ angle2,i.rota.y,i.rota.z }, { 0.4f,0.2f ,0.5f ,1.0f });
+		instanceObject->DrawInstance(i.pos, { 1.0f,1.5f,1.0f }, { i.rota.x,i.rota.y,i.rota.z }, { 0.4f,0.2f ,0.5f ,1.0f });
 		
 		for (int num = 0; num < 3; num++) {
 			float colorRate = (float(num + 1) / 9.0f) + 1.0f;
-			instanceObject->DrawInstance(i.pos - i.moveVec * ((num * (1.0f/bulletSpeed)) + 0.5f), { 1.0f,1.5f,1.0f }, {i.rota.x + angle2, i.rota.y,i.rota.z }, { 0.4f * colorRate,0.2f * colorRate ,0.5f * colorRate ,0.4f / colorRate });
+			instanceObject->DrawInstance(i.pos - i.moveVec * ((num * (1.0f/bulletSpeed)) + 0.5f), { 1.0f,1.5f,1.0f }, {i.rota.x, i.rota.y,i.rota.z }, { 0.4f * colorRate,0.2f * colorRate ,0.5f * colorRate ,0.4f / colorRate });
 		}
 
 		objectNumber++;

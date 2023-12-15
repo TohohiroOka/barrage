@@ -267,7 +267,7 @@ void Fbx::TransferMaterial()
 	}
 }
 
-void Fbx::SetBoneObject(const std::string& _boneName, const std::string& _modelName,
+std::string Fbx::SetBoneObject(const std::string& _boneName, const std::string& _modelName,
 	Model* _model, const XMMATRIX& _matWorld, bool _isDraw, const std::string& _getObjectName)
 {
 	int modelNuber = 0;
@@ -275,21 +275,23 @@ void Fbx::SetBoneObject(const std::string& _boneName, const std::string& _modelN
 		boneObject[_modelName] = InstanceObject::Create(_model);
 	}
 
+	std::string name = std::to_string(int(boneObjectInfo.size()));
 	if (boneObjectInfo.find(_getObjectName) != boneObjectInfo.end() || _getObjectName != "null") {
-		boneObjectInfo[_getObjectName].isDraw = _isDraw;
-		boneObjectInfo[_getObjectName].boneName = _boneName;
-		boneObjectInfo[_getObjectName].attachWorld = XMMatrixIdentity();
-		boneObjectInfo[_getObjectName].instanceName = _modelName;
-		boneObjectInfo[_getObjectName].matWorld = _matWorld;
+		name = _getObjectName;
 	}
-	else {
-		const std::string name = std::to_string(int(boneObjectInfo.size()));
-		boneObjectInfo[name].isDraw = _isDraw;
-		boneObjectInfo[name].boneName = _boneName;
-		boneObjectInfo[name].attachWorld = XMMatrixIdentity();
-		boneObjectInfo[name].instanceName = _modelName;
-		boneObjectInfo[name].matWorld = _matWorld;
-	}
+
+	boneObjectInfo[name].isDraw = _isDraw;
+	boneObjectInfo[name].boneName = _boneName;
+	boneObjectInfo[name].attachWorld = XMMatrixIdentity();
+	boneObjectInfo[name].instanceName = _modelName;
+	boneObjectInfo[name].matWorld = _matWorld;
+
+	return name;
+}
+
+void Fbx::ChangeBoneObjectInfo(const std::string& _name, const XMMATRIX& _matWorld)
+{
+	boneObjectInfo[_name].matWorld = _matWorld;
 }
 
 void Fbx::FrameReset()

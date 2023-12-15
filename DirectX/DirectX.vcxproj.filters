@@ -493,6 +493,9 @@
     <ClCompile Include="game\effect\AttachEmitter.cpp">
       <Filter>ゲームシステム\Effect</Filter>
     </ClCompile>
+    <ClCompile Include="game\enemy\boss1\Boss1HalfAttack.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -1017,6 +1020,9 @@
     </ClInclude>
     <ClInclude Include="game\effect\AttachEmitter.h">
       <Filter>ゲームシステム\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\Boss1HalfAttack.h">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

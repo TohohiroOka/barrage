@@ -1,6 +1,5 @@
 #pragma once
 #include "../BaseBossModel.h"
-#include "../Math/Timer.h"
 #include "effect/AttachEmitter.h"
 
 /// <summary>
@@ -11,8 +10,8 @@ class Boss1Model : public BaseBossModel
 private:
 
 	enum class ObjectType {
-		cube,
-		cone,
+		core,
+		sword,
 		size,
 	};
 	
@@ -37,6 +36,21 @@ public:
 		standBy = 15,
 	};
 
+	enum class AttachName {
+		core1,
+		core2,
+		LowerLeg_L,
+		LowerLeg_R,
+		LowerArm_L,
+		LowerArm_R,
+		LowerArm_R_Non,
+	};
+
+	enum class EffectName {
+		sword,
+		size,
+	};
+
 public:
 
 	Boss1Model();
@@ -48,9 +62,21 @@ public:
 
 	void DrawLightView() override;
 
+	void ChangesPos(const int _num, const float _maxTime, const Vector3& _pos) override;
+
+	void ChangesScale(const int _num, const float _maxTime, const Vector3& _scale) override;
+
+	void ModelReset() override;
+
+	void IsAttachEffect(int _num, bool _isAlive) override {
+		effectAlive[_num] = _isAlive;
+	}
+
+	void ChangeInfo();
+
 private:
 
 	std::array<std::unique_ptr<Model>, int(ObjectType::size)> objModel;
 	std::unique_ptr<AttachEmitter> swordEffect;
-
+	std::array<bool, int(EffectName::size)>effectAlive;
 };
