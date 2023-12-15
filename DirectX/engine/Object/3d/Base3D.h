@@ -107,6 +107,8 @@ protected:
 	bool isLight = true;
 	//アウトライン色
 	XMFLOAT3 outlineColor;
+	//アプリ側でのワールド変換行列計算の有無
+	bool isCalcWorldMat = false;
 
 public:
 
@@ -133,4 +135,5 @@ public:
 	void SetOutline(bool _isOutline) { isOutline = _isOutline; }
 	void SetOutlineColor(const XMFLOAT3& _outlineColor) { outlineColor = _outlineColor; }
 	void SetColor(const XMFLOAT4& _color) { color = _color; }
+	void SetCalcWorldMat(bool _isCalcWorldMat) { isCalcWorldMat = _isCalcWorldMat; }
 };

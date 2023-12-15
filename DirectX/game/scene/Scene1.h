@@ -10,6 +10,7 @@
 #include "game/ui/GameOver.h"
 #include "system/ActionInputConfig.h"
 #include "game/cutscene/Boss1Defeat.h"
+#include "ui/LockonUI.h"
 
 class Scene1 : public InterfaceScene
 {
@@ -95,6 +96,10 @@ private:
 
 	//行動入力設定
 	std::unique_ptr<ActionInputConfig> actionInputConfig;
+
+	//ロックオン
+	std::unique_ptr<LockonUI> lockonUI;
+
 	//行動入力設定中か
 	bool isInputConfigMode = false;
 

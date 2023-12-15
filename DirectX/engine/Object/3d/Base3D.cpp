@@ -23,6 +23,7 @@ void Base3D::Update()
 
 void Base3D::UpdateWorldMatrix()
 {
+	if (isCalcWorldMat) { return; }
 	// スケール、回転、平行移動行列の計算
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 	matRot = XMMatrixIdentity();

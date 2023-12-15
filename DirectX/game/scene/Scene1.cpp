@@ -60,6 +60,9 @@ void Scene1::Initialize()
 	defeatDirection->Init();
 
 	SceneChangeDirection::Instance()->Init();
+
+	lockonUI = std::make_unique<LockonUI>();
+	lockonUI->Init(camera.get());
 }
 
 void Scene1::Update()
@@ -90,6 +93,7 @@ void Scene1::Update()
 				isNormalCamera = !isNormalCamera;
 				Base3D::SetCamera(debugCamera.get());
 			}
+			lockonUI->Update();
 		}
 		else {
 			debugCamera->Update();
@@ -123,6 +127,8 @@ void Scene1::Update()
 			isInputConfigMode = true;
 			actionInputConfig->Reset();
 		}
+
+		if (!camera->GetisLockon()) { lockonUI->EndLockOnDraw(); }
 	}
 	else {
 		//入力設定更新
@@ -153,6 +159,8 @@ void Scene1::Draw(const int _cameraNum)
 
 	defeatDirection->Draw();
 	field->Draw();
+
+	lockonUI->Draw();
 }
 
 void Scene1::DrawLightView(const int _cameraNum)
@@ -348,6 +356,8 @@ void Scene1::CollisionCheck()
 			if (isInsideTargetScreen) {
 				//ロックオン対象を確定させる
 				camera->Lockon(boss->GetCenter());
+				//ロックオンUI表示
+				lockonUI->StartLockOnAnimation(&boss->GetCenter()->GetPosition());
 			}
 		}
 	}
