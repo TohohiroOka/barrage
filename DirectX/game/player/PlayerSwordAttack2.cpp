@@ -22,10 +22,10 @@ PlayerSwordAttack2::PlayerSwordAttack2(Player* player)
 	this->player = player;
 
 	//当たり判定可視化用オブジェクト生成
-	model = Model::CreateFromOBJ("NormalCube");
+	model = Model::CreateFromOBJ("bullet");
 
 	object = Object3d::Create(model.get());
-	object->SetScale({ 1.5f, 1.5f, 1.5f });
+	object->SetScale({ 1.2f, 1.2f, 1.2f });
 	object->SetColor(nonAttackColor);
 
 	//タイマー初期化
@@ -58,7 +58,8 @@ void PlayerSwordAttack2::Update()
 	object->Update();
 
 	//衝突判定用変数の更新
-	DirectX::XMFLOAT3 objectPos = player->GetFbxObject()->GetAttachPos("sword1");
+	DirectX::XMFLOAT3 swordTopButtonVec = player->GetFbxObject()->GetAttachPos("sword2") - player->GetFbxObject()->GetAttachPos("sword1"); //剣先から持つ部分までのベクトル
+	DirectX::XMFLOAT3 objectPos = player->GetFbxObject()->GetAttachPos("sword1") + (swordTopButtonVec * 0.75f);
 	object->SetPosition(objectPos);
 	attackCollisionData.center = { objectPos.x, objectPos.y, objectPos.z, 1 };
 	attackCollisionData.radius = object->GetScale().x;

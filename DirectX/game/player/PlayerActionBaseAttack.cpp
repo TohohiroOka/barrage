@@ -33,12 +33,13 @@ void PlayerActionBaseAttack::Update()
 
 			if (!isNextActionAttack) { nextAction = PlayerActionName::MOVENORMAL; }
 		}
+		//攻撃以外を選択している場合は攻撃行動を解放する
+		else {
+			player->GetData()->attackAction.reset();
+		}
 
 		//予約していた次の行動をセット
 		player->GetData()->action = nextAction;
-
-		//攻撃行動を解放する
-		player->GetData()->attackAction.reset();
 	}
 
 	//いつでも回避で攻撃を中断できる

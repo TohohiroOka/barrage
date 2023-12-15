@@ -6,7 +6,7 @@
 
 using namespace DirectX;
 
-float PlayerActionMoveNormal::moveSpeedMax = 0.5f;
+float PlayerActionMoveNormal::moveSpeedMax = 0.6f;
 float PlayerActionMoveNormal::dashSpeedMax = 1.0f;
 
 PlayerActionMoveNormal::PlayerActionMoveNormal(Player* player)
@@ -98,7 +98,7 @@ void PlayerActionMoveNormal::Move()
 		}
 	}
 	else {
-		player->GetData()->moveSpeed -= moveAccel;
+		player->GetData()->moveSpeed -= moveAccel * 2;
 		player->GetData()->moveSpeed = max(player->GetData()->moveSpeed, 0);
 
 		//スピードがなくなったら待機アニメーションに変更(設計中)

@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "engine/Audio/Audio.h"
 
-float PlayerActionJump::jumpPower = 2.0f;
+float PlayerActionJump::jumpPower = 1.0f;
 
 PlayerActionJump::PlayerActionJump(Player* player)
 	: PlayerActionBase(player)
