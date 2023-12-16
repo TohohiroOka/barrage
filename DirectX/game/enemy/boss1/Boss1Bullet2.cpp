@@ -13,20 +13,30 @@ Boss1Bullet2::Boss1Bullet2()
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack2_start));
 	boss->GetBaseModel()->AnimationReset();
 
+	//状態
 	state = State::start;
 
+	//衝突判定
 	useCollision = UseCollision::sphere;
+
+	//オブジェクト
 	model = Model::CreateFromOBJ("bullet");
 	for (auto& i : instanceObject) {
 		i = InstanceObject::Create(model.get());
 	}
+
+	//弾道
 	predictionLine = std::make_unique<PredictionLine>();
+
+	//タイマー系
 	timer = std::make_unique<Engine::Timer>();
+	hitTimer = std::make_unique<Engine::Timer>();
+
+	//エフェクト
 	bulletEffect = std::make_unique<BulletEffect>();
 	bulletEffect->Init();
 
-	hitTimer = std::make_unique<Engine::Timer>();
-
+	//行動関数
 	func_.emplace_back([this] {return Start(); });
 	func_.emplace_back([this] {return Attack(); });
 	func_.emplace_back([this] {return End(); });

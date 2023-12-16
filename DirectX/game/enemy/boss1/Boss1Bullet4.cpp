@@ -15,17 +15,23 @@ Boss1Bullet4::Boss1Bullet4()
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::crossCut_start));
 	boss->GetBaseModel()->AnimationReset();
 
+	//状態
+	state = State::start;
+
+	//衝突判定
 	useCollision = UseCollision::capsule;
+
+	//オブジェクト
 	model = Model::CreateFromOBJ("boss1/slashing");
 	instanceObject = InstanceObject::Create(model.get());
 	instanceObject->SetBloom(true);
-	instanceObject->SetOutline(true);
 	instanceObject->SetOutlineColor({ 0.4f,0.2f ,0.5f });
 
+	//タイマー系
 	timer = std::make_unique<Engine::Timer>();
-
 	hitTimer = std::make_unique<Engine::Timer>();
 
+	//行動関数
 	func_.emplace_back([this] {return Start(); });
 	func_.emplace_back([this] {return Attack(); });
 }
@@ -66,9 +72,6 @@ void Boss1Bullet4::GetAttackCollisionCapsule(std::vector<Capsule>& _info)
 		XMVECTOR matSPos = XMVector3Transform({ spos.x,spos.y,spos.z }, matRot);
 		XMVECTOR matEPos = XMVector3Transform({ epos.x,epos.y,epos.z }, matRot);
 
-		//add.startPosition = spos;
-		//add.endPosition = epos;
-
 		add.startPosition = XMFLOAT3{ matSPos.m128_f32[0], matSPos.m128_f32[1], matSPos.m128_f32[2] };
 		add.endPosition = XMFLOAT3{ matEPos.m128_f32[0], matEPos.m128_f32[1], matEPos.m128_f32[2] };
 		add.radius = 10.0f;
@@ -106,7 +109,6 @@ void Boss1Bullet4::Start()
 
 void Boss1Bullet4::Attack()
 {
-	int objectNumber = 0;
 	int aliveNum = 0;
 	for (auto& i : object) {
 		if (!i.isAlive) { continue; }
@@ -127,8 +129,6 @@ void Boss1Bullet4::Attack()
 			float colorRate = (float(num + 1) / 9.0f) + 1.0f;
 			instanceObject->DrawInstance(i.pos - i.moveVec * ((num * (1.0f/bulletSpeed)) + 0.5f), { 1.0f,1.5f,1.0f }, {i.rota.x, i.rota.y,i.rota.z }, { 0.4f * colorRate,0.2f * colorRate ,0.5f * colorRate ,0.4f / colorRate });
 		}
-
-		objectNumber++;
 	}
 
 	if ((*timer.get()) / 2.0f >= oldtime) {

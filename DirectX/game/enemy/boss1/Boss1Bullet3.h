@@ -1,28 +1,30 @@
 #pragma once
-#include "../BaseBullet.h"
+#include "../BaseAction.h"
+#include "Object/3d/InstanceObject.h"
+#include "../Math/Timer.h"
 #include <functional>
 
 /// <summary>
-/// ãﬂãóó£Ç…â~èÛÇ≈Ç≈ÇÈíe
+/// ãﬂãóó£Ç…â~èÛÇ≈Ç≈ÇÈéaåÇ
 /// </summary>
-class Boss1Bullet3 : public BaseBullet
+class Boss1Bullet3 : public BaseAction
 {
 public:
 
-	struct BulletInfo {
+	struct ObjectInfo {
 		bool isAlive;//èoåªÇµÇƒÇ¢ÇÈÇ©
 		Vector3 pos;//ç¿ïW
 		Vector3 moveVec;//à⁄ìÆï˚å¸
-		float acceleration;
-		std::unique_ptr<Engine::Timer> timer;//èoåªéûä‘
-		Vector3 predictionLinePoint;
+		Vector3 rota;
+		float alpha;
 	};
 
 private:
 
 	enum class State {
 		start,
-		attack,
+		cut,
+		end,
 		non,
 	};
 
@@ -32,30 +34,41 @@ public:
 
 	void Update() override;
 
-	void GetAttackCollisionSphere(std::vector<Sphere>& _info) override;
+	void Draw() override;
 
-	void GetAttackCollisionBox(std::vector<Box>& _info) override {};
+	void FrameReset() override;
 
-	void GetAttackCollisionCapsule(std::vector<Capsule>& _info) override {};
+	void GetAttackCollisionSphere(std::vector<Sphere>& _info) override{};
 
-	void DeleteBullet(std::vector<int> _deleteNum) override;
+	void GetAttackCollisionBox(std::vector<Box>& _info) override;
+
+	void GetAttackCollisionCapsule(std::vector<Capsule>& _info) override{};
+
+	void DeleteBullet(std::vector<int> _deleteNum) override{};
 
 	int GetDamage()override { return 5; }
 
 	void Start();
 
-	void Attack();
+	void Cut();
 
-	void AddBullet();
+	void End();
 
-	void BulletUpdate(BulletInfo& _bullet);
+	void BulletUpdate();
 
 private:
+
+	static const int bulletNum = 10;
+	std::unique_ptr<Model> model;
+	std::unique_ptr<Model> swordModel;
+	std::array<ObjectInfo, bulletNum> object;
+	std::array<ObjectInfo, bulletNum> swordObject;
+	std::array<std::unique_ptr<InstanceObject>, 2> instanceObject;
 
 	//èÛë‘
 	State state;
 	std::vector<std::function<void()>> func_;
 
-	std::forward_list<BulletInfo> bullet;
+	std::unique_ptr<Engine::Timer> timer;
 };
 

@@ -3,7 +3,7 @@
 #include <functional>
 
 /// <summary>
-/// プレイヤー対しまっすぐ進む弾（乱数により少し散らばる）
+/// 円状に球が出てのち剣をそこから飛ばず
 /// </summary>
 class Boss1Bullet1 : public BaseBullet
 {
