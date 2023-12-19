@@ -16,8 +16,10 @@ SlashEffect::SlashEffect(const std::string& texName, int emitNum, int frameParti
 	//要素数を確保
 	emitPosLists.resize(emitNum);
 
-	particle = Emitter::Create(texName);
-	particle->SetBloom();
+	for (auto& i : particle) {
+		i = Emitter::Create(texName);
+		i->SetBloom();
+	}
 }
 
 void SlashEffect::Update(const Vector3& point1, const Vector3& point2)
@@ -29,12 +31,18 @@ void SlashEffect::Update(const Vector3& point1, const Vector3& point2)
 		AddParticle();
 	}
 
-	particle->Update();
+	for (auto& i : particle) {
+		if (i->GetCreateNum() == 0) { continue; }
+		i->Update();
+	}
 }
 
 void SlashEffect::Draw()
 {
-	particle->Draw();
+	for (auto& i : particle) {
+		if (i->GetCreateNum() == 0) { continue; }
+		i->Draw();
+	}
 }
 
 void SlashEffect::UpdateEmitPos(const Vector3& point1, const Vector3& point2)
@@ -77,7 +85,10 @@ void SlashEffect::AddParticle()
 			const DirectX::XMFLOAT4 eColor = { Easing::InQuint(endColor.x, 0.001f ,colorPower), Easing::InQuint(endColor.y, 0.001f ,colorPower),  Easing::InQuint(endColor.z, 0.001f ,colorPower), 1.0f };
 
 			//パーティクル生成
-			particle->InEmitter(maxFrame, emitpos, {}, {}, startScale, endScale, sColor, eColor);
+			for (auto& i : particle) {
+				if (i->GetCreateNum() >= 1024) { continue; }
+				i->InEmitter(maxFrame, emitpos, {}, {}, startScale, endScale, sColor, eColor);
+			}
 		}
 	}
 }

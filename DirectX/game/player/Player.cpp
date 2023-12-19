@@ -78,7 +78,7 @@ Player::Player()
 
 	XMFLOAT4 startColor = { 0.02f, 0.05f, 0.2f, 1.0f };
 	XMFLOAT4 endColor = { 0.001f, 0.001f, 0.01f, 1.0f };
-	swordEffect = std::make_unique<SlashEffect>("effect", 10, 10, 30.0f, 1.0f, 0.0f, startColor, endColor);
+	swordEffect = std::make_unique<SlashEffect>("effect", 10, 10, 10.0f, 1.0f, 0.0f, startColor, endColor);
 }
 
 void Player::Update()

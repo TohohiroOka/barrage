@@ -247,6 +247,11 @@ void ParticleManager::Update()
 
 void ParticleManager::Draw(const DrawMode _drawMode)
 {
+	const UINT count = UINT(std::distance(particle.begin(), particle.end()));
+	if (count == 0) {
+		return;
+	}
+
 	int modeNum = int(_drawMode);
 
 	ObjectBase::Draw(pipeline[modeNum]);
@@ -261,7 +266,7 @@ void ParticleManager::Draw(const DrawMode _drawMode)
 	cmdList->SetGraphicsRootDescriptorTable(1, texture[name].instance->descriptor->gpu);
 
 	//•`‰æƒRƒ}ƒ“ƒh
-	cmdList->DrawInstanced((UINT)std::distance(particle.begin(), particle.end()), 1, 0, 0);
+	cmdList->DrawInstanced(count, 1, 0, 0);
 }
 
 void ParticleManager::ParticlAllDelete()

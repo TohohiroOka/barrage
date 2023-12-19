@@ -63,7 +63,7 @@ private: //メンバ関数
 
 private: //メンバ変数
 	//パーティクル発生エミッター
-	std::unique_ptr<Emitter> particle;
+	std::array<std::unique_ptr<Emitter>, 3> particle;
 	//発生座標保存用list
 	std::vector<std::list<Vector3>> emitPosLists;
 	//1フレーム前の発生座標との間に発生させるパーティクル数

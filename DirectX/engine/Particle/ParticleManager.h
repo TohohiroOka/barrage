@@ -70,7 +70,7 @@ public: // サブクラス
 
 private: // 定数
 
-	static const int vertexCount = 512;// 頂点数
+	static const int vertexCount = 1024;// 頂点数
 	std::forward_list<PARTICLE>particle;
 
 public: // 静的メンバ関数

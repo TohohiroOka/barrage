@@ -110,7 +110,7 @@ Boss1Model::Boss1Model()
 
 	XMFLOAT4 startColor = { 0.2f, 0.1f, 0.02f, 1.0f };
 	XMFLOAT4 endColor = { 0.01f, 0.005f, 0.001f, 1.0f };
-	swordEffect = std::make_unique<SlashEffect>("effect", 10, 10, 30.0f, 1.0f, 0.0f, startColor, endColor);
+	swordEffect = std::make_unique<SlashEffect>("effect", 10, 10, 10.0f, 1.0f, 0.0f, startColor, endColor);
 }
 
 void Boss1Model::Update()
