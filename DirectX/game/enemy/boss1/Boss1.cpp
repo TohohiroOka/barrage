@@ -10,6 +10,7 @@
 #include "Boss1Bullet2.h"
 #include "Boss1Bullet3.h"
 #include "Boss1Bullet4.h"
+#include "Boss1HalfAttack.h"
 
 #include "Boss1Wince.h"
 
@@ -23,7 +24,7 @@ Boss1::Boss1()
 
 	BaseAction::SetBossPtr(this);
 
-	action = std::make_unique<Boss1Bullet3>();
+	action = std::make_unique<Boss1HalfAttack>();
 
 	hitScale = bossModel->GetObjectInst()->GetScale().y * 5000.0f;
 }

@@ -198,6 +198,11 @@ void InstanceObject::Update()
 
 void InstanceObject::Draw(const DrawMode _drawMode)
 {
+	//•`‰æŒÂ”‚ª0‚È‚ç•`‰æ‚ğ’Ê‚³‚È‚¢
+	if (instanceDrawNum == 0) {
+		return;
+	}
+
 	// ƒ‚ƒfƒ‹‚ÌŠ„‚è“–‚Ä‚ª‚È‚¯‚ê‚Î•`‰æ‚µ‚È‚¢
 	if (model == nullptr) {
 		return;
@@ -222,6 +227,11 @@ void InstanceObject::Draw(const DrawMode _drawMode)
 
 void InstanceObject::DrawLightView()
 {
+	//•`‰æŒÂ”‚ª0‚È‚ç•`‰æ‚ğ’Ê‚³‚È‚¢
+	if (instanceDrawNum == 0) {
+		return;
+	}
+
 	// ƒ‚ƒfƒ‹‚ÌŠ„‚è“–‚Ä‚ª‚È‚¯‚ê‚Î•`‰æ‚µ‚È‚¢
 	if (model == nullptr) {
 		return;
