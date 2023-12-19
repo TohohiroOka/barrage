@@ -245,10 +245,11 @@ void Boss1Bullet1::BulletUpdate(BulletInfo& _bullet)
 	}
 	//�ǂ̊O
 	else {
-		if (_bullet.pos.y > -10.0f) {
-			_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
-		} else {
+		if (_bullet.pos.x < -30.0f || _bullet.pos.x > moveMaxPos.x + 30.0f ||
+			_bullet.pos.z < -30.0f || _bullet.pos.z > moveMaxPos.z + 30.0f || _bullet.pos.y < -10.0f) {
 			_bullet.isAlive = false;
+		} else {
+			_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
 		}
 	}
 

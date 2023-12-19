@@ -1,8 +1,34 @@
 #pragma once
+#include "../Object/3d/InstanceObject.h"
+#include "../Object/3d/PrimitiveObject3D.h"
 #include "../BaseAction.h"
+#include <functional>
 
 class Boss1HalfAttack : public BaseAction
 {
+private:
+
+	struct SwordInfo {
+		float alpha;
+		Vector3 pos;
+		Vector3 rota;
+		Vector2 angle;
+	};
+
+	struct RingInfo{
+		std::array<Vector3, 20> linePos;
+		std::array<SwordInfo, 20> swordObject;
+		float dist;
+		float maxDist;
+	};
+
+	enum class State {
+		start,
+		attack,
+		end,
+		non,
+	};
+
 public:
 	Boss1HalfAttack();
 	~Boss1HalfAttack() {};
@@ -11,8 +37,10 @@ public:
 
 	void Draw() override;
 
-	void FrameReset() override {};
-
+	void FrameReset() override {
+		instanceObject->FrameReset();
+		line->ResetVertex();
+	}
 	void GetAttackCollisionSphere(std::vector<Sphere>& _info) override {};
 
 	void GetAttackCollisionBox(std::vector<Box>& _info) override {};
@@ -23,11 +51,32 @@ public:
 
 	int GetDamage()override { return 0; }
 
-private:
+	void Start();
 
-	//イージングタイマー
-	std::unique_ptr<Engine::Timer> moveTime;
-	//移動方向
-	Vector3 moveV;
+	void Attack();
+
+	void End();
+
+	Vector3 GetMoveVec(SwordInfo& info, float dist);
+
+private:
+	
+	//状態
+	State state;
+	std::vector<std::function<void()>> func_;
+
+	std::unique_ptr<PrimitiveObject3D> line;
+
+	//リング
+	static const int ringNum = 5;
+	std::array<RingInfo, ringNum> ringInfo;
+
+	//オブジェクト
+	std::unique_ptr<Model> model;
+	std::unique_ptr<InstanceObject> instanceObject;
+	
+	//全体タイマー
+	std::unique_ptr<Engine::Timer> timer;
+
 };
 

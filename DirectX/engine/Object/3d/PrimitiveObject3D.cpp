@@ -68,8 +68,6 @@ void PrimitiveObject3D::Update()
 
 void PrimitiveObject3D::Draw(const DrawMode _drawMode)
 {
-	Update();
-
 	int modeNum = int(_drawMode);
 
 	ObjectBase::Draw(pipeline[modeNum]);
