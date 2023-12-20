@@ -28,7 +28,7 @@ PlayerActionBlink::PlayerActionBlink(Player* player)
 
 	//回避アニメーションに変更
 	player->GetFbxObject()->AnimationReset();
-	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ROLL_ANIMATION);
+	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::BLINK_ANIMATION);
 
 	//予め次の行動を設定しておく(終了後は通常移動)
 	nextAction = PlayerActionName::MOVENORMAL;
