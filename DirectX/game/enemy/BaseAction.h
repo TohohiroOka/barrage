@@ -31,9 +31,15 @@ public:
 
 	virtual void DeleteBullet(std::vector<int> _deleteNum) = 0;
 
-	virtual int GetDamage() = 0;
+	virtual void GetDamageInfo(int& _damageNum, int& _knockbackPower, int& _knockbackTime, bool& _isKnockbackStart) = 0;
 
-	bool End() { return isEnd; }
+	void SetActionBreak() {
+		if (timer) {
+			timer->Reset();
+		}
+	}
+
+	bool GetEnd() { return isEnd; }
 	void SetEnd() { isEnd = true; }
 	void SetUseCollision(const UseCollision _useCollision) { useCollision = _useCollision; }
 	UseCollision GetUseCollision() { return useCollision; }
@@ -50,6 +56,8 @@ protected:
 
 	//ボス本体クラス
 	static BaseBoss* boss;
+	//全体タイマー
+	std::unique_ptr<Engine::Timer> timer;
 	//行動終了
 	bool isEnd = false;
 	//どの当たり判定を使用するか
@@ -60,6 +68,5 @@ protected:
 	std::unique_ptr<Engine::Timer> hitTimer;
 	//威力
 	float power;
-
 };
 

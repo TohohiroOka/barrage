@@ -38,9 +38,9 @@ Boss1Move3::Boss1Move3()
 
 void Boss1Move3::Update()
 {
-	if (boss->GetIsWince()) {
-		return;
+	if (boss->GetIsWince() || boss->GetIsBreak()) {
 		isEnd = true;
+		return;
 	}
 
 	if (state < State::size) {
@@ -89,10 +89,10 @@ void Boss1Move3::Move()
 		endPos = boss->GetTargetPos();
 	}
 
-	pos.x = Easing::OutCubic(startPos.x, endPos.x, rate) - pos.x;
-	pos.z = Easing::OutCubic(startPos.z, endPos.z, rate) - pos.z;
+	pos.x = Easing::OutCubic(startPos.x, endPos.x, rate);
+	pos.z = Easing::OutCubic(startPos.z, endPos.z, rate);
 
-	boss->SetMoveVec(pos);
+	boss->GetCenter()->SetPosition(pos);
 
 	if (rate < 1.0f) { return; }
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));

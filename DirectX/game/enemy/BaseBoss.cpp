@@ -21,8 +21,19 @@ void BaseBoss::Update()
 
 	bossModel->Update();
 
-	if (winceAction) {
-		if (!winceAction->End()) {
+	//’†’fs“®
+	//breaks“®—Dæ
+	if (breakAction) {
+		if (!breakAction->GetEnd()) {
+			breakAction->Update();
+		} else {
+			isBreak = false;
+			action->SetEnd();
+			breakAction.reset();
+		}
+	}
+	else if (winceAction) {
+		if (!winceAction->GetEnd()) {
 			winceAction->Update();
 		} else {
 			isWince = false;
@@ -36,6 +47,9 @@ void BaseBoss::Draw()
 {
 	bossModel->Draw();
 	action->Draw();
+	if (breakAction) {
+		breakAction->Draw();
+	}
 }
 
 void BaseBoss::DrawLightView()
@@ -66,8 +80,6 @@ void BaseBoss::Collider()
 {
 	using namespace DirectX;
 	Vector3 pos = Vector3(bossModel->GetObjectInst()->GetPosition());
-	//‘¬“x‚ð‰ÁŽZ‚µ‚ÄÀ•WXV
-	pos += moveVec;
 
 	const XMFLOAT3 moveMinPos = { 0,100,0 };
 	const XMFLOAT3 moveMaxPos = { GameHelper::Instance()->GetStageSize(),0.0f,GameHelper::Instance()->GetStageSize() };

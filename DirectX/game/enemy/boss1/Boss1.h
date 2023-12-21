@@ -48,5 +48,10 @@ public:
 	void SetAction() override;
 
 	void SetShortMoveAction();
+
+private:
+
+	//break‚ğs‚Á‚½hp
+	float nowBreakHp;
 };
 

@@ -55,8 +55,12 @@ Boss1Bullet1::~Boss1Bullet1()
 
 void Boss1Bullet1::Update()
 {
-	if (int(state) >= 0 && int(state) < int(State::non)&& !boss->GetIsWince()) {
-		func_[int(state)]();
+	if (!boss->GetIsWince() && !boss->GetIsBreak()) {
+		if (int(state) >= 0 && int(state) < int(State::non)) {
+			func_[int(state)]();
+		}
+	} else {
+		End();
 	}
 
 	for (auto& i : bulletAddPoint) {
@@ -70,13 +74,8 @@ void Boss1Bullet1::Update()
 		}
 	);
 
-	for (auto& i : bullet) {
-		if (!i.isAlive) { continue; }
-		for (int j = 1; j < instanceObject.size(); j++) {
-			if (!instanceObject[j]->GetInstanceDrawCheck()) { continue; }
-			instanceObject[j]->DrawInstance(i.pos, { 1.0f ,1.0f ,1.0f }, i.rota, { 1,1,1,i.alpha });
-		}
-	}
+	//弾更新
+	BulletUpdate();
 
 	BaseBullet::Update();
 }
@@ -165,23 +164,14 @@ void Boss1Bullet1::Attack()
 		AddBullet(bulletAddPoint[inPoint].pos);
 	}
 
-	for (auto& i : bullet) {
-		BulletUpdate(i);
-	}
-
 	if ((*timer.get()) <= maxTime) { return; }
 	timer->Reset();
 	state = State::end;
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
 }
 
 void Boss1Bullet1::End()
 {
-	int num = 0;
-	for (auto& i : bullet) {
-		BulletUpdate(i);
-		num++;
-	}
-
 	const float maxTime = 30.0f;
 	float bulletAddPointAlpha = Easing::InExpo(1.0f, 0.0f, *timer.get() / maxTime);
 
@@ -189,9 +179,7 @@ void Boss1Bullet1::End()
 		i.alpha = bulletAddPointAlpha;
 	}
 
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
-
-	if (num != 0 || *timer.get() < maxTime) { return; }
+	if (std::distance(bullet.begin(), bullet.end()) != 0 || *timer.get() < maxTime) { return; }
 	isEnd = true;
 }
 
@@ -226,65 +214,68 @@ void Boss1Bullet1::BulletRotate(BulletAddPointInfo& _bullet)
 	_bullet.pos = bossPos + Vector3(cosf(radius) * 15.0f, 15.0f, sinf(radius) * 15.0f);
 }
 
-void Boss1Bullet1::BulletUpdate(BulletInfo& _bullet)
+void Boss1Bullet1::BulletUpdate()
 {
-	//アルファかyが一定以下なら
-	if (_bullet.alpha < 0.1f) {
-		_bullet.isAlive = false;
-		return;
-	}
-	//壁の中
-	else if (_bullet.pos.x > 0.0f && _bullet.pos.x < moveMaxPos.x &&
-		_bullet.pos.z > 0.0f && _bullet.pos.z < moveMaxPos.z) {
-		//地面より上
-		if (_bullet.pos.y > 0.0f && _bullet.pos.y < moveMaxPos.y) {
-			_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
-		} else {
-			_bullet.alpha -= 0.04f;
-		}
-	}
-	//壁の外
-	else {
-		if (_bullet.pos.x < -30.0f || _bullet.pos.x > moveMaxPos.x + 30.0f ||
-			_bullet.pos.z < -30.0f || _bullet.pos.z > moveMaxPos.z + 30.0f || _bullet.pos.y < -10.0f) {
+	for (auto& _bullet : bullet) {
+		if (!_bullet.isAlive) { continue; }
+		//アルファかyが一定以下なら
+		if (_bullet.alpha < 0.1f) {
 			_bullet.isAlive = false;
-		} else {
-			_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
+			return;
 		}
-	}
-
-	////エフェクト追加
-	//DirectX::XMFLOAT4 bulletColor = { 0.f,0.f,0.f,1.0f };
-	//DirectX::XMFLOAT4 effectColor = { 0.2f,0.2f,0.8f,1.0f };
-	//float effectScale = 7.5f;
-	//bulletEffect->AddBulletEffect(_bullet.pos, bulletColor, effectScale, effectColor);
-
-	//アルファが1でないなら移動してないため弾道は出さない
-	if (_bullet.alpha != 1.0) {
-		return;
-	}
-
-	//弾道
-	{
-		if (_bullet.nowIntTime >= 1.0f) {
-			for (int i = 1; i < _bullet.predictionLinePoint.size(); i++) {
-				_bullet.predictionLinePoint[i] = _bullet.predictionLinePoint[i - 1];
+		//壁の中
+		else if (_bullet.pos.x > 0.0f && _bullet.pos.x < moveMaxPos.x &&
+			_bullet.pos.z > 0.0f && _bullet.pos.z < moveMaxPos.z) {
+			//地面より上
+			if (_bullet.pos.y > 0.0f && _bullet.pos.y < moveMaxPos.y) {
+				_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
+			} else {
+				_bullet.alpha -= 0.04f;
+			}
+		}
+		//壁の外
+		else {
+			if (_bullet.pos.x < -30.0f || _bullet.pos.x > moveMaxPos.x + 30.0f ||
+				_bullet.pos.z < -30.0f || _bullet.pos.z > moveMaxPos.z + 30.0f || _bullet.pos.y < -10.0f) {
+				_bullet.isAlive = false;
+			} else {
+				_bullet.pos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
 			}
 		}
 
-		int nowline = _bullet.nowIntTime;
-		if (*_bullet.timer.get() >= _bullet.nowIntTime) {
-			_bullet.predictionLinePoint[0] = _bullet.pos;
-			_bullet.nowIntTime++;
+		//描画入れ
+		for (auto& i : instanceObject) {
+			if (!i->GetInstanceDrawCheck()) { continue; }
+			i->DrawInstance(_bullet.pos, { 1.0f ,1.0f ,1.0f }, _bullet.rota, { 1,1,1,_bullet.alpha });
 		}
 
-		if (nowline >= _bullet.predictionLinePoint.size()) {
-			nowline = int(_bullet.predictionLinePoint.size()) - 2;
+		//アルファが1でないなら移動してないため弾道は出さない
+		if (_bullet.alpha != 1.0) {
+			continue;
 		}
-		_bullet.timer->Update();
 
-		for (int i = 0; i < nowline; i++) {
-			predictionLine->AddLine(_bullet.predictionLinePoint[i], _bullet.predictionLinePoint[i + 1], 1.0f, { 1.0f,1.0f,1.0f,0.5f });
+		//弾道
+		{
+			if (_bullet.nowIntTime >= 1.0f) {
+				for (int i = 1; i < _bullet.predictionLinePoint.size(); i++) {
+					_bullet.predictionLinePoint[i] = _bullet.predictionLinePoint[i - 1];
+				}
+			}
+
+			int nowline = _bullet.nowIntTime;
+			if (*_bullet.timer.get() >= _bullet.nowIntTime) {
+				_bullet.predictionLinePoint[0] = _bullet.pos;
+				_bullet.nowIntTime++;
+			}
+
+			if (nowline >= _bullet.predictionLinePoint.size()) {
+				nowline = int(_bullet.predictionLinePoint.size()) - 2;
+			}
+			_bullet.timer->Update();
+
+			for (int i = 0; i < nowline; i++) {
+				predictionLine->AddLine(_bullet.predictionLinePoint[i], _bullet.predictionLinePoint[i + 1], 1.0f, { 1.0f,1.0f,1.0f,0.5f });
+			}
 		}
 	}
 }

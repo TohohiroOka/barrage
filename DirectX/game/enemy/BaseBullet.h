@@ -16,17 +16,9 @@ public:
 	
 	virtual void Update() override;
 
-	void Draw() override;
+	virtual void Draw() override;
 
-	void FrameReset() override;
-
-	virtual void GetAttackCollisionSphere(std::vector<Sphere>& _info) override {};
-
-	virtual void GetAttackCollisionBox(std::vector<Box>& _info) override {};
-
-	virtual void GetAttackCollisionCapsule(std::vector<Capsule>& _info) override {};
-
-	virtual void DeleteBullet(std::vector<int> _deleteNum) override {};
+	virtual void FrameReset() override;
 
 protected:
 
@@ -39,9 +31,6 @@ protected:
 
 	//弾道描画用
 	std::unique_ptr<PredictionLine> predictionLine;
-
-	//タイマー
-	std::unique_ptr<Engine::Timer> timer;
 	//モデル
 	std::unique_ptr<Model> model;
 };

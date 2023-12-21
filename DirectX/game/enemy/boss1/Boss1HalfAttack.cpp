@@ -6,6 +6,12 @@
 
 Boss1HalfAttack::Boss1HalfAttack()
 {
+	boss->SetPlayerDirection();
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
+	boss->GetBaseModel()->AnimationReset();
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_start));
+	boss->GetBaseModel()->AnimationReset();
+
 	//èÛë‘
 	state = State::start;
 
@@ -29,6 +35,9 @@ Boss1HalfAttack::Boss1HalfAttack()
 	instanceObject = InstanceObject::Create(model.get());
 
 	timer = std::make_unique<Engine::Timer>();
+	hitTimer = std::make_unique<Engine::Timer>();
+
+	isCollision = true;
 
 	//çsìÆä÷êî
 	func_.emplace_back([this] {return Start(); });
@@ -38,7 +47,7 @@ Boss1HalfAttack::Boss1HalfAttack()
 
 void Boss1HalfAttack::Update()
 {
-	if (int(state) >= 0 && int(state) < int(State::non) && !boss->GetIsWince()) {
+	if (int(state) >= 0 && int(state) < int(State::non)) {
 		func_[int(state)]();
 	}
 
@@ -58,6 +67,14 @@ void Boss1HalfAttack::Update()
 	line->VertexInit();
 	line->Update();
 	timer->Update();
+
+	if (!isCollision) {
+		hitTimer->Update();
+		//îªíËÇéÊÇÁÇ»Ç¢éûä‘à»è„Ç…Ç»Ç¡ÇΩÇÁñﬂÇ∑
+		if (*hitTimer.get() > 2) {
+			isCollision = true;
+		}
+	}
 }
 
 void Boss1HalfAttack::Draw()
@@ -65,6 +82,22 @@ void Boss1HalfAttack::Draw()
 	instanceObject->Draw();
 
 	line->Draw();
+}
+
+void Boss1HalfAttack::GetAttackCollisionCapsule(std::vector<Capsule>& _info)
+{
+	Vector3 bossPos = boss->GetCenter()->GetPosition();
+	for (auto& i : ringInfo) {
+		for (auto& j : i.swordObject) {
+			Vector3 vec = j.pos - bossPos;
+			vec=vec.normalize();
+			Capsule add;
+			add.startPosition=j.pos;
+			add.endPosition = j.pos + vec * 1.0f;
+			add.radius = 1.0f;
+			_info.emplace_back(add);
+		}
+	}
 }
 
 void Boss1HalfAttack::Start()
@@ -100,7 +133,6 @@ void Boss1HalfAttack::Start()
 void Boss1HalfAttack::Attack()
 {
 	const float maxTime = 80.0f;
-	const float rate = *timer.get() / maxTime;
 	const Vector3 bossPos = boss->GetCenter()->GetPosition();
 
 	int swordNum = 0;
@@ -120,9 +152,10 @@ void Boss1HalfAttack::Attack()
 		swordNum = 0;
 	}
 
-	if (rate < 1.0f) { return; }
-	state = State::end;
-	timer->Reset();
+	//if (*timer.get() < maxTime) { return; }
+	//state = State::end;
+	//timer->Reset();
+	//boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
 }
 
 void Boss1HalfAttack::End()
