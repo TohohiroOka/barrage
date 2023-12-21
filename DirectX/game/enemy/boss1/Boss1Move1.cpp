@@ -27,9 +27,9 @@ Boss1Move1::Boss1Move1()
 
 void Boss1Move1::Update()
 {
-	if (boss->GetIsWince()) {
-		return;
+	if (boss->GetIsWince() || boss->GetIsBreak()) {
 		isEnd = true;
+		return;
 	}
 
 	const float maxTimer = 30.0f;
@@ -44,7 +44,8 @@ void Boss1Move1::Update()
 		i = Easing::OutSine(5, 0, (rate - 0.5f) * 2.0f);
 	}
 
-	boss->SetMoveVec(moveV * i);
+	Vector3 pos = boss->GetCenter()->GetPosition();
+	boss->GetCenter()->SetPosition(pos + (moveV * i));
 
 	if (*moveTime.get() <= maxTimer) { return; }
 	isEnd = true;

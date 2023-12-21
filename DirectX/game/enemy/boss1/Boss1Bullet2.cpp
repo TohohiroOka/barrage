@@ -44,8 +44,12 @@ Boss1Bullet2::Boss1Bullet2()
 
 void Boss1Bullet2::Update()
 {
-	if (int(state) >= 0 && int(state) < int(State::non) && !boss->GetIsWince()) {
-		func_[int(state)]();
+	if (!boss->GetIsWince() && !boss->GetIsBreak()) {
+		if (int(state) >= 0 && int(state) < int(State::non)) {
+			func_[int(state)]();
+		}
+	} else {
+		End();
 	}
 
 	//falseなら消す
@@ -53,6 +57,9 @@ void Boss1Bullet2::Update()
 		return !x.isAlive;
 		}
 	);
+
+	//更新処理
+	BulletUpdate();
 
 	BaseBullet::Update();
 }
@@ -102,11 +109,6 @@ void Boss1Bullet2::Attack()
 	if (*timer.get() > maxTimer - 30.0f) {
 		boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
 	}
-	//更新処理
-	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
-		it != bullet.end(); it++) {
-		BulletUpdate(*it);
-	}
 
 	if (*timer.get() < maxTimer) { return; }
 	state = State::end;
@@ -115,15 +117,7 @@ void Boss1Bullet2::Attack()
 
 void Boss1Bullet2::End()
 {
-	int num = 0;
-	//更新処理
-	for (std::forward_list<BulletInfo>::iterator it = bullet.begin();
-		it != bullet.end(); it++) {
-		num++;
-		BulletUpdate(*it);
-	}
-
-	if (!boss->GetBaseModel()->GetIsAnimationEnd() || num != 0) { return; }
+	if (!boss->GetBaseModel()->GetIsAnimationEnd() || std::distance(bullet.begin(), bullet.end()) != 0) { return; }
 	state = State::non;
 	isEnd = true;
 }
@@ -154,67 +148,69 @@ void Boss1Bullet2::AddBullet(bool _easing)
 	add.predictionLinePoint.emplace_back(bossPos);
 }
 
-void Boss1Bullet2::BulletUpdate(BulletInfo& _bullet)
+void Boss1Bullet2::BulletUpdate()
 {
 	const float maxTimer = 20.0f;
-	//イージング移動
-	if (!_bullet.isSetVec) {
-		const float l_reto = *_bullet.timer.get() / maxTimer;
-		if (_bullet.easing) {
-			_bullet.nowPos.x = Easing::OutCirc(_bullet.beforePos.x, _bullet.afterPos.x, l_reto);
-			_bullet.nowPos.y = Easing::Lerp(_bullet.beforePos.y, _bullet.afterPos.y, l_reto);
-			_bullet.nowPos.z = Easing::InCirc(_bullet.beforePos.z, _bullet.afterPos.z, l_reto);
+	for (auto& _bullet : bullet) {
+		//イージング移動
+		if (!_bullet.isSetVec) {
+			const float l_reto = *_bullet.timer.get() / maxTimer;
+			if (_bullet.easing) {
+				_bullet.nowPos.x = Easing::OutCirc(_bullet.beforePos.x, _bullet.afterPos.x, l_reto);
+				_bullet.nowPos.y = Easing::Lerp(_bullet.beforePos.y, _bullet.afterPos.y, l_reto);
+				_bullet.nowPos.z = Easing::InCirc(_bullet.beforePos.z, _bullet.afterPos.z, l_reto);
+			} else {
+				_bullet.nowPos.x = Easing::InCirc(_bullet.beforePos.x, _bullet.afterPos.x, l_reto);
+				_bullet.nowPos.y = Easing::Lerp(_bullet.beforePos.y, _bullet.afterPos.y, l_reto);
+				_bullet.nowPos.z = Easing::OutCirc(_bullet.beforePos.z, _bullet.afterPos.z, l_reto);
+			}
+			//移動を変更
+			if (*_bullet.timer.get() > maxTimer - 5.0f) {
+				_bullet.moveVec = _bullet.afterPos - _bullet.nowPos;
+				_bullet.moveVec = _bullet.moveVec.normalize() * 10.0f;
+				_bullet.isSetVec = true;
+			}
+
+			_bullet.timer->Update();
+		}
+		//イージング途中のベクトル方向に壁に当たるまで移動
+		else {
+			_bullet.nowPos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
+		}
+
+		const float dist = 10.0f;
+		if (_bullet.nowPos.x < -dist || _bullet.nowPos.x > moveMaxPos.x + dist ||
+			_bullet.nowPos.y < -dist || _bullet.nowPos.y > moveMaxPos.y + dist ||
+			_bullet.nowPos.z < -dist || _bullet.nowPos.z > moveMaxPos.z + dist) {
+			_bullet.isAlive = false;
+			return;
+		}
+
+		for (auto& i : instanceObject) {
+			if (!i->GetInstanceDrawCheck()) { continue; }
+			i->DrawInstance(_bullet.nowPos, { 1.0f ,1.0f ,1.0f }, { 0.0f ,0.0f ,0.0f }, { 1,1,1,1 });
+		}
+
+		//弾道セット
+		if (_bullet.predictionLinePoint.size() < 10) {
+			_bullet.predictionLinePoint.insert(_bullet.predictionLinePoint.begin(), _bullet.nowPos);
 		} else {
-			_bullet.nowPos.x = Easing::InCirc(_bullet.beforePos.x, _bullet.afterPos.x, l_reto);
-			_bullet.nowPos.y = Easing::Lerp(_bullet.beforePos.y, _bullet.afterPos.y, l_reto);
-			_bullet.nowPos.z = Easing::OutCirc(_bullet.beforePos.z, _bullet.afterPos.z, l_reto);
-		}
-		//移動を変更
-		if (*_bullet.timer.get() > maxTimer - 5.0f) {
-			_bullet.moveVec = _bullet.afterPos - _bullet.nowPos;
-			_bullet.moveVec = _bullet.moveVec.normalize() * 10.0f;
-			_bullet.isSetVec = true;
+			for (int i = 1; i < 10; i++) {
+				_bullet.predictionLinePoint[i] = _bullet.predictionLinePoint[i - 1];
+			}
+			_bullet.predictionLinePoint[0] = _bullet.nowPos;
 		}
 
-		_bullet.timer->Update();
-	}
-	//イージング途中のベクトル方向に壁に当たるまで移動
-	else {
-		_bullet.nowPos += _bullet.moveVec * GameHelper::Instance()->GetGameSpeed();
-	}
-
-	const float dist = 10.0f;
-	if (_bullet.nowPos.x < -dist || _bullet.nowPos.x > moveMaxPos.x + dist ||
-		_bullet.nowPos.y < -dist || _bullet.nowPos.y > moveMaxPos.y + dist ||
-		_bullet.nowPos.z < -dist || _bullet.nowPos.z > moveMaxPos.z + dist) {
-		_bullet.isAlive = false;
-		return;
-	}
-
-	for (auto& i : instanceObject) {
-		if (!i->GetInstanceDrawCheck()) { continue; }
-		i->DrawInstance(_bullet.nowPos, { 1.0f ,1.0f ,1.0f }, { 0.0f ,0.0f ,0.0f }, { 1,1,1,1 });
-	}
-
-	//弾道セット
-	if (_bullet.predictionLinePoint.size() < 10) {
-		_bullet.predictionLinePoint.insert(_bullet.predictionLinePoint.begin(), _bullet.nowPos);
-	} else {
-		for (int i = 1; i < 10; i++) {
-			_bullet.predictionLinePoint[i] = _bullet.predictionLinePoint[i - 1];
+		//弾道描画セット
+		predictionLine->AddLine(_bullet.nowPos, _bullet.predictionLinePoint[0], 1.0f, { 1.0f,1.0f,1.0f,0.5f });
+		for (int i = 1; i < _bullet.predictionLinePoint.size(); i++) {
+			predictionLine->AddLine(_bullet.predictionLinePoint[i - 1], _bullet.predictionLinePoint[i], 1.0f, { 1.0f,1.0f,1.0f,0.5f });
 		}
-		_bullet.predictionLinePoint[0] = _bullet.nowPos;
-	}
 
-	//弾道描画セット
-	predictionLine->AddLine(_bullet.nowPos, _bullet.predictionLinePoint[0], 1.0f, { 1.0f,1.0f,1.0f,0.5f });
-	for (int i = 1; i < _bullet.predictionLinePoint.size(); i++) {
-		predictionLine->AddLine(_bullet.predictionLinePoint[i - 1], _bullet.predictionLinePoint[i], 1.0f, { 1.0f,1.0f,1.0f,0.5f });
+		//エフェクト追加
+		DirectX::XMFLOAT4 bulletColor = { 0.f,0.f,0.f,1.0f };
+		DirectX::XMFLOAT4 effectColor = { 0.2f,0.2f,0.8f,1.0f };
+		float effectScale = 5.f;
+		bulletEffect->AddBulletEffect(_bullet.nowPos, bulletColor, effectScale, effectColor);
 	}
-
-	//エフェクト追加
-	DirectX::XMFLOAT4 bulletColor = { 0.f,0.f,0.f,1.0f };
-	DirectX::XMFLOAT4 effectColor = { 0.2f,0.2f,0.8f,1.0f };
-	float effectScale = 5.f;
-	bulletEffect->AddBulletEffect(_bullet.nowPos, bulletColor, effectScale, effectColor);
 }

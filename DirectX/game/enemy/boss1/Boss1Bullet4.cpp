@@ -38,11 +38,20 @@ Boss1Bullet4::Boss1Bullet4()
 
 void Boss1Bullet4::Update()
 {
-	if (int(state) >= 0 && int(state) <= int(State::non) && !boss->GetIsWince()) {
+	if (!boss->GetIsWince() && !boss->GetIsBreak()) {
+		if (int(state) >= 0 && int(state) <= int(State::non)) {
+			func_[int(state)]();
+		}
+	} else if (state == State::attack) {
 		func_[int(state)]();
+	} else {
+		isEnd = true;
+		return;
 	}
 
 	instanceObject->Update();
+
+	timer->Update();
 }
 
 void Boss1Bullet4::Draw()
@@ -135,8 +144,6 @@ void Boss1Bullet4::Attack()
 		AllHitEffect::Instance()->AddParticle({ object[0].pos.x,0.0f,object[0].pos.z });
 		oldtime++;
 	}
-
-	timer->Update();
 
 	if (aliveNum != 0) { return; }
 	isEnd = true;

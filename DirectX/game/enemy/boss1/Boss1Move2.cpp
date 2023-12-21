@@ -39,14 +39,14 @@ Boss1Move2::Boss1Move2()
 
 void Boss1Move2::Update()
 {
-	boss->SetPlayerDirection();
-
-	if (boss->GetIsWince()) {
-		return;
+	if (boss->GetIsWince() || boss->GetIsBreak()) {
 		isEnd = true;
+		return;
 	}
 
-	if (int(state) >= 0 && int(state) < int(State::non) && !boss->GetIsWince()) {
+	boss->SetPlayerDirection();
+
+	if (int(state) >= 0 && int(state) < int(State::non)) {
 		func_[int(state)]();
 	}
 }
@@ -58,9 +58,9 @@ void Boss1Move2::UpMove()
 	const float rate = *timer.get() / maxTimer;
 
 	if (rate < 1.0f) {
-		const Vector3 pos = Vector3(boss->GetCenter()->GetPosition());
-		float moveY = Easing::OutBack(startPos.y, 20.0f, rate) - pos.y;
-		boss->SetMoveVec({ 0.0f,moveY,0.0f });
+		Vector3 pos = Vector3(boss->GetCenter()->GetPosition());
+		pos.y = Easing::OutBack(startPos.y, 20.0f, rate);
+		boss->GetCenter()->SetPosition(pos);
 	} else if (*timer.get() > maxTimer + 10.0f) {
 		state = State::side;
 		timer->Reset();
@@ -75,11 +75,11 @@ void Boss1Move2::SideMove()
 	const float rate = *timer.get() / maxTimer;
 	Vector3 pos = Vector3(boss->GetCenter()->GetPosition());
 
-	pos.x = Easing::OutCirc(startPos.x, endPos.x, rate) - pos.x;
-	pos.y = Easing::OutCirc(startPos.y, endPos.y, rate) - pos.y;
-	pos.z = Easing::OutCirc(startPos.z, endPos.z, rate) - pos.z;
+	pos.x = Easing::OutCirc(startPos.x, endPos.x, rate);
+	pos.y = Easing::OutCirc(startPos.y, endPos.y, rate);
+	pos.z = Easing::OutCirc(startPos.z, endPos.z, rate);
 
-	boss->SetMoveVec(pos);
+	boss->GetCenter()->SetPosition(pos);
 
 	if (rate < 1.0f) { return; }
 	isEnd = true;

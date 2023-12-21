@@ -62,8 +62,12 @@ Boss1Bullet3::Boss1Bullet3()
 
 void Boss1Bullet3::Update()
 {
-	if (int(state) >= 0 && int(state) <= int(State::non) && !boss->GetIsWince()) {
-		func_[int(state)]();
+	if (!boss->GetIsWince() && !boss->GetIsBreak()) {
+		if (int(state) >= 0 && int(state) < int(State::non)) {
+			func_[int(state)]();
+		}
+	} else {
+		End();
 	}
 
 	for (auto& i : instanceObject) {
@@ -154,7 +158,7 @@ void Boss1Bullet3::End()
 
 	if (aliveNum != 0) { return; }
 	timer->Reset();
-	state = State::non;;
+	state = State::non;
 	isEnd = true;
 }
 

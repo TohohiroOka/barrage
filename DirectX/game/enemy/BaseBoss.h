@@ -21,7 +21,12 @@ public:
 
 	virtual void DrawSprite();
 
-	virtual void FrameReset() { bossModel->RrameReset(); }
+	virtual void FrameReset() {
+		bossModel->RrameReset();
+		if (breakAction) {
+			breakAction->FrameReset();
+		}
+	}
 
 	virtual void SetAction() = 0;
 
@@ -39,8 +44,16 @@ public:
 	BaseBossModel* GetBaseModel() { return bossModel.get(); }
 	bool GetBossIsAlive() { return HP <= 0; }
 	bool GetIsWince() { return isWince; }
+	bool GetIsBreak() { return isBreak; }
 	void SetTargetPos(const Vector3& _targetPos) { targetPos = _targetPos; }
-	void SetMoveVec(const Vector3& _moveVec) { moveVec = _moveVec; }
+	BaseAction* GetBaseAction2() { 
+		if (breakAction) {
+			return breakAction.get();
+		} else {
+			return nullptr;
+		}
+	}
+
 
 protected:
 
@@ -50,15 +63,15 @@ protected:
 	//ボスのモデル情報
 	std::unique_ptr<BaseBossModel> bossModel;
 
-	//移動距離
-	Vector3 moveVec;
-
 	//最大体力
 	int maxHP;
 	//体力
 	int HP;
 	//体力ゲージ
 	std::unique_ptr<Gauge> hpGauge;
+
+	//行動中断フラグ
+	bool isBreak;
 
 	//行動
 	std::unique_ptr<BaseAction> action;
@@ -78,5 +91,8 @@ protected:
 	bool isWince;
 	//怯みアクション
 	std::unique_ptr<BaseAction> winceAction;
+
+	//hpが一定化になった時の行動
+	std::unique_ptr<BaseAction> breakAction;
 };
 

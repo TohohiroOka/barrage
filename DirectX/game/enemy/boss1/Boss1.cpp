@@ -24,21 +24,31 @@ Boss1::Boss1()
 
 	BaseAction::SetBossPtr(this);
 
-	action = std::make_unique<Boss1HalfAttack>();
+	action = std::make_unique<Boss1Move1>();
 
 	hitScale = bossModel->GetObjectInst()->GetScale().y * 5000.0f;
+
+	nowBreakHp = maxHP / 2.0f;
 }
 
 void Boss1::Update()
 {
-	if (winceValue >= 400) {
+	if (HP < nowBreakHp) {
+		action->SetActionBreak();
+		breakAction = std::make_unique<Boss1HalfAttack>();
+		isBreak = true;
+		nowBreakHp = 0;
+	}
+
+	if (winceValue >= 400 && !isBreak) {
+		action->SetActionBreak();
+		winceAction = std::make_unique<Boss1Wince>();
 		isWince = true;
 		winceValue = 0.0f;
-		winceAction = std::make_unique<Boss1Wince>();
 	}
 
 	//アクションが終わり次第次に行く
-	if (action->End() && !isWince) {
+	if (action->GetEnd() && !isWince && !isBreak) {
 		SetAction();
 	}
 

@@ -242,28 +242,38 @@ void Scene1::CollisionCheck()
 
 #pragma region プレイヤーと敵の攻撃の衝突判定
 	{
+		BaseAction* action = boss->GetBaseAction();
 		//プレイヤーが回避またはブリンクをしていなければ衝突判定
 		//攻撃の判定を行わない時間なら判定を取らない
-		if ((!player->GetData()->isNoDamage) && boss->GetBaseAction()->GetIsCollision()) {
+		if ((!player->GetData()->isNoDamage) && action->GetIsCollision()) {
 			const Vector3 ppos = player->GetData()->pos;
 			Sphere playerSphere;
 			playerSphere.center = { ppos.x, ppos.y, ppos.z, 1.0f };
 			playerSphere.radius = player->GetFbxObject()->GetScale().x;
 
 			//球とボックス
-			if (boss->GetBaseAction()->GetUseCollision() == BaseAction::UseCollision::box) {
+			if (action->GetUseCollision() == BaseAction::UseCollision::box) {
 				std::vector<Box> bossAttackDatas;
-				boss->GetBaseAction()->GetAttackCollisionBox(bossAttackDatas);
+				action->GetAttackCollisionBox(bossAttackDatas);
 
 				int num = -1;
 				for (auto& i : bossAttackDatas) {
 					num++;
 					if (Collision::CheckSphere2Box(playerSphere, i)) {
 						Vector3 knockbackVec = ppos - (Vector3)i.point1;
-						player->Damage(boss->GetBaseAction()->GetDamage(), knockbackVec, 3, 10, true);
+
+						//ダメージの情報取得
+						int damageNum;
+						int knockbackPower;
+						int knockbackTime;
+						bool isKnockbackStart;
+						action->GetDamageInfo(damageNum, knockbackPower, knockbackTime, isKnockbackStart);
+
+						//ダメージ処理
+						player->Damage(damageNum, knockbackVec, knockbackPower, knockbackTime, isKnockbackStart);
 						camera->ShakeStart(10, 10);
-						boss->GetBaseAction()->SetIsCollision(false);
-						boss->GetBaseAction()->DeleteBullet({ num });
+						action->SetIsCollision(false);
+						action->DeleteBullet({ num });
 						//ダメージ音再生
 						Audio::Instance()->SoundPlayWava(Sound::SoundName::damage, false, 0.1f);
 
@@ -272,19 +282,28 @@ void Scene1::CollisionCheck()
 				}
 			}
 			//球と球
-			else if (boss->GetBaseAction()->GetUseCollision() == BaseAction::UseCollision::sphere) {
+			else if (action->GetUseCollision() == BaseAction::UseCollision::sphere) {
 				std::vector<Sphere> bossAttackDatas;
-				boss->GetBaseAction()->GetAttackCollisionSphere(bossAttackDatas);
+				action->GetAttackCollisionSphere(bossAttackDatas);
 
 				int num = -1;
 				for (auto& i : bossAttackDatas) {
 					num++;
 					if (Collision::CheckSphere2Sphere(playerSphere, i)) {
 						Vector3 knockbackVec = ppos - Vector3{ i.center.m128_f32[0],i.center.m128_f32[1], i.center.m128_f32[2] };
-						player->Damage(boss->GetBaseAction()->GetDamage(), knockbackVec, 3, 1, true);
+						
+						//ダメージの情報取得
+						int damageNum;
+						int knockbackPower;
+						int knockbackTime;
+						bool isKnockbackStart;
+						action->GetDamageInfo(damageNum, knockbackPower, knockbackTime, isKnockbackStart);
+
+						//ダメージ処理
+						player->Damage(damageNum, knockbackVec, knockbackPower, knockbackTime, isKnockbackStart);
 						camera->ShakeStart(10, 10);
-						boss->GetBaseAction()->SetIsCollision(false);
-						boss->GetBaseAction()->DeleteBullet({ num });
+						action->SetIsCollision(false);
+						action->DeleteBullet({ num });
 						//ダメージ音再生
 						Audio::Instance()->SoundPlayWava(Sound::SoundName::damage, false, 0.1f);
 
@@ -293,9 +312,9 @@ void Scene1::CollisionCheck()
 				}
 			}
 			//球とカプセル
-			else if (boss->GetBaseAction()->GetUseCollision() == BaseAction::UseCollision::capsule) {
+			else if (action->GetUseCollision() == BaseAction::UseCollision::capsule) {
 				std::vector<Capsule> bossAttackDatas;
-				boss->GetBaseAction()->GetAttackCollisionCapsule(bossAttackDatas);
+				action->GetAttackCollisionCapsule(bossAttackDatas);
 
 				int num = -1;
 				for (auto& i : bossAttackDatas) {
@@ -304,10 +323,126 @@ void Scene1::CollisionCheck()
 					Vector3 collisionPos;
 					if (Collision::CheckSphereCapsule(playerSphere, i, &dist, &collisionPos)) {
 						Vector3 knockbackVec = ppos - i.startPosition;
-						player->Damage(boss->GetBaseAction()->GetDamage(), knockbackVec, 3, 10, true);
+						
+						//ダメージの情報取得
+						int damageNum;
+						int knockbackPower;
+						int knockbackTime;
+						bool isKnockbackStart;
+						action->GetDamageInfo(damageNum, knockbackPower, knockbackTime, isKnockbackStart);
+
+						//ダメージ処理
+						player->Damage(damageNum, knockbackVec, knockbackPower, knockbackTime, isKnockbackStart);
 						camera->ShakeStart(10, 10);
-						boss->GetBaseAction()->SetIsCollision(false);
-						boss->GetBaseAction()->DeleteBullet({ num });
+						action->SetIsCollision(false);
+						action->DeleteBullet({ num });
+						//ダメージ音再生
+						Audio::Instance()->SoundPlayWava(Sound::SoundName::damage, false, 0.1f);
+
+						break;
+					}
+				}
+			}
+		}
+	}
+#pragma endregion
+
+#pragma region プレイヤーと敵の攻撃の衝突判定2
+	if(boss->GetBaseAction2()){
+		BaseAction* action = boss->GetBaseAction2();
+		//プレイヤーが回避またはブリンクをしていなければ衝突判定
+		//攻撃の判定を行わない時間なら判定を取らない
+		if ((!player->GetData()->isNoDamage) && action->GetIsCollision()) {
+			const Vector3 ppos = player->GetData()->pos;
+			Sphere playerSphere;
+			playerSphere.center = { ppos.x, ppos.y, ppos.z, 1.0f };
+			playerSphere.radius = player->GetFbxObject()->GetScale().x;
+
+			//球とボックス
+			if (action->GetUseCollision() == BaseAction::UseCollision::box) {
+				std::vector<Box> bossAttackDatas;
+				action->GetAttackCollisionBox(bossAttackDatas);
+
+				int num = -1;
+				for (auto& i : bossAttackDatas) {
+					num++;
+					if (Collision::CheckSphere2Box(playerSphere, i)) {
+						Vector3 knockbackVec = ppos - (Vector3)i.point1;
+						
+						//ダメージの情報取得
+						int damageNum;
+						int knockbackPower;
+						int knockbackTime;
+						bool isKnockbackStart;
+						action->GetDamageInfo(damageNum, knockbackPower, knockbackTime, isKnockbackStart);
+
+						//ダメージ処理
+						player->Damage(damageNum, knockbackVec, knockbackPower, knockbackTime, isKnockbackStart);
+						camera->ShakeStart(10, 10);
+						action->SetIsCollision(false);
+						action->DeleteBullet({ num });
+						//ダメージ音再生
+						Audio::Instance()->SoundPlayWava(Sound::SoundName::damage, false, 0.1f);
+
+						break;
+					}
+				}
+			}
+			//球と球
+			else if (boss->GetBaseAction2()->GetUseCollision() == BaseAction::UseCollision::sphere) {
+				std::vector<Sphere> bossAttackDatas;
+				action->GetAttackCollisionSphere(bossAttackDatas);
+
+				int num = -1;
+				for (auto& i : bossAttackDatas) {
+					num++;
+					if (Collision::CheckSphere2Sphere(playerSphere, i)) {
+						Vector3 knockbackVec = ppos - Vector3{ i.center.m128_f32[0], i.center.m128_f32[1], i.center.m128_f32[2] };
+					
+						//ダメージの情報取得
+						int damageNum;
+						int knockbackPower;
+						int knockbackTime;
+						bool isKnockbackStart;
+						action->GetDamageInfo(damageNum, knockbackPower, knockbackTime, isKnockbackStart);
+
+						//ダメージ処理
+						player->Damage(damageNum, knockbackVec, knockbackPower, knockbackTime, isKnockbackStart);
+						camera->ShakeStart(10, 10);
+						action->SetIsCollision(false);
+						action->DeleteBullet({ num });
+						//ダメージ音再生
+						Audio::Instance()->SoundPlayWava(Sound::SoundName::damage, false, 0.1f);
+
+						break;
+					}
+				}
+			}
+			//球とカプセル
+			else if (action->GetUseCollision() == BaseAction::UseCollision::capsule) {
+				std::vector<Capsule> bossAttackDatas;
+				action->GetAttackCollisionCapsule(bossAttackDatas);
+
+				int num = -1;
+				for (auto& i : bossAttackDatas) {
+					num++;
+					float dist;
+					Vector3 collisionPos;
+					if (Collision::CheckSphereCapsule(playerSphere, i, &dist, &collisionPos)) {
+						Vector3 knockbackVec = ppos - i.startPosition;
+					
+					//ダメージの情報取得
+						int damageNum;
+						int knockbackPower;
+						int knockbackTime;
+						bool isKnockbackStart;
+						action->GetDamageInfo(damageNum, knockbackPower, knockbackTime, isKnockbackStart);
+
+						//ダメージ処理
+						player->Damage(damageNum, knockbackVec, knockbackPower, knockbackTime, isKnockbackStart);
+						camera->ShakeStart(10, 10);
+						action->SetIsCollision(false);
+						action->DeleteBullet({ num });
 						//ダメージ音再生
 						Audio::Instance()->SoundPlayWava(Sound::SoundName::damage, false, 0.1f);
 

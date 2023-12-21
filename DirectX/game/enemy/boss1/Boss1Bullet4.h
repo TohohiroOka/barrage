@@ -44,7 +44,12 @@ public:
 
 	void DeleteBullet(std::vector<int> _deleteNum) override {};
 
-	int GetDamage()override { return 5; }
+	void GetDamageInfo(int& _damageNum, int& _knockbackPower, int& _knockbackTime, bool& _isKnockbackStart) override {
+		_damageNum = 5;
+		_knockbackPower = 3;
+		_knockbackTime = 10;
+		_isKnockbackStart = true;
+	}
 
 	void Start();
 
@@ -60,8 +65,7 @@ private:
 	std::vector<std::function<void()>> func_;
 	//状態
 	State state;
-	//全体タイマー
-	std::unique_ptr<Engine::Timer> timer;
+	//時間記録
 	float oldtime;
 	//出現する場所（中心からの距離）
 	float dist;
