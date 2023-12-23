@@ -3,13 +3,6 @@
 
 class BasePostEffect :public Sprite
 {
-private:
-
-	struct CONST_BUFFER_DATA_OUTLINE {
-		float outlineWidth;//アウトラインの太さ
-		XMFLOAT4 pad;
-	};
-
 public:
 
 	enum class EffectTyep {
@@ -19,19 +12,7 @@ public:
 		size,
 	};
 
-protected:
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize(const EffectTyep _type, const std::string& _texName);
-
-	/// <summary>
-	/// 深度バッファ生成
-	/// </summary>
-	void CreateDepthBuffer();
-
-public://メンバ関数
+public:
 
 	/// <summary>
 	/// コンストラクタ
@@ -44,38 +25,25 @@ public://メンバ関数
 	~BasePostEffect();
 
 	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize(const EffectTyep _type, const std::string& _texName);
+
+	/// <summary>
 	/// 描画コマンドの発行
 	/// </summary>
-	void Draw(TextureManager* _tex);
+	void Draw();
 
-	/// <summary>
-	/// 描画前処理
-	/// </summary>
-	void PreDrawScene();
-
-	/// <summary>
-	/// 描画後処理
-	/// </summary>
-	void PostDrawScene();
+	static void SetPipeline(const std::vector<GraphicsPipelineManager::DrawSet>& _pipeline) { BasePostEffect::pipeline = _pipeline; }
 
 private://静的メンバ変数
 
-	//画面クリアカラー
-	static const float clearColor[4];
 	//パイプライン情報
 	static std::vector<GraphicsPipelineManager::DrawSet> pipeline;
 
 private://メンバ変数
 	
-	std::unique_ptr<TextureManager> renderTexture;
-	//DSV用デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeapDSV;
-	//深度バッファ
-	ComPtr<ID3D12Resource> depthBuffer;
 	//エフェクト種類
 	EffectTyep type;
-
-public:
-	static void SetPipeline(const std::vector<GraphicsPipelineManager::DrawSet>& _pipeline) { BasePostEffect::pipeline = _pipeline; }
 
 };

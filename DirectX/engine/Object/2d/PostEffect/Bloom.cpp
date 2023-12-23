@@ -26,6 +26,7 @@ void Bloom::Update()
 }
 
 Bloom::Bloom()
+	:BasePostEffect()
 {
 	//ブルームの強さ
 	strength = 5.0f;
@@ -43,16 +44,14 @@ std::unique_ptr<Bloom> Bloom::Create(const std::string& _texName)
 	instance->Initialize(EffectTyep::bloom, _texName);
 	//定数バッファ
 	instance->CreateConstBuffer();
-	//深度バッファ生成
-	instance->CreateDepthBuffer();
 
 	//ユニークポインタを返す
 	return std::unique_ptr<Bloom>(instance);
 }
 
-void Bloom::Draw(TextureManager* _tex)
+void Bloom::Draw()
 {
 	Bloom::Update();
 
-	BasePostEffect::Draw(_tex);
+	BasePostEffect::Draw();
 }

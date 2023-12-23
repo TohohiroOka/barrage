@@ -1,24 +1,19 @@
 #include "Depth.h"
 #include "WindowApp.h"
 
+ID3D12Device* Depth::device = nullptr;
+ID3D12GraphicsCommandList* Depth::cmdList = nullptr;
+const float Depth::clearColor[4] = { 0.0f,0.0f,0.0f,0.0f };
+
 using namespace DirectX;
 
-std::unique_ptr<Depth> Depth::Create(const std::string& _texName)
+void Depth::StaticInitialize(ID3D12Device* _device, ID3D12GraphicsCommandList* _cmdList)
 {
-	//インスタンスを生成
-	Depth* instance = new Depth();
-	if (instance == nullptr) {
-		return nullptr;
-	}
-
-	// 初期化
-	instance->Initialize(_texName);
-
-	//ユニークポインタを返す
-	return std::unique_ptr<Depth>(instance);
+	device = _device;
+	cmdList = _cmdList;
 }
 
-void Depth::Initialize(const std::string& _texName)
+Depth::Depth(const std::string& _texName)
 {
 	// テクスチャ用バッファの生成
 	texture = std::make_unique<TextureManager>(_texName);

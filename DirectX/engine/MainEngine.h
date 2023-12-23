@@ -3,6 +3,7 @@
 #include "Scene/SceneManager.h"
 #include "Input/DirectInput.h"
 #include "Input/XInputManager.h"
+#include "Object/2d/PostEffect/BaseRender.h"
 #include "Object/2d/PostEffect/PostEffect.h"
 #include "Object/2d/PostEffect/Bloom.h"
 #include "Object/2d/PostEffect/Outline.h"
@@ -21,6 +22,15 @@ class WindowApp;
 
 class MainEngine
 {
+private:
+
+	enum class RenderType {
+		bloom,
+		outline,
+		fog,
+		size,
+	};
+
 public:
 
 	MainEngine() = default;
@@ -62,6 +72,8 @@ private:
 	XInputManager* xinput = nullptr;
 	//GameSceneのインスタンス
 	std::unique_ptr<SceneManager> scene = nullptr;
+	//レンダーターゲット
+	std::array<std::unique_ptr<BaseRender>,int(RenderType::size)> render;
 	//ポストエフェクトのインスタンス
 	std::unique_ptr<PostEffect> postEffect;
 	//ポストエフェクト加工用

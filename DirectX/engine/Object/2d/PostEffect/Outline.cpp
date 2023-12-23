@@ -44,16 +44,14 @@ std::unique_ptr<Outline> Outline::Create(const std::string& _texName)
 	instance->Initialize(EffectTyep::outline, _texName);
 	//定数バッファ
 	instance->CreateConstBuffer();
-	//深度バッファ生成
-	instance->CreateDepthBuffer();
 
 	//ユニークポインタを返す
 	return std::unique_ptr<Outline>(instance);
 }
 
-void Outline::Draw(TextureManager* _tex)
+void Outline::Draw()
 {
-	Update();
+	Outline::Update();
 
-	BasePostEffect::Draw(_tex);
+	BasePostEffect::Draw();
 }

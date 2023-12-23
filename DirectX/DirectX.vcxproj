@@ -124,6 +124,7 @@
     <ClCompile Include="engine\Math\Vector3.cpp" />
     <ClCompile Include="engine\Object\2d\DebugText.cpp" />
     <ClCompile Include="engine\Object\2d\PostEffect\BasePostEffect.cpp" />
+    <ClCompile Include="engine\Object\2d\PostEffect\BaseRender.cpp" />
     <ClCompile Include="engine\Object\2d\PostEffect\Bloom.cpp" />
     <ClCompile Include="engine\Object\2d\PostEffect\Depth.cpp" />
     <ClCompile Include="engine\Object\2d\PostEffect\Fog.cpp" />
@@ -445,6 +446,7 @@
     <ClInclude Include="engine\Math\Vector3.h" />
     <ClInclude Include="engine\Object\2d\DebugText.h" />
     <ClInclude Include="engine\Object\2d\PostEffect\BasePostEffect.h" />
+    <ClInclude Include="engine\Object\2d\PostEffect\BaseRender.h" />
     <ClInclude Include="engine\Object\2d\PostEffect\Bloom.h" />
     <ClInclude Include="engine\Object\2d\PostEffect\Depth.h" />
     <ClInclude Include="engine\Object\2d\PostEffect\Fog.h" />

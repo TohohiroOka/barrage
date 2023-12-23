@@ -29,6 +29,7 @@ void Fog::Update()
 }
 
 Fog::Fog()
+	:BasePostEffect()
 {
 	//フォグの強さ
 	strength = 1.5f;
@@ -49,16 +50,14 @@ std::unique_ptr<Fog> Fog::Create(const std::string& _texName)
 	instance->Initialize(EffectTyep::fog, _texName);
 	//定数バッファ
 	instance->CreateConstBuffer();
-	//深度バッファ生成
-	instance->CreateDepthBuffer();
 
 	//ユニークポインタを返す
 	return std::unique_ptr<Fog>(instance);
 }
 
-void Fog::Draw(TextureManager* _tex)
+void Fog::Draw()
 {
 	Fog::Update();
 
-	BasePostEffect::Draw(_tex);
+	BasePostEffect::Draw();
 }

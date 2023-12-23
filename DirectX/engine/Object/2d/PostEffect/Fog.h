@@ -46,7 +46,12 @@ public:
 	/// <summary>
 	/// 描画コマンドの発行
 	/// </summary>
-	void Draw(TextureManager* _tex);
+	void Draw();
+
+	void SetStrength(const float _strength) { strength = _strength; }
+	void SetBlendRate(const float _blendRate) { blendRate = _blendRate; }
+	void SetColor1(const XMFLOAT3& _color) { color1 = _color; }
+	void SetColor2(const XMFLOAT3& _color) { color2 = _color; }
 
 private:
 
@@ -58,11 +63,4 @@ private:
 	XMFLOAT3 color1;
 	//フォグの色
 	XMFLOAT3 color2;
-
-public:
-	void SetStrength(const float _strength) { strength = _strength; }
-	void SetBlendRate(const float _blendRate) { blendRate = _blendRate; }
-	void SetColor1(const XMFLOAT3& _color) { color1 = _color; }
-	void SetColor2(const XMFLOAT3& _color) { color2 = _color; }
 };
-

@@ -500,6 +500,9 @@
     <ClCompile Include="engine\Texture\TextureManager.cpp">
       <Filter>Engine\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="engine\Object\2d\PostEffect\BaseRender.cpp">
+      <Filter>Engine\Object\2d\PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -1034,6 +1037,9 @@
     </ClInclude>
     <ClInclude Include="engine\Texture\EngineUseTexture.h">
       <Filter>Engine\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Object\2d\PostEffect\BaseRender.h">
+      <Filter>Engine\Object\2d\PostEffect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

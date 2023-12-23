@@ -5,7 +5,7 @@
 #include <DirectXMath.h>
 #include "Texture/TextureManager.h"
 
-class Depth
+class BaseRender
 {
 public: //静的メンバ関数
 
@@ -14,23 +14,29 @@ public: //静的メンバ関数
 	/// </summary>
 	/// <param name="_device"></param>
 	/// <param name="_cmdList"></param>
-	static void StaticInitialize(ID3D12Device* _device, ID3D12GraphicsCommandList* _cmdList);
-
+	static void StaticInitialize(ID3D12Device* _device,ID3D12GraphicsCommandList* _cmdList);
+	
 public: //メンバ関数
-	Depth(const std::string& _texName);
-	~Depth() {};
 
+	BaseRender(const std::string& _texName);
+	virtual ~BaseRender();
+	
 	/// <summary>
 	/// シーン描画前処理
 	/// </summary>
-	void PreDrawScene();
+	virtual void PreDrawScene();
 
 	/// <summary>
 	/// シーン描画後処理
 	/// </summary>
-	void PostDrawScene();
+	virtual void PostDrawScene();
 
-	TextureManager* GetTexture() { return texture.get(); }
+private:
+
+	/// <summary>
+	/// 深度バッファ生成
+	/// </summary>
+	void CreateDepthBuffer();
 
 private:
 
@@ -44,5 +50,9 @@ private:
 	//レンダーターゲット用画像
 	std::unique_ptr<TextureManager> texture;
 
+	//DSV用デスクリプタヒープ
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapDSV;
+	//深度バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> depthBuffer;
 };
 

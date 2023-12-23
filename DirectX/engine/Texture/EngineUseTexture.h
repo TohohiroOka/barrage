@@ -11,16 +11,12 @@ namespace Engine {
 
 	enum class EngineUseRTVTextureName {
 		main,
-		bloom,
-		outline,
-		fog,
-		size,
-	};
-
-	enum class EngineUseOutRTVTextureName {
-		bloom,
-		outline,
-		fog,
+		bloom_before,
+		outline_before,
+		create = 2,
+		bloom_after,
+		outline_after,
+		fog_after,
 		size,
 	};
 
@@ -37,15 +33,11 @@ namespace Engine {
 
 	static std::array<std::string, int(EngineUseRTVTextureName::size)> EngineUseRTVTexture = {
 		"main",
-		"bloom",
-		"outline",
-		"fog",
-	};
-
-	static std::array<std::string, int(EngineUseOutRTVTextureName::size)> EngineUseOutRTVTexture = {
-		"bloom_out",
-		"outline_out",
-		"fog_out",
+		"bloom_before",
+		"outline_before",
+		"bloom_after",
+		"outline_after",
+		"fog_after",
 	};
 
 	static std::array<std::string, int(EngineUseDSVTextureName::size)> EngineUseDSVTexture = {

@@ -1,7 +1,7 @@
 #pragma once
 #include "BasePostEffect.h"
 
-class Bloom :public BasePostEffect
+class Bloom : public BasePostEffect
 {
 private:
 
@@ -35,14 +35,16 @@ public:
 	~Bloom() {};
 
 	/// <summary>
-	/// インスタンスの生成
+	/// 生成
 	/// </summary>
+	/// <param name="_texName">使用画像名</param>
+	/// <returns></returns>
 	static std::unique_ptr<Bloom> Create(const std::string& _texName);
 
 	/// <summary>
 	/// 描画コマンドの発行
 	/// </summary>
-	void Draw(TextureManager* _tex);
+	void Draw();
 
 	void SetStrength(const float _strength) { strength = _strength; }
 

@@ -42,13 +42,12 @@ public:
 	/// <summary>
 	/// 描画コマンドの発行
 	/// </summary>
-	void Draw(TextureManager* _tex);
+	void Draw();
+
+	void SetOutlineWidth(const float _outlineWidth) { outlineWidth = _outlineWidth; }
 
 private:
 
 	//アウトラインの色
 	float outlineWidth;//アウトラインの太さ
-
-public:
-	void SetOutlineWidth(const float _outlineWidth) { outlineWidth = _outlineWidth; }
 };
