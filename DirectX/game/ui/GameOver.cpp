@@ -10,10 +10,10 @@
 void GameOver::Initialize()
 {
 	//ÉçÅ[ÉhÇ∆ê∂ê¨
-	Sprite::LoadTexture("gameover_gameover", "Resources/SpriteTexture/gameover.png");
-	Sprite::LoadTexture("gameover_continue", "Resources/SpriteTexture/continue.png");
-	Sprite::LoadTexture("gameover_exit", "Resources/SpriteTexture/exit.png");
-	Sprite::LoadTexture("gameover_back", "Resources/SpriteTexture/selectBack.png");
+	TextureManager::LoadTexture("gameover_gameover", "Resources/SpriteTexture/gameover.png");
+	TextureManager::LoadTexture("gameover_continue", "Resources/SpriteTexture/continue.png");
+	TextureManager::LoadTexture("gameover_exit", "Resources/SpriteTexture/exit.png");
+	TextureManager::LoadTexture("gameover_back", "Resources/SpriteTexture/selectBack.png");
 	gameoverText = Sprite::Create("gameover_gameover", {}, {0.5f,0.5f});
 	continueText = Sprite::Create("gameover_continue",	{},	{ 0.5f,0.5f });
 	exitText = Sprite::Create("gameover_exit",			{},	{ 0.5f,0.5f });

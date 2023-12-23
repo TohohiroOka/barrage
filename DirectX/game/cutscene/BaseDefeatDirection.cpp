@@ -7,7 +7,7 @@
 
 void BaseDefeatDirection::Init()
 {
-	Sprite::LoadTexture("victorytext", "Resources/SpriteTexture/victory.png");
+	TextureManager::LoadTexture("victorytext", "Resources/SpriteTexture/victory.png");
 	victoryTextUpper = Sprite::Create("victorytext", {}, { 0.5,0.5 });
 	victoryTextUpper->SetTexSize({ 512,64.f });
 	victoryTextUpper->SetSize({ 512.f * 1.25f,64.f * 1.25 });

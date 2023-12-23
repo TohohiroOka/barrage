@@ -37,7 +37,7 @@ Fog::Fog()
 	color2 = { 0.0f,0.0f,0.0f };
 }
 
-std::unique_ptr<Fog> Fog::Create()
+std::unique_ptr<Fog> Fog::Create(const std::string& _texName)
 {
 	// Spriteのインスタンスを生成
 	Fog* instance = new Fog();
@@ -46,7 +46,7 @@ std::unique_ptr<Fog> Fog::Create()
 	}
 
 	// 初期化
-	instance->Initialize(EffectTyep::fog);
+	instance->Initialize(EffectTyep::fog, _texName);
 	//定数バッファ
 	instance->CreateConstBuffer();
 	//深度バッファ生成
@@ -56,9 +56,9 @@ std::unique_ptr<Fog> Fog::Create()
 	return std::unique_ptr<Fog>(instance);
 }
 
-void Fog::Draw(const Texture*_tex)
+void Fog::Draw()
 {
 	Fog::Update();
 
-	BasePostEffect::Draw(_tex);
+	BasePostEffect::Draw();
 }

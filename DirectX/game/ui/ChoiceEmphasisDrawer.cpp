@@ -2,7 +2,7 @@
 
 void ChoiceEmphasisDrawer::Initialize()
 {
-	Sprite::LoadTexture("emphasis", "Resources/SpriteTexture/selectgradation.png");
+	TextureManager::LoadTexture("emphasis", "Resources/SpriteTexture/selectgradation.png");
 	emphasisSprite = Sprite::Create("emphasis", {}, { 384.f,96.f });
 	emphasisSprite->SetTexSize({ 384.f,96.f });
 	emphasisSprite->SetAnchorpoint({ 0.5f,0.5f });

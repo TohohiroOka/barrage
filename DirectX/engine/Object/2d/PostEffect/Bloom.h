@@ -37,19 +37,17 @@ public:
 	/// <summary>
 	/// インスタンスの生成
 	/// </summary>
-	static std::unique_ptr<Bloom> Create();
+	static std::unique_ptr<Bloom> Create(const std::string& _texName);
 
 	/// <summary>
 	/// 描画コマンドの発行
 	/// </summary>
-	void Draw(const Texture* _tex);
+	void Draw();
+
+	void SetStrength(const float _strength) { strength = _strength; }
 
 private:
 
 	//ブルームの強さ
 	float strength;
-
-public:
-	void SetStrength(const float _strength) { strength = _strength; }
-
 };

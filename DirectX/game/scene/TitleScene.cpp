@@ -15,11 +15,11 @@ void TitleScene::Initialize()
 	Audio::Instance()->SoundPlayWava(Sound::SoundName::msp_bgm, true, 0.1f);
 
 	//スプライトのリソースのロード
-	Sprite::LoadTexture("titleLogo", "Resources/SpriteTexture/titleLogo.png");
-	Sprite::LoadTexture("pab", "Resources/SpriteTexture/pressanybutton.png");
-	Sprite::LoadTexture("gamestart", "Resources/SpriteTexture/gamestart.png");
-	Sprite::LoadTexture("config", "Resources/SpriteTexture/config.png");
-	Sprite::LoadTexture("exitgame", "Resources/SpriteTexture/exitgame.png");
+	TextureManager::LoadTexture("titleLogo", "Resources/SpriteTexture/titleLogo.png");
+	TextureManager::LoadTexture("pab", "Resources/SpriteTexture/pressanybutton.png");
+	TextureManager::LoadTexture("gamestart", "Resources/SpriteTexture/gamestart.png");
+	TextureManager::LoadTexture("config", "Resources/SpriteTexture/config.png");
+	TextureManager::LoadTexture("exitgame", "Resources/SpriteTexture/exitgame.png");
 	//スプライト生成
 	titleLogoSprite = Sprite::Create("titleLogo", {}, { 0.5f,0.5f });
 	titleLogoSprite->SetSize({ 252.f * 1.5f,59.0f * 1.5f });

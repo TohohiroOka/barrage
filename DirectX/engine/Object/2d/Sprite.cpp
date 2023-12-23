@@ -5,7 +5,6 @@
 using namespace DirectX;
 
 std::vector<GraphicsPipelineManager::DrawSet> Sprite::pipeline;
-std::unordered_map<std::string, Sprite::INFORMATION> Sprite::texture;
 XMMATRIX Sprite::matProjection;
 
 Sprite::~Sprite()
@@ -21,21 +20,6 @@ void Sprite::StaticInitialize()
 		0.0f, float(WindowApp::GetWindowWidth()),
 		float(WindowApp::GetWindowHeight()), 0.0f,
 		0.0f, 1.0f);
-
-	Sprite::LoadTexture("debugfont", "Resources/LetterResources/debugfont.png", false);
-}
-
-void Sprite::LoadTexture(const std::string& _keepName, const std::string& _filename, bool _isDelete)
-{
-	// nullptrチェック
-	assert(device);
-
-	//同じキーがあればエラーを出力
-	assert(!texture.count(_keepName));
-
-	//テクスチャ読み込み
-	texture[_keepName].instance = Texture::Create(_filename);
-	texture[_keepName].isDelete = _isDelete;
 }
 
 std::unique_ptr<Sprite> Sprite::Create(const std::string& _name, const XMFLOAT2& _position, const XMFLOAT2& _anchorpoint, const XMFLOAT4& _color, bool _isFlipX, bool _isFlipY)
@@ -58,7 +42,7 @@ std::unique_ptr<Sprite> Sprite::Create(const std::string& _name, const XMFLOAT2&
 
 void Sprite::Initialize(const std::string& _name, const XMFLOAT2& _position, const XMFLOAT2& _anchorpoint, const XMFLOAT4& _color, bool _isFlipX, bool _isFlipY)
 {
-	this->name = _name;
+	texture = std::make_unique<TextureManager>(_name);
 	this->position = _position;
 	this->anchorpoint = _anchorpoint;
 	this-> color = _color;
@@ -67,14 +51,11 @@ void Sprite::Initialize(const std::string& _name, const XMFLOAT2& _position, con
 
 	HRESULT result = S_FALSE;
 
-	//指定番号の画像が読み込み済みなら
-	if (texture[_name].instance->texBuffer.Get()) {
-		//テクスチャ情報取得
-		D3D12_RESOURCE_DESC resDesc = texture[_name].instance->texBuffer.Get()->GetDesc();
-		//スプライトの大きさを画像の解像度に合わせる
-		size = { (float)resDesc.Width, (float)resDesc.Height };
-		texSize = { (float)resDesc.Width, (float)resDesc.Height };
-	}
+	//テクスチャ情報取得
+	XMFLOAT2 _size = texture->GetTexSize();
+	//スプライトの大きさを画像の解像度に合わせる
+	size = { _size.x, _size.y };
+	texSize = { _size.x,_size.y };
 
 	// 頂点バッファ生成
 	result = device->CreateCommittedResource(
@@ -86,7 +67,7 @@ void Sprite::Initialize(const std::string& _name, const XMFLOAT2& _position, con
 		IID_PPV_ARGS(&vertBuff));
 	if (FAILED(result)) { assert(0); }
 
-	if (name != "") {
+	if (texture->GetTexture() != "") {
 		TransferVertices();
 	} else {
 		TransferVerticesNoTex();
@@ -125,7 +106,7 @@ void Sprite::Update()
 	this->matWorld *= XMMatrixTranslation(position.x, position.y, 0.0f);
 
 	//頂点バッファに反映
-	if (name != "") {
+	if (texture->GetTexture() != "") {
 		TransferVertices();
 	} else {
 		TransferVerticesNoTex();
@@ -143,7 +124,7 @@ void Sprite::Update()
 void Sprite::Draw(const DrawMode _drawMode)
 {
 	//テクスチャがセットされていなければ抜ける
-	if (name == "") { return; }
+	if (texture->GetTexture() == "") { return; }
 
 	int modeNum = int(_drawMode);
 
@@ -154,7 +135,7 @@ void Sprite::Draw(const DrawMode _drawMode)
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, this->constBuff->GetGPUVirtualAddress());
 	// シェーダリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(1, texture[name].instance->descriptor->gpu);
+	cmdList->SetGraphicsRootDescriptorTable(1, texture->GetDescriptor()->gpu);
 
 	// 描画コマンド
 	cmdList->DrawInstanced(4, 1, 0, 0);
@@ -208,14 +189,12 @@ void Sprite::TransferVertices()
 	vertices[RT].pos = { right,	top,	0.0f }; // 右上
 
 	// テクスチャ情報取得
-	if (texture[name].instance->texBuffer)
-	{
-		D3D12_RESOURCE_DESC resDesc = texture[name].instance->texBuffer->GetDesc();
-
-		float texLeft = texLeftTop.x / resDesc.Width;
-		float texRight = (texLeftTop.x + texSize.x) / resDesc.Width;
-		float texTop = texLeftTop.y / resDesc.Height;
-		float texBottom = (texLeftTop.y + texSize.y) / resDesc.Height;
+	XMFLOAT2 _size = texture->GetTexSize();
+	if (_size.x != 0.0f && _size.y != 0.0f) {
+		float texLeft = texLeftTop.x / _size.x;
+		float texRight = (texLeftTop.x + texSize.x) / _size.x;
+		float texTop = texLeftTop.y / _size.y;
+		float texBottom = (texLeftTop.y + texSize.y) / _size.y;
 
 		vertices[LB].uv = { texLeft,	texBottom }; // 左下
 		vertices[LT].uv = { texLeft,	texTop }; // 左上
@@ -275,24 +254,4 @@ void Sprite::TransferVerticesNoTex()
 		memcpy(vertMap, vertices, sizeof(vertices));
 		vertBuff->Unmap(0, nullptr);
 	}
-}
-
-void Sprite::SceneFinalize()
-{
-	for (auto itr = texture.begin(); itr != texture.end();) {
-		if (!(*itr).second.isDelete) {
-			++itr;
-			continue;
-		}
-		itr = texture.erase(itr);
-	}
-}
-
-void Sprite::Finalize()
-{
-	for (auto itr = texture.begin(); itr != texture.end(); ++itr)
-	{
-		(*itr).second.instance.reset();
-	}
-	texture.clear();
 }

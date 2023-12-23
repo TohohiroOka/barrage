@@ -24,7 +24,7 @@ protected:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(const EffectTyep _type);
+	void Initialize(const EffectTyep _type, const std::string& _texName);
 
 	/// <summary>
 	/// 深度バッファ生成
@@ -46,7 +46,12 @@ public://メンバ関数
 	/// <summary>
 	/// 描画コマンドの発行
 	/// </summary>
-	void Draw(const Texture* _tex);
+	void Draw();
+
+	/// <summary>
+	/// 描画コマンドの発行
+	/// </summary>
+	void Draw(TextureManager* _tex);
 
 	/// <summary>
 	/// 描画前処理
@@ -58,8 +63,6 @@ public://メンバ関数
 	/// </summary>
 	void PostDrawScene();
 
-	Texture* GetTex() { return texture.get(); }
-
 private://静的メンバ変数
 
 	//画面クリアカラー
@@ -69,10 +72,6 @@ private://静的メンバ変数
 
 private://メンバ変数
 
-	//テクスチャ情報
-	std::unique_ptr<Texture> texture;
-	//RTV用デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeapRTV;
 	//DSV用デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeapDSV;
 	//深度バッファ

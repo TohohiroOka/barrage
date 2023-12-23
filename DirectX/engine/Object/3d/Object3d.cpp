@@ -148,7 +148,7 @@ void Object3d::Draw(const DrawMode _drawMode)
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 
-	cmdList->SetGraphicsRootDescriptorTable(4, lightDepthTexture->descriptor->gpu);
+	cmdList->SetGraphicsRootDescriptorTable(4, lightDepthTexture->GetDescriptor()->gpu);
 
 	// ライトの描画
 	light->Draw(cmdList, 2);

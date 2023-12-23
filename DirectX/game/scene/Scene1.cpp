@@ -21,7 +21,7 @@ const std::array<XMFLOAT4, 2> COLOR = { XMFLOAT4{ 0.0f,0.0f,0.8f,1.0f } ,{ 0.8f,
 
 void Scene1::Initialize()
 {
-	Sprite::LoadTexture("gauge", "Resources/SpriteTexture/gauge.png");
+	TextureManager::LoadTexture("gauge", "Resources/SpriteTexture/gauge.png");
 
 	//ínå`ê∂ê¨
 	field = std::make_unique<Field>();

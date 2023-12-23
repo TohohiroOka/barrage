@@ -5,7 +5,7 @@
 #include <DirectXMath.h>
 
 #include "Pipeline/GraphicsPipelineManager.h"
-#include "Texture/Texture.h"
+#include "Texture/TextureManager.h"
 
 class ObjectBase
 {

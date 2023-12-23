@@ -193,7 +193,7 @@ void Fbx::Draw(const DrawMode _drawMode)
 		cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 		cmdList->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
 
-		cmdList->SetGraphicsRootDescriptorTable(5, lightDepthTexture->descriptor->gpu);
+		cmdList->SetGraphicsRootDescriptorTable(5, lightDepthTexture->GetDescriptor()->gpu);
 
 		// ƒ‰ƒCƒg‚Ì•`‰æ
 		light->Draw(cmdList, 2);

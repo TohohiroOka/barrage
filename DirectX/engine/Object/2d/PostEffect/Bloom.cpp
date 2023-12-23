@@ -31,7 +31,7 @@ Bloom::Bloom()
 	strength = 5.0f;
 }
 
-std::unique_ptr<Bloom> Bloom::Create()
+std::unique_ptr<Bloom> Bloom::Create(const std::string& _texName)
 {
 	// Spriteのインスタンスを生成
 	Bloom* instance = new Bloom();
@@ -40,7 +40,7 @@ std::unique_ptr<Bloom> Bloom::Create()
 	}
 
 	// 初期化
-	instance->Initialize(EffectTyep::bloom);
+	instance->Initialize(EffectTyep::bloom, _texName);
 	//定数バッファ
 	instance->CreateConstBuffer();
 	//深度バッファ生成
@@ -50,9 +50,9 @@ std::unique_ptr<Bloom> Bloom::Create()
 	return std::unique_ptr<Bloom>(instance);
 }
 
-void Bloom::Draw(const Texture* _tex)
+void Bloom::Draw()
 {
 	Bloom::Update();
 
-	BasePostEffect::Draw(_tex);
+	BasePostEffect::Draw();
 }

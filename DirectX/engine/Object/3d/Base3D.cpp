@@ -11,7 +11,7 @@ using namespace DirectX;
 Camera* Base3D::camera = nullptr;
 LightCamera* Base3D::lightCamera = nullptr;
 LightGroup* Base3D::light = nullptr;
-Texture* Base3D::lightDepthTexture = nullptr;
+TextureManager* Base3D::lightDepthTexture = nullptr;
 
 void Base3D::Update()
 {

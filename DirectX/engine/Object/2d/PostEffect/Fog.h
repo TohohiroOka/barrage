@@ -41,12 +41,12 @@ public:
 	/// <summary>
 	/// インスタンスの生成
 	/// </summary>
-	static std::unique_ptr<Fog> Create();
+	static std::unique_ptr<Fog> Create(const std::string& _texName);
 
 	/// <summary>
 	/// 描画コマンドの発行
 	/// </summary>
-	void Draw(const Texture* _tex);
+	void Draw();
 
 private:
 

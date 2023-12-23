@@ -155,6 +155,7 @@
     <ClCompile Include="engine\scene\SceneManager.cpp" />
     <ClCompile Include="engine\Texture\DescriptorHeapManager.cpp" />
     <ClCompile Include="engine\Texture\Texture.cpp" />
+    <ClCompile Include="engine\Texture\TextureManager.cpp" />
     <ClCompile Include="engine\WindowApp.cpp" />
     <ClCompile Include="game\camera\GameCamera.cpp" />
     <ClCompile Include="game\camera\CutSceneCamera.cpp" />
@@ -483,7 +484,9 @@
     <ClInclude Include="engine\scene\SceneManager.h" />
     <ClInclude Include="engine\Singleton.h" />
     <ClInclude Include="engine\Texture\DescriptorHeapManager.h" />
+    <ClInclude Include="engine\Texture\EngineUseTexture.h" />
     <ClInclude Include="engine\Texture\Texture.h" />
+    <ClInclude Include="engine\Texture\TextureManager.h" />
     <ClInclude Include="engine\WindowApp.h" />
     <ClInclude Include="game\camera\GameCamera.h" />
     <ClInclude Include="game\camera\CutSceneCamera.h" />

@@ -32,7 +32,7 @@ Outline::Outline()
 	outlineWidth = 0.2f;
 }
 
-std::unique_ptr<Outline> Outline::Create()
+std::unique_ptr<Outline> Outline::Create(const std::string& _texName)
 {
 	// Spriteのインスタンスを生成
 	Outline* instance = new Outline();
@@ -41,7 +41,7 @@ std::unique_ptr<Outline> Outline::Create()
 	}
 
 	// 初期化
-	instance->Initialize(EffectTyep::outline);
+	instance->Initialize(EffectTyep::outline, _texName);
 	//定数バッファ
 	instance->CreateConstBuffer();
 	//深度バッファ生成
@@ -51,9 +51,9 @@ std::unique_ptr<Outline> Outline::Create()
 	return std::unique_ptr<Outline>(instance);
 }
 
-void Outline::Draw(const Texture* _tex)
+void Outline::Draw()
 {
 	Update();
 
-	BasePostEffect::Draw(_tex);
+	BasePostEffect::Draw();
 }
