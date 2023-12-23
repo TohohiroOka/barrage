@@ -46,11 +46,6 @@ public://メンバ関数
 	/// <summary>
 	/// 描画コマンドの発行
 	/// </summary>
-	void Draw();
-
-	/// <summary>
-	/// 描画コマンドの発行
-	/// </summary>
 	void Draw(TextureManager* _tex);
 
 	/// <summary>
@@ -71,7 +66,8 @@ private://静的メンバ変数
 	static std::vector<GraphicsPipelineManager::DrawSet> pipeline;
 
 private://メンバ変数
-
+	
+	std::unique_ptr<TextureManager> renderTexture;
 	//DSV用デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeapDSV;
 	//深度バッファ

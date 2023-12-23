@@ -56,9 +56,9 @@ std::unique_ptr<Fog> Fog::Create(const std::string& _texName)
 	return std::unique_ptr<Fog>(instance);
 }
 
-void Fog::Draw()
+void Fog::Draw(TextureManager* _tex)
 {
 	Fog::Update();
 
-	BasePostEffect::Draw();
+	BasePostEffect::Draw(_tex);
 }

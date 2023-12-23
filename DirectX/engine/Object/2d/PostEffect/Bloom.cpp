@@ -50,9 +50,9 @@ std::unique_ptr<Bloom> Bloom::Create(const std::string& _texName)
 	return std::unique_ptr<Bloom>(instance);
 }
 
-void Bloom::Draw()
+void Bloom::Draw(TextureManager* _tex)
 {
 	Bloom::Update();
 
-	BasePostEffect::Draw();
+	BasePostEffect::Draw(_tex);
 }

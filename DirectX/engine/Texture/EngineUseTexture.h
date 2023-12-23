@@ -17,6 +17,13 @@ namespace Engine {
 		size,
 	};
 
+	enum class EngineUseOutRTVTextureName {
+		bloom,
+		outline,
+		fog,
+		size,
+	};
+
 	enum class EngineUseDSVTextureName {
 		shadowMap,
 		depth,
@@ -33,6 +40,12 @@ namespace Engine {
 		"bloom",
 		"outline",
 		"fog",
+	};
+
+	static std::array<std::string, int(EngineUseOutRTVTextureName::size)> EngineUseOutRTVTexture = {
+		"bloom_out",
+		"outline_out",
+		"fog_out",
 	};
 
 	static std::array<std::string, int(EngineUseDSVTextureName::size)> EngineUseDSVTexture = {

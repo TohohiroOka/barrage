@@ -42,7 +42,7 @@ public:
 	/// <summary>
 	/// 描画コマンドの発行
 	/// </summary>
-	void Draw();
+	void Draw(TextureManager* _tex);
 
 private:
 

@@ -74,12 +74,12 @@ void DirectXCommon::Initialize()
 	HRESULT result;
 
 	//デバッグレイヤーをオンに
-	//ComPtr<ID3D12Debug1> debugController;
-	//if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
-	//{
-	//	debugController->EnableDebugLayer();
-	//	debugController->SetEnableGPUBasedValidation(TRUE);
-	//}
+	ComPtr<ID3D12Debug1> debugController;
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
+	{
+		debugController->EnableDebugLayer();
+		debugController->SetEnableGPUBasedValidation(TRUE);
+	}
 
 	//DXGIファクトリーの生成
 	result = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
@@ -326,8 +326,6 @@ void DirectXCommon::PostDraw()
 {
 	// imgui描画
 	ImGui::Render();
-	ID3D12DescriptorHeap* ppHeaps[] = { DescriptorHeapManager::GetDescriptorHeap()};
-	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), cmdList.Get());
 
 	// バックバッファの番号を取得（2つなので0番か1番）

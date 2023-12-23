@@ -47,6 +47,10 @@ void MainEngine::Initialize()
 		TextureManager::CreateRenderTexture(i);
 	}
 
+	for (auto& i : Engine::EngineUseOutRTVTexture) {
+		TextureManager::CreateRenderTexture(i);
+	}
+
 	int depthNum = 0;
 	for (auto& i : Engine::EngineUseDSVTexture) {
 		if (depthNum == 0) {
@@ -73,13 +77,14 @@ void MainEngine::Initialize()
 
 	postEffect = PostEffect::Create();
 
-	shadowMap = Depth::Create(Engine::EngineUseDSVTexture[int(Engine::EngineUseDSVTextureName::shadowMap)]);
+	using namespace Engine;
+	shadowMap = Depth::Create(EngineUseDSVTexture[int(EngineUseDSVTextureName::shadowMap)]);
 	Base3D::SetLightDepthTexture(shadowMap->GetTexture());
 
-	bloom = Bloom::Create(Engine::EngineUseRTVTexture[int(Engine::EngineUseRTVTextureName::bloom)]);
-	outline = Outline::Create(Engine::EngineUseRTVTexture[int(Engine::EngineUseRTVTextureName::outline)]);
-	fog = Fog::Create(Engine::EngineUseRTVTexture[int(Engine::EngineUseRTVTextureName::fog)]);
-	depth = Depth::Create(Engine::EngineUseDSVTexture[int(Engine::EngineUseDSVTextureName::depth)]);
+	bloom = Bloom::Create(EngineUseOutRTVTexture[int(EngineUseOutRTVTextureName::bloom)]);
+	outline = Outline::Create(EngineUseOutRTVTexture[int(EngineUseOutRTVTextureName::outline)]);
+	fog = Fog::Create(EngineUseOutRTVTexture[int(EngineUseOutRTVTextureName::fog)]);
+	depth = Depth::Create(EngineUseDSVTexture[int(EngineUseDSVTextureName::depth)]);
 
 	fps = FrameRateKeep::Create();
 }
@@ -119,15 +124,15 @@ void MainEngine::Draw()
 	depth->PostDrawScene();
 
 	bloom->PreDrawScene();
-	bloom->Draw();
+	bloom->Draw(postEffect->GetTexture(PostEffect::TexType::bloom));
 	bloom->PostDrawScene();
 
 	outline->PreDrawScene();
-	outline->Draw();
+	outline->Draw(postEffect->GetTexture(PostEffect::TexType::outline));
 	outline->PostDrawScene();
 
 	fog->PreDrawScene();
-	fog->Draw();
+	fog->Draw(depth->GetTexture());
 	fog->PostDrawScene();
 
 	//•`‰æ‘Oİ’è

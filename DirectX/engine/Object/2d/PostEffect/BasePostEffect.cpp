@@ -87,25 +87,6 @@ void BasePostEffect::CreateDepthBuffer()
 	device->CreateDepthStencilView(depthBuffer.Get(), &dsvDesc, descHeapDSV->GetCPUDescriptorHandleForHeapStart());
 }
 
-void BasePostEffect::Draw()
-{
-	int modeNum = int(type);
-
-	ObjectBase::Draw(pipeline[modeNum]);
-
-	// 頂点バッファの設定
-	cmdList->IASetVertexBuffers(0, 1, &this->vbView);
-
-	// 定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(0, this->constBuff->GetGPUVirtualAddress());
-
-	//シェーダーリソースビュー
-	cmdList->SetGraphicsRootDescriptorTable(pipeline[modeNum].constBuffNum, texture->GetDescriptor()->gpu);
-
-	// 描画コマンド
-	cmdList->DrawInstanced(4, 1, 0, 0);
-}
-
 void BasePostEffect::Draw(TextureManager* _tex)
 {
 	int modeNum = int(type);

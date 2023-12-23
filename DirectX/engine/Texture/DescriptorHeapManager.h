@@ -9,13 +9,32 @@ class DescriptorHeapManager
 {
 private:
 	//デスクリプタの大きさ
-	static const int DescriptorsSize = 512;
+	static const int DescriptorsSRVSize = 1024;
 
-	struct Descriptors {
+	struct DescriptorsSRV {
 		//デスクリプタヒープ
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeap;
 		//デスクリプタテーブルの制御
-		std::array<bool, DescriptorsSize> TableManager;
+		std::array<bool, DescriptorsSRVSize> TableManager;
+	};
+
+	//デスクリプタの大きさ
+	static const int DescriptorsRTVSize = 32;
+
+	struct DescriptorsRTV {
+		//デスクリプタヒープ
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeap;
+		//デスクリプタテーブルの制御
+		std::array<bool, DescriptorsRTVSize> TableManager;
+	};
+	//デスクリプタの大きさ
+	static const int DescriptorsDSVSize = 32;
+
+	struct DescriptorsDSV {
+		//デスクリプタヒープ
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeap;
+		//デスクリプタテーブルの制御
+		std::array<bool, DescriptorsDSVSize> TableManager;
 	};
 
 	enum class DescriptorsType {
@@ -37,12 +56,6 @@ public:
 	/// </summary>
 	/// <param name="_cmdList">コマンドリスト</param>
 	static void PreDraw(ID3D12GraphicsCommandList* _cmdList);
-
-	/// <summary>
-	/// 描画前準備
-	/// </summary>
-	/// <param name="_cmdList">コマンドリスト</param>
-	static void RtvPreDraw(ID3D12GraphicsCommandList* _cmdList);
 
 	/// <summary>
 	/// 解放処理
@@ -79,16 +92,16 @@ public:
 	void CreateDSV(Microsoft::WRL::ComPtr<ID3D12Resource> _texBuffer);
 
 	static ID3D12DescriptorHeap* GetDescriptorHeap() {
-		return descHeap[int(DescriptorsType::srv)].descHeap.Get();
+		return descHeapSRV.descHeap.Get();
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE GetRtvHandle() {
-		return CD3DX12_CPU_DESCRIPTOR_HANDLE(descHeap[int(DescriptorsType::rtv)].descHeap->GetCPUDescriptorHandleForHeapStart(), heapNumberRTV,
+		return CD3DX12_CPU_DESCRIPTOR_HANDLE(descHeapRTV.descHeap->GetCPUDescriptorHandleForHeapStart(), heapNumberRTV,
 			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV));
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDsvHandle() {
-		return CD3DX12_CPU_DESCRIPTOR_HANDLE(descHeap[int(DescriptorsType::dsv)].descHeap->GetCPUDescriptorHandleForHeapStart(), heapNumberDSV,
+		return CD3DX12_CPU_DESCRIPTOR_HANDLE(descHeapDSV.descHeap->GetCPUDescriptorHandleForHeapStart(), heapNumberDSV,
 			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV));
 	}
 
@@ -97,7 +110,11 @@ private:
 	//デバイス
 	static ID3D12Device* device;
 	//デスクリプタヒープ（画像）
-	static std::array<Descriptors, int(DescriptorsType::size)> descHeap;
+	static DescriptorsSRV descHeapSRV;
+	//デスクリプタヒープ（レンダーターゲット）
+	static DescriptorsRTV descHeapRTV;
+	//デスクリプタヒープ（深度）
+	static DescriptorsDSV descHeapDSV;
 
 public:
 

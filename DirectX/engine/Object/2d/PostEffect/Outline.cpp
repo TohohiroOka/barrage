@@ -51,9 +51,9 @@ std::unique_ptr<Outline> Outline::Create(const std::string& _texName)
 	return std::unique_ptr<Outline>(instance);
 }
 
-void Outline::Draw()
+void Outline::Draw(TextureManager* _tex)
 {
 	Update();
 
-	BasePostEffect::Draw();
+	BasePostEffect::Draw(_tex);
 }

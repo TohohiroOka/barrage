@@ -68,10 +68,16 @@ public:
 	}
 
 	ID3D12Resource* GetTexBuffer() {
+		if (!GetIsTextureName(name)) {
+			return texture["white"].instance->texBuffer.Get();
+		}
 		return texture[name].instance->texBuffer.Get();
 	}
 
 	DescriptorHeapManager* GetDescriptor() {
+		if (!GetIsTextureName(name)) {
+			return texture["white"].instance->descriptor.get();
+		}
 		return texture[name].instance->descriptor.get();
 	}
 
@@ -81,11 +87,10 @@ public:
 	/// <returns></returns>
 	DirectX::XMFLOAT2 GetTexSize() {
 		//Žw’è”Ô†‚Ì‰æ‘œ‚ª“Ç‚Ýž‚ÝÏ‚Ý‚È‚ç
-		if (texture[name].instance->texBuffer.Get()) {
-			return { float(texture[name].instance->texSize[0]),float(texture[name].instance->texSize[1]) };
-		} else {
-			return { 0.0f,0.0f };
+		if (!GetIsTextureName(name)) {
+			return { float(texture["white"].instance->texSize[0]),float(texture["white"].instance->texSize[1]) };
 		}
+		return { float(texture[name].instance->texSize[0]),float(texture[name].instance->texSize[1]) };
 	}
 
 	void SetTexture(const std::string& _name) { name = _name; }
