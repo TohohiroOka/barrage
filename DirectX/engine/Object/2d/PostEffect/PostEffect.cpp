@@ -13,10 +13,6 @@ PostEffect::PostEffect()
 
 PostEffect::~PostEffect()
 {
-}
-
-void PostEffect::Finalize()
-{
 	descHeapDSV.Reset();
 }
 

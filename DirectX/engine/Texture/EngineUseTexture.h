@@ -10,10 +10,14 @@ namespace Engine {
 	};
 
 	enum class EngineUseRTVTextureName {
-		main,
+		main_before,
 		bloom_before,
 		outline_before,
-		create = 2,
+		size,
+	};
+
+	enum class EngineUseRTVCreateTextureName {
+		main_after,
 		bloom_after,
 		outline_after,
 		fog_after,
@@ -32,9 +36,13 @@ namespace Engine {
 	};
 
 	static std::array<std::string, int(EngineUseRTVTextureName::size)> EngineUseRTVTexture = {
-		"main",
+		"main_before",
 		"bloom_before",
 		"outline_before",
+	};
+
+	static std::array<std::string, int(EngineUseRTVCreateTextureName::size)> EngineUseRTVCreateTexture = {
+		"main_after",
 		"bloom_after",
 		"outline_after",
 		"fog_after",

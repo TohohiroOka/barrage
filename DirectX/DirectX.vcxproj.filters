@@ -226,7 +226,7 @@
     <ClCompile Include="engine\Object\2d\Sprite.cpp">
       <Filter>Engine\Object\2d</Filter>
     </ClCompile>
-    <ClCompile Include="engine\Object\2d\PostEffect\Depth.cpp">
+    <ClCompile Include="engine\Object\2d\PostEffect\DepthRender.cpp">
       <Filter>Engine\Object\2d\PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="engine\Object\2d\PostEffect\Fog.cpp">
@@ -503,6 +503,12 @@
     <ClCompile Include="engine\Object\2d\PostEffect\BaseRender.cpp">
       <Filter>Engine\Object\2d\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="engine\Object\2d\ShaoeSprite.cpp">
+      <Filter>Engine\Object\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="game\effect\ScreenCut.cpp">
+      <Filter>ゲームシステム\Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -731,7 +737,7 @@
     <ClInclude Include="engine\Object\2d\PostEffect\Bloom.h">
       <Filter>Engine\Object\2d\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="engine\Object\2d\PostEffect\Depth.h">
+    <ClInclude Include="engine\Object\2d\PostEffect\DepthRender.h">
       <Filter>Engine\Object\2d\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="engine\Object\2d\PostEffect\Fog.h">
@@ -1040,6 +1046,12 @@
     </ClInclude>
     <ClInclude Include="engine\Object\2d\PostEffect\BaseRender.h">
       <Filter>Engine\Object\2d\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Object\2d\ShaoeSprite.h">
+      <Filter>Engine\Object\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="game\effect\ScreenCut.h">
+      <Filter>ゲームシステム\Effect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

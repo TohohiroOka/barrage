@@ -1,25 +1,25 @@
-#include "Depth.h"
+#include "DepthRender.h"
 #include "WindowApp.h"
 
-ID3D12Device* Depth::device = nullptr;
-ID3D12GraphicsCommandList* Depth::cmdList = nullptr;
-const float Depth::clearColor[4] = { 0.0f,0.0f,0.0f,0.0f };
+ID3D12Device* DepthRender::device = nullptr;
+ID3D12GraphicsCommandList* DepthRender::cmdList = nullptr;
+const float DepthRender::clearColor[4] = { 0.0f,0.0f,0.0f,0.0f };
 
 using namespace DirectX;
 
-void Depth::StaticInitialize(ID3D12Device* _device, ID3D12GraphicsCommandList* _cmdList)
+void DepthRender::StaticInitialize(ID3D12Device* _device, ID3D12GraphicsCommandList* _cmdList)
 {
 	device = _device;
 	cmdList = _cmdList;
 }
 
-Depth::Depth(const std::string& _texName)
+DepthRender::DepthRender(const std::string& _texName)
 {
 	// テクスチャ用バッファの生成
 	texture = std::make_unique<TextureManager>(_texName);
 }
 
-void Depth::PreDrawScene()
+void DepthRender::PreDrawScene()
 {
 	//リソースバリアを変更(シェーダリソース→描画可能)
 	cmdList->ResourceBarrier(1,
@@ -46,7 +46,7 @@ void Depth::PreDrawScene()
 		nullptr);
 }
 
-void Depth::PostDrawScene()
+void DepthRender::PostDrawScene()
 {
 	//リソースバリアを変更(描画可能→シェーダリソース)
 	cmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(texture->GetTexBuffer(),

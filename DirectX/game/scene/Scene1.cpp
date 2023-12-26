@@ -64,6 +64,8 @@ void Scene1::Initialize()
 
 	lockonUI = std::make_unique<LockonUI>();
 	lockonUI->Init(camera.get());
+
+	screenCut=std::make_unique<ScreenCut>();
 }
 
 void Scene1::Update()
@@ -71,6 +73,8 @@ void Scene1::Update()
 	DirectInput* input = DirectInput::GetInstance();
 
 	//GameHelper::Instance()->SetStop(stop);
+
+	screenCut->Update();
 
 	if (!isInputConfigMode) {
 		player->Update();
@@ -209,6 +213,8 @@ void Scene1::ImguiDraw()
 	ImGui::SliderInt("HitStopNum", &hitStopFrame, 0, 20);
 
 	ImGui::End();
+
+	screenCut->Draw();
 }
 
 void Scene1::FrameReset()

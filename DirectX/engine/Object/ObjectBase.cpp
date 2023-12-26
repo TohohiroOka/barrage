@@ -1,6 +1,7 @@
 #include "ObjectBase.h"
 #include "Object/3d/Base3D.h"
 #include "Object/2d/Sprite.h"
+#include "Object/2d/ShaoeSprite.h"
 
 ID3D12Device* ObjectBase::device = nullptr;
 ID3D12GraphicsCommandList* ObjectBase::cmdList = nullptr;
@@ -20,6 +21,8 @@ void ObjectBase::StaticInitialize(ID3D12Device* _device)
 
 	//スプライトの初期化
 	Sprite::StaticInitialize();
+
+	ShaoeSprite::StaticInitialize();
 }
 
 void ObjectBase::Draw(const GraphicsPipelineManager::DrawSet& _drawSet)

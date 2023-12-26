@@ -31,6 +31,8 @@ public: //ƒƒ“ƒoŠÖ”
 	/// </summary>
 	virtual void PostDrawScene();
 
+	TextureManager* GetTexture() { return texture.get(); }
+
 private:
 
 	/// <summary>

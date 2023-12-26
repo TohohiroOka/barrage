@@ -29,11 +29,6 @@ public://ƒƒ“ƒoŠÖ”
 	/// </summary>
 	static std::unique_ptr<PostEffect> Create();
 
-	/// <summary>
-	/// ‰ğ•úˆ—
-	/// </summary>
-	void Finalize();
-
 public://ƒƒ“ƒoŠÖ”
 
 	/// <summary>

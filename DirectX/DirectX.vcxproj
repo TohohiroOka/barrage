@@ -126,10 +126,11 @@
     <ClCompile Include="engine\Object\2d\PostEffect\BasePostEffect.cpp" />
     <ClCompile Include="engine\Object\2d\PostEffect\BaseRender.cpp" />
     <ClCompile Include="engine\Object\2d\PostEffect\Bloom.cpp" />
-    <ClCompile Include="engine\Object\2d\PostEffect\Depth.cpp" />
+    <ClCompile Include="engine\Object\2d\PostEffect\DepthRender.cpp" />
     <ClCompile Include="engine\Object\2d\PostEffect\Fog.cpp" />
     <ClCompile Include="engine\Object\2d\PostEffect\Outline.cpp" />
     <ClCompile Include="engine\Object\2d\PostEffect\PostEffect.cpp" />
+    <ClCompile Include="engine\Object\2d\ShaoeSprite.cpp" />
     <ClCompile Include="engine\Object\2d\Sprite.cpp" />
     <ClCompile Include="engine\Object\3d\Base3D.cpp" />
     <ClCompile Include="engine\Object\3d\collider\Collision.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="game\cutscene\Boss1OnStage.cpp" />
     <ClCompile Include="game\cutscene\SceneChangeDirection.cpp" />
     <ClCompile Include="game\effect\AllHitEffect.cpp" />
+    <ClCompile Include="game\effect\ScreenCut.cpp" />
     <ClCompile Include="game\effect\SlashEffect.cpp" />
     <ClCompile Include="game\effect\BulletEffect.cpp" />
     <ClCompile Include="game\enemy\BaseAction.cpp" />
@@ -448,10 +450,11 @@
     <ClInclude Include="engine\Object\2d\PostEffect\BasePostEffect.h" />
     <ClInclude Include="engine\Object\2d\PostEffect\BaseRender.h" />
     <ClInclude Include="engine\Object\2d\PostEffect\Bloom.h" />
-    <ClInclude Include="engine\Object\2d\PostEffect\Depth.h" />
+    <ClInclude Include="engine\Object\2d\PostEffect\DepthRender.h" />
     <ClInclude Include="engine\Object\2d\PostEffect\Fog.h" />
     <ClInclude Include="engine\Object\2d\PostEffect\Outline.h" />
     <ClInclude Include="engine\Object\2d\PostEffect\PostEffect.h" />
+    <ClInclude Include="engine\Object\2d\ShaoeSprite.h" />
     <ClInclude Include="engine\Object\2d\Sprite.h" />
     <ClInclude Include="engine\Object\3d\Base3D.h" />
     <ClInclude Include="engine\Object\3d\collider\BaseCollider.h" />
@@ -498,6 +501,7 @@
     <ClInclude Include="game\cutscene\Boss1OnStage.h" />
     <ClInclude Include="game\cutscene\SceneChangeDirection.h" />
     <ClInclude Include="game\effect\AllHitEffect.h" />
+    <ClInclude Include="game\effect\ScreenCut.h" />
     <ClInclude Include="game\effect\SlashEffect.h" />
     <ClInclude Include="game\effect\BulletEffect.h" />
     <ClInclude Include="game\enemy\BaseAction.h" />

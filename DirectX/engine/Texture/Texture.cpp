@@ -89,13 +89,13 @@ void Texture::LoadTexture(const std::string& _fileName)
 			wfilePath,
 			DirectX::DDS_FLAGS_NONE,
 			&metadata, scratchImage);
-		assert(SUCCEEDED(result));
+		if (!SUCCEEDED(result)) { return; };
 	} else {
 		result = LoadFromWICFile(
 			wfilePath,
 			DirectX::WIC_FLAGS_NONE,
 			&metadata, scratchImage);
-		assert(SUCCEEDED(result));
+		if (!SUCCEEDED(result)) { return; };
 	}
 
 	metadata.format = DirectX::MakeSRGB(metadata.format);

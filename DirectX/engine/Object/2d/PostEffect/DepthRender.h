@@ -5,7 +5,7 @@
 #include <DirectXMath.h>
 #include "Texture/TextureManager.h"
 
-class Depth
+class DepthRender
 {
 public: //静的メンバ関数
 
@@ -17,8 +17,8 @@ public: //静的メンバ関数
 	static void StaticInitialize(ID3D12Device* _device, ID3D12GraphicsCommandList* _cmdList);
 
 public: //メンバ関数
-	Depth(const std::string& _texName);
-	~Depth() {};
+	DepthRender(const std::string& _texName);
+	~DepthRender() {};
 
 	/// <summary>
 	/// シーン描画前処理

@@ -3,7 +3,6 @@
 #include "Object/2d/Sprite.h"
 #include "Object/2d/DebugText.h"
 #include "Particle/Emitter.h"
-#include "SafeDelete.h"
 #include "Pipeline/ComputeShaderManager.h"
 #include "Pipeline/GraphicsPipelineManager.h"
 #include "Texture/TextureManager.h"
@@ -20,8 +19,17 @@ MainEngine::~MainEngine()
 {
 	DebugText::Finalize();
 	scene.reset();
+	for (auto& i : render) {
+		i.reset();
+	}
+	mainSprite.reset();
+	postEffect.reset();
+	bloom.reset();
+	outline.reset();
+	fog.reset();
+	depthRender.reset();
+	shadowMapRender.reset();
 	TextureManager::Finalize();
-	postEffect->Finalize();
 	ComputeShaderManager::Finalize();
 	DescriptorHeapManager::Finalize();
 }
@@ -46,6 +54,9 @@ void MainEngine::Initialize()
 	for (auto& i : Engine::EngineUseRTVTexture) {
 		TextureManager::CreateRenderTexture(i);
 	}
+	for (auto& i : Engine::EngineUseRTVCreateTexture) {
+		TextureManager::CreateRenderTexture(i);
+	}
 
 	int depthNum = 0;
 	for (auto& i : Engine::EngineUseDSVTexture) {
@@ -65,7 +76,7 @@ void MainEngine::Initialize()
 	DebugText::GetInstance()->Initialize();
 	FbxModel::StaticInitialize(dXCommon->GetDevice());
 	BaseRender::StaticInitialize(dXCommon->GetDevice(), dXCommon->GetCmdList());
-	Depth::StaticInitialize(dXCommon->GetDevice(), dXCommon->GetCmdList());
+	DepthRender::StaticInitialize(dXCommon->GetDevice(), dXCommon->GetCmdList());
 
 	//ゲーム入力
 	GameInputManager::Initialize();
@@ -76,19 +87,22 @@ void MainEngine::Initialize()
 	postEffect = PostEffect::Create();
 
 	using namespace Engine;
-	for (int i = 0; i<int(RenderType::size); i++) {
-		render[i] = std::make_unique<BaseRender>(EngineUseRTVTexture[i]);
+	for (int i = 0; i<int(EngineUseRTVCreateTextureName::size); i++) {
+		render[i] = std::make_unique<BaseRender>(EngineUseRTVCreateTexture[i]);
 	}
 
-	shadowMap = std::make_unique<Depth>(EngineUseDSVTexture[int(EngineUseDSVTextureName::shadowMap)]);
-	Base3D::SetLightDepthTexture(shadowMap->GetTexture());
+	depthRender = std::make_unique<DepthRender>(EngineUseDSVTexture[int(EngineUseDSVTextureName::depth)]);
+	shadowMapRender = std::make_unique<DepthRender>(EngineUseDSVTexture[int(EngineUseDSVTextureName::shadowMap)]);
+	Base3D::SetLightDepthTexture(shadowMapRender->GetTexture());
 
 	bloom = Bloom::Create(EngineUseRTVTexture[int(EngineUseRTVTextureName::bloom_before)]);
 	outline = Outline::Create(EngineUseRTVTexture[int(EngineUseRTVTextureName::outline_before)]);
 	fog = Fog::Create(EngineUseRTVTexture[int(EngineUseDSVTextureName::depth)]);
-	depth = std::make_unique<Depth>(EngineUseDSVTexture[int(EngineUseDSVTextureName::depth)]);
 
 	fps = FrameRateKeep::Create();
+
+	mainSprite = Sprite::Create("main_after", {});
+	mainSprite->Update();
 }
 
 bool MainEngine::Update()
@@ -113,45 +127,51 @@ void MainEngine::Draw()
 	DescriptorHeapManager::PreDraw(dXCommon->GetCmdList());
 	ObjectBase::SetCmdList(dXCommon->GetCmdList());
 
-	shadowMap->PreDrawScene();
+	shadowMapRender->PreDrawScene();
 	scene->DrawLightView(dXCommon->GetCmdList());
-	shadowMap->PostDrawScene();
+	shadowMapRender->PostDrawScene();
 
 	postEffect->PreDrawScene();
 	scene->Draw(dXCommon->GetCmdList());
 	postEffect->PostDrawScene();
 
-	depth->PreDrawScene();
+	depthRender->PreDrawScene();
 	scene->Draw(dXCommon->GetCmdList());
-	depth->PostDrawScene();
+	depthRender->PostDrawScene();
 
-	render[int(RenderType::bloom)]->PreDrawScene();
+	using namespace Engine;
+	render[int(EngineUseRTVCreateTextureName::bloom_after)]->PreDrawScene();
 	bloom->Draw();
-	render[int(RenderType::bloom)]->PostDrawScene();
+	render[int(EngineUseRTVCreateTextureName::bloom_after)]->PostDrawScene();
 
-	render[int(RenderType::outline)]->PreDrawScene();
+	render[int(EngineUseRTVCreateTextureName::outline_after)]->PreDrawScene();
 	outline->Draw();
-	render[int(RenderType::outline)]->PostDrawScene();
+	render[int(EngineUseRTVCreateTextureName::outline_after)]->PostDrawScene();
 
-	render[int(RenderType::fog)]->PreDrawScene();
+	render[int(EngineUseRTVCreateTextureName::fog_after)]->PreDrawScene();
 	fog->Draw();
-	render[int(RenderType::fog)]->PostDrawScene();
+	render[int(EngineUseRTVCreateTextureName::fog_after)]->PostDrawScene();
 
-	//描画前設定
-	dXCommon->PreDraw();
-
-	ImguiDraw();
+	render[int(EngineUseRTVCreateTextureName::main_after)]->PreDrawScene();
 	std::vector<TextureManager*> postTex(5);
 	postTex[0] = postEffect->GetTexture(PostEffect::TexType::normal);
-	postTex[1] = bloom->GetTexture();
-	postTex[2] = outline->GetTexture();
-	postTex[3] = fog->GetTexture();
-	postTex[4] = depth->GetTexture();
+	postTex[1] = render[int(EngineUseRTVCreateTextureName::bloom_after)]->GetTexture();
+	postTex[2] = render[int(EngineUseRTVCreateTextureName::outline_after)]->GetTexture();
+	postTex[3] = render[int(EngineUseRTVCreateTextureName::fog_after)]->GetTexture();
+	postTex[4] = depthRender->GetTexture();
 
 	postEffect->Draw(postTex);
 
 	//ポストエフェクトをかけない描画
 	scene->NonPostEffectDraw();
+	render[int(EngineUseRTVCreateTextureName::main_after)]->PostDrawScene();
+
+	//描画前設定
+	dXCommon->PreDraw();
+
+	mainSprite->Draw();
+
+	ImguiDraw();
 
 	//imgui表示
 	scene->ImguiDraw();

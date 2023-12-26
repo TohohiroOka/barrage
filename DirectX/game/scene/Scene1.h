@@ -11,6 +11,7 @@
 #include "system/ActionInputConfig.h"
 #include "game/cutscene/Boss1Defeat.h"
 #include "ui/LockonUI.h"
+#include "../game/effect/ScreenCut.h"
 
 class Scene1 : public InterfaceScene
 {
@@ -81,6 +82,8 @@ private:
 	std::unique_ptr<Sprite> sprite;
 
 	std::unique_ptr<Player> player;
+
+	std::unique_ptr<ScreenCut> screenCut;
 
 	//ínå`
 	std::unique_ptr<Field> field;
