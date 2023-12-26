@@ -52,7 +52,7 @@ Player::Player()
 		matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
 		matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
 		matRot *= XMMatrixRotationY(XMConvertToRadians(0.0f));
-		DirectX::XMMATRIX matTrans = XMMatrixTranslation(0.0f, 70.0f, 0.0f);
+		DirectX::XMMATRIX matTrans = XMMatrixTranslation(0.0f, 1.5f, 0.0f);
 		DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
 		world *= matScale;
 		world *= matRot;

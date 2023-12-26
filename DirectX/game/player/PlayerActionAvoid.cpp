@@ -4,6 +4,9 @@
 #include "Math/Easing/Easing.h"
 #include "engine/Audio/Audio.h"
 
+const float PlayerActionAvoid::avoidStartMoveSpeed = 1.1f;
+const float PlayerActionAvoid::avoidEndMoveSpeed = 0.4f;
+
 PlayerActionAvoid::PlayerActionAvoid(Player* player)
 	: PlayerActionBase(player)
 {
@@ -16,7 +19,8 @@ PlayerActionAvoid::PlayerActionAvoid(Player* player)
 	player->GetData()->isNoDamage = true;
 
 	//回避方向を向くようにする
-	const Vector3 moveRotaVelocity = { player->GetData()->avoidBlinkMoveVec.x, 0, player->GetData()->avoidBlinkMoveVec.z }; //プレイヤー回転にジャンプは関係ないので、速度Yは0にしておく
+	Vector3 moveRotaVelocity = player->GetData()->avoidBlinkMoveVec;
+	moveRotaVelocity.y = 0; //プレイヤー回転にジャンプは関係ないので、速度Yは0にしておく
 	player->SetMoveRotate(moveRotaVelocity, 15.0f);
 
 	//回避アニメーションに変更
@@ -46,9 +50,9 @@ void PlayerActionAvoid::Avoid()
 	avoidTimer->Update();
 	const float time = *avoidTimer.get() / (float)avoidTime;
 
-	//イージングで速度を落としていく
-	const float power = Easing::OutCirc(2, 0.5f, time);
-	player->GetData()->velocity = player->GetData()->avoidBlinkMoveVec.normalize() * power;
+	//イージングで移動スピードを落としていく
+	player->GetData()->moveSpeed = Easing::InCirc(avoidStartMoveSpeed, avoidEndMoveSpeed, time);
+	player->GetData()->velocity = player->GetData()->avoidBlinkMoveVec.normalize() * player->GetData()->moveSpeed;
 
 
 	//タイマーが指定した時間になったら行動変更先行入力
