@@ -19,7 +19,7 @@ public: //静的メンバ関数
 public: //メンバ関数
 
 	BaseRender(const std::string& _texName);
-	virtual ~BaseRender();
+	~BaseRender();
 	
 	/// <summary>
 	/// シーン描画前処理

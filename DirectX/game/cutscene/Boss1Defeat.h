@@ -12,7 +12,13 @@ public:
 	Boss1Defeat() = default;
 	~Boss1Defeat() = default;
 
-	void Init() override;
+	void Init() override
+	{
+		noiseParticle = Emitter::Create("white");
+		TextureManager::LoadTexture("gridSmoke", "Resources/particle/gridSmokeEffect.png");
+		smokeParticle = Emitter::Create("gridSmoke");
+		BaseDefeatDirection::Init();
+	}
 
 	void Update() override;
 

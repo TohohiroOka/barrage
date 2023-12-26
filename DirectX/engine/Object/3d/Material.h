@@ -3,7 +3,7 @@
 #include <d3dx12.h>
 #include <DirectXMath.h>
 #include <wrl.h>
-#include "Texture/Texture.h"
+#include "Texture/TextureManager.h"
 
 /// <summary>
 /// マテリアル
@@ -88,13 +88,13 @@ public:
 	/// </summary>
 	void Update();
 
-	const CD3DX12_CPU_DESCRIPTOR_HANDLE& GetCpuHandle() { return texture->descriptor->cpu; }
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& GetGpuHandle() { return texture->descriptor->gpu; }
+	const CD3DX12_CPU_DESCRIPTOR_HANDLE& GetCpuHandle() { return texture->GetDescriptor()->cpu; }
+	const CD3DX12_GPU_DESCRIPTOR_HANDLE& GetGpuHandle() { return texture->GetDescriptor()->gpu; }
 
 private:
 
 	//テクスチャ情報
-	std::unique_ptr<Texture> texture = nullptr;
+	std::unique_ptr<TextureManager> texture = nullptr;
 	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuff;
 

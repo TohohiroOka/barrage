@@ -77,10 +77,6 @@ void OnStageTestScene::NonPostEffectDraw(const int _cameraNum)
 	onStageDirection->Draw();
 }
 
-void OnStageTestScene::Finalize()
-{
-}
-
 void OnStageTestScene::ImguiDraw()
 {
 

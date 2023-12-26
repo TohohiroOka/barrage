@@ -62,11 +62,6 @@ public:
 	virtual void NonPostEffectDraw(const int _cameraNum){};
 
 	/// <summary>
-	/// ‰ð•ú
-	/// </summary>
-	virtual void Finalize() = 0;
-
-	/// <summary>
 	/// imgui‚Ì•\Ž¦
 	/// </summary>
 	virtual void ImguiDraw() {};

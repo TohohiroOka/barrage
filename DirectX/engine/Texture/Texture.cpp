@@ -149,6 +149,8 @@ void Texture::LoadTexture(const std::string& _fileName)
 	D3D12_RESOURCE_DESC resDesc = texBuffer.Get()->GetDesc();
 	//スプライトの大きさを画像の解像度に合わせる
 	texSize = { UINT(resDesc.Width), UINT(resDesc.Height) };
+
+	texBuffer->SetName(L"tex");
 }
 
 void Texture::CreateRenderTexture(const std::string& _fileName)
@@ -201,6 +203,8 @@ void Texture::CreateRenderTexture(const std::string& _fileName)
 	descriptor = std::make_unique<DescriptorHeapManager>();
 	descriptor->CreateSRV(texBuffer, srvDesc);
 	descriptor->CreateRTV(texBuffer);
+
+	texBuffer->SetName(L"L_tex");
 }
 
 void Texture::CreateDepthTexture(const std::string& _fileName, const std::array<UINT, 2>& _texSize)
@@ -242,6 +246,8 @@ void Texture::CreateDepthTexture(const std::string& _fileName, const std::array<
 	descriptor = std::make_unique<DescriptorHeapManager>();
 	descriptor->CreateSRV(texBuffer, srvDesc);
 	descriptor->CreateDSV(texBuffer);
+
+	texBuffer->SetName(L"D_tex");
 }
 
 void Texture::LoadTextureFromDDSFile(const std::string& _fileName, ID3D12GraphicsCommandList* _cmdList)

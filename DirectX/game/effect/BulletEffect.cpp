@@ -2,7 +2,7 @@
 
 void BulletEffect::LoadResources()
 {
-	ParticleManager::LoadTexture("effect", "Resources/particle/effect1.png");
+	TextureManager::LoadTexture("effect", "Resources/particle/effect1.png");
 }
 
 void BulletEffect::Init()

@@ -18,6 +18,8 @@ public:
 
 	void Draw();
 
+	void Finalize();
+
 private:
 	//弾描画用インスタンシングオブジェクト
 	std::array<std::unique_ptr<Emitter>, 3> emitter;

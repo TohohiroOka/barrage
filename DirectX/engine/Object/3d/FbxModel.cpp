@@ -10,7 +10,6 @@ ID3D12Device* FbxModel::device = nullptr;
 FbxManager* FbxModel::fbxManager = nullptr;
 FbxImporter* FbxModel::fbxImporter = nullptr;
 FbxTime FbxModel::frameTime;
-const std::string FbxModel::defaultTexture = "Resources/SubTexture/white1x1.png";
 const std::string FbxModel::baseDirectory = "Resources/Fbx/";
 
 FbxModel::~FbxModel()
@@ -132,7 +131,8 @@ void FbxModel::LoadMaterial(FbxNode* fbxNode)
 					//テクスチャ読み込み
 					const std::string texName = baseDirectory + name + '/' + fileName;
 					if (!texture[texName]) {
-						texture[texName] = Texture::Create(texName);
+						TextureManager::LoadTexture(texName, texName);
+						texture[texName]=std::make_unique<TextureManager>(texName);
 					}
 					data->buffData[elementsNum].texName = texName;
 					textureLoaded = true;
@@ -143,7 +143,7 @@ void FbxModel::LoadMaterial(FbxNode* fbxNode)
 		//textureが無い場合白にする
 		if (!textureLoaded)
 		{
-			data->buffData[elementsNum].texName = defaultTexture;
+			data->buffData[elementsNum].texName = "white";
 		}
 	}
 }
@@ -544,7 +544,7 @@ void FbxModel::LoadFbx(const std::string modelName)
 
 	data->fbxScene = fbxScene;
 
-	texture[defaultTexture] = Texture::Create(defaultTexture);
+	texture["white"] = std::make_unique<TextureManager>("white");
 
 	//モーションブレンド用の配列
 	skinData.resize(data->buffData.size());
@@ -854,10 +854,10 @@ void FbxModel::Draw(ID3D12GraphicsCommandList* cmdList)
 
 		//シェーダーリソースビューをセット
 		if (i.texName == "") {
-			cmdList->SetGraphicsRootDescriptorTable(4, texture[defaultTexture]->descriptor->gpu);
+			cmdList->SetGraphicsRootDescriptorTable(4, texture["white"]->GetDescriptor()->gpu);
 		}
 		else {
-			cmdList->SetGraphicsRootDescriptorTable(4, texture[i.texName]->descriptor->gpu);
+			cmdList->SetGraphicsRootDescriptorTable(4, texture[i.texName]->GetDescriptor()->gpu);
 		}
 		//描画コマンド
 		cmdList->DrawIndexedInstanced((UINT)i.indices.size(), 1, 0, 0, 0);

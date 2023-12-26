@@ -19,6 +19,11 @@ using namespace DirectX;
 
 const std::array<XMFLOAT4, 2> COLOR = { XMFLOAT4{ 0.0f,0.0f,0.8f,1.0f } ,{ 0.8f,0.0f,0.0f,1.0f } };
 
+Scene1::~Scene1()
+{
+	AllHitEffect::Instance()->Finalize();
+}
+
 void Scene1::Initialize()
 {
 	TextureManager::LoadTexture("gauge", "Resources/SpriteTexture/gauge.png");
@@ -197,10 +202,6 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 	defeatDirection->Draw2D();
 
 	SceneChangeDirection::Instance()->Draw();
-}
-
-void Scene1::Finalize()
-{
 }
 
 void Scene1::ImguiDraw()

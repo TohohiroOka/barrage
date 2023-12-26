@@ -29,8 +29,8 @@ MainEngine::~MainEngine()
 	fog.reset();
 	depthRender.reset();
 	shadowMapRender.reset();
-	TextureManager::Finalize();
 	ComputeShaderManager::Finalize();
+	TextureManager::Finalize();
 	DescriptorHeapManager::Finalize();
 }
 

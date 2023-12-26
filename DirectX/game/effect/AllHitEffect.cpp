@@ -5,7 +5,7 @@ AllHitEffect::AllHitEffect()
 {
 	for (int i = 0; i < 3; i++) {
 		std::string num = std::to_string(i + 1);
-		ParticleManager::LoadTexture("triangle" + num, "Resources/particle/triangle" + num + ".png");
+		TextureManager::LoadTexture("triangle" + num, "Resources/particle/triangle" + num + ".png");
 		emitter[i] = Emitter::Create("triangle" + num);
 		emitter[i]->SetBloom();
 	}
@@ -34,5 +34,12 @@ void AllHitEffect::Draw()
 {
 	for (auto& i : emitter) {
 		i->Draw();
+	}
+}
+
+void AllHitEffect::Finalize()
+{
+	for (auto& i : emitter) {
+		i.reset();
 	}
 }

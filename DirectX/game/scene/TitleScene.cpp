@@ -173,10 +173,6 @@ void TitleScene::NonPostEffectDraw(const int _cameraNum)
 	SceneChangeDirection::Instance()->Draw();
 }
 
-void TitleScene::Finalize()
-{
-}
-
 void TitleScene::ImguiDraw()
 {
 }

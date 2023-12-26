@@ -9,6 +9,8 @@ XMMATRIX ShaoeSprite::matProjection;
 
 ShaoeSprite::~ShaoeSprite()
 {
+	vertBuff.Reset();
+	indexBuff.Reset();
 	constBuff.Reset();
 }
 

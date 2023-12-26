@@ -26,7 +26,7 @@ private:// エイリアス
 public:
 
 	Scene1(){};
-	~Scene1(){};
+	~Scene1() override;
 
 	/// <summary>
 	/// 初期化
@@ -54,11 +54,6 @@ public:
 	/// ポストエフェクトをかけない描画
 	/// </summary>
 	void NonPostEffectDraw(const int _cameraNum) override;
-
-	/// <summary>
-	///	解放
-	/// </summary>
-	void Finalize() override;
 
 	/// <summary>
 	/// imguiの表示
