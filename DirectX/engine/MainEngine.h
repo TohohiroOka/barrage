@@ -3,11 +3,12 @@
 #include "Scene/SceneManager.h"
 #include "Input/DirectInput.h"
 #include "Input/XInputManager.h"
+#include "Object/2d/PostEffect/BaseRender.h"
 #include "Object/2d/PostEffect/PostEffect.h"
 #include "Object/2d/PostEffect/Bloom.h"
 #include "Object/2d/PostEffect/Outline.h"
 #include "Object/2d/PostEffect/Fog.h"
-#include "Object/2d/PostEffect/Depth.h"
+#include "Object/2d/PostEffect/DepthRender.h"
 #include "Object/3d/ShadowMap.h"
 #include "FrameRateKeep.h"
 
@@ -62,6 +63,10 @@ private:
 	XInputManager* xinput = nullptr;
 	//GameSceneのインスタンス
 	std::unique_ptr<SceneManager> scene = nullptr;
+	//レンダーターゲット
+	std::array<std::unique_ptr<BaseRender>, int(Engine::EngineUseRTVCreateTextureName::size)> render;
+	//描画
+	std::unique_ptr<Sprite> mainSprite;
 	//ポストエフェクトのインスタンス
 	std::unique_ptr<PostEffect> postEffect;
 	//ポストエフェクト加工用
@@ -71,9 +76,9 @@ private:
 	//ポストエフェクト加工用
 	std::unique_ptr<Fog> fog;
 	//ポストエフェクトで使用する深度
-	std::unique_ptr<Depth> depth;
+	std::unique_ptr<DepthRender> depthRender;
 	//シャドウマップ
-	std::unique_ptr<Depth> shadowMap;
+	std::unique_ptr<DepthRender> shadowMapRender;
 	//Fps固定用クラスのインスタンス
 	std::unique_ptr<FrameRateKeep> fps = nullptr;
 	//数字表示デバッグ用

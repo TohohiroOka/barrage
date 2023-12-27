@@ -1,15 +1,6 @@
 #include "Boss1Defeat.h"
 #include "GameHelper.h"
 
-void Boss1Defeat::Init()
-{
-	ParticleManager::LoadTexture("noisetex", "Resources/SubTexture/white1x1.png");
-	noiseParticle = Emitter::Create("noisetex");
-	ParticleManager::LoadTexture("gridSmoke", "Resources/particle/gridSmokeEffect.png");
-	smokeParticle = Emitter::Create("gridSmoke");
-	BaseDefeatDirection::Init();
-}
-
 void Boss1Defeat::Update()
 {
 	//パーティクル更新

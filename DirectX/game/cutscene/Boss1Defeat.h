@@ -12,7 +12,13 @@ public:
 	Boss1Defeat() = default;
 	~Boss1Defeat() = default;
 
-	void Init() override;
+	void Init() override
+	{
+		noiseParticle = ParticleManager::Create("white");
+		TextureManager::LoadTexture("gridSmoke", "Resources/particle/gridSmokeEffect.png");
+		smokeParticle = ParticleManager::Create("gridSmoke");
+		BaseDefeatDirection::Init();
+	}
 
 	void Update() override;
 
@@ -22,9 +28,9 @@ public:
 
 private:
 	//撃破パーティクル
-	std::unique_ptr<Emitter> noiseParticle;
+	std::unique_ptr<ParticleManager> noiseParticle;
 	ParticleGrainState noiseParticleStatus{ 30,{},{0,1.0f,0},{0,1.0f / 30.f,0},1.0f,1.0f,{1.0f,1.0f,1.0f,1.0f},{1.0f,1.0f,1.0f,0.0f}, };
-	std::unique_ptr<Emitter> smokeParticle;
+	std::unique_ptr<ParticleManager> smokeParticle;
 	ParticleGrainState smokeParticleStatus{ 30,{},{0,1.0f,0},{0,1.0f / 30.f,0},10.0f,0.0f,{1.0f,1.0f,1.0f,0.0f},{1.0f,1.0f,1.0f,1.0f}, };
 
 

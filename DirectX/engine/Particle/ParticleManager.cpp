@@ -3,12 +3,12 @@
 #include"Camera/Camera.h"
 #include "../Math/DirectXMathHelper.h"
 #include "GameHelper.h"
+#include "Helpar.h"
 
 using namespace DirectX;
 
 Camera* ParticleManager::camera = nullptr;
 std::vector<GraphicsPipelineManager::DrawSet> ParticleManager::pipeline;
-std::map<std::string, ParticleManager::INFORMATION> ParticleManager::texture;
 XMMATRIX ParticleManager::matBillboard = XMMatrixIdentity();
 XMMATRIX ParticleManager::matBillboardY = XMMatrixIdentity();
 
@@ -16,19 +16,6 @@ ParticleManager::~ParticleManager()
 {
 	vertBuff.Reset();
 	constBuff.Reset();
-}
-
-void ParticleManager::LoadTexture(const std::string& _keepName, const std::string& _filename, bool _isDelete)
-{
-	// nullptrチェック
-	assert(device);
-
-	//同じキーがあればエラーを出力
-	assert(!texture.count(_keepName));
-
-	//テクスチャ読み込み
-	texture[_keepName].instance = Texture::Create(_filename);
-	texture[_keepName].isDelete = _isDelete;
 }
 
 void ParticleManager::Initialize()
@@ -58,6 +45,8 @@ void ParticleManager::Initialize()
 	vbView.SizeInBytes = sizeof(vertices);
 	vbView.StrideInBytes = sizeof(vertices[0]);
 
+	vertBuff->SetName(L"p_v");
+
 	// 定数バッファの生成
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), 	// アップロード可能
@@ -74,10 +63,12 @@ std::unique_ptr<ParticleManager> ParticleManager::Create(const std::string& _nam
 	// 3Dオブジェクトのインスタンスを生成
 	ParticleManager* instance = new ParticleManager();
 
-	instance->name = _name;
+	instance->texture = std::make_unique<TextureManager>(_name);
 
 	// 初期化
 	instance->Initialize();
+
+	instance->vertBuff->SetName(GetName(_name,""));
 
 	return std::unique_ptr<ParticleManager>(instance);
 }
@@ -263,7 +254,7 @@ void ParticleManager::Draw(const DrawMode _drawMode)
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
 
 	//シェーダーリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(1, texture[name].instance->descriptor->gpu);
+	cmdList->SetGraphicsRootDescriptorTable(1, texture->GetDescriptor()->gpu);
 
 	//描画コマンド
 	cmdList->DrawInstanced(count, 1, 0, 0);
@@ -272,24 +263,4 @@ void ParticleManager::Draw(const DrawMode _drawMode)
 void ParticleManager::ParticlAllDelete()
 {
 	particle.clear();
-}
-
-void ParticleManager::SceneFinalize()
-{
-	for (auto itr = texture.begin(); itr != texture.end();) {
-		if (!(*itr).second.isDelete) {
-			++itr;
-			continue;
-		}
-		itr = texture.erase(itr);
-	}
-}
-
-void ParticleManager::Finalize()
-{
-	for (auto itr = texture.begin(); itr != texture.end(); ++itr)
-	{
-		(*itr).second.instance.reset();
-	}
-	texture.clear();
 }

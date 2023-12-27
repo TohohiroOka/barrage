@@ -34,7 +34,7 @@ public:
 	/// シャドウ用深度テクスチャのセット
 	/// </summary>
 	/// <param name="_texture">テクスチャ</param>
-	static void SetLightDepthTexture(Texture* _texture) { lightDepthTexture = _texture; }
+	static void SetLightDepthTexture(TextureManager* _texture) { lightDepthTexture = _texture; }
 
 public:
 
@@ -72,7 +72,7 @@ protected:
 	//ライト
 	static LightGroup* light;
 	//シャドウ用深度テクスチャ
-	static Texture* lightDepthTexture;
+	static TextureManager* lightDepthTexture;
 
 	// コライダー
 	BaseCollider* collider = nullptr;

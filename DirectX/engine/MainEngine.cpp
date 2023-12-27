@@ -2,11 +2,9 @@
 #include "Object/3d/InstanceObject.h"
 #include "Object/2d/Sprite.h"
 #include "Object/2d/DebugText.h"
-#include "Particle/Emitter.h"
-#include "SafeDelete.h"
 #include "Pipeline/ComputeShaderManager.h"
 #include "Pipeline/GraphicsPipelineManager.h"
-#include "Texture/Texture.h"
+#include "Texture/TextureManager.h"
 #include "Object/3d/FbxModel.h"
 #include "system/GameInputManager.h"
 #include "system/ActionInputConfig.h"
@@ -20,13 +18,18 @@ MainEngine::~MainEngine()
 {
 	DebugText::Finalize();
 	scene.reset();
-	//DrawLine::Finalize();
-	Sprite::Finalize();
-	//Fbx::Finalize();
-	ParticleManager::Finalize();
-	postEffect->Finalize();
-	shadowMap->Finalize();
+	for (auto& i : render) {
+		i.reset();
+	}
+	mainSprite.reset();
+	postEffect.reset();
+	bloom.reset();
+	outline.reset();
+	fog.reset();
+	depthRender.reset();
+	shadowMapRender.reset();
 	ComputeShaderManager::Finalize();
+	TextureManager::Finalize();
 	DescriptorHeapManager::Finalize();
 }
 
@@ -43,6 +46,27 @@ void MainEngine::Initialize()
 	xinput = XInputManager::GetInstance();
 	xinput->Initialize();
 
+	//テクスチャ
+	TextureManager::LoadTexture("debugfont", "Resources/" + Engine::EngineUseLoadTexture[int(Engine::EngineUseLoadTextureName::debugfont)], false);
+	TextureManager::LoadTexture("white", "Resources/" + Engine::EngineUseLoadTexture[int(Engine::EngineUseLoadTextureName::white)], false);
+
+	for (auto& i : Engine::EngineUseRTVTexture) {
+		TextureManager::CreateRenderTexture(i);
+	}
+	for (auto& i : Engine::EngineUseRTVCreateTexture) {
+		TextureManager::CreateRenderTexture(i);
+	}
+
+	int depthNum = 0;
+	for (auto& i : Engine::EngineUseDSVTexture) {
+		if (depthNum == 0) {
+			TextureManager::CreateDepthTexture(i, { 4096 ,4096 });
+		}else if(depthNum == 1) {
+			TextureManager::CreateDepthTexture(i, { 0,0 });
+		}
+		depthNum++;
+	}
+
 	//Object系の初期化
 	GraphicsPipelineManager::SetDevice(dXCommon->GetDevice());
 	ObjectBase::StaticInitialize(dXCommon->GetDevice());
@@ -50,6 +74,8 @@ void MainEngine::Initialize()
 	ComputeShaderManager::StaticInitialize(dXCommon->GetDevice());
 	DebugText::GetInstance()->Initialize();
 	FbxModel::StaticInitialize(dXCommon->GetDevice());
+	BaseRender::StaticInitialize(dXCommon->GetDevice(), dXCommon->GetCmdList());
+	DepthRender::StaticInitialize(dXCommon->GetDevice(), dXCommon->GetCmdList());
 
 	//ゲーム入力
 	GameInputManager::Initialize();
@@ -59,15 +85,23 @@ void MainEngine::Initialize()
 
 	postEffect = PostEffect::Create();
 
-	shadowMap = Depth::Create({ 4096 ,4096 });
-	Base3D::SetLightDepthTexture(shadowMap->GetTex());
+	using namespace Engine;
+	for (int i = 0; i<int(EngineUseRTVCreateTextureName::size); i++) {
+		render[i] = std::make_unique<BaseRender>(EngineUseRTVCreateTexture[i]);
+	}
 
-	bloom = Bloom::Create();
-	outline = Outline::Create();
-	fog = Fog::Create();
-	depth = Depth::Create();
+	depthRender = std::make_unique<DepthRender>(EngineUseDSVTexture[int(EngineUseDSVTextureName::depth)]);
+	shadowMapRender = std::make_unique<DepthRender>(EngineUseDSVTexture[int(EngineUseDSVTextureName::shadowMap)]);
+	Base3D::SetLightDepthTexture(shadowMapRender->GetTexture());
+
+	bloom = Bloom::Create(EngineUseRTVTexture[int(EngineUseRTVTextureName::bloom_before)]);
+	outline = Outline::Create(EngineUseRTVTexture[int(EngineUseRTVTextureName::outline_before)]);
+	fog = Fog::Create(EngineUseRTVTexture[int(EngineUseDSVTextureName::depth)]);
 
 	fps = FrameRateKeep::Create();
+
+	mainSprite = Sprite::Create("main_after", {});
+	mainSprite->Update();
 }
 
 bool MainEngine::Update()
@@ -92,45 +126,51 @@ void MainEngine::Draw()
 	DescriptorHeapManager::PreDraw(dXCommon->GetCmdList());
 	ObjectBase::SetCmdList(dXCommon->GetCmdList());
 
-	shadowMap->PreDrawScene();
+	shadowMapRender->PreDrawScene();
 	scene->DrawLightView(dXCommon->GetCmdList());
-	shadowMap->PostDrawScene();
+	shadowMapRender->PostDrawScene();
 
 	postEffect->PreDrawScene();
 	scene->Draw(dXCommon->GetCmdList());
 	postEffect->PostDrawScene();
 
-	depth->PreDrawScene();
+	depthRender->PreDrawScene();
 	scene->Draw(dXCommon->GetCmdList());
-	depth->PostDrawScene();
+	depthRender->PostDrawScene();
 
-	bloom->PreDrawScene();
-	bloom->Draw(postEffect->GetTex(PostEffect::TexType::bloom));
-	bloom->PostDrawScene();
+	using namespace Engine;
+	render[int(EngineUseRTVCreateTextureName::bloom_after)]->PreDrawScene();
+	bloom->Draw();
+	render[int(EngineUseRTVCreateTextureName::bloom_after)]->PostDrawScene();
 
-	outline->PreDrawScene();
-	outline->Draw(postEffect->GetTex(PostEffect::TexType::outline));
-	outline->PostDrawScene();
+	render[int(EngineUseRTVCreateTextureName::outline_after)]->PreDrawScene();
+	outline->Draw();
+	render[int(EngineUseRTVCreateTextureName::outline_after)]->PostDrawScene();
 
-	fog->PreDrawScene();
-	fog->Draw(depth->GetTex());
-	fog->PostDrawScene();
+	render[int(EngineUseRTVCreateTextureName::fog_after)]->PreDrawScene();
+	fog->Draw();
+	render[int(EngineUseRTVCreateTextureName::fog_after)]->PostDrawScene();
 
-	//描画前設定
-	dXCommon->PreDraw();
-
-	ImguiDraw();
-	std::vector<Texture*> postTex(5);
-	postTex[0] = postEffect->GetTex(PostEffect::TexType::normal);
-	postTex[1] = bloom->GetTex();
-	postTex[2] = outline->GetTex();
-	postTex[3] = fog->GetTex();
-	postTex[4] = depth->GetTex();
+	render[int(EngineUseRTVCreateTextureName::main_after)]->PreDrawScene();
+	std::vector<TextureManager*> postTex(5);
+	postTex[0] = postEffect->GetTexture(PostEffect::TexType::normal);
+	postTex[1] = render[int(EngineUseRTVCreateTextureName::bloom_after)]->GetTexture();
+	postTex[2] = render[int(EngineUseRTVCreateTextureName::outline_after)]->GetTexture();
+	postTex[3] = render[int(EngineUseRTVCreateTextureName::fog_after)]->GetTexture();
+	postTex[4] = depthRender->GetTexture();
 
 	postEffect->Draw(postTex);
 
 	//ポストエフェクトをかけない描画
 	scene->NonPostEffectDraw();
+	render[int(EngineUseRTVCreateTextureName::main_after)]->PostDrawScene();
+
+	//描画前設定
+	dXCommon->PreDraw();
+
+	mainSprite->Draw();
+
+	ImguiDraw();
 
 	//imgui表示
 	scene->ImguiDraw();

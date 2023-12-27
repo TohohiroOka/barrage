@@ -11,6 +11,7 @@
 #include "system/ActionInputConfig.h"
 #include "game/cutscene/Boss1Defeat.h"
 #include "ui/LockonUI.h"
+#include "../game/effect/ScreenCut.h"
 
 class Scene1 : public InterfaceScene
 {
@@ -25,7 +26,7 @@ private:// エイリアス
 public:
 
 	Scene1(){};
-	~Scene1(){};
+	~Scene1() override;
 
 	/// <summary>
 	/// 初期化
@@ -55,11 +56,6 @@ public:
 	void NonPostEffectDraw(const int _cameraNum) override;
 
 	/// <summary>
-	///	解放
-	/// </summary>
-	void Finalize() override;
-
-	/// <summary>
 	/// imguiの表示
 	/// </summary>
 	void ImguiDraw() override;
@@ -81,6 +77,8 @@ private:
 	std::unique_ptr<Sprite> sprite;
 
 	std::unique_ptr<Player> player;
+
+	std::unique_ptr<ScreenCut> screenCut;
 
 	//地形
 	std::unique_ptr<Field> field;

@@ -58,13 +58,13 @@ void Material::LoadTexture(const std::string& _directoryPath)
 {
 	// テクスチャなし
 	if (textureFilename.size() == 0) {
-		textureFilename = "white1x1.png";
+		texture = std::make_unique<TextureManager>("white");
+	} else {
+		// ファイルパスを結合
+		string filepath = _directoryPath + textureFilename;
+		TextureManager::LoadTexture(filepath, filepath);
+		texture = std::make_unique<TextureManager>(filepath);
 	}
-
-	// ファイルパスを結合
-	string filepath = _directoryPath + textureFilename;
-
-	texture = Texture::Create(filepath);
 }
 
 void Material::Update()

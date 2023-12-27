@@ -124,6 +124,7 @@ void SceneManager::CreatePipeline()
 		std::vector<GraphicsPipelineManager::DrawSet> addDrawSet{};
 		SetPipeline("Sprite", addDrawSet);
 		Sprite::SetPipeline(addDrawSet);
+		ShaoeSprite::SetPipeline(addDrawSet);
 	}
 	//PARTICLE
 	{
@@ -153,8 +154,7 @@ void SceneManager::Update()
 		if (scene)
 		{
 			scene.reset();
-			Sprite::SceneFinalize();
-			ParticleManager::SceneFinalize();
+			TextureManager::SceneFinalize();
 		}
 
 		//ƒV[ƒ“Ø‚è‘Ö‚¦

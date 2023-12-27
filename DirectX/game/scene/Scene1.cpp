@@ -19,9 +19,14 @@ using namespace DirectX;
 
 const std::array<XMFLOAT4, 2> COLOR = { XMFLOAT4{ 0.0f,0.0f,0.8f,1.0f } ,{ 0.8f,0.0f,0.0f,1.0f } };
 
+Scene1::~Scene1()
+{
+	AllHitEffect::Instance()->Finalize();
+}
+
 void Scene1::Initialize()
 {
-	Sprite::LoadTexture("gauge", "Resources/SpriteTexture/gauge.png");
+	TextureManager::LoadTexture("gauge", "Resources/SpriteTexture/gauge.png");
 
 	//ínå`ê∂ê¨
 	field = std::make_unique<Field>();
@@ -64,6 +69,8 @@ void Scene1::Initialize()
 
 	lockonUI = std::make_unique<LockonUI>();
 	lockonUI->Init(camera.get());
+
+	screenCut = std::make_unique<ScreenCut>();
 }
 
 void Scene1::Update()
@@ -71,6 +78,8 @@ void Scene1::Update()
 	DirectInput* input = DirectInput::GetInstance();
 
 	//GameHelper::Instance()->SetStop(stop);
+
+	screenCut->Update();
 
 	if (!isInputConfigMode) {
 		player->Update();
@@ -195,12 +204,10 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 	SceneChangeDirection::Instance()->Draw();
 }
 
-void Scene1::Finalize()
-{
-}
-
 void Scene1::ImguiDraw()
 {
+	screenCut->Draw();
+
 	ImGui::Begin("debug imgui");
 
 	ImGui::SetWindowSize(ImVec2(300, 300), ImGuiCond_::ImGuiCond_FirstUseEver);
@@ -208,6 +215,9 @@ void Scene1::ImguiDraw()
 
 	ImGui::SliderInt("HitStopNum", &hitStopFrame, 0, 20);
 
+	screenCut->DrawImgui();
+	XMFLOAT2 mousePos = DirectInput::GetInstance()->GetMousePoint();
+	ImGui::Text("mouse : x %f:y %f", mousePos.x, mousePos.y);
 	ImGui::End();
 }
 

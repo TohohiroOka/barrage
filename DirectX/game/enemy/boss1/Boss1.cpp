@@ -69,8 +69,8 @@ void Boss1::SetAction()
 	Vector3 pos = bossModel->GetObjectInst()->GetPosition();
 	Vector3 dist = targetPos - pos;
 
-	//action = std::make_unique<Boss1Bullet4>();
-	//return;
+	action = std::make_unique<Boss1Move1>();
+	return;
 
 	//ƒvƒŒƒCƒ„[‚ª‰“‹——£‚É‚¢‚é
 	if (dist.length() > 100.0f) {

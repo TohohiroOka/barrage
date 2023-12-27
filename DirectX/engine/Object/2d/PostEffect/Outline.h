@@ -37,19 +37,17 @@ public:
 	/// <summary>
 	/// インスタンスの生成
 	/// </summary>
-	static std::unique_ptr<Outline> Create();
+	static std::unique_ptr<Outline> Create(const std::string& _texName);
 
 	/// <summary>
 	/// 描画コマンドの発行
 	/// </summary>
-	void Draw(const Texture* _tex);
+	void Draw();
+
+	void SetOutlineWidth(const float _outlineWidth) { outlineWidth = _outlineWidth; }
 
 private:
 
 	//アウトラインの色
 	float outlineWidth;//アウトラインの太さ
-
-public:
-	void SetOutlineWidth(const float _outlineWidth) { outlineWidth = _outlineWidth; }
-
 };

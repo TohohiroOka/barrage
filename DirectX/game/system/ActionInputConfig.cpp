@@ -13,10 +13,10 @@ DirectX::XMFLOAT4 ActionInputConfig::selectColor = { 1, 1, 0.5f, 1 };
 void ActionInputConfig::LoadTexture()
 {
 	//仮置き背景用テクスチャ
-	Sprite::LoadTexture("white1x1", "Resources/SubTexture/white1x1.png", false);
+	TextureManager::LoadTexture("white1x1", "Resources/SubTexture/white1x1.png", false);
 
 	//フレームテクスチャ読み込み
-	Sprite::LoadTexture("inputFrame", "Resources/SpriteTexture/inputFrame.png", false);
+	TextureManager::LoadTexture("inputFrame", "Resources/SpriteTexture/inputFrame.png", false);
 
 	//行動名テクスチャ読み込み
 	LoadActionNameTexture(GameInputManager::MoveForward, "MoveForward.png");
@@ -118,34 +118,34 @@ void ActionInputConfig::LoadTexture()
 	LoadPadTexture(17, "RSTICK.png");
 
 	//カメラ回転用「ノーマル」「リバース」テクスチャ読み込み
-	Sprite::LoadTexture("normal", "Resources/SpriteTexture/normal.png", false);
-	Sprite::LoadTexture("reverse", "Resources/SpriteTexture/reverse.png", false);
+	TextureManager::LoadTexture("normal", "Resources/SpriteTexture/normal.png", false);
+	TextureManager::LoadTexture("reverse", "Resources/SpriteTexture/reverse.png", false);
 
 	//操作方法用テキストテクスチャ読み込み
-	Sprite::LoadTexture("select", "Resources/SpriteTexture/action/Select.png", false);
-	Sprite::LoadTexture("back", "Resources/SpriteTexture/action/Back.png", false);
-	Sprite::LoadTexture("buttonSelect", "Resources/SpriteTexture/action/ButtonSelect.png", false);
+	TextureManager::LoadTexture("select", "Resources/SpriteTexture/action/Select.png", false);
+	TextureManager::LoadTexture("back", "Resources/SpriteTexture/action/Back.png", false);
+	TextureManager::LoadTexture("buttonSelect", "Resources/SpriteTexture/action/ButtonSelect.png", false);
 }
 
 void ActionInputConfig::LoadActionNameTexture(int actionName, const std::string& fileName)
 {
 	std::string directoryPass = "Resources/SpriteTexture/action/";
 	std::string keepname = "action_" + std::to_string(actionName);
-	Sprite::LoadTexture(keepname, directoryPass + fileName, false);
+	TextureManager::LoadTexture(keepname, directoryPass + fileName, false);
 }
 
 void ActionInputConfig::LoadKeyTexture(BYTE num, const std::string& fileName)
 {
 	std::string directoryPass = "Resources/SpriteTexture/key/";
 	std::string keepname = "key_" + std::to_string(num);
-	Sprite::LoadTexture(keepname, directoryPass + fileName, false);
+	TextureManager::LoadTexture(keepname, directoryPass + fileName, false);
 }
 
 void ActionInputConfig::LoadPadTexture(int num, const std::string& fileName)
 {
 	std::string directoryPass = "Resources/SpriteTexture/pad/";
 	std::string keepname = "pad_" + std::to_string(num);
-	Sprite::LoadTexture(keepname, directoryPass + fileName, false);
+	TextureManager::LoadTexture(keepname, directoryPass + fileName, false);
 }
 
 
@@ -422,7 +422,7 @@ void ActionInputConfig::InputChangeModeUpdate()
 			//他の行動と被っていなければ進む
 			if (GameInputManager::ChangeInputKey((GameInputManager::InputAction)selectAction, newKey)) {
 				//指定したキーのテクスチャがあるか
-				if (!Sprite::GetIsTextureName("key_" + std::to_string(newKey))) {
+				if (!TextureManager::GetIsTextureName("key_" + std::to_string(newKey))) {
 					return;
 				}
 				//テクスチャ割り当て
@@ -441,7 +441,7 @@ void ActionInputConfig::InputChangeModeUpdate()
 			//他の行動と被っていなければ進む
 			if (GameInputManager::ChangeInputPadButton((GameInputManager::InputAction)selectAction, newButton)) {
 				//指定したボタンのテクスチャがあるか
-				if (!Sprite::GetIsTextureName("pad_" + std::to_string(newButton))) {
+				if (!TextureManager::GetIsTextureName("pad_" + std::to_string(newButton))) {
 					return;
 				}
 

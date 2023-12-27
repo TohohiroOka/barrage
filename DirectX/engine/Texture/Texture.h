@@ -23,6 +23,18 @@ public:
 	/// <param name="_cmdList">ddsファイル時はcmdListを持ってくる</param>
 	static std::unique_ptr<Texture> Create(const std::string& _fileName, ID3D12GraphicsCommandList* _cmdList = nullptr);
 
+	/// <summary>
+	/// インスタンスの生成
+	/// </summary>
+	/// <param name="_fileName">ファイル名</param>
+	static std::unique_ptr<Texture> CreateSRV_RTV(const std::string& _fileName);
+
+	/// <summary>
+	/// インスタンスの生成
+	/// </summary>
+	/// <param name="_fileName">ファイル名</param>
+	static std::unique_ptr<Texture> CreateSRV_DSV(const std::string& _fileName, const std::array<UINT, 2>& _texSize);
+
 public:
 
 	/// <summary>
@@ -38,8 +50,21 @@ public:
 	/// <summary>
 	/// テクスチャの読み込み
 	/// </summary>
-	/// <param name="_fileName">画像ファイルの名前</param
+	/// <param name="_fileName">画像ファイルの名前</param>
 	void LoadTexture(const std::string& _fileName);
+
+	/// <summary>
+	/// レンダー用画像生成
+	/// </summary>
+	/// <param name="_fileName">画像ファイルの名前</param>
+	void CreateRenderTexture(const std::string& _fileName);
+
+	/// <summary>
+	/// 深度値用画像生成
+	/// </summary>
+	/// <param name="_fileName">画像ファイルの名前</param>
+	/// <param name="_texSize">画像サイズ</param>
+	void CreateDepthTexture(const std::string& _fileName, const std::array<UINT, 2>& _texSize);
 
 	/// <summary>
 	/// ddsファイルの読み込み
@@ -62,5 +87,6 @@ public:
 	std::vector<D3D12_SUBRESOURCE_DATA> subresources;
 	Microsoft::WRL::ComPtr<ID3D12Resource> texConstBuffer = nullptr;
 
+	std::array<UINT, 2> texSize;
 };
 

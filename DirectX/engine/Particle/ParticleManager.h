@@ -62,26 +62,12 @@ public: // サブクラス
 		XMFLOAT4 endColor = { 0,0,0,0 };
 	};
 
-	struct INFORMATION
-	{
-		bool isDelete = false; //シーン遷移で削除を行うか
-		std::unique_ptr<Texture> instance = nullptr;
-	};
-
 private: // 定数
 
 	static const int vertexCount = 1024;// 頂点数
 	std::forward_list<PARTICLE>particle;
 
 public: // 静的メンバ関数
-
-	/// <summary>
-	/// テクスチャ読み込み
-	/// </summary>
-	/// <param name="_keepName">保存名</param>
-	/// <param name="_filename">ファイル名</param>
-	/// <param name="_isDelete">シーン遷移で削除を行うか</param>
-	static void LoadTexture(const std::string& _keepName, const std::string& _filename, bool _isDelete = true);
 
 	/// <summary>
 	/// インスタンス生成
@@ -99,14 +85,12 @@ public: // 静的メンバ関数
 	}
 
 	/// <summary>
-	/// シーンごとの解放処理
+	/// カメラのセット
 	/// </summary>
-	static void SceneFinalize();
-
-	/// <summary>
-	/// 解放処理
-	/// </summary>
-	static void Finalize();
+	/// <param name="_camera">カメラ</param>
+	static Camera* GetCamera() {
+		return ParticleManager::camera;
+	}
 
 private:// 静的メンバ関数
 
@@ -162,21 +146,25 @@ public: // メンバ関数
 		return int(std::distance(particle.begin(), particle.end()));
 	}
 
+	/// <summary>
+	/// 描画上限に行っていないか
+	/// </summary>
+	bool GetCheckDraw() {
+		return (vertexCount - 1) > int(std::distance(particle.begin(), particle.end()));
+	}
+
 private: // メンバ変数
 
 	//カメラ
 	static Camera* camera;
 	//パイプライン情報
 	static std::vector<GraphicsPipelineManager::DrawSet> pipeline;
-	//テクスチャ情報
-	static std::map<std::string, INFORMATION> texture;
-	//ビルボード行列
 	static XMMATRIX matBillboard;
 	//Y軸回りのビルボード行列
 	static XMMATRIX matBillboardY;
 
 	//テクスチャ名
-	std::string name;
+	std::unique_ptr<TextureManager> texture;
 	// 頂点バッファ
 	ComPtr<ID3D12Resource> vertBuff = {};
 	// 頂点バッファビュー

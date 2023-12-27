@@ -51,11 +51,6 @@ public:
 	void NonPostEffectDraw(const int _cameraNum) override;
 
 	/// <summary>
-	///	‰ð•ú
-	/// </summary>
-	void Finalize() override;
-
-	/// <summary>
 	/// imgui‚Ì•\Ž¦
 	/// </summary>
 	void ImguiDraw() override;

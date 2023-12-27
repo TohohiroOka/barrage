@@ -1,5 +1,5 @@
 #pragma once
-#include "Particle/Emitter.h"
+#include "Particle/ParticleManager.h"
 #include <array>
 #include "Singleton.h"
 
@@ -18,7 +18,9 @@ public:
 
 	void Draw();
 
+	void Finalize();
+
 private:
 	//弾描画用インスタンシングオブジェクト
-	std::array<std::unique_ptr<Emitter>, 3> emitter;
+	std::array<std::unique_ptr<ParticleManager>, 3> particle;
 };

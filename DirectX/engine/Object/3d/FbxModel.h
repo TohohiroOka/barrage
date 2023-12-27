@@ -4,7 +4,7 @@
 #include <d3d12.h>
 #include <d3dx12.h>
 #include <DirectXMath.h>
-#include "Texture/Texture.h"
+#include "Texture/TextureManager.h"
 #include <vector>
 #include <unordered_map>
 #include "Math/DirectXMathHelper.h"
@@ -261,8 +261,6 @@ private://静的メンバ変数
 	static FbxImporter* fbxImporter;
 	//1フレームの時間
 	static FbxTime frameTime;
-	//textureが無い時のtexture
-	static const std::string defaultTexture;
 	//ファイルパス
 	static const std::string baseDirectory;
 	//Fbxのデータ
@@ -273,7 +271,7 @@ public://メンバ変数
 	//モデル名
 	std::string name;
 	//テクスチャパス
-	std::unordered_map<std::string,std::unique_ptr<Texture>> texture;
+	std::unordered_map<std::string,std::unique_ptr<TextureManager>> texture;
 	//定数Texture
 	ComPtr<ID3D12Resource> constBuffSkin = nullptr;
 	//アニメーション可能か

@@ -1,5 +1,5 @@
 #pragma once
-#include "Particle/Emitter.h"
+#include "Particle/ParticleManager.h"
 #include "Object/3d/Object3d.h"
 #include "Math/Vector3.h"
 
@@ -63,7 +63,7 @@ private: //メンバ関数
 
 private: //メンバ変数
 	//パーティクル発生エミッター
-	std::array<std::unique_ptr<Emitter>, 3> particle;
+	std::array<std::unique_ptr<ParticleManager>, 3> particle;
 	//発生座標保存用list
 	std::vector<std::list<Vector3>> emitPosLists;
 	//1フレーム前の発生座標との間に発生させるパーティクル数

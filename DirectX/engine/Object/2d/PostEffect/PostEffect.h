@@ -29,11 +29,6 @@ public://メンバ関数
 	/// </summary>
 	static std::unique_ptr<PostEffect> Create();
 
-	/// <summary>
-	/// 解放処理
-	/// </summary>
-	void Finalize();
-
 public://メンバ関数
 
 	/// <summary>
@@ -59,7 +54,7 @@ public://メンバ関数
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw(const std::vector<Texture*> _tex);
+	void Draw(const std::vector<TextureManager*> _tex);
 
 	/// <summary>
 	/// 描画前処理
@@ -71,7 +66,7 @@ public://メンバ関数
 	/// </summary>
 	void PostDrawScene();
 
-	Texture* GetTex(TexType _type) {
+	TextureManager* GetTexture(TexType _type) {
 		return texture[int(_type)].get();
 	}
 
@@ -85,9 +80,7 @@ private://静的メンバ変数
 private://メンバ変数
 
 	//テクスチャ情報
-	std::array<std::unique_ptr<Texture>, int(TexType::size)> texture;
-	//RTV用デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeapRTV;
+	std::array<std::unique_ptr<TextureManager>, int(TexType::size)> texture;
 	//DSV用デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeapDSV;
 	//深度バッファ

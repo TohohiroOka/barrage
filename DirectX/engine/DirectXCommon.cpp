@@ -326,8 +326,6 @@ void DirectXCommon::PostDraw()
 {
 	// imgui描画
 	ImGui::Render();
-	ID3D12DescriptorHeap* ppHeaps[] = { DescriptorHeapManager::GetDescriptorHeap()};
-	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), cmdList.Get());
 
 	// バックバッファの番号を取得（2つなので0番か1番）

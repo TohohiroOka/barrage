@@ -385,7 +385,7 @@ void Model::LoadTextures()
 		// テクスチャなし
 		else {
 			// マテリアルにテクスチャ読み込み
-			material->LoadTexture(baseDirectory);
+			material->LoadTexture("");
 			textureIndex++;
 		}
 	}

@@ -3,8 +3,7 @@
 
 void SceneChangeDirection::Create()
 {
-	Sprite::LoadTexture("fadetex", "Resources/SubTexture/white1x1.png", false);
-	fadeSprite = Sprite::Create("fadetex", {}, {});
+	fadeSprite = Sprite::Create("white", {}, {});
 	fadeSprite->SetSize({ float(WindowApp::GetWindowWidth()), float(WindowApp::GetWindowHeight()) });
 	isLoaded = true;
 }

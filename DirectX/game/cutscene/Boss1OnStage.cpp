@@ -4,9 +4,9 @@
 
 void Boss1OnStage::Init()
 {
-	Sprite::LoadTexture("first_name", "Resources/SpriteTexture/firstname.png");
-	Sprite::LoadTexture("second_name", "Resources/SpriteTexture/secondname.png");
-	Sprite::LoadTexture("letterbox", "Resources/SubTexture/white1x1.png");
+	TextureManager::LoadTexture("first_name", "Resources/SpriteTexture/firstname.png");
+	TextureManager::LoadTexture("second_name", "Resources/SpriteTexture/secondname.png");
+	TextureManager::LoadTexture("letterbox", "Resources/SubTexture/white1x1.png");
 
 	firstName = Sprite::Create("first_name", {});
 	firstName->SetAnchorpoint({ 0.5,0.5 });

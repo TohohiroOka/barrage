@@ -7,7 +7,7 @@
 
 void BaseDefeatDirection::Init()
 {
-	Sprite::LoadTexture("victorytext", "Resources/SpriteTexture/victory.png");
+	TextureManager::LoadTexture("victorytext", "Resources/SpriteTexture/victory.png");
 	victoryTextUpper = Sprite::Create("victorytext", {}, { 0.5,0.5 });
 	victoryTextUpper->SetTexSize({ 512,64.f });
 	victoryTextUpper->SetSize({ 512.f * 1.25f,64.f * 1.25 });
@@ -76,9 +76,9 @@ void BaseDefeatDirection::Reset()
 	isCommonEnded = false;
 }
 
-void BaseDefeatDirection::InEmitter(Emitter* ptr, ParticleGrainState& pgState)
+void BaseDefeatDirection::InEmitter(ParticleManager* ptr, ParticleGrainState& pgState)
 {
-	ptr->InEmitter(pgState.aliveFrame,
+	ptr->Add(pgState.aliveFrame,
 		pgState.pos,
 		pgState.vel,
 		pgState.acc,
