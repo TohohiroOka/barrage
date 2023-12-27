@@ -2,7 +2,7 @@
 
 #include "camera/CutSceneCamera.h"
 
-#include "Particle/Emitter.h"
+#include "Particle/ParticleManager.h"
 #include "Object/2d/Sprite.h"
 
 struct ParticleGrainState
@@ -44,7 +44,7 @@ protected:
 	//継承先で共通で使用する
 
 	//パーティクル関数簡略化
-	void InEmitter(Emitter* ptr, ParticleGrainState& pgState);
+	void InEmitter(ParticleManager* ptr, ParticleGrainState& pgState);
 
 	void StartCommonDirection();
 

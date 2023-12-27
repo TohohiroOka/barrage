@@ -149,7 +149,6 @@
     <ClCompile Include="engine\Object\3d\PrimitiveObject3D.cpp" />
     <ClCompile Include="engine\Object\3d\TerrainModel.cpp" />
     <ClCompile Include="engine\Object\ObjectBase.cpp" />
-    <ClCompile Include="engine\particle\Emitter.cpp" />
     <ClCompile Include="engine\particle\ParticleManager.cpp" />
     <ClCompile Include="engine\Pipeline\ComputeShaderManager.cpp" />
     <ClCompile Include="engine\Pipeline\GraphicsPipelineManager.cpp" />
@@ -479,7 +478,6 @@
     <ClInclude Include="engine\Object\3d\PrimitiveObject3D.h" />
     <ClInclude Include="engine\Object\3d\TerrainModel.h" />
     <ClInclude Include="engine\Object\ObjectBase.h" />
-    <ClInclude Include="engine\particle\Emitter.h" />
     <ClInclude Include="engine\particle\ParticleManager.h" />
     <ClInclude Include="engine\Pipeline\ComputeShaderManager.h" />
     <ClInclude Include="engine\Pipeline\GraphicsPipelineManager.h" />

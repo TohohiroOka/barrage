@@ -7,7 +7,7 @@
 #include "Object/3d/Object3d.h"
 #include "Object/2d/Sprite.h"
 #include "Object/2d/ShaoeSprite.h"
-#include "Particle/Emitter.h"
+#include "Particle/ParticleManager.h"
 #include "Light/LightGroup.h"
 #include "Math/Easing/Easing.h"
 #include "Object/3d/HeightMap.h"

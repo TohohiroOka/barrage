@@ -17,8 +17,8 @@ SlashEffect::SlashEffect(const std::string& texName, int emitNum, int frameParti
 	emitPosLists.resize(emitNum);
 
 	for (auto& i : particle) {
-		i = Emitter::Create(texName);
-		i->SetBloom();
+		i = ParticleManager::Create(texName);
+		i->SetBloom(true);
 	}
 }
 
@@ -87,7 +87,7 @@ void SlashEffect::AddParticle()
 			//パーティクル生成
 			for (auto& i : particle) {
 				if (i->GetCreateNum() >= 1024) { continue; }
-				i->InEmitter(maxFrame, emitpos, {}, {}, startScale, endScale, sColor, eColor);
+				i->Add(maxFrame, emitpos, {}, {}, startScale, endScale, sColor, eColor);
 			}
 		}
 	}

@@ -84,6 +84,14 @@ public: // 静的メンバ関数
 		ParticleManager::camera = _camera;
 	}
 
+	/// <summary>
+	/// カメラのセット
+	/// </summary>
+	/// <param name="_camera">カメラ</param>
+	static Camera* GetCamera() {
+		return ParticleManager::camera;
+	}
+
 private:// 静的メンバ関数
 
 	/// <summary>
@@ -136,6 +144,13 @@ public: // メンバ関数
 	/// </summary>
 	int GetCreateNum() {
 		return int(std::distance(particle.begin(), particle.end()));
+	}
+
+	/// <summary>
+	/// 描画上限に行っていないか
+	/// </summary>
+	bool GetCheckDraw() {
+		return (vertexCount - 1) > int(std::distance(particle.begin(), particle.end()));
 	}
 
 private: // メンバ変数

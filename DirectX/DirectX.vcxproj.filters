@@ -163,9 +163,6 @@
     <ClCompile Include="engine\particle\ParticleManager.cpp">
       <Filter>Engine\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="engine\particle\Emitter.cpp">
-      <Filter>Engine\Particle</Filter>
-    </ClCompile>
     <ClCompile Include="engine\light\LightGroup.cpp">
       <Filter>Engine\Light</Filter>
     </ClCompile>
@@ -648,9 +645,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\particle\ParticleManager.h">
-      <Filter>Engine\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\particle\Emitter.h">
       <Filter>Engine\Particle</Filter>
     </ClInclude>
     <ClInclude Include="engine\light\LightGroup.h">

@@ -76,9 +76,9 @@ void BaseDefeatDirection::Reset()
 	isCommonEnded = false;
 }
 
-void BaseDefeatDirection::InEmitter(Emitter* ptr, ParticleGrainState& pgState)
+void BaseDefeatDirection::InEmitter(ParticleManager* ptr, ParticleGrainState& pgState)
 {
-	ptr->InEmitter(pgState.aliveFrame,
+	ptr->Add(pgState.aliveFrame,
 		pgState.pos,
 		pgState.vel,
 		pgState.acc,

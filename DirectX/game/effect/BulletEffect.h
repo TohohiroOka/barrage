@@ -1,5 +1,5 @@
 #pragma once
-#include "Particle/Emitter.h"
+#include "Particle/ParticleManager.h"
 #include "engine/Math/Timer.h"
 
 #include <memory>
@@ -26,5 +26,5 @@ public:
 
 private:
 	//弾描画用インスタンシングオブジェクト
-	std::unique_ptr<Emitter> emitter;
+	std::unique_ptr<ParticleManager> particle;
 };

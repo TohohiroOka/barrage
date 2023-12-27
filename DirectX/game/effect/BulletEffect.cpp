@@ -7,20 +7,20 @@ void BulletEffect::LoadResources()
 
 void BulletEffect::Init()
 {
-	emitter = Emitter::Create("effect");
+	particle = ParticleManager::Create("effect");
 }
 
 void BulletEffect::Update()
 {
-	emitter->Update();
+	particle->Update();
 }
 
 void BulletEffect::Draw()
 {
-	if(emitter->GetCreateNum() != 0){ emitter->Draw(); }
+	if(particle->GetCreateNum() != 0){ particle->Draw(); }
 }
 
 void BulletEffect::AddBulletEffect(DirectX::XMFLOAT3& pos, DirectX::XMFLOAT4& color, float& effectScale, DirectX::XMFLOAT4& effectColor)
 {
-	emitter->InEmitter(1, pos, { 0.f,0.f,0.f }, { 0.f,0.f,0.f }, effectScale, effectScale, effectColor, effectColor);
+	particle->Add(1, pos, { 0.f,0.f,0.f }, { 0.f,0.f,0.f }, effectScale, effectScale, effectColor, effectColor);
 }

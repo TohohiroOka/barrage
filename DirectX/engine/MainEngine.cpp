@@ -2,7 +2,6 @@
 #include "Object/3d/InstanceObject.h"
 #include "Object/2d/Sprite.h"
 #include "Object/2d/DebugText.h"
-#include "Particle/Emitter.h"
 #include "Pipeline/ComputeShaderManager.h"
 #include "Pipeline/GraphicsPipelineManager.h"
 #include "Texture/TextureManager.h"
