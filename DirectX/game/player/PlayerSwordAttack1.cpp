@@ -20,7 +20,7 @@ PlayerSwordAttack1::PlayerSwordAttack1(Player* player)
 {
 	//プレイヤーをセット
 	this->player = player;
-	player->GetSword()->GetSlashEffect()->SetIsParticleEmit(true); //仮で斬撃演出生成を開始しておく。終了しないので出っぱなし
+	player->GetSword()->GetSlashEffect()->SetIsParticleEmit(true); //仮で斬撃演出生成を開始しておく。
 	//当たり判定可視化用オブジェクト生成
 	model = Model::CreateFromOBJ("bullet");
 

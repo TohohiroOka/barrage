@@ -36,6 +36,7 @@ void PlayerActionBaseAttack::Update()
 		//攻撃以外を選択している場合は攻撃行動を解放する
 		else {
 			player->GetData()->attackAction.reset();
+			player->GetSword()->GetSlashEffect()->SetIsParticleEmit(false); //斬撃演出生成も停止させておく
 		}
 
 		//予約していた次の行動をセット
@@ -55,5 +56,6 @@ void PlayerActionBaseAttack::Update()
 
 		//攻撃行動を解放する
 		player->GetData()->attackAction.reset();
+		player->GetSword()->GetSlashEffect()->SetIsParticleEmit(false); //斬撃演出生成も停止させておく
 	}
 }

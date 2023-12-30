@@ -12,6 +12,7 @@ PlayerActionKnockback::PlayerActionKnockback(Player* player, const Vector3& knoc
 
 	//攻撃行動を解放する
 	player->GetData()->attackAction.reset();
+	player->GetSword()->GetSlashEffect()->SetIsParticleEmit(false); //斬撃演出生成も停止させておく
 
 	//予め次の行動を設定しておく(終了後は通常移動)
 	nextAction = PlayerActionName::MOVENORMAL;
