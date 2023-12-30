@@ -30,35 +30,9 @@ Player::Player()
 	object->SetIsBoneDraw(true);
 	object->SetUseAnimation(PlayerAnimationName::JUMP_ANIMATION);
 
-	//剣モデル読み込み
-	swordModel = Model::CreateFromOBJ("sword");
-	std::string bone = "thumb.01.R";
-	XMMATRIX matScale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
-	XMMATRIX matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
-	matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
-	matRot *= XMMatrixRotationY(XMConvertToRadians(0.0f));
-	DirectX::XMMATRIX matTrans = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
-	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
-	world *= matScale;
-	world *= matRot;
-	world *= matTrans;
-	object->SetBoneObject(bone, "rightHand", swordModel.get(), world, true, "sword1");
-
-	//剣の長さ図り用
-	{
-		XMMATRIX matScale = XMMatrixScaling(0.0f, 0.0f, 0.0f);
-		XMMATRIX matRot = XMMatrixIdentity();
-		matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
-		matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
-		matRot *= XMMatrixRotationY(XMConvertToRadians(0.0f));
-		DirectX::XMMATRIX matTrans = XMMatrixTranslation(0.0f, 1.5f, 0.0f);
-		DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
-		world *= matScale;
-		world *= matRot;
-		world *= matTrans;
-		object->SetBoneObject(bone, "rightHand", swordModel.get(), world, false, "sword2");
-	}
+	//剣生成
+	sword = std::make_unique<PlayerSword>(object.get());
+	
 	object->SetScale({ 5,5,5 });
 
 	//データ生成
@@ -75,10 +49,6 @@ Player::Player()
 	//タイマー生成
 	healTimer = std::make_unique<Engine::Timer>();
 	enduranceRecoveryStartTimer = std::make_unique<Engine::Timer>();
-
-	XMFLOAT4 startColor = { 0.02f, 0.05f, 0.2f, 1.0f };
-	XMFLOAT4 endColor = { 0.001f, 0.001f, 0.01f, 1.0f };
-	swordEffect = std::make_unique<SlashEffect>("effect", 10, 10, 10.0f, 1.0f, 0.0f, startColor, endColor);
 }
 
 void Player::Update()
@@ -106,14 +76,16 @@ void Player::Update()
 	hpGauge->Update();
 	enduranceGauge->Update();
 
-	//斬撃エフェクト更新
-	swordEffect->Update(object->GetAttachPos("sword1"), object->GetAttachPos("sword2"));
+	//剣更新
+	sword->Update();
 }
 
 void Player::Draw()
 {
-	swordEffect->Draw();
 	object->Draw();
+
+	//剣演出描画
+	sword->DrawEffect();
 
 	//if (!data->attackAction) { return; }
 	//data->attackAction->Draw();

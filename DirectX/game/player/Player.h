@@ -7,7 +7,7 @@
 #include "game/ui/Gauge.h"
 #include "BasePlayerAttack.h"
 #include "Math/Timer.h"
-#include "effect/SlashEffect.h"
+#include "PlayerSword.h"
 
 class GameCamera;
 
@@ -92,6 +92,7 @@ public: //メンバ関数
 
 	//getter
 	Fbx* GetFbxObject() { return object.get(); }
+	PlayerSword* GetSword() { return sword.get(); }
 	GameCamera* GetGameCamera() { return gameCamera; }
 	PlayerData* GetData() { return data.get(); }
 
@@ -139,8 +140,10 @@ private: //静的メンバ変数
 private: //メンバ変数
 	std::unique_ptr<FbxModel> model = nullptr;
 	std::unique_ptr<Fbx> object = nullptr;
-	//剣のモデル
-	std::unique_ptr<Model> swordModel = nullptr;
+
+	//剣
+	std::unique_ptr<PlayerSword> sword;
+	
 	//ゲームカメラ
 	GameCamera* gameCamera = nullptr;
 
@@ -170,6 +173,4 @@ private: //メンバ変数
 	std::unique_ptr<Engine::Timer> enduranceRecoveryStartTimer;
 	////持久力ゲージ
 	std::unique_ptr<Gauge> enduranceGauge;
-
-	std::unique_ptr<SlashEffect> swordEffect;
 };

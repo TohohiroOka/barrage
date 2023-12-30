@@ -202,6 +202,7 @@
     <ClCompile Include="game\player\PlayerActionMoveNormal.cpp" />
     <ClCompile Include="game\player\PlayerActionStrongAttack.cpp" />
     <ClCompile Include="game\player\PlayerData.cpp" />
+    <ClCompile Include="game\player\PlayerSword.cpp" />
     <ClCompile Include="game\player\PlayerSwordAttack1.cpp" />
     <ClCompile Include="game\player\PlayerSwordAttack2.cpp" />
     <ClCompile Include="game\scene\OnStageTest.cpp" />
@@ -536,6 +537,7 @@
     <ClInclude Include="game\player\PlayerActionMoveNormal.h" />
     <ClInclude Include="game\player\PlayerActionStrongAttack.h" />
     <ClInclude Include="game\player\PlayerData.h" />
+    <ClInclude Include="game\player\PlayerSword.h" />
     <ClInclude Include="game\player\PlayerSwordAttack1.h" />
     <ClInclude Include="game\player\PlayerSwordAttack2.h" />
     <ClInclude Include="game\scene\OnStageTest.h" />
