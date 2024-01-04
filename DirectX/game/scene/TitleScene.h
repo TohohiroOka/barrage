@@ -5,6 +5,11 @@
 
 #include "ui/ChoiceEmphasisDrawer.h"
 #include "system/ActionInputConfig.h"
+#include "camera/GameCamera.h"
+#include "player/Player.h"
+#include "field/Field.h"
+#include "titleObject/Portal.h"
+#include "ui/PressSelectButtonUI.h"
 
 #include <memory>
 
@@ -56,51 +61,38 @@ public:
 	void ImguiDraw() override;
 
 	/// <summary>
-	/// 
+	/// 毎フレームリセット
 	/// </summary>
 	void FrameReset() override;
 
+	/// <summary>
+	/// 当たり判定
+	/// </summary>
 	void CollisionCheck();
 
 private:
-	//選択中
-	enum class PLAYER_SELECT
-	{
-		SELECT_STARTGAME,
-		SELECT_CONFIG,
-		SELECT_EXIT,
-	};
-	PLAYER_SELECT selecting = PLAYER_SELECT::SELECT_STARTGAME;
-
-	bool isPressed = false;
-	bool isSelected = false;
-	
-	bool isSceneChangeWait = false;
-
-	std::unique_ptr<ChoiceEmphasisDrawer> choiceDrawer;
-	//表示座標系
-	const float OPTIONS_START_Y = 550.f;
-	const float OPTIONS_DISTANCE_Y = 50.f;
 	//カメラ
+	bool isNormalCamera = true;
 	std::unique_ptr<DebugCamera> debugCamera;
+	std::unique_ptr<GameCamera> camera;
 	std::unique_ptr<LightCamera> lightCamera;
+
 	//スプライト
-	std::unique_ptr<Sprite> titleLogoSprite;
-	std::unique_ptr<Sprite> pressAnyButtonSprite;
-	std::unique_ptr<Sprite> gamestartSprite;
-	std::unique_ptr<Sprite> configSprite;
-	std::unique_ptr<Sprite> exitgameSprite;
-	//時間
-	const int FADEIN_FRAME = 150;
-	int fadeinFrame = 0;
-	//コンフィグ
+	std::unique_ptr<Sprite> titleLogoSprite;	//タイトルロゴ
+	std::unique_ptr<Sprite> intoPortalSprite;	//「入る」
+
+	//地形
+	std::unique_ptr<Field> field;
+	//プレイヤー
+	std::unique_ptr<Player> player;
+	//シーン変更ポータル
+	std::array<std::unique_ptr<Portal>, 3> portals;
+
+	//行動入力設定
 	std::unique_ptr<ActionInputConfig> actionInputConfig;
-	bool isConfigMode = false;
+	bool isInputConfigMode = false;
 
-	//入力判定用
-	bool IsUp();
-	bool IsDown();
-	bool IsEnter();
-
+	//選択ボタンが押下可能UI
+	std::unique_ptr<PressSelectButtonUI> pressSelectButtonUI;
 };
 

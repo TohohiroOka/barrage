@@ -202,6 +202,9 @@ public://ƒƒ“ƒoŠÖ”
 	/// </summary>
 	void EndVibration();
 
+	//getter
+	bool ControllerConnectCheck() { return !controllers.dwResult; }
+
 private://ƒƒ“ƒo•Ï”
 
 	CONTROLLER_STATE controllers;

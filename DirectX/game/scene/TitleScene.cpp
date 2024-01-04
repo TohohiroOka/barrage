@@ -5,6 +5,8 @@
 #include "scene/Scene1.h"
 #include "cutscene/SceneChangeDirection.h"
 #include "Audio/Audio.h"
+#include "WindowApp.h"
+#include <Object/3d/collider/Collision.h>
 
 TitleScene::~TitleScene()
 {
@@ -12,163 +14,152 @@ TitleScene::~TitleScene()
 
 void TitleScene::Initialize()
 {
-	Audio::Instance()->SoundPlayWava(Sound::SoundName::msp_bgm, true, 0.1f);
-
 	//スプライトのリソースのロード
 	TextureManager::LoadTexture("titleLogo", "Resources/SpriteTexture/titleLogo.png");
-	TextureManager::LoadTexture("pab", "Resources/SpriteTexture/pressanybutton.png");
-	TextureManager::LoadTexture("gamestart", "Resources/SpriteTexture/gamestart.png");
-	TextureManager::LoadTexture("config", "Resources/SpriteTexture/config.png");
-	TextureManager::LoadTexture("exitgame", "Resources/SpriteTexture/exitgame.png");
 	//スプライト生成
 	titleLogoSprite = Sprite::Create("titleLogo", {}, { 0.5f,0.5f });
 	titleLogoSprite->SetSize({ 252.f * 1.5f,59.0f * 1.5f });
-	titleLogoSprite->SetPosition({ 1500.f / 2.f,200.f });
+	titleLogoSprite->SetPosition({ 1500.f / 2.f,100.f });
 	titleLogoSprite->Update();
-	pressAnyButtonSprite = Sprite::Create("pab", {}, { 512.f,32.f });
-	pressAnyButtonSprite->SetTexSize({ 512.f,32.0f });
-	pressAnyButtonSprite->SetAnchorpoint({ 0.5f,0.5f });
-	pressAnyButtonSprite->SetPosition({ 1500.f / 2.f,550.f });
-	pressAnyButtonSprite->Update();
-	gamestartSprite = Sprite::Create("gamestart", {}, { 320.f,32.f });
-	gamestartSprite->SetTexSize({ 320.f,32.f });
-	gamestartSprite->SetAnchorpoint({ 0.5f,0.5f });
-	gamestartSprite->SetPosition({ 1500.f / 2,OPTIONS_START_Y });
-	gamestartSprite->Update();
-	configSprite = Sprite::Create("config", {}, { 320.f,32.f });
-	configSprite->SetTexSize({ 320.f,32.f });
-	configSprite->SetAnchorpoint({ 0.5f,0.5f });
-	configSprite->SetPosition({ 1500.f / 2, OPTIONS_START_Y + OPTIONS_DISTANCE_Y });
-	configSprite->Update();
-	exitgameSprite = Sprite::Create("exitgame", {}, { 320.f,32.f });
-	exitgameSprite->SetTexSize({ 320.f,32.f });
-	exitgameSprite->SetAnchorpoint({ 0.5f,0.5f });
-	exitgameSprite->SetPosition({ 1500.f / 2,OPTIONS_START_Y + (OPTIONS_DISTANCE_Y * 2) });
-	exitgameSprite->Update();
 
-	//カメラ初期化
+	pressSelectButtonUI = std::make_unique<PressSelectButtonUI>();
+
+	//Audio::Instance()->SoundPlayWava(Sound::SoundName::msp_bgm, true, 0.1f);
+
+	//地形生成
+	field = std::make_unique<Field>();
+	//プレイヤー生成
+	player = std::make_unique<Player>();
+	//ポータル生成
+	Scene1* gameScene = new Scene1;
+	const float stageSize = GameHelper::Instance()->GetStageSize();
+	const float portalPosY = 11.0f;
+	portals[0] = std::make_unique<Portal>(Vector3{ stageSize * 0.75f, portalPosY, stageSize / 2 }, gameScene);
+	TitleScene* titleScene = new TitleScene;
+	portals[1] = std::make_unique<Portal>(Vector3{ stageSize * 0.25f, portalPosY, stageSize / 2 }, titleScene);
+	portals[2] = std::make_unique<Portal>(Vector3{ stageSize / 2, portalPosY, stageSize * 0.75f }, nullptr);
+
+	//カメラ生成
+	GameCamera::SetPlayer(player.get());
 	debugCamera = DebugCamera::Create({ 300, 40, 0 });
-	lightCamera.reset(new LightCamera({ -50, 20, -50 }));
-	lightCamera->SetProjectionNum({ 360, 300 }, { -360, -100 });
-	//カメラ設定
-	Base3D::SetCamera(debugCamera.get());
+	camera = std::make_unique<GameCamera>();
+	player->SetGameCamera(camera.get());
+
+	//影用光源カメラ初期化
+	lightCamera = std::make_unique<LightCamera>(Vector3{ 205, 200, 204 }, Vector3{ 205, 0, 205 });
+	const float projectionSize = 1.5f;
+	lightCamera->SetProjectionNum({ projectionSize * (float)WindowApp::GetWindowWidth() / 5, projectionSize * (float)WindowApp::GetWindowHeight() / 5 },
+		{ -projectionSize * (float)WindowApp::GetWindowWidth() / 5, -projectionSize * (float)WindowApp::GetWindowHeight() / 5 });
+
+	Base3D::SetCamera(camera.get());
 	Base3D::SetLightCamera(lightCamera.get());
 
-	//強調表示初期化
-	choiceDrawer=std::make_unique<ChoiceEmphasisDrawer>();
-	choiceDrawer->Initialize();
+	ParticleManager::SetCamera(camera.get());
+
+	//行動入力設定
+	actionInputConfig = std::make_unique<ActionInputConfig>();
 
 	//遷移初期化
 	SceneChangeDirection::Instance()->Init();
-
-	actionInputConfig = std::make_unique<ActionInputConfig>();
 }
 
 void TitleScene::Update()
 {
-	//カメラ更新
-	debugCamera->Update();
-	lightCamera->Update();
+	if (!isInputConfigMode) {
+		//ポータルの目の前で入力を行えばシーン変更を開始する
+		if (DirectInput::GetInstance()->TriggerKey(DIK_SPACE)) {
+			for (int i = 0; i < 3; i++) {
+				if (portals[i]->GetIsIntoPortal()) {
+					if (portals[i]->GetChangeScene() == nullptr) {}
+					else {
+						SceneManager::SetNextScene(portals[i]->GetChangeScene());
+					}
+				}
+			}
+		}
 
-	if (isPressed) {
-		if (isConfigMode) {
-			//入力設定更新
-			actionInputConfig->Update();
-			if (actionInputConfig->GetIsInputConfigEnd()) { 
-				isConfigMode = false;
-				isSelected = false;
+		//オブジェクト更新
+		player->Update();
+		field->Update(player->GetData()->pos, camera->GetEye());
+		for (int i = 0; i < 3; i++) {
+			portals[i]->Update(player->GetFbxObject()->GetPosition(), player->GetFbxObject()->GetRotation(), player->GetData()->onGround);
+		}
+
+		//当たり判定
+		CollisionCheck();
+
+		//カメラ更新
+		if (isNormalCamera) {
+			camera->Update();
+			if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
+				isNormalCamera = !isNormalCamera;
+				Base3D::SetCamera(debugCamera.get());
 			}
 		}
 		else {
-			if (!isSelected) {
-				if (IsUp() && selecting != PLAYER_SELECT::SELECT_STARTGAME) {
-					selecting = PLAYER_SELECT(int(selecting) - 1);
-				}
-				else if (IsDown() && selecting != PLAYER_SELECT::SELECT_CONFIG) {
-					selecting = PLAYER_SELECT(int(selecting) + 1);
-				}
-			}
-
-			choiceDrawer->SetEmphasisPos(1500.f / 2.f, OPTIONS_START_Y + (OPTIONS_DISTANCE_Y * float(selecting)), 550.f, 80.f);
-
-			//決定キーが押されたら
-			if (IsEnter()) {
-				choiceDrawer->PlayChoiseAnimation();
-				//カーソル移動をロック
-				isSelected = true;
-			}
-
-			if (choiceDrawer->IsChooseAnimEnd()) {
-				switch (selecting)
-				{
-				case TitleScene::PLAYER_SELECT::SELECT_STARTGAME:
-					isSceneChangeWait = true;
-					SceneChangeDirection::Instance()->PlayFadeOut();
-					break;
-				case TitleScene::PLAYER_SELECT::SELECT_CONFIG:
-					isConfigMode = true;
-					actionInputConfig->Reset();
-					break;
-				case TitleScene::PLAYER_SELECT::SELECT_EXIT:
-
-					break;
-				default:
-					break;
-				}
-			}
-
-			if (isSceneChangeWait && SceneChangeDirection::Instance()->IsDirectionEnd()) {
-				Scene1* gameScene = nullptr;
-				gameScene = new Scene1;
-				SceneManager::SetNextScene(gameScene);
+			debugCamera->Update();
+			if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
+				isNormalCamera = !isNormalCamera;
+				Base3D::SetCamera(camera.get());
 			}
 		}
+		lightCamera->Update();
 
-
-
+		if (DirectInput::GetInstance()->TriggerKey(DIK_TAB) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_START)) {
+			isInputConfigMode = true;
+			actionInputConfig->Reset();
+		}
 	}
 	else {
-		//なにかしらのボタンが押されたら選択肢表示
-		if (DirectInput::GetInstance()->ReleaseKey(DIK_SPACE) ||
-			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A)) {
-			isPressed = true;
-		}
+		//入力設定更新
+		actionInputConfig->Update();
+
+		if (actionInputConfig->GetIsInputConfigEnd()) { isInputConfigMode = false; }
 	}
 
-
-
-	choiceDrawer->Update();
+	//スプライト更新
+	pressSelectButtonUI->Update();
 
 	SceneChangeDirection::Instance()->Update();
 }
 
 void TitleScene::Draw(const int _cameraNum)
 {
-
+	player->Draw();
+	field->Draw();
+	for (int i = 0; i < 3; i++) {
+		portals[i]->Draw();
+	}
 }
 
 void TitleScene::DrawLightView(const int _cameraNum)
 {
+	player->DrawLightView();
+	for (int i = 0; i < 3; i++) {
+		portals[i]->DrawLightView();
+	}
 }
 
 void TitleScene::NonPostEffectDraw(const int _cameraNum)
 {
 	titleLogoSprite->Draw();
 
-	if (!isConfigMode) {
-		if (isPressed) {
-			choiceDrawer->Draw();
-			gamestartSprite->Draw();
-			configSprite->Draw();
-			//exitgameSprite->Draw();
-		}
-		else {
-			pressAnyButtonSprite->Draw();
+	bool isIntoPortal = false;
+	for (int i = 0; i < 3; i++) {
+		if (portals[i]->GetIsIntoPortal()) {
+			isIntoPortal = true;
+			break;
 		}
 	}
-	else {
+	if (isIntoPortal) {
+		pressSelectButtonUI->Draw();
+	}
+
+	//入力設定描画
+	if (isInputConfigMode) {
 		actionInputConfig->Draw();
 	}
+
 
 	SceneChangeDirection::Instance()->Draw();
 }
@@ -179,30 +170,32 @@ void TitleScene::ImguiDraw()
 
 void TitleScene::FrameReset()
 {
+	player->FrameReset();
+	field->FrameReset();
 }
 
 void TitleScene::CollisionCheck()
 {
-}
+#pragma region プレイヤーとポータルの衝突判定
+	{
+		const Vector3 plpos = player->GetData()->pos;
+		Sphere playerSphere;
+		playerSphere.center = { plpos.x, plpos.y, plpos.z, 1.0f };
+		playerSphere.radius = player->GetFbxObject()->GetScale().x / 2;
 
-bool TitleScene::IsUp()
-{
-	return DirectInput::GetInstance()->TriggerKey(DIK_UP) ||
-		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_UP) ||
-		XInputManager::GetInstance()->TriggerLeftStickY(true);
-}
+		for (int i = 0; i < 3; i++) {
+			const Vector3 popos = portals[i]->GetObject3d()->GetPosition();
+			Sphere portalSphere;
+			portalSphere.center = { popos.x, popos.y, popos.z, 1.0f };
+			portalSphere.radius = portals[i]->GetObject3d()->GetScale().x;
 
-bool TitleScene::IsDown()
-{
-	return DirectInput::GetInstance()->TriggerKey(DIK_DOWN) ||
-		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_DOWN) ||
-		XInputManager::GetInstance()->TriggerLeftStickY(false);
-}
-
-bool TitleScene::IsEnter()
-{
-	bool isEnter = (DirectInput::GetInstance()->TriggerKey(DIK_SPACE) ||
-		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A));
-
-	return isEnter;
+			XMVECTOR inter;
+			XMVECTOR reject;
+			if (Collision::CheckSphere2Sphere(playerSphere, portalSphere, &inter, &reject)) {
+				//プレイヤーを押し戻す
+				player->PushBack(reject);
+			}
+		}
+	}
+#pragma endregion
 }

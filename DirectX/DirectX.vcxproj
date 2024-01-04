@@ -210,10 +210,12 @@
     <ClCompile Include="game\scene\TitleScene.cpp" />
     <ClCompile Include="game\system\ActionInputConfig.cpp" />
     <ClCompile Include="game\system\GameInputManager.cpp" />
+    <ClCompile Include="game\titleObject\Portal.cpp" />
     <ClCompile Include="game\ui\ChoiceEmphasisDrawer.cpp" />
     <ClCompile Include="game\ui\GameOver.cpp" />
     <ClCompile Include="game\ui\Gauge.cpp" />
     <ClCompile Include="game\ui\LockonUI.cpp" />
+    <ClCompile Include="game\ui\PressSelectButtonUI.cpp" />
     <ClCompile Include="main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -546,10 +548,12 @@
     <ClInclude Include="game\system\ActionInputConfig.h" />
     <ClInclude Include="game\system\GameInputManager.h" />
     <ClInclude Include="game\system\Sound.h" />
+    <ClInclude Include="game\titleObject\Portal.h" />
     <ClInclude Include="game\ui\ChoiceEmphasisDrawer.h" />
     <ClInclude Include="game\ui\GameOver.h" />
     <ClInclude Include="game\ui\Gauge.h" />
     <ClInclude Include="game\ui\LockonUI.h" />
+    <ClInclude Include="game\ui\PressSelectButtonUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="engine\external\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

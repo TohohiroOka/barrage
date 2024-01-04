@@ -70,11 +70,6 @@ private: //メンバ関数
 	void LockonAdjastEaseRotate(float& rotation, float easeBeforeRotate, float easeAfterRotate, float easeTime);
 
 	/// <summary>
-	/// ロックオン時にy軸回転を停止中の処理
-	/// </summary>
-	void LockonRotYStop();
-
-	/// <summary>
 	/// 座標を更新
 	/// </summary>
 	void UpdatePosition();
