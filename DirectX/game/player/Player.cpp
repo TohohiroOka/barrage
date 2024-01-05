@@ -11,6 +11,8 @@
 #include "PlayerActionBlink.h"
 #include "PlayerActionKnockback.h"
 #include "PlayerActionDead.h"
+#include "PlayerTitleActionFloat.h"
+#include "PlayerTitleActionIntoPortal.h"
 #include "engine/Math/Easing/Easing.h"
 #include "PlayerSwordAttack1.h"
 #include <imgui.h>
@@ -29,11 +31,11 @@ Player::Player()
 	object->SetAnimation(true);
 	object->SetIsBoneDraw(true);
 	object->SetUseAnimation(PlayerAnimationName::JUMP_ANIMATION);
+	object->SetScale({ 5,5,5 });
 
 	//剣生成
 	sword = std::make_unique<PlayerSword>(object.get());
 	
-	object->SetScale({ 5,5,5 });
 
 	//データ生成
 	data = std::make_unique<PlayerData>();
@@ -70,14 +72,14 @@ void Player::Update()
 	//更新した座標などを反映し、オブジェクト更新
 	ObjectUpdate();
 
+	//剣更新
+	sword->Update();
+
 	//ゲージ更新
 	HealHPMove();
 	EnduranceRecovery();
 	hpGauge->Update();
 	enduranceGauge->Update();
-
-	//剣更新
-	sword->Update();
 }
 
 void Player::Draw()
@@ -206,6 +208,16 @@ void Player::UseEndurance(const int enduranceUseNum, const int enduranceRecovery
 	*enduranceRecoveryStartTimer.get() = enduranceRecoveryStartTime;
 }
 
+void Player::TitlePhaseStart()
+{
+	//通常の状態でなければ抜ける
+	if ((data->action == PlayerActionName::TITLE_FLOAT || data->action == PlayerActionName::TITLE_INTO_PORTAL)) { return; }
+
+	//フェーズを更新
+	data->action = PlayerActionName::TITLE_FLOAT;
+	action = std::make_unique<PlayerTitleActionFloat>(this, portalPos);
+}
+
 void Player::ObjectUpdate()
 {
 	//速度を加算して座標更新
@@ -249,7 +261,7 @@ void Player::ActionChange()
 {
 	//行動の変更が終わり、現在選択されている行動を開始する
 	switch (data->action) {
-	case PlayerActionName::MOVENORMAL:
+	case PlayerActionName::MOVE_NORMAL:
 		action = std::make_unique<PlayerActionMoveNormal>(this);
 		break;
 
@@ -257,11 +269,11 @@ void Player::ActionChange()
 		action = std::make_unique<PlayerActionJump>(this);
 		break;
 
-	case PlayerActionName::LIGHTATTACK:
+	case PlayerActionName::LIGHT_ATTACK:
 		action = std::make_unique<PlayerActionLightAttack>(this);
 		break;
 
-	case PlayerActionName::STRONGATTACK:
+	case PlayerActionName::STRONG_ATTACK:
 		action = std::make_unique<PlayerActionStrongAttack>(this);
 		break;
 
@@ -271,6 +283,10 @@ void Player::ActionChange()
 
 	case PlayerActionName::BLINK:
 		action = std::make_unique<PlayerActionBlink>(this);
+		break;
+
+	case PlayerActionName::TITLE_INTO_PORTAL:
+		action = std::make_unique<PlayerTitleActionIntoPortal>(this, portalPos);
 		break;
 
 	default:

@@ -15,7 +15,7 @@ PlayerActionKnockback::PlayerActionKnockback(Player* player, const Vector3& knoc
 	player->GetSword()->GetSlashEffect()->SetIsParticleEmit(false); //aŒ‚‰‰o¶¬‚à’â~‚³‚¹‚Ä‚¨‚­
 
 	//—\‚ßŸ‚Ìs“®‚ğİ’è‚µ‚Ä‚¨‚­(I—¹Œã‚Í’ÊíˆÚ“®)
-	nextAction = PlayerActionName::MOVENORMAL;
+	nextAction = PlayerActionName::MOVE_NORMAL;
 }
 
 PlayerActionKnockback::~PlayerActionKnockback()

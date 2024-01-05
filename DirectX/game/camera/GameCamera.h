@@ -9,6 +9,7 @@ class GameCamera :public Camera
 {
 public: //静的メンバ関数
 	
+	//setter
 	static void SetPlayer(Player* player) { GameCamera::player = player; }
 
 public: //メンバ関数
@@ -32,7 +33,7 @@ public: //メンバ関数
 	bool GetisLockon() { return isLockon; }
 	bool GetisLockonStart() { return isLockonStart; }
 
-private: //メンバ関数
+protected: //メンバ関数
 	/// <summary>
 	/// ワールド行列を更新
 	/// </summary>
@@ -89,7 +90,7 @@ private: //メンバ関数
 	/// </summary>
 	void LockonEndRotate();
 
-private: //静的メンバ変数
+protected: //静的メンバ変数
 	static Player* player;
 	static const float rotateXMin;
 	static const float rotateXMax;
@@ -97,7 +98,7 @@ private: //静的メンバ変数
 	static const float rotateCenterDistanceNormal;
 	static const Vector3 targetDistanceNormal;
 
-private: //メンバ変数
+protected: //メンバ変数
 	//カメラ座標
 	Vector3 position;
 	//ターゲット角度

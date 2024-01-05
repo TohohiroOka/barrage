@@ -89,6 +89,11 @@ public: //メンバ関数
 	/// <param name="isDecreaseDiffMode">使用量を黄色いバーで可視化するか</param>
 	void UseEndurance(const int enduranceUseNum, const int enduranceRecoveryStartTime, bool isDecreaseDiffMode);
 
+	/// <summary>
+	/// タイトルシーン用行動演出開始
+	/// </summary>
+	void TitlePhaseStart();
+
 
 	//getter
 	Fbx* GetFbxObject() { return object.get(); }
@@ -98,6 +103,7 @@ public: //メンバ関数
 
 	//setter
 	void SetGameCamera(GameCamera* gameCamera) { this->gameCamera = gameCamera; }
+	void SetPortalPos(const Vector3& portalPos) { this->portalPos = portalPos; }
 
 private:
 	/// <summary>
@@ -173,4 +179,7 @@ private: //メンバ変数
 	std::unique_ptr<Engine::Timer> enduranceRecoveryStartTimer;
 	////持久力ゲージ
 	std::unique_ptr<Gauge> enduranceGauge;
+
+	//タイトルシーン用ポータル座標
+	Vector3 portalPos;
 };

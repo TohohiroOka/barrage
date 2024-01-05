@@ -15,8 +15,6 @@ public: //メンバ関数
 	/// </summary>
 	void Update() override;
 
-private: //メンバ関数
-
 private: //静的メンバ変数
 	//ジャンプ力
 	static float jumpPower;

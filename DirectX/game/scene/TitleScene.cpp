@@ -42,7 +42,7 @@ void TitleScene::Initialize()
 	//カメラ生成
 	GameCamera::SetPlayer(player.get());
 	debugCamera = DebugCamera::Create({ 300, 40, 0 });
-	camera = std::make_unique<GameCamera>();
+	camera = std::make_unique<TitleCamera>();
 	player->SetGameCamera(camera.get());
 
 	//影用光源カメラ初期化
@@ -66,15 +66,15 @@ void TitleScene::Initialize()
 void TitleScene::Update()
 {
 	if (!isInputConfigMode) {
-		//ポータルの目の前で入力を行えばシーン変更を開始する
-		if (DirectInput::GetInstance()->TriggerKey(DIK_SPACE)) {
-			for (int i = 0; i < 3; i++) {
-				if (portals[i]->GetIsIntoPortal()) {
-					if (portals[i]->GetChangeScene() == nullptr) {}
-					else {
-						SceneManager::SetNextScene(portals[i]->GetChangeScene());
-					}
-				}
+		//ポータルに入る行動
+		IntoPortalStart();
+		IntoPortal();
+		//暗転が完了したら次のシーンへ
+		if (isSceneChangeWait && SceneChangeDirection::Instance()->IsDirectionEnd()) {
+			//選択しているポータルの通じるシーンに移行する
+			if (selectPortal->GetChangeScene() == nullptr) {}
+			else {
+				SceneManager::SetNextScene(selectPortal->GetChangeScene());
 			}
 		}
 
@@ -82,7 +82,7 @@ void TitleScene::Update()
 		player->Update();
 		field->Update(player->GetData()->pos, camera->GetEye());
 		for (int i = 0; i < 3; i++) {
-			portals[i]->Update(player->GetFbxObject()->GetPosition(), player->GetFbxObject()->GetRotation(), player->GetData()->onGround);
+			portals[i]->Update(*player->GetData());
 		}
 
 		//当たり判定
@@ -105,7 +105,7 @@ void TitleScene::Update()
 		}
 		lightCamera->Update();
 
-		if (DirectInput::GetInstance()->TriggerKey(DIK_TAB) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_START)) {
+		if ((!isIntoPortal) && (DirectInput::GetInstance()->TriggerKey(DIK_TAB) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_START))) {
 			isInputConfigMode = true;
 			actionInputConfig->Reset();
 		}
@@ -198,4 +198,55 @@ void TitleScene::CollisionCheck()
 		}
 	}
 #pragma endregion
+}
+
+void TitleScene::IntoPortalStart()
+{
+	//既にポータルに入る行動をしていれば抜ける
+	if (isIntoPortal) { return; }
+	//入力がなければ抜ける
+	if (!(DirectInput::GetInstance()->TriggerKey(DIK_E) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
+	//カメラが通常状態でなければ抜ける
+	if (!(camera->GetTitleCameraPhase() == TitleCamera::TitleCameraPhase::NORMAL)) { return; }
+
+	//ポータルの数回す
+	for (int i = 0; i < 3; i++) {
+		if (!portals[i]->GetIsIntoPortal()) { continue; }
+
+		camera->SetPortalPos(portals[i]->GetObject3d()->GetPosition());
+		camera->ChangePhase(TitleCamera::TitleCameraPhase::MOVE_PORTAL_FRONT);
+		player->SetPortalPos(portals[i]->GetObject3d()->GetPosition());
+		player->TitlePhaseStart();
+		isIntoPortal = true;
+		selectPortal = portals[i].get();
+		break;
+	}
+}
+
+void TitleScene::IntoPortal()
+{
+	//ポータルに入る行動をしていなければ抜ける
+	if (!isIntoPortal) { return; }
+
+	//カメラがポータル正面に移動する状態のとき
+	if (camera->GetTitleCameraPhase() == TitleCamera::TitleCameraPhase::MOVE_PORTAL_FRONT) {
+		//プレイヤーがポータルに入る行動状態ならば、カメラ行動をポータルにズームする状態に変更
+		if (!(player->GetData()->action == PlayerActionName::TITLE_INTO_PORTAL)) { return; }
+		camera->ChangePhase(TitleCamera::TitleCameraPhase::ZOOM_PORTAL);
+	}
+	//カメラがポータルをズームする状態のとき
+	else if (camera->GetTitleCameraPhase() == TitleCamera::TitleCameraPhase::ZOOM_PORTAL) {
+		//カメラ行動をポータルにズームする行動を終えたら、停止状態
+		if (!camera->GetIsPhaseActionEnd()) { return; }
+		camera->ChangePhase(TitleCamera::TitleCameraPhase::STAY);
+	}
+	//カメラがポータル前で停止状態のとき
+	else if (camera->GetTitleCameraPhase() == TitleCamera::TitleCameraPhase::STAY) {
+		//停止状態を終えたら、暗転開始
+		if (!camera->GetIsPhaseActionEnd()) { return; }
+		if (isSceneChangeWait) { return; }
+
+		isSceneChangeWait = true;
+		SceneChangeDirection::Instance()->PlayFadeOut();
+	}
 }

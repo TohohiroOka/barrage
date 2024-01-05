@@ -23,7 +23,7 @@ void PlayerActionLightAttack::NextAttack()
 		player->UseEndurance(player->GetData()->attackAction->GetUseEndranceNum(), 60, true); //持久力を使用
 
 		//予め次の行動を設定しておく(終了後は通常移動)
-		nextAction = PlayerActionName::MOVENORMAL;
+		nextAction = PlayerActionName::MOVE_NORMAL;
 	}
 	//ジャンプの先行入力も受け付ける
 	else if (JumpStart()) {
@@ -31,6 +31,6 @@ void PlayerActionLightAttack::NextAttack()
 	}
 	//強攻撃の先行入力も受け付ける
 	else if (GameInputManager::TriggerInputAction(GameInputManager::StrongAttack)) {
-		nextAction = PlayerActionName::STRONGATTACK;
+		nextAction = PlayerActionName::STRONG_ATTACK;
 	}
 }

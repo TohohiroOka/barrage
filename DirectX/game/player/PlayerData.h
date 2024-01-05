@@ -8,14 +8,16 @@
 /// </summary>
 enum PlayerActionName
 {
-	MOVENORMAL,	//通常移動(入力に制限がかからない)
+	MOVE_NORMAL,	//通常移動(入力に制限がかからない)
 	JUMP,	//ジャンプ(1フレーム)
-	LIGHTATTACK,	//弱攻撃
-	STRONGATTACK,	//強攻撃
+	LIGHT_ATTACK,	//弱攻撃
+	STRONG_ATTACK,	//強攻撃
 	AVOID,	//回避
 	BLINK,	//ブリンク
 	KNOCKBACK,//ノックバック
 	DEAD,	//死亡
+	TITLE_FLOAT,	//タイトルシーン用浮遊
+	TITLE_INTO_PORTAL,	//タイトルシーン用ポータルに入る
 };
 
 /// <summary>

@@ -158,6 +158,9 @@
     <Filter Include="ゲームシステム\TitleObject">
       <UniqueIdentifier>{aa5d381f-0943-459b-884c-2380ec4ee2e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ゲームシステム\Player\Action\Title">
+      <UniqueIdentifier>{b128452c-2700-4e1d-a9cf-abd20c1f09aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -517,6 +520,15 @@
     </ClCompile>
     <ClCompile Include="game\ui\PressSelectButtonUI.cpp">
       <Filter>ゲームシステム\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="game\camera\TitleCamera.cpp">
+      <Filter>ゲームシステム\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="game\player\PlayerTitleActionFloat.cpp">
+      <Filter>ゲームシステム\Player\Action\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="game\player\PlayerTitleActionIntoPortal.cpp">
+      <Filter>ゲームシステム\Player\Action\Title</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1067,6 +1079,15 @@
     </ClInclude>
     <ClInclude Include="game\ui\PressSelectButtonUI.h">
       <Filter>ゲームシステム\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="game\camera\TitleCamera.h">
+      <Filter>ゲームシステム\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerTitleActionFloat.h">
+      <Filter>ゲームシステム\Player\Action\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player\PlayerTitleActionIntoPortal.h">
+      <Filter>ゲームシステム\Player\Action\Title</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

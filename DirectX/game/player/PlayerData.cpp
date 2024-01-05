@@ -8,7 +8,7 @@ int PlayerData::blinkUseEndurance = 10;
 
 PlayerData::PlayerData()
 {
-	action = PlayerActionName::MOVENORMAL;
+	action = PlayerActionName::MOVE_NORMAL;
 
 	pos = { GameHelper::Instance()->GetStageSize() / 2.0f, 5.0f,GameHelper::Instance()->GetStageSize() / 5.0f };
 	moveVec = { 0, 0, 1 };

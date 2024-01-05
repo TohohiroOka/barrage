@@ -160,6 +160,7 @@
     <ClCompile Include="engine\WindowApp.cpp" />
     <ClCompile Include="game\camera\GameCamera.cpp" />
     <ClCompile Include="game\camera\CutSceneCamera.cpp" />
+    <ClCompile Include="game\camera\TitleCamera.cpp" />
     <ClCompile Include="game\cutscene\BaseDefeatDirection.cpp" />
     <ClCompile Include="game\cutscene\BaseOnStageDirection.cpp" />
     <ClCompile Include="game\cutscene\Boss1Defeat.cpp" />
@@ -205,6 +206,8 @@
     <ClCompile Include="game\player\PlayerSword.cpp" />
     <ClCompile Include="game\player\PlayerSwordAttack1.cpp" />
     <ClCompile Include="game\player\PlayerSwordAttack2.cpp" />
+    <ClCompile Include="game\player\PlayerTitleActionFloat.cpp" />
+    <ClCompile Include="game\player\PlayerTitleActionIntoPortal.cpp" />
     <ClCompile Include="game\scene\OnStageTest.cpp" />
     <ClCompile Include="game\scene\Scene1.cpp" />
     <ClCompile Include="game\scene\TitleScene.cpp" />
@@ -496,6 +499,7 @@
     <ClInclude Include="engine\WindowApp.h" />
     <ClInclude Include="game\camera\GameCamera.h" />
     <ClInclude Include="game\camera\CutSceneCamera.h" />
+    <ClInclude Include="game\camera\TitleCamera.h" />
     <ClInclude Include="game\cutscene\BaseDefeatDirection.h" />
     <ClInclude Include="game\cutscene\BaseOnStageDirection.h" />
     <ClInclude Include="game\cutscene\Boss1Defeat.h" />
@@ -542,6 +546,8 @@
     <ClInclude Include="game\player\PlayerSword.h" />
     <ClInclude Include="game\player\PlayerSwordAttack1.h" />
     <ClInclude Include="game\player\PlayerSwordAttack2.h" />
+    <ClInclude Include="game\player\PlayerTitleActionFloat.h" />
+    <ClInclude Include="game\player\PlayerTitleActionIntoPortal.h" />
     <ClInclude Include="game\scene\OnStageTest.h" />
     <ClInclude Include="game\scene\Scene1.h" />
     <ClInclude Include="game\scene\TitleScene.h" />

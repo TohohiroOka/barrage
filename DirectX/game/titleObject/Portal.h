@@ -1,6 +1,7 @@
 #pragma once
 #include "Object/3d/Object3d.h"
 #include "Math/Vector3.h"
+#include "player/PlayerData.h"
 
 class InterfaceScene;
 
@@ -19,7 +20,7 @@ public: //メンバ関数
 	/// <param name="playerPos">プレイヤーの座標</param>
 	/// <param name="playerRota">プレイヤーの回転角</param>
 	/// <param name="isPlayerOnGround">プレイヤーが地面に接地しているか</param>
-	void Update(const Vector3& playerPos, const Vector3& playerRota, bool isPlayerOnGround);
+	void Update(const PlayerData& playerData);
 
 	/// <summary>
 	/// 描画
@@ -45,7 +46,7 @@ private: //メンバ関数
 	/// <param name="playerPos">プレイヤーの座標</param>
 	/// <param name="playerRota">プレイヤーの回転角</param>
 	/// <returns>ポータルに入れる範囲にいるか</returns>
-	bool CheckIntoPortal(const Vector3& playerPos, const Vector3& playerRota);
+	bool CheckIntoPortal(const PlayerData& playerData);
 
 private: //メンバ変数
 	//オブジェクト3d

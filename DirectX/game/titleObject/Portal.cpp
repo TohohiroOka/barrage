@@ -26,10 +26,10 @@ Portal::~Portal()
 {
 }
 
-void Portal::Update(const Vector3& playerPos, const Vector3& playerRota, bool isPlayerOnGround)
+void Portal::Update(const PlayerData& playerData)
 {
 	//ポータルに入れる条件を満たしているかチェック
-	isIntoPortal = CheckIntoPortal(playerPos, playerRota) && isPlayerOnGround;
+	isIntoPortal = CheckIntoPortal(playerData) && playerData.onGround && playerData.action == PlayerActionName::MOVE_NORMAL;
 
 	//オブジェクト更新
 	object->Update();
@@ -46,24 +46,24 @@ void Portal::DrawLightView()
 	object->DrawLightView();
 }
 
-bool Portal::CheckIntoPortal(const Vector3& playerPos, const Vector3& playerRota)
+bool Portal::CheckIntoPortal(const PlayerData& playerData)
 {
 	//ポータルに入れる範囲にいなければfalse
-	if (playerPos.x < intoPortalRangeMin.x) { return false; }
-	if (playerPos.z < intoPortalRangeMin.z) { return false; }
-	if (playerPos.x > intoPortalRangeMax.x) { return false; }
-	if (playerPos.z > intoPortalRangeMax.z) { return false; }
+	if (playerData.pos.x < intoPortalRangeMin.x) { return false; }
+	if (playerData.pos.z < intoPortalRangeMin.z) { return false; }
+	if (playerData.pos.x > intoPortalRangeMax.x) { return false; }
+	if (playerData.pos.z > intoPortalRangeMax.z) { return false; }
 
 	//プレイヤーがポータルの方向を向いていなければfalse
 	//視線先の座標を記憶しておく
-	const float playerRotaRadian = DirectX::XMConvertToRadians(playerRota.y);
-	Vector3 lineSightPos = playerPos;
+	const float playerRotaRadian = DirectX::XMConvertToRadians(playerData.rota.y);
+	Vector3 lineSightPos = playerData.pos;
 	lineSightPos.x += sinf(playerRotaRadian);
 	lineSightPos.z += cosf(playerRotaRadian);
 
 	//視線ベクトルとプレイヤーとポータルの座標の差のベクトルの内積を計算
-	Vector2 playerLineSightVec = Vector2{ playerPos.x, playerPos.z } - Vector2{ lineSightPos.x, lineSightPos.z };
-	Vector2 playerToPortalVec = Vector2{ playerPos.x, playerPos.z } - Vector2{ object->GetPosition().x, object->GetPosition().z };
+	Vector2 playerLineSightVec = Vector2{ playerData.pos.x, playerData.pos.z } - Vector2{ lineSightPos.x, lineSightPos.z };
+	Vector2 playerToPortalVec = Vector2{ playerData.pos.x, playerData.pos.z } - Vector2{ object->GetPosition().x, object->GetPosition().z };
 	playerLineSightVec.normalize();
 	playerToPortalVec.normalize();
 

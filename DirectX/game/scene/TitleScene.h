@@ -5,7 +5,7 @@
 
 #include "ui/ChoiceEmphasisDrawer.h"
 #include "system/ActionInputConfig.h"
-#include "camera/GameCamera.h"
+#include "camera/TitleCamera.h"
 #include "player/Player.h"
 #include "field/Field.h"
 #include "titleObject/Portal.h"
@@ -70,11 +70,21 @@ public:
 	/// </summary>
 	void CollisionCheck();
 
+	/// <summary>
+	/// ポータルに入る行動を開始
+	/// </summary>
+	void IntoPortalStart();
+
+	/// <summary>
+	/// ポータルに入る行動
+	/// </summary>
+	void IntoPortal();
+
 private:
 	//カメラ
 	bool isNormalCamera = true;
 	std::unique_ptr<DebugCamera> debugCamera;
-	std::unique_ptr<GameCamera> camera;
+	std::unique_ptr<TitleCamera> camera;
 	std::unique_ptr<LightCamera> lightCamera;
 
 	//スプライト
@@ -94,5 +104,13 @@ private:
 
 	//選択ボタンが押下可能UI
 	std::unique_ptr<PressSelectButtonUI> pressSelectButtonUI;
+
+	//入るポータル
+	Portal* selectPortal = nullptr;
+	//ポータルに入る行動をしているか
+	bool isIntoPortal = false;
+
+	//シーン遷移待機中か
+	bool isSceneChangeWait = false;
 };
 

@@ -6,7 +6,6 @@
 /// </summary>
 class Player;
 
-
 /// <summary>
 /// プレイヤーの行動基底クラス
 /// </summary>
@@ -21,6 +20,7 @@ public:
 	/// </summary>
 	virtual void Update() = 0;
 
+	//getter
 	bool GetIsActionEnd() { return isActionEnd; }
 
 protected: //メンバ関数
