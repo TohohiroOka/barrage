@@ -43,10 +43,16 @@ private: //メンバ関数
 	/// <summary>
 	/// ポータルに入れる範囲にいるかチェック
 	/// </summary>
-	/// <param name="playerPos">プレイヤーの座標</param>
-	/// <param name="playerRota">プレイヤーの回転角</param>
+	/// <param name="playerData">プレイヤーの情報</param>
 	/// <returns>ポータルに入れる範囲にいるか</returns>
-	bool CheckIntoPortal(const PlayerData& playerData);
+	bool CheckIntoPortalArea(const PlayerData& playerData);
+
+	/// <summary>
+	/// プレイヤーの視線内にポータルがあるかチェック
+	/// </summary>
+	/// <param name="playerData">プレイヤーの情報</param>
+	/// <returns>プレイヤーの視線内にポータルがあるか</returns>
+	bool CheckLineSightInPortal(const PlayerData& playerData);
 
 private: //メンバ変数
 	//オブジェクト3d

@@ -1,6 +1,7 @@
 #include "Portal.h"
 #include "Scene/InterfaceScene.h"
 #include "Math/Vector2.h"
+#include "Object/3d/collider/Collision.h"
 
 Portal::Portal(const Vector3& position, InterfaceScene* changeScene)
 {
@@ -29,7 +30,7 @@ Portal::~Portal()
 void Portal::Update(const PlayerData& playerData)
 {
 	//ポータルに入れる条件を満たしているかチェック
-	isIntoPortal = CheckIntoPortal(playerData) && playerData.onGround && playerData.action == PlayerActionName::MOVE_NORMAL;
+	isIntoPortal = CheckIntoPortalArea(playerData) && CheckLineSightInPortal(playerData) && playerData.onGround && playerData.action == PlayerActionName::MOVE_NORMAL;
 
 	//オブジェクト更新
 	object->Update();
@@ -46,7 +47,7 @@ void Portal::DrawLightView()
 	object->DrawLightView();
 }
 
-bool Portal::CheckIntoPortal(const PlayerData& playerData)
+bool Portal::CheckIntoPortalArea(const PlayerData& playerData)
 {
 	//ポータルに入れる範囲にいなければfalse
 	if (playerData.pos.x < intoPortalRangeMin.x) { return false; }
@@ -54,7 +55,12 @@ bool Portal::CheckIntoPortal(const PlayerData& playerData)
 	if (playerData.pos.x > intoPortalRangeMax.x) { return false; }
 	if (playerData.pos.z > intoPortalRangeMax.z) { return false; }
 
-	//プレイヤーがポータルの方向を向いていなければfalse
+	//全ての項目をクリアすればtrue
+	return true;
+}
+
+bool Portal::CheckLineSightInPortal(const PlayerData& playerData)
+{
 	//視線先の座標を記憶しておく
 	const float playerRotaRadian = DirectX::XMConvertToRadians(playerData.rota.y);
 	Vector3 lineSightPos = playerData.pos;
@@ -62,15 +68,20 @@ bool Portal::CheckIntoPortal(const PlayerData& playerData)
 	lineSightPos.z += cosf(playerRotaRadian);
 
 	//視線ベクトルとプレイヤーとポータルの座標の差のベクトルの内積を計算
-	Vector2 playerLineSightVec = Vector2{ playerData.pos.x, playerData.pos.z } - Vector2{ lineSightPos.x, lineSightPos.z };
-	Vector2 playerToPortalVec = Vector2{ playerData.pos.x, playerData.pos.z } - Vector2{ object->GetPosition().x, object->GetPosition().z };
+	Vector3 playerLineSightVec = Vector3{ lineSightPos.x, 0, lineSightPos.z } - Vector3{ playerData.pos.x, 0, playerData.pos.z };
 	playerLineSightVec.normalize();
-	playerToPortalVec.normalize();
 
-	//プレイヤーがポータルの入口を見ていなければfalse
-	float dot = playerLineSightVec.dot(playerToPortalVec);
-	if (dot < 0.75f) { return false; }
+	//視線方向のレイを生成
+	Segment lineSightRay;
+	lineSightRay.start = { playerData.pos.x, playerData.pos.y, playerData.pos.z, 1 };
+	lineSightRay.dir = { playerLineSightVec.x, playerLineSightVec.y, playerLineSightVec.z, 1 };
+	//ポータルの球を生成
+	Sphere portalSphere;
+	portalSphere.center = { object->GetPosition().x, object->GetPosition().y, object->GetPosition().z, 1 };
+	portalSphere.radius = object->GetScale().x * 1.1f;
 
-	//全ての項目をクリアすればtrue
+	//視線レイとポータル球が衝突していなければfalse
+	if (!Collision::CheckRay2Sphere(lineSightRay, portalSphere)) { return false; }
+
 	return true;
 }
