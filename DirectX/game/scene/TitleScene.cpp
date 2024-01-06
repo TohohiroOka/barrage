@@ -72,10 +72,8 @@ void TitleScene::Update()
 		//暗転が完了したら次のシーンへ
 		if (isSceneChangeWait && SceneChangeDirection::Instance()->IsDirectionEnd()) {
 			//選択しているポータルの通じるシーンに移行する
-			if (selectPortal->GetChangeScene() == nullptr) {}
-			else {
-				SceneManager::SetNextScene(selectPortal->GetChangeScene());
-			}
+			if (selectPortal->GetChangeScene() == nullptr) { isEndRequest = true; } //ゲームループ終了
+			else { SceneManager::SetNextScene(selectPortal->GetChangeScene()); } //指定したシーンへ移行
 		}
 
 		//オブジェクト更新

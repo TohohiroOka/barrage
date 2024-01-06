@@ -71,7 +71,13 @@ public://メンバ関数
 	/// <param name="inScene">次シーンのインスタンス</param>
 	static void SetNextScene(InterfaceScene* inScene) { nextScene = inScene; }
 
+	/// <summary>
+	/// フレーム毎の初期化
+	/// </summary>
 	void FrameReset();
+
+	//getter
+	bool GetIsEndRequest() { return scene->GetIsEndRequest(); }
 
 private://メンバ変数
 
