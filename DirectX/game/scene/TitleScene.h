@@ -10,6 +10,7 @@
 #include "field/Field.h"
 #include "titleObject/Portal.h"
 #include "ui/PressSelectButtonUI.h"
+#include "ui/TextCreator.h"
 
 #include <memory>
 
@@ -109,8 +110,14 @@ private:
 	Portal* selectPortal = nullptr;
 	//ポータルに入る行動をしているか
 	bool isIntoPortal = false;
-
+	
 	//シーン遷移待機中か
 	bool isSceneChangeWait = false;
+
+
+	std::unique_ptr<TextCreator> text;
+
+	bool isText = false;
+	int timer = 0;
 };
 

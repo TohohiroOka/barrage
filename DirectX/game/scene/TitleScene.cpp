@@ -61,6 +61,10 @@ void TitleScene::Initialize()
 
 	//遷移初期化
 	SceneChangeDirection::Instance()->Init();
+
+	const std::wstring str(L"いえぇぇぇぇぇぇぇぇい＠わっしょいわっしょい。＠所さんのめがテン＠（やばばばばばばばばばばばばばばばば）");
+	XMFLOAT2 pos = { 500.0f, 500.0f };
+	text = std::make_unique<TextCreator>(str, pos, 1.f, false);
 }
 
 void TitleScene::Update()
@@ -117,7 +121,20 @@ void TitleScene::Update()
 
 	//スプライト更新
 	pressSelectButtonUI->Update();
+	
+	if (DirectInput::GetInstance()->TriggerKey(DIK_7)) {
+		if (!isText) {
+			isText = true;
+		}
+	}
+	if (isText) {
+		if (!text->GetCharSprite(text->GetTextLength() - 1)->GetIsDraw()) {
 
+			text->GetCharSprite(timer)->SetIsDraw(true);
+			timer++;
+		}
+	}
+	text->Update();
 	SceneChangeDirection::Instance()->Update();
 }
 
@@ -141,6 +158,7 @@ void TitleScene::DrawLightView(const int _cameraNum)
 void TitleScene::NonPostEffectDraw(const int _cameraNum)
 {
 	titleLogoSprite->Draw();
+	text->Draw();
 
 	bool isIntoPortal = false;
 	for (int i = 0; i < 3; i++) {

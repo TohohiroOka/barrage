@@ -161,6 +161,9 @@
     <Filter Include="ゲームシステム\Player\Action\Title">
       <UniqueIdentifier>{b128452c-2700-4e1d-a9cf-abd20c1f09aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ゲームシステム\UI\Text">
+      <UniqueIdentifier>{b9b133cc-1c3d-4b44-a3f2-efe84c6da5d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -530,6 +533,10 @@
     <ClCompile Include="game\player\PlayerTitleActionIntoPortal.cpp">
       <Filter>ゲームシステム\Player\Action\Title</Filter>
     </ClCompile>
+    <ClCompile Include="game\ui\CharSprite.cpp">
+      <Filter>ゲームシステム\UI\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="game\ui\TextCreator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -1088,6 +1095,12 @@
     </ClInclude>
     <ClInclude Include="game\player\PlayerTitleActionIntoPortal.h">
       <Filter>ゲームシステム\Player\Action\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="game\ui\CharSprite.h">
+      <Filter>ゲームシステム\UI\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="game\ui\TextCreator.h">
+      <Filter>ゲームシステム\UI\Text</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
