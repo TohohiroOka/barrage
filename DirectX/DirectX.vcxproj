@@ -222,6 +222,7 @@
     <ClCompile Include="game\ui\PressSelectButtonUI.cpp" />
     <ClCompile Include="game\ui\QuestionSystem.cpp" />
     <ClCompile Include="game\ui\TextCreator.cpp" />
+    <ClCompile Include="game\ui\TextTypeWriter.cpp" />
     <ClCompile Include="main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -566,6 +567,7 @@
     <ClInclude Include="game\ui\PressSelectButtonUI.h" />
     <ClInclude Include="game\ui\QuestionSystem.h" />
     <ClInclude Include="game\ui\TextCreator.h" />
+    <ClInclude Include="game\ui\TextTypeWriter.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="engine\external\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

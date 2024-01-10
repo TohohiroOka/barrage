@@ -1,4 +1,4 @@
-#include "TitleScene.h"
+ï»¿#include "TitleScene.h"
 #include "Input/DirectInput.h"
 #include "Input/XInputManager.h"
 #include "engine/Scene/SceneManager.h"
@@ -14,9 +14,9 @@ TitleScene::~TitleScene()
 
 void TitleScene::Initialize()
 {
-	//ƒXƒvƒ‰ƒCƒg‚ÌƒŠƒ\[ƒX‚Ìƒ[ƒh
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ãƒªã‚½ãƒ¼ã‚¹ã®ãƒ­ãƒ¼ãƒ‰
 	TextureManager::LoadTexture("titleLogo", "Resources/SpriteTexture/titleLogo.png");
-	//ƒXƒvƒ‰ƒCƒg¶¬
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆç”Ÿæˆ
 	titleLogoSprite = Sprite::Create("titleLogo", {}, { 0.5f,0.5f });
 	titleLogoSprite->SetSize({ 252.f * 1.5f,59.0f * 1.5f });
 	titleLogoSprite->SetPosition({ 1500.f / 2.f,100.f });
@@ -26,11 +26,11 @@ void TitleScene::Initialize()
 
 	//Audio::Instance()->SoundPlayWava(Sound::SoundName::msp_bgm, true, 0.1f);
 
-	//’nŒ`¶¬
+	//åœ°å½¢ç”Ÿæˆ
 	field = std::make_unique<Field>();
-	//ƒvƒŒƒCƒ„[¶¬
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç”Ÿæˆ
 	player = std::make_unique<Player>();
-	//ƒ|[ƒ^ƒ‹¶¬
+	//ãƒãƒ¼ã‚¿ãƒ«ç”Ÿæˆ
 	Scene1* gameScene = new Scene1;
 	const float stageSize = GameHelper::Instance()->GetStageSize();
 	const float portalPosY = 11.0f;
@@ -39,13 +39,13 @@ void TitleScene::Initialize()
 	portals[1] = std::make_unique<Portal>(Vector3{ stageSize * 0.25f, portalPosY, stageSize / 2 }, titleScene);
 	portals[2] = std::make_unique<Portal>(Vector3{ stageSize / 2, portalPosY, stageSize * 0.75f }, nullptr);
 
-	//ƒJƒƒ‰¶¬
+	//ã‚«ãƒ¡ãƒ©ç”Ÿæˆ
 	GameCamera::SetPlayer(player.get());
 	debugCamera = DebugCamera::Create({ 300, 40, 0 });
 	camera = std::make_unique<TitleCamera>();
 	player->SetGameCamera(camera.get());
 
-	//‰e—pŒõŒ¹ƒJƒƒ‰‰Šú‰»
+	//å½±ç”¨å…‰æºã‚«ãƒ¡ãƒ©åˆæœŸåŒ–
 	lightCamera = std::make_unique<LightCamera>(Vector3{ 205, 200, 204 }, Vector3{ 205, 0, 205 });
 	const float projectionSize = 1.5f;
 	lightCamera->SetProjectionNum({ projectionSize * (float)WindowApp::GetWindowWidth() / 5, projectionSize * (float)WindowApp::GetWindowHeight() / 5 },
@@ -56,25 +56,26 @@ void TitleScene::Initialize()
 
 	ParticleManager::SetCamera(camera.get());
 
-	//s“®“ü—Íİ’è
+	//è¡Œå‹•å…¥åŠ›è¨­å®š
 	actionInputConfig = std::make_unique<ActionInputConfig>();
 
-	//‘JˆÚ‰Šú‰»
+	//é·ç§»åˆæœŸåŒ–
 	SceneChangeDirection::Instance()->Init();
 
 	std::vector<std::wstring> strs;
-	const std::wstring str1(L"‚Í‚¢");
-	const std::wstring str2(L"‚¢‚¢‚¦");
-	const std::wstring str3(L"‚Ç‚Á‚¿‚Å‚à‚¢‚¢");
-	const std::wstring str4(L"‚Ù‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚Ù");
-	const std::wstring str5(L"‚Ø");
+	const std::wstring str1(L"ã¯ã„");
+	const std::wstring str2(L"ã„ã„ãˆ");
+	const std::wstring str3(L"ã©ã£ã¡ã§ã‚‚ã„ã„");
+	const std::wstring str4(L"ã»ãŠãŠãŠãŠãŠãŠãŠãŠãŠãŠãŠãŠãŠãŠã»");
+	const std::wstring str5(L"ãº");
 	strs.push_back(str1);
 	strs.push_back(str2);
-	strs.push_back(str3);
-	strs.push_back(str4);
-	strs.push_back(str5);
-	//XMFLOAT2 pos = { 500.0f, 500.0f };
-	//text = std::make_unique<TextCreator>(str, pos, 1.f, false);
+	//strs.push_back(str3);
+	//strs.push_back(str4);
+	//strs.push_back(str5);
+	XMFLOAT2 pos = { 400.0f, 650.0f };
+	const std::wstring str(L"ã„ã†ã†ã†ã†ã†ã†ã†ã†ã†ã€ã†ã†ã†ã†ã†ã†ã€‚ï¼ ãˆãˆãˆãˆãˆãˆãˆãˆãˆãˆãˆã€ãˆãˆãˆãˆãˆãˆãˆãˆãˆ");
+	textWriter = std::make_unique<TextTypeWriter>(str, pos, 1.f, 2);
 
 	questionSystem = std::make_unique<QuestionSystem>(strs);
 }
@@ -82,27 +83,27 @@ void TitleScene::Initialize()
 void TitleScene::Update()
 {
 	if (!isInputConfigMode) {
-		//ƒ|[ƒ^ƒ‹‚É“ü‚és“®
+		//ãƒãƒ¼ã‚¿ãƒ«ã«å…¥ã‚‹è¡Œå‹•
 		IntoPortalStart();
 		IntoPortal();
-		//ˆÃ“]‚ªŠ®—¹‚µ‚½‚çŸ‚ÌƒV[ƒ“‚Ö
+		//æš—è»¢ãŒå®Œäº†ã—ãŸã‚‰æ¬¡ã®ã‚·ãƒ¼ãƒ³ã¸
 		if (isSceneChangeWait && SceneChangeDirection::Instance()->IsDirectionEnd()) {
-			//‘I‘ğ‚µ‚Ä‚¢‚éƒ|[ƒ^ƒ‹‚Ì’Ê‚¶‚éƒV[ƒ“‚ÉˆÚs‚·‚é
-			if (selectPortal->GetChangeScene() == nullptr) { isEndRequest = true; } //ƒQ[ƒ€ƒ‹[ƒvI—¹
-			else { SceneManager::SetNextScene(selectPortal->GetChangeScene()); } //w’è‚µ‚½ƒV[ƒ“‚ÖˆÚs
+			//é¸æŠã—ã¦ã„ã‚‹ãƒãƒ¼ã‚¿ãƒ«ã®é€šã˜ã‚‹ã‚·ãƒ¼ãƒ³ã«ç§»è¡Œã™ã‚‹
+			if (selectPortal->GetChangeScene() == nullptr) { isEndRequest = true; } //ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—çµ‚äº†
+			else { SceneManager::SetNextScene(selectPortal->GetChangeScene()); } //æŒ‡å®šã—ãŸã‚·ãƒ¼ãƒ³ã¸ç§»è¡Œ
 		}
 
-		//ƒIƒuƒWƒFƒNƒgXV
+		//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæ›´æ–°
 		player->Update();
 		field->Update(player->GetData()->pos, camera->GetEye());
 		for (int i = 0; i < 3; i++) {
 			portals[i]->Update(*player->GetData());
 		}
 
-		//“–‚½‚è”»’è
+		//å½“ãŸã‚Šåˆ¤å®š
 		CollisionCheck();
 
-		//ƒJƒƒ‰XV
+		//ã‚«ãƒ¡ãƒ©æ›´æ–°
 		if (isNormalCamera) {
 			camera->Update();
 			if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
@@ -125,13 +126,13 @@ void TitleScene::Update()
 		}
 	}
 	else {
-		//“ü—Íİ’èXV
+		//å…¥åŠ›è¨­å®šæ›´æ–°
 		actionInputConfig->Update();
 
 		if (actionInputConfig->GetIsInputConfigEnd()) { isInputConfigMode = false; }
 	}
 
-	//ƒXƒvƒ‰ƒCƒgXV
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæ›´æ–°
 	pressSelectButtonUI->Update();
 	
 	if (DirectInput::GetInstance()->TriggerKey(DIK_7)) {
@@ -140,28 +141,24 @@ void TitleScene::Update()
 
 
 			std::vector<std::wstring> strs;
-			const std::wstring str1(L"‚Í‚¢");
-			const std::wstring str2(L"‚¢‚¢‚¦");
-			const std::wstring str3(L"‚Ç‚Á‚¿‚Å‚à‚¢‚¢");
-			const std::wstring str4(L"‚Ù‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚¨‚Ù");
-			const std::wstring str5(L"‚Ø");
+			const std::wstring str1(L"ã¯ã„");
+			const std::wstring str2(L"ã„ã„ãˆ");
+			const std::wstring str3(L"ã©ã£ã¡ã§ã‚‚ã„ã„");
+			const std::wstring str4(L"ã»ãŠãŠãŠãŠãŠãŠãŠãŠãŠãŠãŠãŠãŠãŠã»");
+			const std::wstring str5(L"ãº");
 			strs.push_back(str1);
 			strs.push_back(str2);
-			strs.push_back(str3);
-			strs.push_back(str4);
-			strs.push_back(str5);
+			//strs.push_back(str3);
+			//strs.push_back(str4);
+			//strs.push_back(str5);
 			questionSystem = std::make_unique<QuestionSystem>(strs);
 		}
 	}
 	if (isText) {
-		/*if (!text->GetCharSprite(text->GetTextLength() - 1)->GetIsDraw()) {
-
-			text->GetCharSprite(timer)->SetIsDraw(true);
-			timer++;
-		}*/
+		textWriter->Update();
 	}
 
-	//text->Update();
+	
 	questionSystem->Update();
 	SceneChangeDirection::Instance()->Update();
 }
@@ -186,7 +183,7 @@ void TitleScene::DrawLightView(const int _cameraNum)
 void TitleScene::NonPostEffectDraw(const int _cameraNum)
 {
 	titleLogoSprite->Draw();
-	//text->Draw();
+	textWriter->Draw();
 	if (isText && !questionSystem->GetIsEnd()) {
 		questionSystem->Draw();
 	}
@@ -201,7 +198,7 @@ void TitleScene::NonPostEffectDraw(const int _cameraNum)
 		pressSelectButtonUI->Draw();
 	}
 
-	//“ü—Íİ’è•`‰æ
+	//å…¥åŠ›è¨­å®šæç”»
 	if (isInputConfigMode) {
 		actionInputConfig->Draw();
 	}
@@ -222,7 +219,7 @@ void TitleScene::FrameReset()
 
 void TitleScene::CollisionCheck()
 {
-#pragma region ƒvƒŒƒCƒ„[‚Æƒ|[ƒ^ƒ‹‚ÌÕ“Ë”»’è
+#pragma region ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨ãƒãƒ¼ã‚¿ãƒ«ã®è¡çªåˆ¤å®š
 	{
 		const Vector3 plpos = player->GetData()->pos;
 		Sphere playerSphere;
@@ -238,7 +235,7 @@ void TitleScene::CollisionCheck()
 			XMVECTOR inter;
 			XMVECTOR reject;
 			if (Collision::CheckSphere2Sphere(playerSphere, portalSphere, &inter, &reject)) {
-				//ƒvƒŒƒCƒ„[‚ğ‰Ÿ‚µ–ß‚·
+				//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’æŠ¼ã—æˆ»ã™
 				player->PushBack(reject);
 			}
 		}
@@ -248,14 +245,14 @@ void TitleScene::CollisionCheck()
 
 void TitleScene::IntoPortalStart()
 {
-	//Šù‚Éƒ|[ƒ^ƒ‹‚É“ü‚és“®‚ğ‚µ‚Ä‚¢‚ê‚Î”²‚¯‚é
+	//æ—¢ã«ãƒãƒ¼ã‚¿ãƒ«ã«å…¥ã‚‹è¡Œå‹•ã‚’ã—ã¦ã„ã‚Œã°æŠœã‘ã‚‹
 	if (isIntoPortal) { return; }
-	//“ü—Í‚ª‚È‚¯‚ê‚Î”²‚¯‚é
+	//å…¥åŠ›ãŒãªã‘ã‚Œã°æŠœã‘ã‚‹
 	if (!(DirectInput::GetInstance()->TriggerKey(DIK_E) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
-	//ƒJƒƒ‰‚ª’Êíó‘Ô‚Å‚È‚¯‚ê‚Î”²‚¯‚é
+	//ã‚«ãƒ¡ãƒ©ãŒé€šå¸¸çŠ¶æ…‹ã§ãªã‘ã‚Œã°æŠœã‘ã‚‹
 	if (!(camera->GetTitleCameraPhase() == TitleCamera::TitleCameraPhase::NORMAL)) { return; }
 
-	//ƒ|[ƒ^ƒ‹‚Ì”‰ñ‚·
+	//ãƒãƒ¼ã‚¿ãƒ«ã®æ•°å›ã™
 	for (int i = 0; i < 3; i++) {
 		if (!portals[i]->GetIsIntoPortal()) { continue; }
 
@@ -271,24 +268,24 @@ void TitleScene::IntoPortalStart()
 
 void TitleScene::IntoPortal()
 {
-	//ƒ|[ƒ^ƒ‹‚É“ü‚és“®‚ğ‚µ‚Ä‚¢‚È‚¯‚ê‚Î”²‚¯‚é
+	//ãƒãƒ¼ã‚¿ãƒ«ã«å…¥ã‚‹è¡Œå‹•ã‚’ã—ã¦ã„ãªã‘ã‚Œã°æŠœã‘ã‚‹
 	if (!isIntoPortal) { return; }
 
-	//ƒJƒƒ‰‚ªƒ|[ƒ^ƒ‹³–Ê‚ÉˆÚ“®‚·‚éó‘Ô‚Ì‚Æ‚«
+	//ã‚«ãƒ¡ãƒ©ãŒãƒãƒ¼ã‚¿ãƒ«æ­£é¢ã«ç§»å‹•ã™ã‚‹çŠ¶æ…‹ã®ã¨ã
 	if (camera->GetTitleCameraPhase() == TitleCamera::TitleCameraPhase::MOVE_PORTAL_FRONT) {
-		//ƒvƒŒƒCƒ„[‚ªƒ|[ƒ^ƒ‹‚É“ü‚és“®ó‘Ô‚È‚ç‚ÎAƒJƒƒ‰s“®‚ğƒ|[ƒ^ƒ‹‚ÉƒY[ƒ€‚·‚éó‘Ô‚É•ÏX
+		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒãƒãƒ¼ã‚¿ãƒ«ã«å…¥ã‚‹è¡Œå‹•çŠ¶æ…‹ãªã‚‰ã°ã€ã‚«ãƒ¡ãƒ©è¡Œå‹•ã‚’ãƒãƒ¼ã‚¿ãƒ«ã«ã‚ºãƒ¼ãƒ ã™ã‚‹çŠ¶æ…‹ã«å¤‰æ›´
 		if (!(player->GetData()->action == PlayerActionName::TITLE_INTO_PORTAL)) { return; }
 		camera->ChangePhase(TitleCamera::TitleCameraPhase::ZOOM_PORTAL);
 	}
-	//ƒJƒƒ‰‚ªƒ|[ƒ^ƒ‹‚ğƒY[ƒ€‚·‚éó‘Ô‚Ì‚Æ‚«
+	//ã‚«ãƒ¡ãƒ©ãŒãƒãƒ¼ã‚¿ãƒ«ã‚’ã‚ºãƒ¼ãƒ ã™ã‚‹çŠ¶æ…‹ã®ã¨ã
 	else if (camera->GetTitleCameraPhase() == TitleCamera::TitleCameraPhase::ZOOM_PORTAL) {
-		//ƒJƒƒ‰s“®‚ğƒ|[ƒ^ƒ‹‚ÉƒY[ƒ€‚·‚és“®‚ğI‚¦‚½‚çA’â~ó‘Ô
+		//ã‚«ãƒ¡ãƒ©è¡Œå‹•ã‚’ãƒãƒ¼ã‚¿ãƒ«ã«ã‚ºãƒ¼ãƒ ã™ã‚‹è¡Œå‹•ã‚’çµ‚ãˆãŸã‚‰ã€åœæ­¢çŠ¶æ…‹
 		if (!camera->GetIsPhaseActionEnd()) { return; }
 		camera->ChangePhase(TitleCamera::TitleCameraPhase::STAY);
 	}
-	//ƒJƒƒ‰‚ªƒ|[ƒ^ƒ‹‘O‚Å’â~ó‘Ô‚Ì‚Æ‚«
+	//ã‚«ãƒ¡ãƒ©ãŒãƒãƒ¼ã‚¿ãƒ«å‰ã§åœæ­¢çŠ¶æ…‹ã®ã¨ã
 	else if (camera->GetTitleCameraPhase() == TitleCamera::TitleCameraPhase::STAY) {
-		//’â~ó‘Ô‚ğI‚¦‚½‚çAˆÃ“]ŠJn
+		//åœæ­¢çŠ¶æ…‹ã‚’çµ‚ãˆãŸã‚‰ã€æš—è»¢é–‹å§‹
 		if (!camera->GetIsPhaseActionEnd()) { return; }
 		if (isSceneChangeWait) { return; }
 

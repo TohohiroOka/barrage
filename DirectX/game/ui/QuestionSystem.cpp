@@ -40,7 +40,7 @@ QuestionSystem::QuestionSystem(const std::vector<std::wstring>& choices)
 
 	//選択強調背景用スプライト生成
 	choiceBackSprite = Sprite::Create("white", DirectX::XMFLOAT2{ centerPos.x, textPosYs[selectNum] }, { 0.5f, 0.5f }, { 1, 0, 0, 0.8f });
-	DirectX::XMFLOAT2 choiceBackSize = { backSize.x - 40, CharSprite::charTextureSize * textScale };
+	DirectX::XMFLOAT2 choiceBackSize = { backSize.x - 60, CharSprite::charTextureSize * textScale + 4 };
 	choiceBackSprite->SetSize(choiceBackSize);
 
 	//各状態の内容をセット
