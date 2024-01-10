@@ -10,7 +10,7 @@
 #include "field/Field.h"
 #include "titleObject/Portal.h"
 #include "ui/PressSelectButtonUI.h"
-#include "ui/TextCreator.h"
+#include "ui/QuestionSystem.h"
 
 #include <memory>
 
@@ -116,6 +116,7 @@ private:
 
 
 	std::unique_ptr<TextCreator> text;
+	std::unique_ptr<QuestionSystem> questionSystem;
 
 	bool isText = false;
 	int timer = 0;

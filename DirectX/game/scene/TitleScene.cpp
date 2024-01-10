@@ -62,9 +62,21 @@ void TitleScene::Initialize()
 	//遷移初期化
 	SceneChangeDirection::Instance()->Init();
 
-	const std::wstring str(L"いえぇぇぇぇぇぇぇぇい＠わっしょいわっしょい。＠所さんのめがテン＠（やばばばばばばばばばばばばばばばば）");
-	XMFLOAT2 pos = { 500.0f, 500.0f };
-	text = std::make_unique<TextCreator>(str, pos, 1.f, false);
+	std::vector<std::wstring> strs;
+	const std::wstring str1(L"はい");
+	const std::wstring str2(L"いいえ");
+	const std::wstring str3(L"どっちでもいい");
+	const std::wstring str4(L"ほおおおおおおおおおおおおおおほ");
+	const std::wstring str5(L"ぺ");
+	strs.push_back(str1);
+	strs.push_back(str2);
+	strs.push_back(str3);
+	strs.push_back(str4);
+	strs.push_back(str5);
+	//XMFLOAT2 pos = { 500.0f, 500.0f };
+	//text = std::make_unique<TextCreator>(str, pos, 1.f, false);
+
+	questionSystem = std::make_unique<QuestionSystem>(strs);
 }
 
 void TitleScene::Update()
@@ -125,16 +137,32 @@ void TitleScene::Update()
 	if (DirectInput::GetInstance()->TriggerKey(DIK_7)) {
 		if (!isText) {
 			isText = true;
+
+
+			std::vector<std::wstring> strs;
+			const std::wstring str1(L"はい");
+			const std::wstring str2(L"いいえ");
+			const std::wstring str3(L"どっちでもいい");
+			const std::wstring str4(L"ほおおおおおおおおおおおおおおほ");
+			const std::wstring str5(L"ぺ");
+			strs.push_back(str1);
+			strs.push_back(str2);
+			strs.push_back(str3);
+			strs.push_back(str4);
+			strs.push_back(str5);
+			questionSystem = std::make_unique<QuestionSystem>(strs);
 		}
 	}
 	if (isText) {
-		if (!text->GetCharSprite(text->GetTextLength() - 1)->GetIsDraw()) {
+		/*if (!text->GetCharSprite(text->GetTextLength() - 1)->GetIsDraw()) {
 
 			text->GetCharSprite(timer)->SetIsDraw(true);
 			timer++;
-		}
+		}*/
 	}
-	text->Update();
+
+	//text->Update();
+	questionSystem->Update();
 	SceneChangeDirection::Instance()->Update();
 }
 
@@ -158,8 +186,10 @@ void TitleScene::DrawLightView(const int _cameraNum)
 void TitleScene::NonPostEffectDraw(const int _cameraNum)
 {
 	titleLogoSprite->Draw();
-	text->Draw();
-
+	//text->Draw();
+	if (isText && !questionSystem->GetIsEnd()) {
+		questionSystem->Draw();
+	}
 	bool isIntoPortal = false;
 	for (int i = 0; i < 3; i++) {
 		if (portals[i]->GetIsIntoPortal()) {

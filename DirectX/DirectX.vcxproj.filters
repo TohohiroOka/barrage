@@ -536,7 +536,12 @@
     <ClCompile Include="game\ui\CharSprite.cpp">
       <Filter>ゲームシステム\UI\Text</Filter>
     </ClCompile>
-    <ClCompile Include="game\ui\TextCreator.cpp" />
+    <ClCompile Include="game\ui\TextCreator.cpp">
+      <Filter>ゲームシステム\UI\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="game\ui\QuestionSystem.cpp">
+      <Filter>ゲームシステム\UI\Text</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -1100,6 +1105,9 @@
       <Filter>ゲームシステム\UI\Text</Filter>
     </ClInclude>
     <ClInclude Include="game\ui\TextCreator.h">
+      <Filter>ゲームシステム\UI\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="game\ui\QuestionSystem.h">
       <Filter>ゲームシステム\UI\Text</Filter>
     </ClInclude>
   </ItemGroup>

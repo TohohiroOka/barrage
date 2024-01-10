@@ -13,7 +13,7 @@ CharSprite::CharSprite(const std::wstring& character, const DirectX::XMFLOAT2& p
 	LoadCharTexture(str);
 
 	//スプライト生成
-	charSprite = Sprite::Create(str, pos);
+	charSprite = Sprite::Create(str, pos, { 0.5f, 0.5f });
 	charSprite->SetScale(scale);
 
 	//描画するかセット
