@@ -109,16 +109,21 @@ void QuestionSystem::ChangeSelectChoices()
 {
 	//入力がなければ抜ける
 	if (!(DirectInput::GetInstance()->TriggerKey(DIK_UP) || DirectInput::GetInstance()->TriggerKey(DIK_DOWN) ||
-		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_UP || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_DOWN)))) {
+		DirectInput::GetInstance()->TriggerKey(DIK_W) || DirectInput::GetInstance()->TriggerKey(DIK_S) ||
+		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_UP) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_DOWN) || 
+		XInputManager::GetInstance()->TriggerLeftStickY(true) || XInputManager::GetInstance()->TriggerLeftStickY(false))) {
 		return;
 	}
 
 	//上入力で一つ上の選択肢を選択する
-	if (DirectInput::GetInstance()->TriggerKey(DIK_UP) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_UP)) {
+	if (DirectInput::GetInstance()->TriggerKey(DIK_UP) || DirectInput::GetInstance()->TriggerKey(DIK_W) || 
+		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_UP) || XInputManager::GetInstance()->TriggerLeftStickY(true)) {
 		if (selectNum <= 0) { return; }
 		selectNum--;
 	}
-	else if (DirectInput::GetInstance()->TriggerKey(DIK_DOWN) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_DOWN)) {
+	//下入力で一つ下の選択肢を選択する
+	else if (DirectInput::GetInstance()->TriggerKey(DIK_DOWN) || DirectInput::GetInstance()->TriggerKey(DIK_S) || 
+		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_DOWN) || XInputManager::GetInstance()->TriggerLeftStickY(false)) {
 		if (selectNum >= choicesNum - 1) { return; }
 		selectNum++;
 	}

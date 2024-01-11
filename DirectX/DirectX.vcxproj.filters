@@ -542,7 +542,12 @@
     <ClCompile Include="game\ui\QuestionSystem.cpp">
       <Filter>ゲームシステム\UI\Text</Filter>
     </ClCompile>
-    <ClCompile Include="game\ui\TextTypeWriter.cpp" />
+    <ClCompile Include="game\ui\TextTypeWriter.cpp">
+      <Filter>ゲームシステム\UI\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="game\ui\TextManager.cpp">
+      <Filter>ゲームシステム\UI\Text</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -1112,6 +1117,12 @@
       <Filter>ゲームシステム\UI\Text</Filter>
     </ClInclude>
     <ClInclude Include="game\ui\TextTypeWriter.h">
+      <Filter>ゲームシステム\UI\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="game\ui\TextData.h">
+      <Filter>ゲームシステム\UI\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="game\ui\TextManager.h">
       <Filter>ゲームシステム\UI\Text</Filter>
     </ClInclude>
   </ItemGroup>

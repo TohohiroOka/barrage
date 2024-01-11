@@ -40,19 +40,19 @@ void PlayerActionMoveNormal::Move()
 	DirectInput* input = DirectInput::GetInstance();
 
 	//移動キー入力を判定
-	player->GetData()->isMoveKey = (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveRight).key) ||
+	player->GetData()->isMoveKey = player->GetData()->actionInput.isMove && (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveRight).key) ||
 		input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveLeft).key) ||
 		input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveForward).key) ||
 		input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveBack).key));
 
 	//ある程度スティックを傾けないと移動パッド入力判定しない
 	const XMFLOAT2 padIncline = GameInputManager::GetPadLStickIncline();
-	player->GetData()->isMovePad = (fabsf(padIncline.x) >= GameInputManager::GetPadStickInputIncline() || fabsf(padIncline.y) >= GameInputManager::GetPadStickInputIncline());
+	player->GetData()->isMovePad = player->GetData()->actionInput.isMove && (fabsf(padIncline.x) >= GameInputManager::GetPadStickInputIncline() || fabsf(padIncline.y) >= GameInputManager::GetPadStickInputIncline());
 
 	//ダッシュ
 	Dash();
 
-	//入力
+	//入力があれば
 	const float moveAccel = 0.025f * GameHelper::Instance()->GetGameSpeed();
 	if (player->GetData()->isMoveKey || player->GetData()->isMovePad) {
 		player->GetData()->moveSpeed += moveAccel;
@@ -146,8 +146,8 @@ void PlayerActionMoveNormal::NextActionStart()
 {
 	//いずれかの行動を開始できる状態か判定
 	if (JumpStart()) { nextAction = PlayerActionName::JUMP; }
-	else if (GameInputManager::TriggerInputAction(GameInputManager::LightAttack) && LightAttackStart()) { nextAction = PlayerActionName::LIGHT_ATTACK; }
-	else if (GameInputManager::TriggerInputAction(GameInputManager::StrongAttack) && StrongAttackStart()) { nextAction = PlayerActionName::STRONG_ATTACK; }
+	else if (player->GetData()->actionInput.isLightAttack && GameInputManager::TriggerInputAction(GameInputManager::LightAttack) && LightAttackStart()) { nextAction = PlayerActionName::LIGHT_ATTACK; }
+	else if (player->GetData()->actionInput.isStrongAttack && GameInputManager::TriggerInputAction(GameInputManager::StrongAttack) && StrongAttackStart()) { nextAction = PlayerActionName::STRONG_ATTACK; }
 	else if (AvoidStart()) { nextAction = PlayerActionName::AVOID; player->GetData()->avoidBlinkMoveVec = player->GetData()->moveVec; }
 	else if (BlinkStart()) { nextAction = PlayerActionName::BLINK; player->GetData()->avoidBlinkMoveVec = player->GetData()->moveVec; }
 	else { return; }

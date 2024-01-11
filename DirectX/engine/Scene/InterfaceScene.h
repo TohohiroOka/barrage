@@ -17,6 +17,8 @@
 
 #include "Pipeline/GraphicsPipelineManager.h"
 
+#include "ui/TextManager.h"
+
 //計算シェーダー
 #include "Pipeline/ComputeShaderManager.h"
 

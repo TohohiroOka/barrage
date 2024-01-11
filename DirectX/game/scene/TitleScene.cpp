@@ -8,6 +8,8 @@
 #include "WindowApp.h"
 #include <Object/3d/collider/Collision.h>
 
+#include "ui/TextManager.h"
+
 TitleScene::~TitleScene()
 {
 }
@@ -61,30 +63,13 @@ void TitleScene::Initialize()
 
 	//遷移初期化
 	SceneChangeDirection::Instance()->Init();
-
-	std::vector<std::wstring> strs;
-	const std::wstring str1(L"はい");
-	const std::wstring str2(L"いいえ");
-	const std::wstring str3(L"どっちでもいい");
-	const std::wstring str4(L"ほおおおおおおおおおおおおおおほ");
-	const std::wstring str5(L"ぺ");
-	strs.push_back(str1);
-	strs.push_back(str2);
-	//strs.push_back(str3);
-	//strs.push_back(str4);
-	//strs.push_back(str5);
-	XMFLOAT2 pos = { 400.0f, 650.0f };
-	const std::wstring str(L"いううううううううう、うううううう。＠えええええええええええ、えええええええええ");
-	textWriter = std::make_unique<TextTypeWriter>(str, pos, 1.f, 2);
-
-	questionSystem = std::make_unique<QuestionSystem>(strs);
 }
 
 void TitleScene::Update()
 {
 	if (!isInputConfigMode) {
 		//ポータルに入る行動
-		IntoPortalStart();
+		IntoPortalCheck();
 		IntoPortal();
 		//暗転が完了したら次のシーンへ
 		if (isSceneChangeWait && SceneChangeDirection::Instance()->IsDirectionEnd()) {
@@ -134,32 +119,7 @@ void TitleScene::Update()
 
 	//スプライト更新
 	pressSelectButtonUI->Update();
-	
-	if (DirectInput::GetInstance()->TriggerKey(DIK_7)) {
-		if (!isText) {
-			isText = true;
-
-
-			std::vector<std::wstring> strs;
-			const std::wstring str1(L"はい");
-			const std::wstring str2(L"いいえ");
-			const std::wstring str3(L"どっちでもいい");
-			const std::wstring str4(L"ほおおおおおおおおおおおおおおほ");
-			const std::wstring str5(L"ぺ");
-			strs.push_back(str1);
-			strs.push_back(str2);
-			//strs.push_back(str3);
-			//strs.push_back(str4);
-			//strs.push_back(str5);
-			questionSystem = std::make_unique<QuestionSystem>(strs);
-		}
-	}
-	if (isText) {
-		textWriter->Update();
-	}
-
-	
-	questionSystem->Update();
+	TextManager::Instance()->Update();
 	SceneChangeDirection::Instance()->Update();
 }
 
@@ -183,19 +143,17 @@ void TitleScene::DrawLightView(const int _cameraNum)
 void TitleScene::NonPostEffectDraw(const int _cameraNum)
 {
 	titleLogoSprite->Draw();
-	textWriter->Draw();
-	if (isText && !questionSystem->GetIsEnd()) {
-		questionSystem->Draw();
-	}
-	bool isIntoPortal = false;
-	for (int i = 0; i < 3; i++) {
-		if (portals[i]->GetIsIntoPortal()) {
-			isIntoPortal = true;
-			break;
+
+	TextManager::Instance()->Draw();
+
+	//テキストがなにも描画されていなければ押下可能UI描画
+	if (!TextManager::Instance()->GetIsTextDraw()) {
+		for (int i = 0; i < 3; i++) {
+			if (portals[i]->GetIsIntoPortal()) {
+				pressSelectButtonUI->Draw();
+				break;
+			}
 		}
-	}
-	if (isIntoPortal) {
-		pressSelectButtonUI->Draw();
 	}
 
 	//入力設定描画
@@ -243,27 +201,73 @@ void TitleScene::CollisionCheck()
 #pragma endregion
 }
 
-void TitleScene::IntoPortalStart()
+void TitleScene::IntoPortalCheck()
 {
 	//既にポータルに入る行動をしていれば抜ける
 	if (isIntoPortal) { return; }
-	//入力がなければ抜ける
-	if (!(DirectInput::GetInstance()->TriggerKey(DIK_E) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
-	//カメラが通常状態でなければ抜ける
-	if (!(camera->GetTitleCameraPhase() == TitleCamera::TitleCameraPhase::NORMAL)) { return; }
 
-	//ポータルの数回す
-	for (int i = 0; i < 3; i++) {
-		if (!portals[i]->GetIsIntoPortal()) { continue; }
+	//テキストがなにも描画されていなければ
+	if (!TextManager::Instance()->GetIsTextDraw()) {
+		//入力がなければ抜ける
+		if (!(DirectInput::GetInstance()->TriggerKey(DIK_E) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
+		//カメラが通常状態でなければ抜ける
+		if (!(camera->GetTitleCameraPhase() == TitleCamera::TitleCameraPhase::NORMAL)) { return; }
 
-		camera->SetPortalPos(portals[i]->GetObject3d()->GetPosition());
-		camera->ChangePhase(TitleCamera::TitleCameraPhase::MOVE_PORTAL_FRONT);
-		player->SetPortalPos(portals[i]->GetObject3d()->GetPosition());
-		player->TitlePhaseStart();
-		isIntoPortal = true;
-		selectPortal = portals[i].get();
-		break;
+		//どのポータルが対象かセット
+		for (int i = 0; i < 3; i++) {
+			if (!portals[i]->GetIsIntoPortal()) { continue; }
+			selectPortal = portals[i].get();
+			break;
+		}
+		//ポータルが設定されていなければ抜ける
+		if (!selectPortal) { return; }
+
+		//テキスト文章生成
+		if (selectPortal == portals[0].get()) { TextManager::Instance()->SentenceCreate(SentenceData::SentenceName::GO_TO_GAME_CHECK); }
+		else if (selectPortal == portals[1].get()) { TextManager::Instance()->SentenceCreate(SentenceData::SentenceName::GO_TO_TUTORIAL_CHECK); }
+		else if (selectPortal == portals[2].get()) { TextManager::Instance()->SentenceCreate(SentenceData::SentenceName::EXIT_GAME_CHECK); }
+
+		//プレイヤーとカメラ行動の入力を全停止
+		player->GetData()->SetAllActionInput(false);
+		camera->SetAllActionInput(false);
 	}
+	else {
+		//テキスト文章表示が終われば選択肢を表示
+		if (TextManager::Instance()->GetIsSentenceEnd(SentenceData::SentenceName::GO_TO_GAME_CHECK) ||
+			TextManager::Instance()->GetIsSentenceEnd(SentenceData::SentenceName::GO_TO_TUTORIAL_CHECK) ||
+			TextManager::Instance()->GetIsSentenceEnd(SentenceData::SentenceName::EXIT_GAME_CHECK)) {
+			TextManager::Instance()->ChoicesCreate(ChoicesData::ChoicesName::YES_OR_NO);
+		}
+
+		//選択肢の選択肢を終えていれば
+		if (TextManager::Instance()->GetIsChoiceEnd()) {
+			//選択が0番ならポータルに入る行動を開始
+			if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::YES_OR_NO) == 0) {
+				IntoPortalStart(); 
+			}
+			//選択が1番なら元に戻る
+			else if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::YES_OR_NO) == 1) {
+				selectPortal = nullptr;
+
+				//プレイヤーとカメラ行動の入力を全復活させる
+				player->GetData()->SetAllActionInput(true);
+				camera->SetAllActionInput(true);
+			}
+
+			//文章、選択肢の表示終了
+			TextManager::Instance()->SentenceDrawEnd();
+			TextManager::Instance()->ChoicesDrawEnd();
+		}
+	}
+}
+
+void TitleScene::IntoPortalStart()
+{
+	camera->SetPortalPos(selectPortal->GetObject3d()->GetPosition());
+	camera->ChangePhase(TitleCamera::TitleCameraPhase::MOVE_PORTAL_FRONT);
+	player->SetPortalPos(selectPortal->GetObject3d()->GetPosition());
+	player->TitlePhaseStart();
+	isIntoPortal = true;
 }
 
 void TitleScene::IntoPortal()

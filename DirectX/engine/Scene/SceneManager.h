@@ -91,4 +91,6 @@ private://メンバ変数
 	std::unique_ptr<LightGroup> light = nullptr;
 	//パイプライン
 	std::unique_ptr<GraphicsPipelineManager> graphicsPipeline = nullptr;
+	//テキスト管理
+	std::unique_ptr<TextManager> textManager;
 };

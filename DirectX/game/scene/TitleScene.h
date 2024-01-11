@@ -11,9 +11,6 @@
 #include "titleObject/Portal.h"
 #include "ui/PressSelectButtonUI.h"
 
-#include "ui/TextTypeWriter.h"
-#include "ui/QuestionSystem.h"
-
 #include <memory>
 
 class TitleScene : public InterfaceScene
@@ -74,6 +71,11 @@ public:
 	void CollisionCheck();
 
 	/// <summary>
+	/// ポータルに入るかチェック
+	/// </summary>
+	void IntoPortalCheck();
+
+	/// <summary>
 	/// ポータルに入る行動を開始
 	/// </summary>
 	void IntoPortalStart();
@@ -115,12 +117,5 @@ private:
 
 	//シーン遷移待機中か
 	bool isSceneChangeWait = false;
-
-
-	std::unique_ptr<TextTypeWriter> textWriter;
-	std::unique_ptr<QuestionSystem> questionSystem;
-
-	bool isText = false;
-	int timer = 0;
 };
 

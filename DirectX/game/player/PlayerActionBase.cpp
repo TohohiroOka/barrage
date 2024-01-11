@@ -19,6 +19,8 @@ bool PlayerActionBase::JumpStart()
 {
 	//ジャンプ回数が連続ジャンプ可能回数を超えていたら抜ける
 	if (player->GetData()->jumpCount >= player->GetData()->jumpMaxNum) { return false; }
+	//入力を判定しない状態なら抜ける
+	if (!player->GetData()->actionInput.isJump) { return false; }
 	//ジャンプ入力がなければ抜ける
 	if (!GameInputManager::TriggerInputAction(GameInputManager::Jump)) { return false; }
 	//持久力がジャンプで使用する値以下なら抜ける
@@ -49,6 +51,8 @@ bool PlayerActionBase::AvoidStart()
 {
 	//地面にいない場合は抜ける
 	if (!player->GetData()->onGround) { return false; }
+	//入力を判定しない状態なら抜ける
+	if (!player->GetData()->actionInput.isAvoid) { return false; }
 	//移動中に回避入力がなければ抜ける
 	if (!((player->GetData()->isMoveKey || player->GetData()->isMovePad) && GameInputManager::TriggerInputAction(GameInputManager::Avoid_Blink_Dash))) { return false; }
 	//持久力が回避で使用する値以下なら抜ける	
@@ -63,6 +67,8 @@ bool PlayerActionBase::BlinkStart()
 	if (!(player->GetData()->blinkCount < 1)) { return false; }
 	//ジャンプ中でなければ抜ける
 	if (!(player->GetData()->jumpCount >= 1)) { return false; }
+	//入力を判定しない状態なら抜ける
+	if (!player->GetData()->actionInput.isBlink) { return false; }
 	//ブリンク入力がなければ抜ける
 	if (!GameInputManager::TriggerInputAction(GameInputManager::Avoid_Blink_Dash)) { return false; }
 	//持久力がブリンクで使用する値以下なら抜ける

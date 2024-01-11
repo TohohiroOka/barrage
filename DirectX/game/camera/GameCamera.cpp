@@ -16,6 +16,10 @@ const Vector3 GameCamera::targetDistanceNormal = { 0, 5, 0 };
 GameCamera::GameCamera() :
 	Camera(true)
 {
+	//入力で行動できる状態にセット
+	actionInput.isCameraMove = true;
+	actionInput.isLockon = true;
+
 	//回転の中心との距離をセット
 	rotateCenterDistance = rotateCenterDistanceNormal;
 	//ターゲットの中心からずらす距離をセット
@@ -115,10 +119,14 @@ void GameCamera::UpdateTransform()
 
 void GameCamera::UpdateRotate()
 {
+	//入力を判定しない状態なら抜ける
+	if (!actionInput.isCameraMove) { return; }
+
 	DirectInput* input = DirectInput::GetInstance();
 	//視界移動
 	const float rotSpeed = 2.5f;
 	XMFLOAT2 rotNum = { 0,0 };//回転量
+
 
 	//キー入力
 	{
@@ -354,6 +362,8 @@ void GameCamera::LockonInput()
 	//ロックオンターゲット検出フラグを毎フレーム戻しておく
 	isLockonStart = false;
 
+	//入力を判定しない状態なら抜ける
+	if (!actionInput.isLockon) { return; }
 	//ロックオン入力がなければ抜ける
 	if (!GameInputManager::TriggerInputAction(GameInputManager::Lockon)) { return; }
 

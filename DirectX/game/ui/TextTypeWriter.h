@@ -52,4 +52,6 @@ private: //メンバ変数
 	int normalWriteWaitFrame = 0;
 	//表示文字数カウント
 	int writeCount = 0;
+	//テキスト更新と同じ入力を使用している場合、トリガー判定が通ってしまい文章が全表示されてしまうので生成した瞬間かのフラグを設置
+	bool isCreateFrame = true;
 };

@@ -7,8 +7,18 @@
 /// </summary>
 class GameCamera :public Camera
 {
+public: //struct
+	/// <summary>
+	/// 入力で行動が可能か
+	/// </summary>
+	struct CameraActionInput
+	{
+		bool isCameraMove;
+		bool isLockon;
+	};
+
 public: //静的メンバ関数
-	
+
 	//setter
 	static void SetPlayer(Player* player) { GameCamera::player = player; }
 
@@ -29,9 +39,17 @@ public: //メンバ関数
 
 	//getter
 	const XMFLOAT3& GetCameraRota() { return rotation; }
+	CameraActionInput GetActionInput() { return actionInput; }
 	Base3D* GetLockonTarget() { return lockonTarget; }
 	bool GetisLockon() { return isLockon; }
 	bool GetisLockonStart() { return isLockonStart; }
+
+	//setter
+	void SetActionInput(bool& actionInputFlag, bool isInput) { actionInputFlag = isInput; }
+	void SetAllActionInput(bool isInput) {
+		actionInput.isCameraMove = isInput;
+		actionInput.isLockon = isInput;
+	}
 
 protected: //メンバ関数
 	/// <summary>
@@ -111,6 +129,9 @@ protected: //メンバ変数
 	Vector3 targetDistance;
 	//ワールド変換行列
 	XMMATRIX matWorld = {};
+
+	//入力で行動が可能か
+	CameraActionInput actionInput;
 
 	//ロックオンターゲット
 	Base3D* lockonTarget = nullptr;

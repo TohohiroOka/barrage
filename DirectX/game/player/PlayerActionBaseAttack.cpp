@@ -28,8 +28,8 @@ void PlayerActionBaseAttack::Update()
 		//先行入力で弱攻撃または強攻撃を選択している場合は最終チェック
 		if (nextAction == PlayerActionName::LIGHT_ATTACK || nextAction == PlayerActionName::STRONG_ATTACK) {
 			bool isNextActionAttack = false;
-			if (nextAction == PlayerActionName::LIGHT_ATTACK && LightAttackStart()) { isNextActionAttack = true; }
-			else if (nextAction == PlayerActionName::STRONG_ATTACK && StrongAttackStart()) { isNextActionAttack = true; }
+			if (player->GetData()->actionInput.isLightAttack && nextAction == PlayerActionName::LIGHT_ATTACK && LightAttackStart()) { isNextActionAttack = true; }
+			else if (player->GetData()->actionInput.isStrongAttack && nextAction == PlayerActionName::STRONG_ATTACK && StrongAttackStart()) { isNextActionAttack = true; }
 
 			if (!isNextActionAttack) { nextAction = PlayerActionName::MOVE_NORMAL; }
 		}

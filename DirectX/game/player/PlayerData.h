@@ -41,9 +41,34 @@ enum PlayerAnimationName
 /// </summary>
 class PlayerData
 {
+public: //struct
+	/// <summary>
+	/// 入力で行動が可能か
+	/// </summary>
+	struct PlayerActionInput
+	{
+		bool isMove;
+		bool isJump;
+		bool isLightAttack;
+		bool isStrongAttack;
+		bool isAvoid;
+		bool isBlink;
+	};
+
 public: //メンバ関数
 	PlayerData();
 	~PlayerData();
+
+	//setter
+	void SetActionInput(bool& actionInputFlag, bool isInput) { actionInputFlag = isInput; }
+	void SetAllActionInput(bool isInput) {
+		actionInput.isMove = isInput;
+		actionInput.isJump = isInput;
+		actionInput.isLightAttack = isInput;
+		actionInput.isStrongAttack = isInput;
+		actionInput.isAvoid = isInput;
+		actionInput.isBlink = isInput;
+	}
 
 public: //静的メンバ変数 (変更しやすいようにpublic)
 	//各行動で使用する持久力
@@ -62,6 +87,8 @@ public: //メンバ変数 (変更しやすいようにpublic)
 
 	bool onGround ; //地面に接地しているか
 	float fallSpeed; // 落下スピード
+
+	PlayerActionInput actionInput; //入力で行動が可能か
 
 	bool isMoveKey; //移動入力がされているか(キーボード)
 	bool isMovePad; //移動入力がされているか(ゲームパッド)

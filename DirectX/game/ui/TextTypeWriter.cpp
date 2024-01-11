@@ -27,6 +27,11 @@ void TextTypeWriter::Update()
 	AllWrite();
 
 	text->Update();
+
+	//生成された瞬間を終了
+	if (isCreateFrame) {
+		isCreateFrame = false;
+	}
 }
 
 void TextTypeWriter::Draw()
@@ -69,9 +74,10 @@ void TextTypeWriter::AllWrite()
 {
 	//全ての表示が終了していれば抜ける
 	if (GetIsAllWrite()) { return; }
-
 	//入力がなければ抜ける
 	if (!(DirectInput::GetInstance()->TriggerKey(DIK_E) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
+	//生成された瞬間なら抜ける
+	if (isCreateFrame) { return; }
 
 	//表示されていない文字を一気に全表示する
 	for (int i = writeCount; i < text->GetTextLength(); i++) {
