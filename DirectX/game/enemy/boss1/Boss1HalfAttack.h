@@ -27,6 +27,7 @@ private:
 
 	enum class State {
 		move,
+		smaller,
 		attackstart,
 		attack,
 		end,
@@ -62,6 +63,8 @@ public:
 
 	void Move();
 
+	void Small();
+
 	void Start();
 
 	void Attack();
@@ -82,7 +85,7 @@ private:
 	Vector3 moveBefore;
 
 	//リング
-	static const int ringNum = 5;
+	static const int ringNum = 6;
 	std::array<RingInfo, ringNum> ringInfo;
 
 	//オブジェクト
