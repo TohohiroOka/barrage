@@ -184,6 +184,8 @@ void Scene1::DrawLightView(const int _cameraNum)
 
 void Scene1::NonPostEffectDraw(const int _cameraNum)
 {
+	screenCut->Draw();
+
 	//スプライト
 	if (_cameraNum == 0) {
 		DebugText::GetInstance()->DrawAll();
@@ -206,8 +208,6 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 
 void Scene1::ImguiDraw()
 {
-	screenCut->Draw();
-
 	ImGui::Begin("debug imgui");
 
 	ImGui::SetWindowSize(ImVec2(300, 300), ImGuiCond_::ImGuiCond_FirstUseEver);

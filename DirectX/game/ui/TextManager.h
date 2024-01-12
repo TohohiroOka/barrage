@@ -11,6 +11,18 @@ class TextManager : public Singleton<TextManager>
 {
 	friend class Singleton<TextManager>;
 
+public: //enum
+	/// <summary>
+	/// 文章生成のフェーズ
+	/// </summary>
+	enum class SentenceCreatePhase
+	{
+		NONE,			//文章がなにもないフェーズ
+		FRAME_EMERGE,	//文章を囲う枠が出てくるフェーズ
+		SENTENCE_CREATE,//文章を生成するフェーズ
+		FRAME_SUBMERGE,	//文章を囲う枠が消えていくフェーズ
+	};
+
 public: //構造体
 	/// <summary>
 	/// 文章
@@ -90,6 +102,13 @@ public: //メンバ関数
 	}
 
 private: //メンバ関数
+	//角文章フェーズの更新処理
+	void UpdateSentenceNonePhase();
+	void UpdateSentenceFrameEmergePhase();
+	void UpdateSentenceCreatePhase();
+	void UpdateSentenceFrameSubemergePhase();
+
+
 	/// <summary>
 	/// 次のテキストを表示
 	/// </summary>
@@ -102,8 +121,23 @@ private: //定数
 	const float textScale = 1.0f;
 	//テキストを表示する早さ
 	const int textWriteSpeed = 2;
+	//枠スプライトのalpha
+	const float frameColorAlpha = 0.7f;
 
 private: //メンバ変数
+	//文章生成のフェーズ
+	SentenceCreatePhase sentenceCreatePhase = SentenceCreatePhase::NONE;
+	//各フェーズの動き
+	std::vector<std::function<void()>> func;
+	//イージング用タイマー
+	std::unique_ptr<Engine::Timer> easeTimer;
+
+	//文章を囲う枠スプライト
+	std::unique_ptr<Sprite> sentenceFrameSprite;
+
+	//次のテキストを表示させるためのボタンスプライト
+	std::unique_ptr<Sprite> inputNextTextSprite;
+
 	//文章
 	Sentence sentence;
 	//1文章のテキスト更新回数
