@@ -21,11 +21,11 @@ Boss1HalfAttack::Boss1HalfAttack()
 	useCollision = UseCollision::capsule;
 	line = PrimitiveObject3D::Create();
 
-	std::array<float, ringNum> numberY = { 2,-15,11, -6,19 };
+	std::array<float, ringNum> numberY = { 0,2,-15,11, -6,19 };
 
 	for (int ring = 0; ring < ringNum; ring++) {
 		ringInfo[ring].dist = 0.0f;
-		ringInfo[ring].maxDist = 20.0f + ring * 15.0f;
+		ringInfo[ring].maxDist = ring * 15.0f;
 		for (int sword = 0; sword < ringInfo[ring].swordObject.size(); sword++) {
 			ringInfo[ring].swordObject[sword].angle = {
 			360.0f / ringInfo[ring].swordObject.size() * sword,
@@ -45,6 +45,7 @@ Boss1HalfAttack::Boss1HalfAttack()
 
 	//s“®ŠÖ”
 	func_.emplace_back([this] {return Move(); });
+	func_.emplace_back([this] {return Small(); });
 	func_.emplace_back([this] {return Start(); });
 	func_.emplace_back([this] {return Attack(); });
 	func_.emplace_back([this] {return End(); });
@@ -118,6 +119,22 @@ void Boss1HalfAttack::Move()
 	boss->GetBaseModel()->SetPosition(pos);
 
 	if (rate < 1.0f) { return; }
+	state = State::smaller;
+	timer->Reset();
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_start));
+}
+
+void Boss1HalfAttack::Small()
+{
+	const float maxTime = 20.0f;
+	const float rate = *timer.get() / maxTime;
+
+	for (int i = 0; i< int(Boss1Model::AttachName::LowerArm_R_Non); i++) {
+		if (i == int(Boss1Model::AttachName::core1)) { continue; }
+		boss->GetBaseModel()->ChangesScale(i, 10.0f, { 0.0f, 0.0f, 0.0f });
+	}
+	
+	if (rate < 1.0f) { return; }
 	state = State::attackstart;
 	timer->Reset();
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_start));
@@ -179,6 +196,7 @@ void Boss1HalfAttack::Attack()
 	state = State::end;
 	timer->Reset();
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
+	boss->GetBaseModel()->ModelReset();
 }
 
 void Boss1HalfAttack::End()

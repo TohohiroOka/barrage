@@ -100,7 +100,7 @@ void BaseBoss::Collider()
 
 void BaseBoss::SetPlayerDirection()
 {
-	Vector3 rota = VelocityRotate(targetPos - Vector3(bossModel->GetPosition()));
+	Vector3 rota = VelocityRotate(Vector3(targetPos.x, 0.0f, targetPos.z) - Vector3(bossModel->GetPosition().x, 0.0f, bossModel->GetPosition().z));
 	//rota.x += 90.0f;
 	bossModel->GetObjectInst()->SetRotation(rota);
 }

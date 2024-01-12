@@ -161,15 +161,19 @@ void Boss1Model::ModelReset()
 	for (int i = 0; i < bone.size(); i++) {
 		attachInfo[i].pos.isChange = true;
 		attachInfo[i].pos.after = {};
+		attachInfo[i].pos.time->Reset();
 		attachInfo[i].scale.isChange = true;
 		attachInfo[i].scale.after = { 6.0f, 6.0f, 6.0f };
+		attachInfo[i].scale.time->Reset();
 	}
 
 	for (int i = 0; i < boneT.size(); i++) {
 		int number = int(bone.size()) + i;
 		attachInfo[number].pos.isChange = true;
 		attachInfo[number].pos.after = {};
+		attachInfo[number].pos.time->Reset();
 		attachInfo[number].scale.isChange = true;
+		attachInfo[number].scale.time->Reset();
 		if (i < 2) {
 			attachInfo[number].scale.after = { 6.0f, 9.0f, 6.0f };
 		} else if (i == 2) {
@@ -183,8 +187,10 @@ void Boss1Model::ModelReset()
 		int number = int(bone.size()) + int(boneT.size());
 		attachInfo[number].pos.isChange = true;
 		attachInfo[number].pos.after = { 0.0f, attachInfo[5].scale.now.y * transformScale, 0.0f };
+		attachInfo[number].scale.time->Reset();
 		attachInfo[number].scale.isChange = true;
 		attachInfo[number].scale.after = { 0.0f, 0.0f, 0.0f };
+		attachInfo[number].scale.time->Reset();
 	}
 }
 
