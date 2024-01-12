@@ -173,7 +173,7 @@ void Scene1::Draw(const int _cameraNum)
 	defeatDirection->Draw();
 	field->Draw();
 
-	lockonUI->Draw();
+
 }
 
 void Scene1::DrawLightView(const int _cameraNum)
@@ -189,6 +189,8 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 		DebugText::GetInstance()->DrawAll();
 		//sprite->Draw();
 	}
+
+	lockonUI->Draw();
 
 	player->DrawSprite();
 	boss->DrawSprite();
@@ -517,7 +519,7 @@ void Scene1::CollisionCheck()
 				//ロックオン対象を確定させる
 				camera->Lockon(boss->GetCenter());
 				//ロックオンUI表示
-				lockonUI->StartLockOnAnimation(&boss->GetCenter()->GetPosition());
+				lockonUI->StartLockOnAnimation(&boss->GetCenter()->GetScreenPosition());
 			}
 		}
 	}
