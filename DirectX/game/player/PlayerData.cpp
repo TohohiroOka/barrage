@@ -28,7 +28,7 @@ PlayerData::PlayerData()
 	maxHP = 100;
 	HP = maxHP;
 	
-	maxEndurance = 300;
+	maxEndurance = 400;
 	endurance = maxEndurance;
 
 	isNoGravity = false;

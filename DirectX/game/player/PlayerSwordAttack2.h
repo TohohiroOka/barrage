@@ -79,7 +79,7 @@ public: //静的メンバ変数 (変更しやすいようにpublic)
 	//攻撃にかかる時間
 	static const int attackTime2 = 35;
 	//先行入力を開始する時間
-	static const int actionChangeStartTime2 = 25;
+	static const int actionChangeStartTime2 = 30;
 	//衝突判定が有効に切り替わる時間
 	static const int collisionValidStartTime2 = 15;
 
@@ -87,7 +87,7 @@ public: //静的メンバ変数 (変更しやすいようにpublic)
 	//攻撃にかかる時間
 	static const int attackTime3 = 35;
 	//先行入力を開始する時間
-	static const int actionChangeStartTime3 = 25;
+	static const int actionChangeStartTime3 = 30;
 	//衝突判定が有効に切り替わる時間
 	static const int collisionValidStartTime3 = 15;
 
