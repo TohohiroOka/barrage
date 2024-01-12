@@ -11,9 +11,11 @@ Boss1HalfAttack::Boss1HalfAttack()
 	boss->GetBaseModel()->AnimationReset();
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_start));
 	boss->GetBaseModel()->AnimationReset();
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::standBy));
+	boss->GetBaseModel()->AnimationReset();
 
 	//èÛë‘
-	state = State::start;
+	state = State::move;
 
 	//è’ìÀîªíË
 	useCollision = UseCollision::capsule;
@@ -39,7 +41,10 @@ Boss1HalfAttack::Boss1HalfAttack()
 
 	isCollision = true;
 
+	moveBefore = boss->GetCenter()->GetPosition();
+
 	//çsìÆä÷êî
+	func_.emplace_back([this] {return Move(); });
 	func_.emplace_back([this] {return Start(); });
 	func_.emplace_back([this] {return Attack(); });
 	func_.emplace_back([this] {return End(); });
@@ -98,6 +103,24 @@ void Boss1HalfAttack::GetAttackCollisionCapsule(std::vector<Capsule>& _info)
 			_info.emplace_back(add);
 		}
 	}
+}
+
+void Boss1HalfAttack::Move()
+{
+	const float maxTime = 20.0f;
+	const float rate = *timer.get() / maxTime;
+
+	Vector3 pos={};
+	pos.x = Easing::OutCubic(moveBefore.x, GameHelper::Instance()->GetStageSize() / 2.0f, rate);
+	pos.y = Easing::OutCubic(moveBefore.y, 10.0f, rate);
+	pos.z = Easing::OutCubic(moveBefore.z, GameHelper::Instance()->GetStageSize() / 2.0f, rate);
+
+	boss->GetCenter()->SetPosition(pos);
+
+	if (rate < 1.0f) { return; }
+	state = State::attackstart;
+	timer->Reset();
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_start));
 }
 
 void Boss1HalfAttack::Start()

@@ -165,14 +165,15 @@ void MainEngine::Draw()
 
 	postEffect->Draw(postTex);
 
-	//ポストエフェクトをかけない描画
-	scene->NonPostEffectDraw();
 	render[int(EngineUseRTVCreateTextureName::main_after)]->PostDrawScene();
 
 	//描画前設定
 	dXCommon->PreDraw();
 
 	mainSprite->Draw();
+
+	//ポストエフェクトをかけない描画
+	scene->NonPostEffectDraw();
 
 	ImguiDraw();
 
