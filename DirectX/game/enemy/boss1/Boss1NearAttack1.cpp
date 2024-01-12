@@ -100,7 +100,7 @@ void Boss1NearAttack1::Attack()
 
 	if (*timer.get() % 5 != 0) { return; }
 	//oŒ»”
-	XMFLOAT3 pos = boss->GetCenter()->GetPosition();
+	XMFLOAT3 pos = boss->GetBaseModel()->GetPosition();
 	float inNum = timer->GetTime();
 	if (inNum >= 40.0f) {
 		inNum = 40.0f;

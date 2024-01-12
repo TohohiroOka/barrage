@@ -79,7 +79,7 @@ void BaseBoss::Damage(int damageNum)
 void BaseBoss::Collider()
 {
 	using namespace DirectX;
-	Vector3 pos = Vector3(bossModel->GetObjectInst()->GetPosition());
+	Vector3 pos = Vector3(bossModel->GetPosition());
 
 	const XMFLOAT3 moveMinPos = { 0,100,0 };
 	const XMFLOAT3 moveMaxPos = { GameHelper::Instance()->GetStageSize(),0.0f,GameHelper::Instance()->GetStageSize() };
@@ -95,12 +95,12 @@ void BaseBoss::Collider()
 		pos.y = 2.0f * hitScale;
 	}
 	//最終的な座標をセット
-	bossModel->GetObjectInst()->SetPosition(pos);
+	bossModel->SetPosition(pos);
 }
 
 void BaseBoss::SetPlayerDirection()
 {
-	Vector3 rota = VelocityRotate(targetPos - Vector3(bossModel->GetObjectInst()->GetPosition()));
+	Vector3 rota = VelocityRotate(targetPos - Vector3(bossModel->GetPosition()));
 	//rota.x += 90.0f;
 	bossModel->GetObjectInst()->SetRotation(rota);
 }

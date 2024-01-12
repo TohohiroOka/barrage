@@ -90,9 +90,9 @@ void Scene1::Update()
 		//撃破演出再生
 		//デバッグ用再生
 		if (DirectInput::GetInstance()->TriggerKey(DIK_H)) {
-			defeatDirection->StartDefeatDirection(boss->GetCenter()->GetPosition());
+			defeatDirection->StartDefeatDirection(boss->GetBaseModel()->GetPosition());
 		}
-		if (boss->GetBossIsAlive()) { defeatDirection->StartDefeatDirection(boss->GetCenter()->GetPosition()); }
+		if (boss->GetBossIsAlive()) { defeatDirection->StartDefeatDirection(boss->GetBaseModel()->GetPosition()); }
 
 		CollisionCheck();
 
@@ -238,7 +238,7 @@ void Scene1::CollisionCheck()
 		playerSphere.radius = player->GetFbxObject()->GetScale().x;
 
 		Sphere enemySphere;
-		enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
+		enemySphere.center = { boss->GetBaseModel()->GetPosition().x, boss->GetBaseModel()->GetPosition().y, boss->GetBaseModel()->GetPosition().z, 1.0f };
 		enemySphere.radius = boss->GetHitScale();
 
 		XMVECTOR inter;
@@ -469,7 +469,7 @@ void Scene1::CollisionCheck()
 		//プレイヤーの攻撃がある場合のみ判定 
 		if (player->GetData()->attackAction) {
 			Sphere enemySphere;
-			enemySphere.center = { boss->GetCenter()->GetPosition().x, boss->GetCenter()->GetPosition().y, boss->GetCenter()->GetPosition().z, 1.0f };
+			enemySphere.center = { boss->GetBaseModel()->GetPosition().x, boss->GetBaseModel()->GetPosition().y, boss->GetBaseModel()->GetPosition().z, 1.0f };
 			enemySphere.radius = boss->GetHitScale();
 
 			Capsule attackCapsule;
@@ -517,7 +517,7 @@ void Scene1::CollisionCheck()
 				//ロックオン対象を確定させる
 				camera->Lockon(boss->GetCenter());
 				//ロックオンUI表示
-				lockonUI->StartLockOnAnimation(&boss->GetCenter()->GetPosition());
+				lockonUI->StartLockOnAnimation(&boss->GetBaseModel()->GetPosition());
 			}
 		}
 	}
