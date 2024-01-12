@@ -11,6 +11,8 @@
 #include "PlayerActionBlink.h"
 #include "PlayerActionKnockback.h"
 #include "PlayerActionDead.h"
+#include "PlayerTitleActionFloat.h"
+#include "PlayerTitleActionIntoPortal.h"
 #include "engine/Math/Easing/Easing.h"
 #include "PlayerSwordAttack1.h"
 #include <imgui.h>
@@ -29,37 +31,11 @@ Player::Player()
 	object->SetAnimation(true);
 	object->SetIsBoneDraw(true);
 	object->SetUseAnimation(PlayerAnimationName::JUMP_ANIMATION);
-
-	//剣モデル読み込み
-	swordModel = Model::CreateFromOBJ("sword");
-	std::string bone = "thumb.01.R";
-	XMMATRIX matScale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
-	XMMATRIX matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
-	matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
-	matRot *= XMMatrixRotationY(XMConvertToRadians(0.0f));
-	DirectX::XMMATRIX matTrans = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
-	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
-	world *= matScale;
-	world *= matRot;
-	world *= matTrans;
-	object->SetBoneObject(bone, "rightHand", swordModel.get(), world, true, "sword1");
-
-	//剣の長さ図り用
-	{
-		XMMATRIX matScale = XMMatrixScaling(0.0f, 0.0f, 0.0f);
-		XMMATRIX matRot = XMMatrixIdentity();
-		matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
-		matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
-		matRot *= XMMatrixRotationY(XMConvertToRadians(0.0f));
-		DirectX::XMMATRIX matTrans = XMMatrixTranslation(0.0f, 1.5f, 0.0f);
-		DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
-		world *= matScale;
-		world *= matRot;
-		world *= matTrans;
-		object->SetBoneObject(bone, "rightHand", swordModel.get(), world, false, "sword2");
-	}
 	object->SetScale({ 5,5,5 });
+
+	//剣生成
+	sword = std::make_unique<PlayerSword>(object.get());
+	
 
 	//データ生成
 	data = std::make_unique<PlayerData>();
@@ -75,10 +51,6 @@ Player::Player()
 	//タイマー生成
 	healTimer = std::make_unique<Engine::Timer>();
 	enduranceRecoveryStartTimer = std::make_unique<Engine::Timer>();
-
-	XMFLOAT4 startColor = { 0.02f, 0.05f, 0.2f, 1.0f };
-	XMFLOAT4 endColor = { 0.001f, 0.001f, 0.01f, 1.0f };
-	swordEffect = std::make_unique<SlashEffect>("effect", 10, 10, 10.0f, 1.0f, 0.0f, startColor, endColor);
 }
 
 void Player::Update()
@@ -100,20 +72,22 @@ void Player::Update()
 	//更新した座標などを反映し、オブジェクト更新
 	ObjectUpdate();
 
+	//剣更新
+	sword->Update();
+
 	//ゲージ更新
 	HealHPMove();
 	EnduranceRecovery();
 	hpGauge->Update();
 	enduranceGauge->Update();
-
-	//斬撃エフェクト更新
-	swordEffect->Update(object->GetAttachPos("sword1"), object->GetAttachPos("sword2"));
 }
 
 void Player::Draw()
 {
-	swordEffect->Draw();
 	object->Draw();
+
+	//剣演出描画
+	sword->DrawEffect();
 
 	//if (!data->attackAction) { return; }
 	//data->attackAction->Draw();
@@ -234,6 +208,16 @@ void Player::UseEndurance(const int enduranceUseNum, const int enduranceRecovery
 	*enduranceRecoveryStartTimer.get() = enduranceRecoveryStartTime;
 }
 
+void Player::TitlePhaseStart()
+{
+	//通常の状態でなければ抜ける
+	if ((data->action == PlayerActionName::TITLE_FLOAT || data->action == PlayerActionName::TITLE_INTO_PORTAL)) { return; }
+
+	//フェーズを更新
+	data->action = PlayerActionName::TITLE_FLOAT;
+	action = std::make_unique<PlayerTitleActionFloat>(this, portalPos);
+}
+
 void Player::ObjectUpdate()
 {
 	//速度を加算して座標更新
@@ -277,7 +261,7 @@ void Player::ActionChange()
 {
 	//行動の変更が終わり、現在選択されている行動を開始する
 	switch (data->action) {
-	case PlayerActionName::MOVENORMAL:
+	case PlayerActionName::MOVE_NORMAL:
 		action = std::make_unique<PlayerActionMoveNormal>(this);
 		break;
 
@@ -285,11 +269,11 @@ void Player::ActionChange()
 		action = std::make_unique<PlayerActionJump>(this);
 		break;
 
-	case PlayerActionName::LIGHTATTACK:
+	case PlayerActionName::LIGHT_ATTACK:
 		action = std::make_unique<PlayerActionLightAttack>(this);
 		break;
 
-	case PlayerActionName::STRONGATTACK:
+	case PlayerActionName::STRONG_ATTACK:
 		action = std::make_unique<PlayerActionStrongAttack>(this);
 		break;
 
@@ -299,6 +283,10 @@ void Player::ActionChange()
 
 	case PlayerActionName::BLINK:
 		action = std::make_unique<PlayerActionBlink>(this);
+		break;
+
+	case PlayerActionName::TITLE_INTO_PORTAL:
+		action = std::make_unique<PlayerTitleActionIntoPortal>(this, portalPos);
 		break;
 
 	default:

@@ -65,6 +65,9 @@ void SceneManager::Initialize()
 	light->SetDirLightColor(0, { 1,1,1 });
 	light->SetDirLightDir(0, { 0.0f, 0.0f, 1.0f, 0 });
 
+	//テキスト管理
+	textManager = std::make_unique<TextManager>();
+
 	SceneChangeDirection::Instance()->Create();
 
 	//最初のシーン設定

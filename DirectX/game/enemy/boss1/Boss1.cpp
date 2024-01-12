@@ -24,11 +24,11 @@ Boss1::Boss1()
 
 	BaseAction::SetBossPtr(this);
 
-	action = std::make_unique<Boss1Move1>();
+	action = std::make_unique<Boss1Move3>();
 
 	hitScale = bossModel->GetObjectInst()->GetScale().y * 5000.0f;
 
-	nowBreakHp = maxHP / 2.0f;
+	nowBreakHp = maxHP-50.0f;
 }
 
 void Boss1::Update()
@@ -69,7 +69,7 @@ void Boss1::SetAction()
 	Vector3 pos = bossModel->GetObjectInst()->GetPosition();
 	Vector3 dist = targetPos - pos;
 
-	action = std::make_unique<Boss1Move1>();
+	action = std::make_unique<Boss1Move3>();
 	return;
 
 	//ƒvƒŒƒCƒ„[‚ª‰“‹——£‚É‚¢‚é

@@ -4,6 +4,9 @@
 #include "../BaseAction.h"
 #include <functional>
 
+/// <summary>
+/// ƒIƒ‹ƒKƒmƒ“
+/// </summary>
 class Boss1HalfAttack : public BaseAction
 {
 private:
@@ -23,7 +26,8 @@ private:
 	};
 
 	enum class State {
-		start,
+		move,
+		attackstart,
 		attack,
 		end,
 		non,
@@ -56,6 +60,8 @@ public:
 		_isKnockbackStart = false;
 	}
 
+	void Move();
+
 	void Start();
 
 	void Attack();
@@ -71,6 +77,9 @@ private:
 	std::vector<std::function<void()>> func_;
 
 	std::unique_ptr<PrimitiveObject3D> line;
+
+	//ˆÚ“®‘O
+	Vector3 moveBefore;
 
 	//ƒŠƒ“ƒO
 	static const int ringNum = 5;

@@ -7,7 +7,7 @@
 #include "game/ui/Gauge.h"
 #include "BasePlayerAttack.h"
 #include "Math/Timer.h"
-#include "effect/SlashEffect.h"
+#include "PlayerSword.h"
 
 class GameCamera;
 
@@ -89,14 +89,21 @@ public: //メンバ関数
 	/// <param name="isDecreaseDiffMode">使用量を黄色いバーで可視化するか</param>
 	void UseEndurance(const int enduranceUseNum, const int enduranceRecoveryStartTime, bool isDecreaseDiffMode);
 
+	/// <summary>
+	/// タイトルシーン用行動演出開始
+	/// </summary>
+	void TitlePhaseStart();
+
 
 	//getter
 	Fbx* GetFbxObject() { return object.get(); }
+	PlayerSword* GetSword() { return sword.get(); }
 	GameCamera* GetGameCamera() { return gameCamera; }
 	PlayerData* GetData() { return data.get(); }
 
 	//setter
 	void SetGameCamera(GameCamera* gameCamera) { this->gameCamera = gameCamera; }
+	void SetPortalPos(const Vector3& portalPos) { this->portalPos = portalPos; }
 
 private:
 	/// <summary>
@@ -139,8 +146,10 @@ private: //静的メンバ変数
 private: //メンバ変数
 	std::unique_ptr<FbxModel> model = nullptr;
 	std::unique_ptr<Fbx> object = nullptr;
-	//剣のモデル
-	std::unique_ptr<Model> swordModel = nullptr;
+
+	//剣
+	std::unique_ptr<PlayerSword> sword;
+	
 	//ゲームカメラ
 	GameCamera* gameCamera = nullptr;
 
@@ -171,5 +180,6 @@ private: //メンバ変数
 	////持久力ゲージ
 	std::unique_ptr<Gauge> enduranceGauge;
 
-	std::unique_ptr<SlashEffect> swordEffect;
+	//タイトルシーン用ポータル座標
+	Vector3 portalPos;
 };

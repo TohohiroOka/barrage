@@ -17,6 +17,8 @@
 
 #include "Pipeline/GraphicsPipelineManager.h"
 
+#include "ui/TextManager.h"
+
 //計算シェーダー
 #include "Pipeline/ComputeShaderManager.h"
 
@@ -88,10 +90,15 @@ public:
 	/// </summary>
 	virtual void FrameReset() {};
 
+	//getter
+	bool GetIsEndRequest() { return isEndRequest; }
+
 protected:
 
 	//コマンドリスト
 	ID3D12GraphicsCommandList* cmdList = nullptr;
 	//ライト
 	LightGroup* light = nullptr;
+	//ゲームループ終了リクエスト
+	bool isEndRequest = false;
 };

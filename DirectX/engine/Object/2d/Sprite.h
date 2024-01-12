@@ -152,6 +152,7 @@ public:
 	void SetPosition(const XMFLOAT2& _position) { this->position = _position; }
 	void SetRotation(float _rotation) { this->rotation = _rotation; }
 	void SetSize(const XMFLOAT2& _size) { this->size = _size; }
+	void SetScale(float scale){ size = { texSize.x * scale, texSize.y * scale }; }
 	void SetTexSize(const XMFLOAT2& _texSize) { this->texSize = _texSize; }
 	void SetTexLeftTop(const XMFLOAT2& _texLeftTop) { this->texLeftTop = _texLeftTop; }
 	void SetColor(const XMFLOAT4& _color) { this->color = _color; }

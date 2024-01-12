@@ -71,7 +71,13 @@ public://メンバ関数
 	/// <param name="inScene">次シーンのインスタンス</param>
 	static void SetNextScene(InterfaceScene* inScene) { nextScene = inScene; }
 
+	/// <summary>
+	/// フレーム毎の初期化
+	/// </summary>
 	void FrameReset();
+
+	//getter
+	bool GetIsEndRequest() { return scene->GetIsEndRequest(); }
 
 private://メンバ変数
 
@@ -85,4 +91,6 @@ private://メンバ変数
 	std::unique_ptr<LightGroup> light = nullptr;
 	//パイプライン
 	std::unique_ptr<GraphicsPipelineManager> graphicsPipeline = nullptr;
+	//テキスト管理
+	std::unique_ptr<TextManager> textManager;
 };

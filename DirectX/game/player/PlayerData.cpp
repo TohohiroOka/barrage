@@ -8,7 +8,7 @@ int PlayerData::blinkUseEndurance = 10;
 
 PlayerData::PlayerData()
 {
-	action = PlayerActionName::MOVENORMAL;
+	action = PlayerActionName::MOVE_NORMAL;
 
 	pos = { GameHelper::Instance()->GetStageSize() / 2.0f, 5.0f,GameHelper::Instance()->GetStageSize() / 5.0f };
 	moveVec = { 0, 0, 1 };
@@ -18,6 +18,13 @@ PlayerData::PlayerData()
 
 	isMoveKey = false;
 	isMovePad = false;
+
+	actionInput.isMove = true;
+	actionInput.isJump = true;
+	actionInput.isLightAttack = true;
+	actionInput.isStrongAttack = true;
+	actionInput.isAvoid = true;
+	actionInput.isBlink = true;
 
 	moveSpeed = 0.0f;
 	

@@ -28,7 +28,7 @@ PlayerActionAvoid::PlayerActionAvoid(Player* player)
 	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ROLL_ANIMATION);
 
 	//予め次の行動を設定しておく(終了後は通常移動)
-	nextAction = PlayerActionName::MOVENORMAL;
+	nextAction = PlayerActionName::MOVE_NORMAL;
 
 	//回避音再生
 	Audio::Instance()->SoundPlayWava(Sound::SoundName::avoid, false, 0.1f);
@@ -58,8 +58,8 @@ void PlayerActionAvoid::Avoid()
 	//タイマーが指定した時間になったら行動変更先行入力
 	if (*avoidTimer.get() >= actionChangeStartTime) {
 		if (JumpStart()) { nextAction = PlayerActionName::JUMP; }
-		else if (GameInputManager::TriggerInputAction(GameInputManager::LightAttack)) { nextAction = PlayerActionName::LIGHTATTACK; }
-		else if (GameInputManager::TriggerInputAction(GameInputManager::StrongAttack)) { nextAction = PlayerActionName::STRONGATTACK; }
+		else if (GameInputManager::TriggerInputAction(GameInputManager::LightAttack)) { nextAction = PlayerActionName::LIGHT_ATTACK; }
+		else if (GameInputManager::TriggerInputAction(GameInputManager::StrongAttack)) { nextAction = PlayerActionName::STRONG_ATTACK; }
 	}
 
 
@@ -68,12 +68,12 @@ void PlayerActionAvoid::Avoid()
 		isActionEnd = true;
 
 		//先行入力で弱攻撃または強攻撃を選択している場合は最終チェック
-		if (nextAction == PlayerActionName::LIGHTATTACK || nextAction == PlayerActionName::STRONGATTACK) {
+		if (nextAction == PlayerActionName::LIGHT_ATTACK || nextAction == PlayerActionName::STRONG_ATTACK) {
 			bool isNextActionAttack = false;
-			if (nextAction == PlayerActionName::LIGHTATTACK && LightAttackStart()) { isNextActionAttack = true; }
-			else if (nextAction == PlayerActionName::STRONGATTACK && StrongAttackStart()) { isNextActionAttack = true; }
+			if (nextAction == PlayerActionName::LIGHT_ATTACK && LightAttackStart()) { isNextActionAttack = true; }
+			else if (nextAction == PlayerActionName::STRONG_ATTACK && StrongAttackStart()) { isNextActionAttack = true; }
 
-			if (!isNextActionAttack) { nextAction = PlayerActionName::MOVENORMAL; }
+			if (!isNextActionAttack) { nextAction = PlayerActionName::MOVE_NORMAL; }
 		}
 
 		//予約していた次の行動をセット

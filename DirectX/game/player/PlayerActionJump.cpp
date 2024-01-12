@@ -20,7 +20,7 @@ PlayerActionJump::PlayerActionJump(Player* player)
 	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::JUMP_ANIMATION);
 
 	//予め次の行動を設定しておく(終了後は通常移動)
-	nextAction = PlayerActionName::MOVENORMAL;
+	nextAction = PlayerActionName::MOVE_NORMAL;
 
 	//ジャンプ音再生
 	Audio::Instance()->SoundPlayWava(Sound::SoundName::jump, false, 0.1f);

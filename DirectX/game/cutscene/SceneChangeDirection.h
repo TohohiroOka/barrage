@@ -37,7 +37,7 @@ private:
 	//フェードインか
 	bool isFadein;
 	// 遷移にかかる時間
-	const int CHANGE_FADE_FRAME = 60;
+	const int CHANGE_FADE_FRAME = 20;
 	//遷移完了フラグ
 	bool isDirectionEnd;
 	//塗りつぶすやつ

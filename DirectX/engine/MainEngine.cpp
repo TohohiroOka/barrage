@@ -61,7 +61,8 @@ void MainEngine::Initialize()
 	for (auto& i : Engine::EngineUseDSVTexture) {
 		if (depthNum == 0) {
 			TextureManager::CreateDepthTexture(i, { 4096 ,4096 });
-		}else if(depthNum == 1) {
+		}
+		else if (depthNum == 1) {
 			TextureManager::CreateDepthTexture(i, { 0,0 });
 		}
 		depthNum++;
@@ -117,6 +118,9 @@ bool MainEngine::Update()
 	//更新
 	scene->Update();
 
+	//各シーンから終了リクエストがあればゲームループ終了
+	if (scene->GetIsEndRequest()) { return true; }
+
 	return false;
 }
 
@@ -161,14 +165,15 @@ void MainEngine::Draw()
 
 	postEffect->Draw(postTex);
 
-	//ポストエフェクトをかけない描画
-	scene->NonPostEffectDraw();
 	render[int(EngineUseRTVCreateTextureName::main_after)]->PostDrawScene();
 
 	//描画前設定
 	dXCommon->PreDraw();
 
 	mainSprite->Draw();
+
+	//ポストエフェクトをかけない描画
+	scene->NonPostEffectDraw();
 
 	ImguiDraw();
 

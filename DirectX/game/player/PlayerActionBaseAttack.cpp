@@ -7,7 +7,7 @@ PlayerActionBaseAttack::PlayerActionBaseAttack(Player* player)
 	player->UseEndurance(player->GetData()->attackAction->GetUseEndranceNum(), 60, true); //持久力を使用
 
 	//予め次の行動を設定しておく(終了後は通常移動)
-	nextAction = PlayerActionName::MOVENORMAL;
+	nextAction = PlayerActionName::MOVE_NORMAL;
 }
 
 PlayerActionBaseAttack::~PlayerActionBaseAttack()
@@ -26,16 +26,17 @@ void PlayerActionBaseAttack::Update()
 		isActionEnd = true;
 
 		//先行入力で弱攻撃または強攻撃を選択している場合は最終チェック
-		if (nextAction == PlayerActionName::LIGHTATTACK || nextAction == PlayerActionName::STRONGATTACK) {
+		if (nextAction == PlayerActionName::LIGHT_ATTACK || nextAction == PlayerActionName::STRONG_ATTACK) {
 			bool isNextActionAttack = false;
-			if (nextAction == PlayerActionName::LIGHTATTACK && LightAttackStart()) { isNextActionAttack = true; }
-			else if (nextAction == PlayerActionName::STRONGATTACK && StrongAttackStart()) { isNextActionAttack = true; }
+			if (player->GetData()->actionInput.isLightAttack && nextAction == PlayerActionName::LIGHT_ATTACK && LightAttackStart()) { isNextActionAttack = true; }
+			else if (player->GetData()->actionInput.isStrongAttack && nextAction == PlayerActionName::STRONG_ATTACK && StrongAttackStart()) { isNextActionAttack = true; }
 
-			if (!isNextActionAttack) { nextAction = PlayerActionName::MOVENORMAL; }
+			if (!isNextActionAttack) { nextAction = PlayerActionName::MOVE_NORMAL; }
 		}
 		//攻撃以外を選択している場合は攻撃行動を解放する
 		else {
 			player->GetData()->attackAction.reset();
+			player->GetSword()->GetSlashEffect()->SetIsParticleEmit(false); //斬撃演出生成も停止させておく
 		}
 
 		//予約していた次の行動をセット
@@ -55,5 +56,6 @@ void PlayerActionBaseAttack::Update()
 
 		//攻撃行動を解放する
 		player->GetData()->attackAction.reset();
+		player->GetSword()->GetSlashEffect()->SetIsParticleEmit(false); //斬撃演出生成も停止させておく
 	}
 }

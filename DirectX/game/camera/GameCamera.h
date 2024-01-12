@@ -7,8 +7,19 @@
 /// </summary>
 class GameCamera :public Camera
 {
+public: //struct
+	/// <summary>
+	/// 入力で行動が可能か
+	/// </summary>
+	struct CameraActionInput
+	{
+		bool isCameraMove;
+		bool isLockon;
+	};
+
 public: //静的メンバ関数
-	
+
+	//setter
 	static void SetPlayer(Player* player) { GameCamera::player = player; }
 
 public: //メンバ関数
@@ -28,11 +39,19 @@ public: //メンバ関数
 
 	//getter
 	const XMFLOAT3& GetCameraRota() { return rotation; }
+	CameraActionInput GetActionInput() { return actionInput; }
 	Base3D* GetLockonTarget() { return lockonTarget; }
 	bool GetisLockon() { return isLockon; }
 	bool GetisLockonStart() { return isLockonStart; }
 
-private: //メンバ関数
+	//setter
+	void SetActionInput(bool& actionInputFlag, bool isInput) { actionInputFlag = isInput; }
+	void SetAllActionInput(bool isInput) {
+		actionInput.isCameraMove = isInput;
+		actionInput.isLockon = isInput;
+	}
+
+protected: //メンバ関数
 	/// <summary>
 	/// ワールド行列を更新
 	/// </summary>
@@ -70,11 +89,6 @@ private: //メンバ関数
 	void LockonAdjastEaseRotate(float& rotation, float easeBeforeRotate, float easeAfterRotate, float easeTime);
 
 	/// <summary>
-	/// ロックオン時にy軸回転を停止中の処理
-	/// </summary>
-	void LockonRotYStop();
-
-	/// <summary>
 	/// 座標を更新
 	/// </summary>
 	void UpdatePosition();
@@ -94,7 +108,7 @@ private: //メンバ関数
 	/// </summary>
 	void LockonEndRotate();
 
-private: //静的メンバ変数
+protected: //静的メンバ変数
 	static Player* player;
 	static const float rotateXMin;
 	static const float rotateXMax;
@@ -102,7 +116,7 @@ private: //静的メンバ変数
 	static const float rotateCenterDistanceNormal;
 	static const Vector3 targetDistanceNormal;
 
-private: //メンバ変数
+protected: //メンバ変数
 	//カメラ座標
 	Vector3 position;
 	//ターゲット角度
@@ -115,6 +129,9 @@ private: //メンバ変数
 	Vector3 targetDistance;
 	//ワールド変換行列
 	XMMATRIX matWorld = {};
+
+	//入力で行動が可能か
+	CameraActionInput actionInput;
 
 	//ロックオンターゲット
 	Base3D* lockonTarget = nullptr;
