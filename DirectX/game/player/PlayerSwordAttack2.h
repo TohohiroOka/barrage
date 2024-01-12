@@ -66,12 +66,31 @@ public: //静的メンバ変数 (変更しやすいようにpublic)
 	static int attackUseEnduranceNum;
 	//この攻撃の攻撃力
 	static int attackPower;
+
+	//1回目の攻撃
 	//攻撃にかかる時間
-	static const int attackTime = 130;
+	static const int attackTime1 = 30;
 	//先行入力を開始する時間
-	static const int actionChangeStartTime = 80;
+	static const int actionChangeStartTime1 = 20;
 	//衝突判定が有効に切り替わる時間
-	static const int collisionValidStartTime = 42;
+	static const int collisionValidStartTime1 = 10;
+
+	//2回目の攻撃
+	//攻撃にかかる時間
+	static const int attackTime2 = 35;
+	//先行入力を開始する時間
+	static const int actionChangeStartTime2 = 30;
+	//衝突判定が有効に切り替わる時間
+	static const int collisionValidStartTime2 = 15;
+
+	//3回目の攻撃
+	//攻撃にかかる時間
+	static const int attackTime3 = 35;
+	//先行入力を開始する時間
+	static const int actionChangeStartTime3 = 30;
+	//衝突判定が有効に切り替わる時間
+	static const int collisionValidStartTime3 = 15;
+
 	//色
 	static const DirectX::XMFLOAT4 attackColor;
 	static const DirectX::XMFLOAT4 nonAttackColor;

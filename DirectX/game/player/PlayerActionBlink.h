@@ -24,7 +24,7 @@ private: //メンバ関数
 
 private: //静的メンバ変数
 	//ブリンクにかかる時間
-	static const int blinkTime = 35;
+	static const int blinkTime = 40;
 	//先行入力を開始する時間
 	static const int actionChangeStartTime = 15;
 

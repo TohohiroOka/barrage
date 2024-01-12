@@ -16,7 +16,7 @@ const DirectX::XMFLOAT4 PlayerSwordAttack1::nonAttackColor = { 0, 0, 1, 0.3f };
 const float PlayerSwordAttack1::attackStartMoveSpeedMax = 1.5f;
 const float PlayerSwordAttack1::attackStartMoveSpeedMin = 0.5f;
 
-PlayerSwordAttack1::PlayerSwordAttack1(Player* player)
+PlayerSwordAttack1::PlayerSwordAttack1(Player *player)
 {
 	//プレイヤーをセット
 	this->player = player;
@@ -91,7 +91,7 @@ bool PlayerSwordAttack1::NextAttack()
 
 	//アニメーションリセット
 	player->GetFbxObject()->AnimationReset();
-	
+
 	if (attackNum == 1) {
 		//攻撃1へ
 		state = State::ATTACK1;
@@ -154,20 +154,20 @@ void PlayerSwordAttack1::AttackAction1()
 	timer->Update();
 
 	//攻撃に合わせてプレイヤーを動かす
-	MovePlayer(actionChangeStartTime);
+	MovePlayer(actionChangeStartTime1);
 
 	//攻撃判定をONにする
-	if (*timer.get() == collisionValidStartTime && !isHitAttack) {
+	if (*timer.get() == collisionValidStartTime1 && !isHitAttack) {
 		isCollisionValid = true;
 	}
 
 	//次の行動を入力可能にする
-	if (*timer.get() == actionChangeStartTime) {
+	if (*timer.get() == actionChangeStartTime1) {
 		isNextActionInput = true;
 	}
 
 	//タイマーが指定した時間になったら
-	if (*timer.get() >= attackTime) {
+	if (*timer.get() >= attackTime1) {
 		//攻撃行動終了
 		isAttackActionEnd = true;
 	}
@@ -179,20 +179,20 @@ void PlayerSwordAttack1::AttackAction2()
 	timer->Update();
 
 	//攻撃に合わせてプレイヤーを動かす
-	MovePlayer(actionChangeStartTime);
+	MovePlayer(actionChangeStartTime2);
 
 	//攻撃判定をONにする
-	if (*timer.get() == collisionValidStartTime && !isHitAttack) {
+	if (*timer.get() == collisionValidStartTime2 && !isHitAttack) {
 		isCollisionValid = true;
 	}
 
 	//次の行動を入力可能にする
-	if (*timer.get() == actionChangeStartTime) {
+	if (*timer.get() == actionChangeStartTime2) {
 		isNextActionInput = true;
 	}
 
 	//タイマーが指定した時間になったら
-	if (*timer.get() >= attackTime) {
+	if (*timer.get() >= attackTime2) {
 		//攻撃行動終了
 		isAttackActionEnd = true;
 	}
@@ -204,20 +204,20 @@ void PlayerSwordAttack1::AttackAction3()
 	timer->Update();
 
 	//攻撃に合わせてプレイヤーを動かす
-	MovePlayer(actionChangeStartTime);
+	MovePlayer(actionChangeStartTime3);
 
 	//攻撃判定をONにする
-	if (*timer.get() == collisionValidStartTime && !isHitAttack) {
+	if (*timer.get() == collisionValidStartTime3 && !isHitAttack) {
 		isCollisionValid = true;
 	}
 
 	//次の行動を入力可能にする
-	if (*timer.get() == actionChangeStartTime) {
+	if (*timer.get() == actionChangeStartTime3) {
 		isNextActionInput = true;
 	}
 
 	//タイマーが指定した時間になったら
-	if (*timer.get() >= attackTime) {
+	if (*timer.get() >= attackTime3) {
 		//攻撃行動終了
 		isAttackActionEnd = true;
 	}
@@ -239,7 +239,7 @@ void PlayerSwordAttack1::MovePlayer(int moveTime)
 
 void PlayerSwordAttack1::PlayerChangeRotate()
 {
-	DirectInput* input = DirectInput::GetInstance();
+	DirectInput *input = DirectInput::GetInstance();
 
 	//キー入力を判定
 	player->GetData()->isMoveKey = (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveRight).key) ||
