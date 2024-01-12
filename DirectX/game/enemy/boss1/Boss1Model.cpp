@@ -16,12 +16,12 @@ Boss1Model::Boss1Model()
 	objModel[int(ObjectType::core)] = Model::CreateFromOBJ("boss1/core");
 	objModel[int(ObjectType::sword)] = Model::CreateFromOBJ("boss1/feet");
 
-	model = FbxModel::Create("boss1","Hips");
+	model = FbxModel::Create("boss1");
 	fbxObject = Fbx::Create(model.get());
 	fbxObject->SetScale({ 0.0011f,0.0011f ,0.0011f });
 	fbxObject->SetLight(true);
 	fbxObject->SetAnimation(true);
-	fbxObject->SetPosition({ GameHelper::Instance()->GetStageSize() / 2.0f,10.0f ,GameHelper::Instance()->GetStageSize() / 2.0f });
+	bossPos = { GameHelper::Instance()->GetStageSize() / 2.0f,10.0f ,GameHelper::Instance()->GetStageSize() / 2.0f };
 	fbxObject->SetIsModelDraw(false);
 	fbxObject->SetIsBoneDraw(true);
 	fbxObject->SetIsRoop(false);
@@ -116,6 +116,7 @@ Boss1Model::Boss1Model()
 void Boss1Model::Update()
 {
 	ChangeInfo();
+	fbxObject->SetPosition({ bossPos.x,bossPos.y - 10.0f,bossPos.z });
 	fbxObject->Update();
 	swordEffect->Update(fbxObject->GetAttachPos("larm1"), fbxObject->GetAttachPos("larm2"));
 }

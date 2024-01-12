@@ -66,7 +66,7 @@ void Boss1::SetAction()
 	//‰Šú‰»
 	action.reset();
 
-	Vector3 pos = bossModel->GetObjectInst()->GetPosition();
+	Vector3 pos = bossModel->GetPosition();
 	Vector3 dist = targetPos - pos;
 
 	action = std::make_unique<Boss1Move3>();

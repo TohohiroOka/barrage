@@ -41,7 +41,7 @@ Boss1HalfAttack::Boss1HalfAttack()
 
 	isCollision = true;
 
-	moveBefore = boss->GetCenter()->GetPosition();
+	moveBefore = boss->GetBaseModel()->GetPosition();
 
 	//çsìÆä÷êî
 	func_.emplace_back([this] {return Move(); });
@@ -91,7 +91,7 @@ void Boss1HalfAttack::Draw()
 
 void Boss1HalfAttack::GetAttackCollisionCapsule(std::vector<Capsule>& _info)
 {
-	Vector3 bossPos = boss->GetCenter()->GetPosition();
+	Vector3 bossPos = boss->GetBaseModel()->GetPosition();
 	for (auto& i : ringInfo) {
 		for (auto& j : i.swordObject) {
 			Vector3 vec = j.pos - bossPos;
@@ -115,7 +115,7 @@ void Boss1HalfAttack::Move()
 	pos.y = Easing::OutCubic(moveBefore.y, 10.0f, rate);
 	pos.z = Easing::OutCubic(moveBefore.z, GameHelper::Instance()->GetStageSize() / 2.0f, rate);
 
-	boss->GetCenter()->SetPosition(pos);
+	boss->GetBaseModel()->SetPosition(pos);
 
 	if (rate < 1.0f) { return; }
 	state = State::attackstart;
@@ -127,7 +127,7 @@ void Boss1HalfAttack::Start()
 {
 	const float maxTime = 80.0f;
 	const float rate = *timer.get() / maxTime;
-	const Vector3 bossPos = boss->GetCenter()->GetPosition();
+	const Vector3 bossPos = boss->GetBaseModel()->GetPosition();
 
 	int swordNum = 0;
 	for (auto& ring : ringInfo) {
@@ -156,7 +156,7 @@ void Boss1HalfAttack::Start()
 void Boss1HalfAttack::Attack()
 {
 	const float maxTime = 80.0f;
-	const Vector3 bossPos = boss->GetCenter()->GetPosition();
+	const Vector3 bossPos = boss->GetBaseModel()->GetPosition();
 
 	int swordNum = 0;
 	for (auto& ring : ringInfo) {
@@ -175,17 +175,17 @@ void Boss1HalfAttack::Attack()
 		swordNum = 0;
 	}
 
-	//if (*timer.get() < maxTime) { return; }
-	//state = State::end;
-	//timer->Reset();
-	//boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
+	if (*timer.get() < maxTime) { return; }
+	state = State::end;
+	timer->Reset();
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
 }
 
 void Boss1HalfAttack::End()
 {
 	const float maxTime = 80.0f;
 	const float rate = *timer.get() / maxTime;
-	const Vector3 bossPos = boss->GetCenter()->GetPosition();
+	const Vector3 bossPos = boss->GetBaseModel()->GetPosition();
 
 	int swordNum = 0;
 	for (auto& ring : ringInfo) {

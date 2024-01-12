@@ -142,9 +142,6 @@ void Boss1Bullet1::Attack()
 	}
 
 	const float maxTime = 120.0f;
-
-	Vector3 targetPos = boss->GetCenter()->GetPosition();
-
 	const float deviationWidth = 20.0f;
 	usePoint[0] = int((*timer.get() / (maxTime - deviationWidth)) * (maxBulletNum - 1));
 	if (*timer.get() > 20.0f) {
@@ -185,7 +182,7 @@ void Boss1Bullet1::End()
 
 void Boss1Bullet1::AddBullet(const Vector3& _pos)
 {
-	Vector3 moveVec = _pos - Vector3(boss->GetCenter()->GetPosition());
+	Vector3 moveVec = _pos - Vector3(boss->GetBaseModel()->GetPosition());
 	moveVec.y = 0.0f;
 	moveVec = moveVec.normalize();
 	moveVec.y = -(RandomFloat(80.0f) + 2.0f) / 100.0f;
@@ -204,7 +201,7 @@ void Boss1Bullet1::AddBullet(const Vector3& _pos)
 
 void Boss1Bullet1::BulletRotate(BulletAddPointInfo& _bullet)
 {
-	Vector3 bossPos = boss->GetCenter()->GetPosition();
+	Vector3 bossPos = boss->GetBaseModel()->GetPosition();
 
 	_bullet.angle += angleSpeed;
 	if (_bullet.angle >= 360) {

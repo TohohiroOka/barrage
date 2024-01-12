@@ -11,7 +11,7 @@ Boss1Move2::Boss1Move2()
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::standBy));
 
 	Vector3 target = boss->GetTargetPos();
-	startPos = boss->GetCenter()->GetPosition();
+	startPos = boss->GetBaseModel()->GetPosition();
 
 	Vector3 move = Vector3(startPos) - target;
 	move.y = 0.0f;
@@ -58,13 +58,13 @@ void Boss1Move2::UpMove()
 	const float rate = *timer.get() / maxTimer;
 
 	if (rate < 1.0f) {
-		Vector3 pos = Vector3(boss->GetCenter()->GetPosition());
+		Vector3 pos = Vector3(boss->GetBaseModel()->GetPosition());
 		pos.y = Easing::OutBack(startPos.y, 20.0f, rate);
-		boss->GetCenter()->SetPosition(pos);
+		boss->GetBaseModel()->SetPosition(pos);
 	} else if (*timer.get() > maxTimer + 10.0f) {
 		state = State::side;
 		timer->Reset();
-		startPos = boss->GetCenter()->GetPosition();
+		startPos = boss->GetBaseModel()->GetPosition();
 	}
 }
 
@@ -73,16 +73,16 @@ void Boss1Move2::SideMove()
 	timer->Update();
 	const float maxTimer = 100.0f;
 	const float rate = *timer.get() / maxTimer;
-	Vector3 pos = Vector3(boss->GetCenter()->GetPosition());
+	Vector3 pos = Vector3(boss->GetBaseModel()->GetPosition());
 
 	pos.x = Easing::OutCirc(startPos.x, endPos.x, rate);
 	pos.y = Easing::OutCirc(startPos.y, endPos.y, rate);
 	pos.z = Easing::OutCirc(startPos.z, endPos.z, rate);
 
-	boss->GetCenter()->SetPosition(pos);
+	boss->GetBaseModel()->SetPosition(pos);
 
 	if (rate < 1.0f) { return; }
 	isEnd = true;
 	timer->Reset();
-	startPos = boss->GetCenter()->GetPosition();
+	startPos = boss->GetBaseModel()->GetPosition();
 }

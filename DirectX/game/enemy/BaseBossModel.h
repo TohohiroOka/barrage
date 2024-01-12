@@ -49,12 +49,16 @@ public:
 	void SetMovement(const int _number) { fbxObject->SetUseAnimation(_number); };
 	void SetIsRoop(const bool _isRoop) { fbxObject->SetIsRoop(_isRoop); }
 	bool GetIsAnimationEnd() { return fbxObject->GetIsAnimationEnd(); }
-
+	void SetPosition(const Vector3& _pos) { bossPos = _pos; };
+	Vector3 GetPosition() { return bossPos; };
 
 protected:
 	
 	std::unique_ptr<FbxModel> model;
 	std::unique_ptr<Fbx> fbxObject;
 	std::vector<AttachInfo> attachInfo;
+
+	//ç¿ïW
+	Vector3 bossPos;
 };
 

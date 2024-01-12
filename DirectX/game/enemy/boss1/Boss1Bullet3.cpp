@@ -35,7 +35,7 @@ Boss1Bullet3::Boss1Bullet3()
 	hitTimer = std::make_unique<Engine::Timer>();
 
 	const float dist = 20.0f;
-	const Vector3 bossPos = boss->GetCenter()->GetPosition();
+	const Vector3 bossPos = boss->GetBaseModel()->GetPosition();
 	for (int i = 0; i < bulletNum; i++) {
 		float radius = DirectX::XMConvertToRadians(360.0f / 10.0f * float(i));
 		Vector3 vec = { cosf(radius) ,0.0f,sinf(radius) };

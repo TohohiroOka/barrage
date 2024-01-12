@@ -13,7 +13,7 @@ Boss1Move1::Boss1Move1()
 	boss->GetBaseModel()->AnimationReset();
 
 	Vector3 target = boss->GetTargetPos();
-	Vector3 bossPos = boss->GetCenter()->GetPosition();
+	Vector3 bossPos = boss->GetBaseModel()->GetPosition();
 
 	float angle = GetAngle({ target.x,target.z }, { bossPos.x,bossPos.z });
 	boss->GetCenter()->SetRotation({ 0.0f,angle ,0.0f });
@@ -44,8 +44,8 @@ void Boss1Move1::Update()
 		i = Easing::OutSine(5, 0, (rate - 0.5f) * 2.0f);
 	}
 
-	Vector3 pos = boss->GetCenter()->GetPosition();
-	boss->GetCenter()->SetPosition(pos + (moveV * i));
+	Vector3 pos = boss->GetBaseModel()->GetPosition();
+	boss->GetBaseModel()->SetPosition(pos + (moveV * i));
 
 	if (*moveTime.get() <= maxTimer) { return; }
 	isEnd = true;

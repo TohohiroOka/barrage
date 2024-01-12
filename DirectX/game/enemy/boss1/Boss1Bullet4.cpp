@@ -93,7 +93,7 @@ void Boss1Bullet4::Start()
 	boss->SetPlayerDirection();
 	if (!boss->GetBaseModel()->GetIsAnimationEnd()) { return; }
 
-	DirectX::XMFLOAT3 pos = boss->GetCenter()->GetPosition();
+	DirectX::XMFLOAT3 pos = boss->GetBaseModel()->GetPosition();
 	DirectX::XMFLOAT3 target = boss->GetTargetPos();
 
 	for (int i = 0; i < 2; i++) {

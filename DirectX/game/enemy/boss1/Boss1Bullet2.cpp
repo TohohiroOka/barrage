@@ -124,7 +124,7 @@ void Boss1Bullet2::End()
 
 void Boss1Bullet2::AddBullet(bool _easing)
 {
-	Vector3 bossPos = boss->GetCenter()->GetPosition();
+	Vector3 bossPos = boss->GetBaseModel()->GetPosition();
 	Vector3 targetPos = boss->GetTargetPos();
 
 	//Žû‘©”ÍˆÍ

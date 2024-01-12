@@ -14,7 +14,7 @@ Boss1Move3::Boss1Move3()
 
 	boss->GetBaseModel()->ChangesScale(int(Boss1Model::AttachName::LowerArm_R), 10.0f, { 4.0f, 10.0f, 4.0f });
 
-	startPos = boss->GetCenter()->GetPosition();
+	startPos = boss->GetBaseModel()->GetPosition();
 	endPos = boss->GetTargetPos();
 
 	state = State::start;
@@ -81,8 +81,7 @@ void Boss1Move3::Move()
 {
 	const float maxTimer = 60.0f;
 	const float rate = *timer.get() / maxTimer;
-	Vector3 pos = Vector3(boss->GetCenter()->GetPosition());
-	pos.y = 0.0f;
+	Vector3 pos = Vector3(boss->GetBaseModel()->GetPosition());
 
 	if (*timer.get() < maxTimer - 40.0f) {
 		boss->SetPlayerDirection();
@@ -92,7 +91,7 @@ void Boss1Move3::Move()
 	pos.x = Easing::OutCubic(startPos.x, endPos.x, rate);
 	pos.z = Easing::OutCubic(startPos.z, endPos.z, rate);
 
-	boss->GetCenter()->SetPosition(pos);
+	boss->GetBaseModel()->SetPosition(pos);
 
 	if (rate < 1.0f) { return; }
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
