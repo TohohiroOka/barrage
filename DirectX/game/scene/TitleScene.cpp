@@ -58,6 +58,16 @@ void TitleScene::Initialize()
 
 	ParticleManager::SetCamera(camera.get());
 
+	//吹き出しオブジェクト生成
+	for (int i = 0; i < 3; i++) {
+		std::string modelName = "speechBubble";
+		XMFLOAT3 pos = portals[i]->GetObject3d()->GetPosition();
+		const float upNum = 21;
+		pos.y += upNum;
+		const float scale = 10.0f;
+		speechBubbles[i] = std::make_unique<SpeechBubble>(camera.get(), modelName, pos, scale);
+	}
+
 	//行動入力設定
 	actionInputConfig = std::make_unique<ActionInputConfig>();
 
@@ -83,6 +93,7 @@ void TitleScene::Update()
 		field->Update(player->GetData()->pos, camera->GetEye());
 		for (int i = 0; i < 3; i++) {
 			portals[i]->Update(*player->GetData());
+			speechBubbles[i]->Update();
 		}
 
 		//当たり判定
@@ -129,6 +140,7 @@ void TitleScene::Draw(const int _cameraNum)
 	field->Draw();
 	for (int i = 0; i < 3; i++) {
 		portals[i]->Draw();
+		speechBubbles[i]->Draw();
 	}
 }
 

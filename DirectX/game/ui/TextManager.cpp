@@ -8,7 +8,7 @@ TextManager::TextManager()
 {
 	//枠スプライトを生成
 	const DirectX::XMFLOAT2 framePos = { (float)WindowApp::GetWindowWidth() / 2, 700 };
-	sentenceFrameSprite = Sprite::Create("white", framePos, { 0.5f, 0.5f }, { 0.3f, 0.3f, 0.3f, 0 });
+	sentenceFrameSprite = Sprite::Create("white", framePos, { 0.5f, 0.5f }, { 0.1f, 0.1f, 0.1f, 0 });
 	DirectX::XMFLOAT2 backSize = { 900, 220 };
 	sentenceFrameSprite->SetSize(backSize);
 

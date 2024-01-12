@@ -31,7 +31,7 @@ QuestionSystem::QuestionSystem(const std::vector<std::wstring>& choices)
 	}
 
 	//背景スプライト生成
-	backSprite = Sprite::Create("white", centerPos, { 0.5f, 0.5f }, { 0.3f, 0.3f, 0.3f, 0.8f });
+	backSprite = Sprite::Create("white", centerPos, { 0.5f, 0.5f }, { 0.1f, 0.1f, 0.1f, 0.8f });
 	DirectX::XMFLOAT2 backSize = { (CharSprite::charTextureSize - 2) * textScale * charNumMax + 80, (CharSprite::charTextureSize + 15) * (float)(choices.size()) * textScale + 30 };
 	//枠が小さすぎるとしょぼいので、最小値を設定
 	backSize.x = max(backSize.x, 350);
