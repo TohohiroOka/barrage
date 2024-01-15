@@ -15,9 +15,7 @@ CharSprite::CharSprite(const std::wstring& character, const DirectX::XMFLOAT2& p
 	//スプライト生成
 	charSprite = Sprite::Create(str, pos, { 0.5f, 0.5f });
 	charSprite->SetScale(scale);
-
-	//描画するかセット
-	this->isDraw = isDraw;
+	charSprite->SetIsDraw(isDraw);
 }
 
 CharSprite::~CharSprite()
@@ -26,15 +24,11 @@ CharSprite::~CharSprite()
 
 void CharSprite::Update()
 {
-	if (!isDraw) { return; }
-
 	charSprite->Update();
 }
 
 void CharSprite::Draw()
 {
-	if (!isDraw) { return; }
-
 	charSprite->Draw();
 }
 

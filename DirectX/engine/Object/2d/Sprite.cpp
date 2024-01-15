@@ -123,6 +123,9 @@ void Sprite::Update()
 
 void Sprite::Draw(const DrawMode _drawMode)
 {
+	//描画しない設定なら抜ける
+	if (!isDraw) { return; }
+
 	//テクスチャがセットされていなければ抜ける
 	if (texture->GetTexture() == "") { return; }
 
@@ -143,6 +146,9 @@ void Sprite::Draw(const DrawMode _drawMode)
 
 void Sprite::Draw(const Texture* _tex, const DrawMode _drawMode)
 {
+	//描画しない設定なら抜ける
+	if (!isDraw) { return; }
+
 	int modeNum = int(_drawMode);
 
 	ObjectBase::Draw(pipeline[modeNum]);

@@ -115,6 +115,8 @@ protected: // メンバ変数
 	XMFLOAT2 texLeftTop = { 0, 0 };
 	// テクスチャ幅、高さ
 	XMFLOAT2 texSize = { 500.0f, 500.0f };
+	//描画判定
+	bool isDraw = true;
 
 protected: // メンバ関数
 
@@ -140,6 +142,7 @@ public:
 	const XMFLOAT2& GetAnchorpoint() { return anchorpoint; }
 	bool GetIsFlipX() { return isFlipX; }
 	bool GetIsFlipY() { return isFlipY; }
+	bool GetIsDraw() { return isDraw; }
 	TextureManager* GetTexture() { return texture.get(); }
 	void SetTexture(const std::string& _name, bool isChangeSize = true) {
 		texture->SetTexture(_name);
@@ -159,4 +162,5 @@ public:
 	void SetAnchorpoint(const XMFLOAT2& _anchorpoint) { this->anchorpoint = _anchorpoint; }
 	void SetIsFlipX(bool _isFlipX) { this->isFlipX = _isFlipX; };
 	void SetIsFlipY(bool _isFlipY) { this->isFlipY = _isFlipY; };
+	void SetIsDraw(bool _isDraw) { this->isDraw = _isDraw; }
 };

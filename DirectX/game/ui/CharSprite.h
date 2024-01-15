@@ -20,12 +20,8 @@ public: //ƒƒ“ƒoŠÖ”
 	/// </summary>
 	void Draw();
 
-	//getter
-	bool GetIsDraw() { return isDraw; }
-
 	//setter
 	const std::wstring& GetCharacter() { return character; }
-	void SetIsDraw(bool isDraw) { this->isDraw = isDraw; }
 
 private: //ƒƒ“ƒoŠÖ”
 	/// <summary>
@@ -50,6 +46,4 @@ private: //ƒƒ“ƒo•Ï”
 	std::unique_ptr<Sprite> charSprite;
 	//•¶š
 	std::wstring character;
-	//•`‰æ‚·‚é‚©
-	bool isDraw = true;
 };

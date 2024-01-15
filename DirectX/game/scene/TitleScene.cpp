@@ -2,6 +2,7 @@
 #include "Input/DirectInput.h"
 #include "Input/XInputManager.h"
 #include "engine/Scene/SceneManager.h"
+#include "scene/TutorialScene.h"
 #include "scene/Scene1.h"
 #include "cutscene/SceneChangeDirection.h"
 #include "Audio/Audio.h"
@@ -37,8 +38,8 @@ void TitleScene::Initialize()
 	const float stageSize = GameHelper::Instance()->GetStageSize();
 	const float portalPosY = 11.0f;
 	portals[0] = std::make_unique<Portal>(Vector3{ stageSize * 0.75f, portalPosY, stageSize / 2 }, gameScene);
-	TitleScene* titleScene = new TitleScene;
-	portals[1] = std::make_unique<Portal>(Vector3{ stageSize * 0.25f, portalPosY, stageSize / 2 }, titleScene);
+	TutorialScene* tutorialScene = new TutorialScene;
+	portals[1] = std::make_unique<Portal>(Vector3{ stageSize * 0.25f, portalPosY, stageSize / 2 }, tutorialScene);
 	portals[2] = std::make_unique<Portal>(Vector3{ stageSize / 2, portalPosY, stageSize * 0.75f }, nullptr);
 
 	//カメラ生成

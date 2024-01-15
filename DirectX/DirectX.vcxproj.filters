@@ -551,6 +551,9 @@
     <ClCompile Include="game\titleObject\SpeechBubble.cpp">
       <Filter>ゲームシステム\TitleObject</Filter>
     </ClCompile>
+    <ClCompile Include="game\scene\TutorialScene.cpp">
+      <Filter>ゲームシステム\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -1130,6 +1133,9 @@
     </ClInclude>
     <ClInclude Include="game\titleObject\SpeechBubble.h">
       <Filter>ゲームシステム\TitleObject</Filter>
+    </ClInclude>
+    <ClInclude Include="game\scene\TutorialScene.h">
+      <Filter>ゲームシステム\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
