@@ -6,6 +6,9 @@ CharSprite::CharSprite(const std::wstring& character, const DirectX::XMFLOAT2& p
 {
 	//•¶Žš‚ð•Û‘¶‚µ‚Ä‚¨‚­
 	this->character = character;
+	//ŽqƒNƒ‰ƒX‚ÅL""‚ðÝ’è‚·‚é‚±‚Æ‚ª‚ ‚é‚½‚ß”²‚¯‚é
+	if (character == L"") { return; }
+
 	//wstringŒ^‚ðstringŒ^‚É•ÏŠ·
 	std::string str = WStringToString(character);
 
@@ -15,7 +18,9 @@ CharSprite::CharSprite(const std::wstring& character, const DirectX::XMFLOAT2& p
 	//ƒXƒvƒ‰ƒCƒg¶¬
 	charSprite = Sprite::Create(str, pos, { 0.5f, 0.5f });
 	charSprite->SetScale(scale);
-	charSprite->SetIsDraw(isDraw);
+
+	//•`‰æ‚·‚é‚©ƒZƒbƒg
+	this->isDraw = isDraw;
 }
 
 CharSprite::~CharSprite()
@@ -24,11 +29,17 @@ CharSprite::~CharSprite()
 
 void CharSprite::Update()
 {
+	//•`‰æ‚µ‚È‚¢Ý’è‚È‚ç”²‚¯‚é
+	if (!isDraw) { return; }
+
 	charSprite->Update();
 }
 
 void CharSprite::Draw()
 {
+	//•`‰æ‚µ‚È‚¢Ý’è‚È‚ç”²‚¯‚é
+	if (!isDraw) { return; }
+
 	charSprite->Draw();
 }
 

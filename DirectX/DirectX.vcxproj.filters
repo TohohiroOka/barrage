@@ -554,6 +554,9 @@
     <ClCompile Include="game\scene\TutorialScene.cpp">
       <Filter>ゲームシステム\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="game\ui\CharActionInputSprite.cpp">
+      <Filter>ゲームシステム\UI\Text</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -1136,6 +1139,9 @@
     </ClInclude>
     <ClInclude Include="game\scene\TutorialScene.h">
       <Filter>ゲームシステム\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="game\ui\CharActionInputSprite.h">
+      <Filter>ゲームシステム\UI\Text</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

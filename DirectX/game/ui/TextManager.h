@@ -3,6 +3,7 @@
 #include "QuestionSystem.h"
 #include "TextData.h"
 #include "Singleton.h"
+#include "CharActionInputSprite.h"
 
 /// <summary>
 /// テキスト管理
@@ -136,7 +137,7 @@ private: //メンバ変数
 	std::unique_ptr<Sprite> sentenceFrameSprite;
 
 	//次のテキストを表示させるためのボタンスプライト
-	std::unique_ptr<Sprite> inputNextTextSprite;
+	std::unique_ptr<CharActionInputSprite> inputNextTextSprite;
 
 	//文章
 	Sentence sentence;

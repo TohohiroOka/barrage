@@ -177,7 +177,7 @@ void ActionInputConfig::Initialize()
 		//各入力種類の要素数
 		int loopNum = 0;
 		if (i == CameraRota) { loopNum = CameraRotaTypeNum; }
-		else { loopNum = GameInputManager::InputActionNum; }
+		else { loopNum = GameInputManager::Lockon + 1; }
 
 		for (int j = 0; j < loopNum; j++) {
 			//入力スプライト初期化
@@ -323,7 +323,8 @@ void ActionInputConfig::Reset()
 void ActionInputConfig::SelectModeUpdate()
 {
 	//選択入力形態変更
-	if (selectInputType < CameraRota && (DirectInput::GetInstance()->TriggerKey(DIK_RIGHT) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_RIGHT))) {
+	if (selectInputType < CameraRota && (DirectInput::GetInstance()->TriggerKey(DIK_RIGHT) ||
+		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_RIGHT) || XInputManager::GetInstance()->TriggerLeftStickX(false))) {
 		//選択中のスプライトの枠の色を元に戻す
 		DirectX::XMFLOAT4 returnColor = normalColor;
 		if (selectInputType == Key && !GameInputManager::GetKeyInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
@@ -342,7 +343,8 @@ void ActionInputConfig::SelectModeUpdate()
 		//新たに選択する枠の色を変更
 		frameSprites[selectInputType][selectAction]->SetColor(selectColor);
 	}
-	else if (selectInputType > Key && (DirectInput::GetInstance()->TriggerKey(DIK_LEFT) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_LEFT))) {
+	else if (selectInputType > Key && (DirectInput::GetInstance()->TriggerKey(DIK_LEFT) ||
+		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_LEFT) || XInputManager::GetInstance()->TriggerLeftStickX(true))) {
 		//選択中のスプライトの枠の色を元に戻す
 		DirectX::XMFLOAT4 returnColor = normalColor;
 		if (selectInputType == Key && !GameInputManager::GetKeyInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
@@ -363,7 +365,8 @@ void ActionInputConfig::SelectModeUpdate()
 	}
 
 	//選択行動変更
-	if (selectAction > 0 && (DirectInput::GetInstance()->TriggerKey(DIK_UP) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_UP))) {
+	if (selectAction > 0 && (DirectInput::GetInstance()->TriggerKey(DIK_UP) ||
+		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_UP) || XInputManager::GetInstance()->TriggerLeftStickY(true))) {
 		//選択中のスプライトの枠の色を元に戻す
 		DirectX::XMFLOAT4 returnColor = normalColor;
 		if (selectInputType == Key && !GameInputManager::GetKeyInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }
@@ -376,7 +379,8 @@ void ActionInputConfig::SelectModeUpdate()
 		//新たに選択する枠の色を変更
 		frameSprites[selectInputType][selectAction]->SetColor(selectColor);
 	}
-	else if (selectAction < (int)configSprites[selectInputType].size() - 1 && (DirectInput::GetInstance()->TriggerKey(DIK_DOWN) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_DOWN))) {
+	else if (selectAction < (int)configSprites[selectInputType].size() - 1 && (DirectInput::GetInstance()->TriggerKey(DIK_DOWN) ||
+		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_DOWN) || XInputManager::GetInstance()->TriggerLeftStickY(false))) {
 		//選択中のスプライトの枠の色を元に戻す
 		DirectX::XMFLOAT4 returnColor = normalColor;
 		if (selectInputType == Key && !GameInputManager::GetKeyInputActionData(selectAction).isChangeInput) { returnColor = noChangeColor; }

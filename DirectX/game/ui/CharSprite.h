@@ -13,15 +13,20 @@ public: //メンバ関数
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	virtual void Update();
 
 	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw();
 
-	//setter
+	//getter
+	Sprite* GetSprite() { return charSprite.get(); }
+	bool GetIsDraw() { return isDraw; }
 	const std::wstring& GetCharacter() { return character; }
+
+	//setter
+	void SetIsDraw(bool isDraw) { this->isDraw = isDraw; }
 
 private: //メンバ関数
 	/// <summary>
@@ -41,9 +46,11 @@ public: //静的メンバ変数(取得しやすいようにpublic)
 	//文字テクスチャの大きさ
 	static const float charTextureSize;
 
-private: //メンバ変数
+protected: //メンバ変数
 	//文字スプライト
 	std::unique_ptr<Sprite> charSprite;
 	//文字
 	std::wstring character;
+	//描画するか
+	bool isDraw = true;
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include "CharSprite.h"
+#include "system/GameInputManager.h"
 
 /// <summary>
 /// テキスト制作システム
@@ -23,6 +24,14 @@ public: //メンバ関数
 	//getter
 	int GetTextLength() { return (int)charSprites.size(); }
 	CharSprite* GetCharSprite(int num) { return charSprites[num].get(); }
+
+private: //メンバ関数
+	/// <summary>
+	/// 行動入力コマンドを解析
+	/// </summary>
+	/// <param name="command">コマンド</param>
+	/// <returns>行動入力</returns>
+	GameInputManager::InputAction ActionInputCommand(const std::wstring& command);
 
 private: //メンバ変数
 	//文字スプライト

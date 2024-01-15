@@ -128,7 +128,7 @@ private: //メンバ変数
 	std::unique_ptr<Sprite> backSprite;
 
 	//行動名スプライト
-	std::array<std::unique_ptr<Sprite>, GameInputManager::InputActionNum> actionNameSprites;
+	std::array<std::unique_ptr<Sprite>, GameInputManager::Lockon + 1> actionNameSprites;
 	//キー・ボタンスプライト(要素2は、カメラ回転用なので要素は2個)
 	std::array<std::vector<std::unique_ptr<Sprite>>, InputTypeNum> configSprites;
 	//フレームスプライト

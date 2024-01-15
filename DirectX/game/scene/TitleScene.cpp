@@ -249,17 +249,17 @@ void TitleScene::IntoPortalCheck()
 		if (TextManager::Instance()->GetIsSentenceEnd(SentenceData::SentenceName::GO_TO_GAME_CHECK) ||
 			TextManager::Instance()->GetIsSentenceEnd(SentenceData::SentenceName::GO_TO_TUTORIAL_CHECK) ||
 			TextManager::Instance()->GetIsSentenceEnd(SentenceData::SentenceName::EXIT_GAME_CHECK)) {
-			TextManager::Instance()->ChoicesCreate(ChoicesData::ChoicesName::KANSAI);
+			TextManager::Instance()->ChoicesCreate(ChoicesData::ChoicesName::YES_OR_NO);
 		}
 
 		//選択肢の選択肢を終えていれば
 		if (TextManager::Instance()->GetIsChoiceEnd()) {
 			//選択が0番ならポータルに入る行動を開始
-			if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::KANSAI) == 0) {
+			if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::YES_OR_NO) == 0) {
 				IntoPortalStart(); 
 			}
 			//選択が1番なら元に戻る
-			else if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::KANSAI) == 1) {
+			else if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::YES_OR_NO) == 1) {
 				selectPortal = nullptr;
 
 				//プレイヤーとカメラ行動の入力を全復活させる

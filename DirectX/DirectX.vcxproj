@@ -216,6 +216,7 @@
     <ClCompile Include="game\system\GameInputManager.cpp" />
     <ClCompile Include="game\titleObject\Portal.cpp" />
     <ClCompile Include="game\titleObject\SpeechBubble.cpp" />
+    <ClCompile Include="game\ui\CharActionInputSprite.cpp" />
     <ClCompile Include="game\ui\CharSprite.cpp" />
     <ClCompile Include="game\ui\ChoiceEmphasisDrawer.cpp" />
     <ClCompile Include="game\ui\GameOver.cpp" />
@@ -564,6 +565,7 @@
     <ClInclude Include="game\system\Sound.h" />
     <ClInclude Include="game\titleObject\Portal.h" />
     <ClInclude Include="game\titleObject\SpeechBubble.h" />
+    <ClInclude Include="game\ui\CharActionInputSprite.h" />
     <ClInclude Include="game\ui\CharSprite.h" />
     <ClInclude Include="game\ui\ChoiceEmphasisDrawer.h" />
     <ClInclude Include="game\ui\GameOver.h" />

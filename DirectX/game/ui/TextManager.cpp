@@ -13,11 +13,7 @@ TextManager::TextManager()
 	sentenceFrameSprite->SetSize(backSize);
 
 	//次のテキストを生成する入力スプライトを生成
-	std::string textureName;
-	if (XInputManager::GetInstance()->ControllerConnectCheck()) { textureName = "pad_" + std::to_string(XInputManager::PAD_A); }
-	else { textureName = "key_" + std::to_string(DIK_SPACE); }
-	inputNextTextSprite = Sprite::Create(textureName, { 1150, 775 }, { 0.5, 0.5f });
-	inputNextTextSprite->SetScale(1.0f);
+	inputNextTextSprite = std::make_unique<CharActionInputSprite>(GameInputManager::InputAction::Select, DirectX::XMFLOAT2{ 1150, 775 }, 1.0f, true);
 
 	//各状態の内容をセット
 	func.emplace_back([this] { return UpdateSentenceNonePhase(); });
@@ -42,11 +38,6 @@ void TextManager::Update()
 	//入力スプライト描画
 	if (sentence.text && !choices.question) {
 		if (sentence.text->GetIsAllWrite()) {
-			std::string textureName;
-			if (XInputManager::GetInstance()->ControllerConnectCheck()) { textureName = "pad_" + std::to_string(XInputManager::PAD_A); }
-			else { textureName = "key_" + std::to_string(DIK_SPACE); }
-			inputNextTextSprite->SetTexture(textureName);
-			inputNextTextSprite->SetScale(1.f);
 			inputNextTextSprite->Update();
 		}
 	}

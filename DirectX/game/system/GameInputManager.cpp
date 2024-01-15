@@ -22,7 +22,7 @@ void GameInputManager::Initialize()
 	keyInputActions[CameraLeftRota] = { DIK_LEFT, false };
 	keyInputActions[CameraRightRota] = { DIK_RIGHT, false };
 	keyInputActions[Lockon] = { DIK_X, true };
-
+	keyInputActions[Select] = { DIK_SPACE, false };
 
 	//パッド入力初期設定
 	const int LStickNum = 16; //ボタン入力でない用の仮置きボタン番号(左スティック：16)
@@ -40,14 +40,16 @@ void GameInputManager::Initialize()
 	padInputActions[CameraLeftRota] = { RStickNum, false };
 	padInputActions[CameraRightRota] = { RStickNum, false };
 	padInputActions[Lockon] = { XInputManager::PAD_RIGHT_STICK_PUSH, true };
+	padInputActions[Select] = { XInputManager::PAD_A, true };
 }
 
 bool GameInputManager::ChangeInputKey(InputAction inputAction, BYTE key)
 {
 	//変更後のキーが他のキーと被りがないかをチェック
-	for (auto& keyInputAction : keyInputActions) {
+	for (int i = 0; i < InputActionNum; i++) {
+		if (i == (int)Select) { continue; }
 		if (key == keyInputActions[inputAction].key) { continue; }
-		if (key == keyInputAction.key) { return false; }
+		if (key == keyInputActions[i].key) { return false; }
 	}
 
 	//指定したキーを割り当て
@@ -59,9 +61,10 @@ bool GameInputManager::ChangeInputKey(InputAction inputAction, BYTE key)
 bool GameInputManager::ChangeInputPadButton(InputAction inputAction, int padButton)
 {
 	//変更後のキーが他のキーと被りがないかをチェック
-	for (auto& padInputAction : padInputActions) {
+	for (int i = 0; i < InputActionNum; i++) {
+		if (i == (int)Select) { continue; }
 		if (padButton == padInputActions[inputAction].padButton) { continue; }
-		if (padButton == padInputAction.padButton) { return false; }
+		if (padButton == padInputActions[i].padButton) { return false; }
 	}
 
 	//指定したキーを割り当て
