@@ -1,7 +1,7 @@
 #pragma once
 #include "../Object/3d/InstanceObject.h"
 #include "../Object/3d/PrimitiveObject3D.h"
-#include "../BaseAction.h"
+#include "../game/enemy/BaseAction.h"
 #include <functional>
 
 /// <summary>

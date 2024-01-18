@@ -79,6 +79,11 @@ public: //ƒƒ“ƒoŠÖ”
 	/// </summary>
 	void ChoicesDrawEnd();
 
+	/// <summary>
+	/// I—¹ˆ—
+	/// </summary>
+	void Finalize();
+
 	//getter
 	bool GetIsTextDraw() { return sentence.text || choices.question; }
 	const Sentence& GetSentece() { return sentence; }

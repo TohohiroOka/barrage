@@ -41,6 +41,8 @@ public:
 
 	virtual void IsAttachEffect(int _num, bool _isAlive) {};
 
+	virtual Vector3 GetPartsPos(const std::string& _num) = 0;
+
 	DirectX::XMFLOAT3 GetModelMove() { return fbxObject->GetModelMove(); }
 	void AnimationReset() { fbxObject->AnimationReset(); }
 	void SetAnimation(const int _animationNumber) { fbxObject->SetUseAnimation(_animationNumber); }

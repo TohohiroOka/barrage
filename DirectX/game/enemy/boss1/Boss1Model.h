@@ -1,6 +1,5 @@
 #pragma once
 #include "../BaseBossModel.h"
-#include "effect/SlashEffect.h"
 
 /// <summary>
 /// 直線移動（イージングあり）
@@ -74,9 +73,12 @@ public:
 
 	void ChangeInfo();
 
+	Vector3 GetPartsPos(const std::string& _num)override {
+		return fbxObject->GetAttachPos(_num);
+	};
+
 private:
 
 	std::array<std::unique_ptr<Model>, int(ObjectType::size)> objModel;
-	std::unique_ptr<SlashEffect> swordEffect;
 	std::array<bool, int(EffectName::size)>effectAlive;
 };

@@ -68,7 +68,7 @@ void SceneChangeDirection::PlayFadeOut()
 	isPlayingDirection = true;
 }
 
-void SceneChangeDirection::Delete()
+void SceneChangeDirection::Finalize()
 {
 	fadeSprite.reset();
 }
