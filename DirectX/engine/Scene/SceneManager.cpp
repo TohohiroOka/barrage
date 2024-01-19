@@ -49,7 +49,7 @@ void SceneManager::SetPipeline(const std::string& name,std::vector<GraphicsPipel
 
 SceneManager::~SceneManager()
 {
-	SceneChangeDirection::Instance()->Delete();
+	SceneChangeDirection::Instance()->Finalize();
 	scene.reset();
 }
 

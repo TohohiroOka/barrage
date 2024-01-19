@@ -53,7 +53,7 @@ void PlayerActionMoveNormal::Move()
 	Dash();
 
 	//“ü—Í‚ª‚ ‚ê‚Î
-	const float moveAccel = 0.025f * GameHelper::Instance()->GetGameSpeed();
+	const float moveAccel = 0.05f * GameHelper::Instance()->GetGameSpeed();
 	if (player->GetData()->isMoveKey || player->GetData()->isMovePad) {
 		player->GetData()->moveSpeed += moveAccel;
 		if (isDash) { player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, dashSpeedMax); }
