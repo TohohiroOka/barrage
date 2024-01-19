@@ -15,7 +15,7 @@ PlayerSword::PlayerSword(Fbx* parent)
 	matRot *= XMMatrixRotationZ(XMConvertToRadians(0.0f));
 	matRot *= XMMatrixRotationX(XMConvertToRadians(0.0f));
 	matRot *= XMMatrixRotationY(XMConvertToRadians(0.0f));
-	DirectX::XMMATRIX matTrans = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+	DirectX::XMMATRIX matTrans = XMMatrixTranslation(0.0f, -0.15f, 0.0f);
 	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
 	world *= matScale;
 	world *= matRot;
