@@ -138,6 +138,12 @@ void TextManager::ChoicesDrawEnd()
 	choices.question.reset();
 }
 
+void TextManager::Finalize()
+{
+	sentenceFrameSprite.reset();
+	inputNextTextSprite.reset();
+}
+
 void TextManager::UpdateSentenceNonePhase()
 {
 	//なにもしないフェーズ

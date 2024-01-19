@@ -1,7 +1,7 @@
 #pragma once
-#include "../BaseAction.h"
+#include "../game/enemy/BaseAction.h"
 #include <functional>
-#include "Object/3d/Object3d.h"
+#include "effect/SlashEffect.h"
 
 /// <summary>
 /// ƒvƒŒƒCƒ„[‚É‹ß‚Ã‚¢‚ÄUŒ‚
@@ -64,7 +64,10 @@ private:
 	State state;
 	std::vector<std::function<void()>> func_;
 
-	std::unique_ptr<Model> cube;
-	std::unique_ptr<Object3d> object;
+	std::unique_ptr<SlashEffect> swordEffect;
+	Vector3 swordPos;
+
+	//Õ“Ë‚µ‚½Œã
+	bool isHit;
 };
 

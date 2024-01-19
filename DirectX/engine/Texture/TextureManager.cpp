@@ -62,9 +62,9 @@ void TextureManager::SceneFinalize()
 
 void TextureManager::Finalize()
 {
-	for (auto itr = texture.begin(); itr != texture.end(); ++itr)
+	for (auto itr = texture.begin(); itr != texture.end();)
 	{
-		(*itr).second.instance.reset();
+		itr = texture.erase(itr);
 	}
 	texture.clear();
 }

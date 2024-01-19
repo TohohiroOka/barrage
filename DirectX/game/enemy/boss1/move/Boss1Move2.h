@@ -1,5 +1,5 @@
 #pragma once
-#include "../BaseAction.h"
+#include "../game/enemy/BaseAction.h"
 #include <DirectXMath.h>
 #include "../Math/Timer.h"
 #include <functional>

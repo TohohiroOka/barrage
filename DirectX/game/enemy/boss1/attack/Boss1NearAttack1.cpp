@@ -1,7 +1,7 @@
 #include "Boss1NearAttack1.h"
-#include "../boss1/Boss1Model.h"
-#include "../BaseBoss.h"
 #include "GameHelper.h"
+#include "../Boss1Model.h"
+#include "../game/enemy/BaseBoss.h"
 #include "../Math/Easing/Easing.h"
 
 using namespace DirectX;

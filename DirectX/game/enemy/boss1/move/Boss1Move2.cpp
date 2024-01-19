@@ -1,6 +1,6 @@
 #include "Boss1Move2.h"
-#include "../boss1/Boss1Model.h"
-#include "../BaseBoss.h"
+#include "../Boss1Model.h"
+#include "../game/enemy/BaseBoss.h"
 #include "GameHelper.h"
 #include "Math/Easing/Easing.h"
 

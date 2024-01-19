@@ -164,6 +164,12 @@
     <Filter Include="ゲームシステム\UI\Text">
       <UniqueIdentifier>{b9b133cc-1c3d-4b44-a3f2-efe84c6da5d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ゲームシステム\Enemy\Boss1\move">
+      <UniqueIdentifier>{0feb9fa7-70fc-434d-a822-f3115f413cb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ゲームシステム\Enemy\Boss1\attack">
+      <UniqueIdentifier>{f2176a48-943d-46b2-952e-dbbcff939882}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -349,9 +355,6 @@
     <ClCompile Include="game\enemy\BaseBoss.cpp">
       <Filter>ゲームシステム\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="game\enemy\boss1\Boss1NearAttack1.cpp">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
-    </ClCompile>
     <ClCompile Include="game\enemy\boss1\Boss1.cpp">
       <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClCompile>
@@ -363,9 +366,6 @@
     </ClCompile>
     <ClCompile Include="game\field\Field.cpp">
       <Filter>ゲームシステム\Field</Filter>
-    </ClCompile>
-    <ClCompile Include="game\enemy\boss1\Boss1Move1.cpp">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClCompile>
     <ClCompile Include="engine\Math\DirectXMathHelper.cpp">
       <Filter>Engine\Math</Filter>
@@ -379,20 +379,8 @@
     <ClCompile Include="engine\Camera\LightCamera.cpp">
       <Filter>Engine\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="game\enemy\boss1\Boss1Bullet1.cpp">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
-    </ClCompile>
-    <ClCompile Include="game\enemy\boss1\Boss1Bullet2.cpp">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
-    </ClCompile>
     <ClCompile Include="game\enemy\BaseBullet.cpp">
       <Filter>ゲームシステム\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="game\enemy\boss1\Boss1Bullet3.cpp">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
-    </ClCompile>
-    <ClCompile Include="game\enemy\boss1\Boss1Move2.cpp">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClCompile>
     <ClCompile Include="game\scene\TitleScene.cpp">
       <Filter>ゲームシステム\Scene</Filter>
@@ -466,23 +454,14 @@
     <ClCompile Include="game\player\PlayerActionJump.cpp">
       <Filter>ゲームシステム\Player\Action</Filter>
     </ClCompile>
-    <ClCompile Include="game\enemy\boss1\Boss1Wince.cpp">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
-    </ClCompile>
     <ClCompile Include="game\cutscene\SceneChangeDirection.cpp">
       <Filter>ゲームシステム\cutScene</Filter>
     </ClCompile>
     <ClCompile Include="game\ui\ChoiceEmphasisDrawer.cpp">
       <Filter>ゲームシステム\UI</Filter>
     </ClCompile>
-    <ClCompile Include="game\enemy\boss1\Boss1Move3.cpp">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
-    </ClCompile>
     <ClCompile Include="game\player\PlayerActionDead.cpp">
       <Filter>ゲームシステム\Player\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="game\enemy\boss1\Boss1Bullet4.cpp">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClCompile>
     <ClCompile Include="game\effect\AllHitEffect.cpp">
       <Filter>ゲームシステム\Effect</Filter>
@@ -498,9 +477,6 @@
     </ClCompile>
     <ClCompile Include="game\effect\SlashEffect.cpp">
       <Filter>ゲームシステム\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="game\enemy\boss1\Boss1HalfAttack.cpp">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClCompile>
     <ClCompile Include="game\ui\LockonUI.cpp" />
     <ClCompile Include="engine\Texture\TextureManager.cpp">
@@ -550,6 +526,36 @@
     </ClCompile>
     <ClCompile Include="game\titleObject\SpeechBubble.cpp">
       <Filter>ゲームシステム\TitleObject</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\Boss1Wince.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\attack\Boss1Bullet3.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\attack\Boss1Bullet4.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\attack\Boss1HalfAttack.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\attack\Boss1NearAttack1.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\attack\Boss1Bullet1.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\attack\Boss1Bullet2.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\move\Boss1Move2.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1\move</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\move\Boss1Move3.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1\move</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\boss1\move\Boss1Move1.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1\move</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -920,17 +926,11 @@
     <ClInclude Include="game\enemy\boss1\Boss1.h">
       <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClInclude>
-    <ClInclude Include="game\enemy\boss1\Boss1NearAttack1.h">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
-    </ClInclude>
     <ClInclude Include="engine\Camera\DebugCamera.h">
       <Filter>Engine\Camera</Filter>
     </ClInclude>
     <ClInclude Include="game\field\Field.h">
       <Filter>ゲームシステム\Field</Filter>
-    </ClInclude>
-    <ClInclude Include="game\enemy\boss1\Boss1Move1.h">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClInclude>
     <ClInclude Include="engine\Math\DirectXMathHelper.h">
       <Filter>Engine\Math</Filter>
@@ -944,20 +944,8 @@
     <ClInclude Include="engine\Camera\LightCamera.h">
       <Filter>Engine\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="game\enemy\boss1\Boss1Bullet1.h">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
-    </ClInclude>
-    <ClInclude Include="game\enemy\boss1\Boss1Bullet2.h">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
-    </ClInclude>
     <ClInclude Include="game\enemy\BaseBullet.h">
       <Filter>ゲームシステム\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="game\enemy\boss1\Boss1Bullet3.h">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
-    </ClInclude>
-    <ClInclude Include="game\enemy\boss1\Boss1Move2.h">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClInclude>
     <ClInclude Include="engine\Math\Timer.h">
       <Filter>Engine\Math</Filter>
@@ -1037,23 +1025,14 @@
     <ClInclude Include="game\player\PlayerActionJump.h">
       <Filter>ゲームシステム\Player\Action</Filter>
     </ClInclude>
-    <ClInclude Include="game\enemy\boss1\Boss1Wince.h">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
-    </ClInclude>
     <ClInclude Include="game\cutscene\SceneChangeDirection.h">
       <Filter>ゲームシステム\cutScene</Filter>
     </ClInclude>
     <ClInclude Include="game\player\PlayerActionDead.h">
       <Filter>ゲームシステム\Player\Action</Filter>
     </ClInclude>
-    <ClInclude Include="game\enemy\boss1\Boss1Move3.h">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
-    </ClInclude>
     <ClInclude Include="game\ui\ChoiceEmphasisDrawer.h">
       <Filter>ゲームシステム\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="game\enemy\boss1\Boss1Bullet4.h">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClInclude>
     <ClInclude Include="game\effect\AllHitEffect.h">
       <Filter>ゲームシステム\Effect</Filter>
@@ -1072,9 +1051,6 @@
     </ClInclude>
     <ClInclude Include="game\effect\SlashEffect.h">
       <Filter>ゲームシステム\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="game\enemy\boss1\Boss1HalfAttack.h">
-      <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClInclude>
     <ClInclude Include="game\ui\LockonUI.h" />
     <ClInclude Include="engine\Texture\TextureManager.h">
@@ -1130,6 +1106,36 @@
     </ClInclude>
     <ClInclude Include="game\titleObject\SpeechBubble.h">
       <Filter>ゲームシステム\TitleObject</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\Boss1Wince.h">
+      <Filter>ゲームシステム\Enemy\Boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\attack\Boss1Bullet2.h">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\attack\Boss1Bullet3.h">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\attack\Boss1Bullet4.h">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\attack\Boss1HalfAttack.h">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\attack\Boss1NearAttack1.h">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\attack\Boss1Bullet1.h">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\move\Boss1Move2.h">
+      <Filter>ゲームシステム\Enemy\Boss1\move</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\move\Boss1Move3.h">
+      <Filter>ゲームシステム\Enemy\Boss1\move</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\move\Boss1Move1.h">
+      <Filter>ゲームシステム\Enemy\Boss1\move</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

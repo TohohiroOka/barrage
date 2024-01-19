@@ -1,7 +1,7 @@
 #include "Boss1HalfAttack.h"
-#include "../boss1/Boss1Model.h"
 #include "GameHelper.h"
-#include "../BaseBoss.h"
+#include "../Boss1Model.h"
+#include "../game/enemy/BaseBoss.h"
 #include "Math/Easing/Easing.h"
 
 Boss1HalfAttack::Boss1HalfAttack()
