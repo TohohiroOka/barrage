@@ -17,7 +17,7 @@ public:
 
 	void Draw();
 
-	void StartLockOnAnimation(const DirectX::XMFLOAT2 *enemyPos);
+	void StartLockOnAnimation(const DirectX::XMFLOAT3 *enemyPos);
 
 	void EndLockOnDraw() { isDraw = false; }
 
@@ -30,7 +30,7 @@ private:
 	Camera* camera;
 	
 	//敵座標（参照）
-	const DirectX::XMFLOAT2 *position;
+	const DirectX::XMFLOAT3 *position;
 
 	//現フレーム
 	int frame = 0;

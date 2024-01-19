@@ -519,7 +519,7 @@ void Scene1::CollisionCheck()
 				//ロックオン対象を確定させる
 				camera->Lockon(boss->GetCenter());
 				//ロックオンUI表示
-				lockonUI->StartLockOnAnimation(&boss->GetCenter()->GetScreenPosition());
+				lockonUI->StartLockOnAnimation(&boss->GetCenter()->GetPosition());
 			}
 		}
 	}

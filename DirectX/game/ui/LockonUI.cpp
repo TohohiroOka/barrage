@@ -2,6 +2,8 @@
 
 #include "Math/Easing/Easing.h"
 #include "engine/Camera/Camera.h"
+#include "WindowApp.h"
+#include "Math/Matrix4.h"
 
 #include <DirectXMath.h>
 
@@ -32,12 +34,34 @@ void LockonUI::Update()
 		const float beginScale = 7.0f;
 		const float endScale = 1.0f;
 		float nowScale = Easing::InQuad(beginScale, endScale, scaleRate);
-		lockonSprite->SetSize({ 32.f * nowScale,32.f * nowScale });
-		lockonSprite->SetColor({ scaleRate,scaleRate,scaleRate,scaleRate });
+		lockonSprite->SetSize({ 24.f * nowScale,24.f * nowScale });
+		lockonSprite->SetColor({ 1,1,1,scaleRate });
 	}
 
 	//座標更新
-	if (position != nullptr) { lockonSprite->SetPosition(*position); }
+	if (position != nullptr) { 
+		//ビュー行列と射影行列
+		DirectX::XMMATRIX matview = camera->GetView(), matProjection = camera->GetProjection();
+		//ビューポート行列
+		DirectX::XMMATRIX matViewport = {
+			{(float)WindowApp::GetWindowWidth() / 2, 0, 0, 0 },
+			{0, -(float)WindowApp::GetWindowHeight() / 2, 0, 0},
+			{0, 0, 1, 0},
+			{(float)WindowApp::GetWindowWidth() / 2, (float)WindowApp::GetWindowHeight() / 2, 0, 1}
+		};
+		//ビューと射影を計算
+		DirectX::XMFLOAT3 tmp = *position;
+		tmp = transform(tmp, matview);
+		tmp = transform(tmp, matProjection);
+		tmp.x /= tmp.z;
+		tmp.y /= tmp.z;
+		tmp.z /= tmp.z;
+		DirectX::XMFLOAT3 screenPos = transform(tmp, matViewport);
+
+		lockonSprite->SetPosition({ screenPos.x,screenPos.y });
+	}
+
+
 
 	//時間管理
 	if (frame < DISPLAY_FRAME) {
@@ -49,14 +73,13 @@ void LockonUI::Update()
 
 void LockonUI::Draw()
 {
-	//if (isDraw) {
-	//	lockOnObject->Draw(ObjectBase::DrawMode::add);
-	//}
+	if (isDraw) {
+		lockonSprite->Draw();
+	}
 
-	lockonSprite->Draw();
 }
 
-void LockonUI::StartLockOnAnimation(const DirectX::XMFLOAT2 *enemyPos)
+void LockonUI::StartLockOnAnimation(const DirectX::XMFLOAT3 *enemyPos)
 {
 	frame = 0;
 	position = enemyPos;
