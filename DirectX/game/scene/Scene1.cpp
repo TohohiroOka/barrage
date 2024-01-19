@@ -82,11 +82,6 @@ void Scene1::Update()
 	screenCut->Update();
 
 	if (!isInputConfigMode) {
-		player->Update();
-		field->Update(player->GetData()->pos, camera->GetEye());
-		boss->SetTargetPos(player->GetData()->pos);
-		boss->Update();
-
 		//撃破演出再生
 		//デバッグ用再生
 		if (DirectInput::GetInstance()->TriggerKey(DIK_H)) {
@@ -119,6 +114,12 @@ void Scene1::Update()
 		}
 		//camera->Update();
 		lightCamera->Update();
+
+		//オブジェクト更新
+		field->Update(player->GetData()->pos, camera->GetEye());
+		player->Update();
+		boss->SetTargetPos(player->GetData()->pos);
+		boss->Update();
 
 		//デバッグ用シーン切り替え
 		if (DirectInput::GetInstance()->ReleaseKey(DIK_1)) {

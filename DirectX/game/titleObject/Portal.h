@@ -2,6 +2,7 @@
 #include "Object/3d/Object3d.h"
 #include "Math/Vector3.h"
 #include "player/PlayerData.h"
+#include "../effect/PortalEffect.h"
 
 class InterfaceScene;
 
@@ -65,4 +66,6 @@ private: //メンバ変数
 	bool isIntoPortal = false;
 	//変更後のシーン
 	InterfaceScene* changeScene;
+
+	std::unique_ptr<PortalEffect> effect;
 };
