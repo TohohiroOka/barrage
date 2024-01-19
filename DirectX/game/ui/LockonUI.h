@@ -13,11 +13,11 @@ public:
 
 	void Init(Camera *camera);
 
-	void Update();
+	void Update(const DirectX::XMFLOAT3 &enemyPos);
 
 	void Draw();
 
-	void StartLockOnAnimation(const DirectX::XMFLOAT3 *enemyPos);
+	void StartLockOnAnimation();
 
 	void EndLockOnDraw() { isDraw = false; }
 
@@ -28,9 +28,9 @@ private:
 
 	//カメラ参照
 	Camera* camera;
-	
-	//敵座標（参照）
-	const DirectX::XMFLOAT3 *position;
+
+	//モデルの中心に合わせるためのy座標オフセット
+	const float MODEL_Y_OFFSET = 8.f;
 
 	//現フレーム
 	int frame = 0;

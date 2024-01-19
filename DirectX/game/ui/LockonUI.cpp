@@ -23,7 +23,7 @@ void LockonUI::Init(Camera* camera)
 	lockonSprite = Sprite::Create("lockonSight", { 0,0 }, { 0.5f,0.5f });
 }
 
-void LockonUI::Update()
+void LockonUI::Update(const DirectX::XMFLOAT3& enemyPos)
 {
 	if (!isDraw) { return; }
 
@@ -39,28 +39,26 @@ void LockonUI::Update()
 	}
 
 	//座標更新
-	if (position != nullptr) { 
-		//ビュー行列と射影行列
-		DirectX::XMMATRIX matview = camera->GetView(), matProjection = camera->GetProjection();
-		//ビューポート行列
-		DirectX::XMMATRIX matViewport = {
-			{(float)WindowApp::GetWindowWidth() / 2, 0, 0, 0 },
-			{0, -(float)WindowApp::GetWindowHeight() / 2, 0, 0},
-			{0, 0, 1, 0},
-			{(float)WindowApp::GetWindowWidth() / 2, (float)WindowApp::GetWindowHeight() / 2, 0, 1}
-		};
-		//ビューと射影を計算
-		DirectX::XMFLOAT3 tmp = *position;
-		tmp = transform(tmp, matview);
-		tmp = transform(tmp, matProjection);
-		tmp.x /= tmp.z;
-		tmp.y /= tmp.z;
-		tmp.z /= tmp.z;
-		DirectX::XMFLOAT3 screenPos = transform(tmp, matViewport);
+	//ビュー行列と射影行列
+	DirectX::XMMATRIX matview = camera->GetView(), matProjection = camera->GetProjection();
+	//ビューポート行列
+	DirectX::XMMATRIX matViewport = {
+		{(float)WindowApp::GetWindowWidth() / 2, 0, 0, 0 },
+		{0, -(float)WindowApp::GetWindowHeight() / 2, 0, 0},
+		{0, 0, 1, 0},
+		{(float)WindowApp::GetWindowWidth() / 2, (float)WindowApp::GetWindowHeight() / 2, 0, 1}
+	};
+	//ビューと射影を計算
+	DirectX::XMFLOAT3 tmp = enemyPos;
+	tmp.y = tmp.y + MODEL_Y_OFFSET;
+	tmp = transform(tmp, matview);
+	tmp = transform(tmp, matProjection);
+	tmp.x /= tmp.z;
+	tmp.y /= tmp.z;
+	tmp.z /= tmp.z;
+	DirectX::XMFLOAT3 screenPos = transform(tmp, matViewport);
 
-		lockonSprite->SetPosition({ screenPos.x,screenPos.y });
-	}
-
+	lockonSprite->SetPosition({ screenPos.x,screenPos.y });
 
 
 	//時間管理
@@ -79,9 +77,8 @@ void LockonUI::Draw()
 
 }
 
-void LockonUI::StartLockOnAnimation(const DirectX::XMFLOAT3 *enemyPos)
+void LockonUI::StartLockOnAnimation()
 {
 	frame = 0;
-	position = enemyPos;
 	isDraw = true;
 }

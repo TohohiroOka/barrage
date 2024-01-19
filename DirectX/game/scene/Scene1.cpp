@@ -103,7 +103,7 @@ void Scene1::Update()
 				isNormalCamera = !isNormalCamera;
 				Base3D::SetCamera(debugCamera.get());
 			}
-			lockonUI->Update();
+			lockonUI->Update(boss->GetCenter()->GetPosition());
 		}
 		else {
 			debugCamera->Update();
@@ -519,7 +519,7 @@ void Scene1::CollisionCheck()
 				//ロックオン対象を確定させる
 				camera->Lockon(boss->GetCenter());
 				//ロックオンUI表示
-				lockonUI->StartLockOnAnimation(&boss->GetBaseModel()->GetPosition());
+				lockonUI->StartLockOnAnimation();
 			}
 		}
 	}
