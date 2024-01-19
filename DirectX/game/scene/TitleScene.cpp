@@ -88,17 +88,6 @@ void TitleScene::Update()
 			else { SceneManager::SetNextScene(selectPortal->GetChangeScene()); } //指定したシーンへ移行
 		}
 
-		//オブジェクト更新
-		player->Update();
-		field->Update(player->GetData()->pos, camera->GetEye());
-		for (int i = 0; i < 3; i++) {
-			portals[i]->Update(*player->GetData());
-			speechBubbles[i]->Update();
-		}
-
-		//当たり判定
-		CollisionCheck();
-
 		//カメラ更新
 		if (isNormalCamera) {
 			camera->Update();
@@ -115,6 +104,17 @@ void TitleScene::Update()
 			}
 		}
 		lightCamera->Update();
+
+		//オブジェクト更新
+		player->Update();
+		field->Update(player->GetData()->pos, camera->GetEye());
+		for (int i = 0; i < 3; i++) {
+			portals[i]->Update(*player->GetData());
+			speechBubbles[i]->Update();
+		}
+
+		//当たり判定
+		CollisionCheck();
 
 		if ((!isIntoPortal) && (DirectInput::GetInstance()->TriggerKey(DIK_TAB) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_START))) {
 			isInputConfigMode = true;

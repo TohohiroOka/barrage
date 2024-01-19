@@ -6,7 +6,7 @@
 Portal::Portal(const Vector3& position, InterfaceScene* changeScene)
 {
 	//オブジェクト生成
-	model = Model::CreateFromOBJ("portal");
+	model = Model::CreateFromOBJ("warp");
 	object = Object3d::Create(model.get());
 	object->SetPosition(position);
 	const float size = 10.0f;
@@ -21,6 +21,8 @@ Portal::Portal(const Vector3& position, InterfaceScene* changeScene)
 
 	//変更後のシーンをセット
 	this->changeScene = changeScene;
+
+	effect = std::make_unique<PortalEffect>(position,Vector2(12.0f, 29.0f));
 }
 
 Portal::~Portal()
@@ -34,12 +36,17 @@ void Portal::Update(const PlayerData& playerData)
 
 	//オブジェクト更新
 	object->Update();
+
+	effect->AddParticle();
+	effect->Update();
 }
 
 void Portal::Draw()
 {
 	//オブジェクト描画
 	object->Draw();
+
+	effect->Draw();
 }
 
 void Portal::DrawLightView()
