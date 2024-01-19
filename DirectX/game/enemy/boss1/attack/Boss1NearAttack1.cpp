@@ -1,7 +1,7 @@
 #include "Boss1NearAttack1.h"
-#include "../boss1/Boss1Model.h"
-#include "../BaseBoss.h"
 #include "GameHelper.h"
+#include "../Boss1Model.h"
+#include "../game/enemy/BaseBoss.h"
 #include "../Math/Easing/Easing.h"
 
 using namespace DirectX;
@@ -100,7 +100,7 @@ void Boss1NearAttack1::Attack()
 
 	if (*timer.get() % 5 != 0) { return; }
 	//oŒ»”
-	XMFLOAT3 pos = boss->GetCenter()->GetPosition();
+	XMFLOAT3 pos = boss->GetBaseModel()->GetPosition();
 	float inNum = timer->GetTime();
 	if (inNum >= 40.0f) {
 		inNum = 40.0f;

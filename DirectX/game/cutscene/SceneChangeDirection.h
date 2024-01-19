@@ -27,7 +27,7 @@ public:
 
 	bool IsDirectionEnd() { return isDirectionEnd; }
 
-	void Delete();
+	void Finalize();
 
 private:
 	

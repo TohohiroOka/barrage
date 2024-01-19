@@ -40,7 +40,7 @@ public:
 	float GetHitScale() { return hitScale; }
 	BaseAction* GetBaseAction() { return action.get(); }
 	Vector3 GetTargetPos() { return targetPos; }
-	float GetLength() { return (targetPos - Vector3(bossModel->GetObjectInst()->GetPosition())).length(); }
+	float GetLength() { return (targetPos - Vector3(bossModel->GetPosition())).length(); }
 	BaseBossModel* GetBaseModel() { return bossModel.get(); }
 	bool GetBossIsAlive() { return HP <= 0; }
 	bool GetIsWince() { return isWince; }

@@ -41,6 +41,8 @@ public:
 
 	virtual void IsAttachEffect(int _num, bool _isAlive) {};
 
+	virtual Vector3 GetPartsPos(const std::string& _num) = 0;
+
 	DirectX::XMFLOAT3 GetModelMove() { return fbxObject->GetModelMove(); }
 	void AnimationReset() { fbxObject->AnimationReset(); }
 	void SetAnimation(const int _animationNumber) { fbxObject->SetUseAnimation(_animationNumber); }
@@ -49,12 +51,16 @@ public:
 	void SetMovement(const int _number) { fbxObject->SetUseAnimation(_number); };
 	void SetIsRoop(const bool _isRoop) { fbxObject->SetIsRoop(_isRoop); }
 	bool GetIsAnimationEnd() { return fbxObject->GetIsAnimationEnd(); }
-
+	void SetPosition(const Vector3& _pos) { bossPos = _pos; };
+	Vector3 GetPosition() { return bossPos; };
 
 protected:
 	
 	std::unique_ptr<FbxModel> model;
 	std::unique_ptr<Fbx> fbxObject;
 	std::vector<AttachInfo> attachInfo;
+
+	//ç¿ïW
+	Vector3 bossPos;
 };
 

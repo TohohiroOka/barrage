@@ -9,6 +9,7 @@
 #include "player/Player.h"
 #include "field/Field.h"
 #include "titleObject/Portal.h"
+#include "titleObject/SpeechBubble.h"
 #include "ui/PressSelectButtonUI.h"
 
 #include <memory>
@@ -102,6 +103,8 @@ private:
 	std::unique_ptr<Player> player;
 	//シーン変更ポータル
 	std::array<std::unique_ptr<Portal>, 3> portals;
+	//ポータル説明用吹き出しオブジェクト
+	std::array<std::unique_ptr<SpeechBubble>, 3> speechBubbles;
 
 	//行動入力設定
 	std::unique_ptr<ActionInputConfig> actionInputConfig;

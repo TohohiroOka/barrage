@@ -16,12 +16,12 @@ Boss1Model::Boss1Model()
 	objModel[int(ObjectType::core)] = Model::CreateFromOBJ("boss1/core");
 	objModel[int(ObjectType::sword)] = Model::CreateFromOBJ("boss1/feet");
 
-	model = FbxModel::Create("boss1","Hips");
+	model = FbxModel::Create("boss1");
 	fbxObject = Fbx::Create(model.get());
 	fbxObject->SetScale({ 0.0011f,0.0011f ,0.0011f });
 	fbxObject->SetLight(true);
 	fbxObject->SetAnimation(true);
-	fbxObject->SetPosition({ GameHelper::Instance()->GetStageSize() / 2.0f,10.0f ,GameHelper::Instance()->GetStageSize() / 2.0f });
+	bossPos = { GameHelper::Instance()->GetStageSize() / 2.0f,10.0f ,GameHelper::Instance()->GetStageSize() / 2.0f };
 	fbxObject->SetIsModelDraw(false);
 	fbxObject->SetIsBoneDraw(true);
 	fbxObject->SetIsRoop(false);
@@ -107,22 +107,17 @@ Boss1Model::Boss1Model()
 	fbxObject->GetBrneObject("cube")->SetOutline(true);
 	fbxObject->GetBrneObject("normal")->SetOutlineColor({0.9f,0.1f,0.1f});
 	fbxObject->GetBrneObject("cube")->SetOutlineColor({ 0.9f,0.1f,0.1f });
-
-	XMFLOAT4 startColor = { 0.2f, 0.1f, 0.02f, 1.0f };
-	XMFLOAT4 endColor = { 0.01f, 0.005f, 0.001f, 1.0f };
-	swordEffect = std::make_unique<SlashEffect>("effect", 10, 10, 10.0f, 1.0f, 0.0f, startColor, endColor);
 }
 
 void Boss1Model::Update()
 {
 	ChangeInfo();
+	fbxObject->SetPosition({ bossPos.x,bossPos.y - 10.0f,bossPos.z });
 	fbxObject->Update();
-	swordEffect->Update(fbxObject->GetAttachPos("larm1"), fbxObject->GetAttachPos("larm2"));
 }
 
 void Boss1Model::Draw()
 {
-	swordEffect->Draw();
 	fbxObject->Draw();
 }
 
@@ -159,31 +154,43 @@ void Boss1Model::ModelReset()
 	using namespace DirectX;
 	for (int i = 0; i < bone.size(); i++) {
 		attachInfo[i].pos.isChange = true;
+		attachInfo[i].pos.before = attachInfo[i].pos.now;
 		attachInfo[i].pos.after = {};
+		attachInfo[i].pos.time->Reset();
 		attachInfo[i].scale.isChange = true;
+		attachInfo[i].scale.before = attachInfo[i].scale.now;
 		attachInfo[i].scale.after = { 6.0f, 6.0f, 6.0f };
+		attachInfo[i].scale.time->Reset();
 	}
 
 	for (int i = 0; i < boneT.size(); i++) {
 		int number = int(bone.size()) + i;
 		attachInfo[number].pos.isChange = true;
+		attachInfo[number].pos.before = attachInfo[number].pos.now;
 		attachInfo[number].pos.after = {};
+		attachInfo[number].pos.time->Reset();
 		attachInfo[number].scale.isChange = true;
+		attachInfo[number].scale.time->Reset();
+		attachInfo[number].scale.before = attachInfo[number].scale.now;
 		if (i < 2) {
 			attachInfo[number].scale.after = { 6.0f, 9.0f, 6.0f };
 		} else if (i == 2) {
 			attachInfo[number].scale.after = { 4.0f, 5.0f, 4.0f };
 		} else if (i == 3) {
-			attachInfo[number].scale.after = { 4.0f, 10.0f, 4.0f };
+			attachInfo[number].scale.after = { 4.0f, 5.0f, 4.0f };
 		}
 	}
 
 	{
 		int number = int(bone.size()) + int(boneT.size());
 		attachInfo[number].pos.isChange = true;
+		attachInfo[number].pos.before = attachInfo[number].pos.now;
 		attachInfo[number].pos.after = { 0.0f, attachInfo[5].scale.now.y * transformScale, 0.0f };
+		attachInfo[number].scale.time->Reset();
 		attachInfo[number].scale.isChange = true;
+		attachInfo[number].scale.before = attachInfo[number].scale.now;
 		attachInfo[number].scale.after = { 0.0f, 0.0f, 0.0f };
+		attachInfo[number].scale.time->Reset();
 	}
 }
 

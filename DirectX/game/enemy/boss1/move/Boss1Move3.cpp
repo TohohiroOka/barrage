@@ -1,6 +1,6 @@
 #include "Boss1Move3.h"
-#include "../boss1/Boss1Model.h"
-#include "../BaseBoss.h"
+#include "../Boss1Model.h"
+#include "../game/enemy/BaseBoss.h"
 #include "GameHelper.h"
 #include "Math/Easing/Easing.h"
 
@@ -14,7 +14,7 @@ Boss1Move3::Boss1Move3()
 
 	boss->GetBaseModel()->ChangesScale(int(Boss1Model::AttachName::LowerArm_R), 10.0f, { 4.0f, 10.0f, 4.0f });
 
-	startPos = boss->GetCenter()->GetPosition();
+	startPos = boss->GetBaseModel()->GetPosition();
 	endPos = boss->GetTargetPos();
 
 	state = State::start;
@@ -24,11 +24,9 @@ Boss1Move3::Boss1Move3()
 
 	useCollision = UseCollision::box;
 
-	//攻撃用オブジェクト
-	cube = Model::CreateFromOBJ("boss1/slashing");
-	object = Object3d::Create(cube.get());
-	object->SetColor({ 0.7f,0.7f, 0.7f, 0.2f });
-	object->SetLight(false);
+	DirectX::XMFLOAT4 startColor = { 0.2f, 0.1f, 0.02f, 1.0f };
+	DirectX::XMFLOAT4 endColor = { 0.01f, 0.005f, 0.001f, 1.0f };
+	swordEffect = std::make_unique<SlashEffect>("effect", 10, 10, 10.0f, 1.0f, 0.0f, startColor, endColor);
 
 	func_.emplace_back([this] {return Start(); });
 	func_.emplace_back([this] {return Move(); });
@@ -38,6 +36,8 @@ Boss1Move3::Boss1Move3()
 
 void Boss1Move3::Update()
 {
+	swordEffect->Update(boss->GetBaseModel()->GetPartsPos("larm1"), boss->GetBaseModel()->GetPartsPos("larm2"));
+
 	if (boss->GetIsWince() || boss->GetIsBreak()) {
 		isEnd = true;
 		return;
@@ -52,20 +52,16 @@ void Boss1Move3::Update()
 
 void Boss1Move3::Draw()
 {
-	if (state == State::attack) {
-		object->Draw(ObjectBase::DrawMode::add);
-	}
+	swordEffect->Draw();
 }
 
 void Boss1Move3::GetAttackCollisionBox(std::vector<Box>& _info)
 {
-	if (object->GetColor().w < 0.1f) { return; }
-	Vector3 pos= object->GetPosition();
-	Vector3 scale = object->GetScale();
+	Vector3 scale = { 1.0f,4.0f,1.0f };
 
 	Box add;
-	add.point1 = { pos.x - scale.x, pos.y - scale.y, pos.z - scale.z };
-	add.point2 = { pos.x + scale.x, pos.y + scale.y, pos.z + scale.z };
+	add.point1 = { swordPos.x - scale.x, swordPos.y - scale.y, swordPos.z - scale.z };
+	add.point2 = { swordPos.x + scale.x, swordPos.y + scale.y, swordPos.z + scale.z };
 	_info.emplace_back(add);
 }
 
@@ -81,8 +77,7 @@ void Boss1Move3::Move()
 {
 	const float maxTimer = 60.0f;
 	const float rate = *timer.get() / maxTimer;
-	Vector3 pos = Vector3(boss->GetCenter()->GetPosition());
-	pos.y = 0.0f;
+	Vector3 pos = Vector3(boss->GetBaseModel()->GetPosition());
 
 	if (*timer.get() < maxTimer - 40.0f) {
 		boss->SetPlayerDirection();
@@ -92,57 +87,44 @@ void Boss1Move3::Move()
 	pos.x = Easing::OutCubic(startPos.x, endPos.x, rate);
 	pos.z = Easing::OutCubic(startPos.z, endPos.z, rate);
 
-	boss->GetCenter()->SetPosition(pos);
+	boss->GetBaseModel()->SetPosition(pos);
 
 	if (rate < 1.0f) { return; }
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_end));
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::runAttack_end));
 	timer->Reset();
 	state = State::attack;
 
 	Vector3 v = endPos - startPos;
 	v.y = 0.0;
 
-	//角度
-	Vector3 rota = VelocityRotate(v);
-	rota.y += 90;
-	object->SetRotation(rota);
-
 	//位置
 	v = v.normalize();
-	v = Vector3(endPos) + v * 9.0f;
-	v.y = -20.0f;
-	object->SetPosition(v);
-
-	isCollision = true;
+	swordPos = Vector3(endPos) + v * 9.0f;
+	swordPos.y = -20.0f;
 }
 
 void Boss1Move3::Attack()
 {
-	const float maxTimer = 20.0f;
+	const float maxTimer = 40.0f;
 
-	if (*timer.get() < maxTimer) {
+	if (!isHit && *timer.get() >= 30.0f) {
+		isCollision = true;
+		isHit = true;
+	}
+
+	if (*timer.get() <= maxTimer) {
 		const float rate = *timer.get() / maxTimer;
-		Vector3 pos = object->GetPosition();
-		pos.y = Easing::OutCubic(-20.0f, 10.0f, rate);
-
-		object->SetPosition(pos);
+		swordPos.y = Easing::OutCubic(-20.0f, 10.0f, rate);
 	}
-	//消える
-	else {
-		const float rate = (*timer.get() - maxTimer) / maxTimer;
-		float alp = Easing::OutQuart(0.2f, 0.0f, rate);
-		object->SetColor({ 0.7f,0.7f, 0.7f, alp });
-	}
-	object->Update();
 
 	if (*timer.get() < maxTimer * 2.0f) { return; }
-	boss->GetBaseModel()->ChangesScale(int(Boss1Model::AttachName::LowerArm_R), 15.0f, { 4.0f, 5.0f, 4.0f });
 	timer->Reset();
 	state = State::end;
+	boss->GetBaseModel()->ModelReset();
 }
 
 void Boss1Move3::End()
 {
-	if (*timer.get() < 15) { return; }
+	if (*timer.get() < 10) { return; }
 	isEnd = true;
 }

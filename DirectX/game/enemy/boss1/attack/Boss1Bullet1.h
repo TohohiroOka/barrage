@@ -1,24 +1,30 @@
 #pragma once
-#include "../BaseBullet.h"
+#include "../game/enemy/BaseBullet.h"
 #include <functional>
 
 /// <summary>
-/// 外側に出てからプレイヤーに追従する
+/// 円状に球が出てのち剣をそこから飛ばず
 /// </summary>
-class Boss1Bullet2 : public BaseBullet
+class Boss1Bullet1 : public BaseBullet
 {
 public:
 
+	struct BulletAddPointInfo {
+		bool isAlive;//出現しているか
+		float alpha;
+		Vector3 pos;//座標
+		float angle;
+	};
+
 	struct BulletInfo {
 		bool isAlive;//出現しているか
-		bool easing;
-		Vector3 nowPos;//座標
-		Vector3 beforePos;
-		Vector3 afterPos;
-		bool isSetVec;
+		float alpha;
+		Vector3 pos;//座標
+		Vector3 rota;
 		Vector3 moveVec;
 		std::unique_ptr<Engine::Timer> timer;//出現時間
-		std::vector<Vector3> predictionLinePoint;
+		int nowIntTime;
+		std::array<Vector3, 3> predictionLinePoint;
 	};
 
 private:
@@ -31,8 +37,8 @@ private:
 	};
 
 public:
-	Boss1Bullet2();
-	~Boss1Bullet2() {};
+	Boss1Bullet1();
+	~Boss1Bullet1();
 
 	void Update() override;
 
@@ -51,22 +57,41 @@ public:
 		_isKnockbackStart = true;
 	}
 
+private:
+
 	void Start();
 
 	void Attack();
 
 	void End();
 
-	void AddBullet(bool _easing);
+	void AddBullet(const Vector3& _pos);
+
+	void BulletRotate(BulletAddPointInfo& _bullet);
 
 	void BulletUpdate();
 
 private:
 
+	std::unique_ptr<Model> bulletModel;
+
 	//状態
 	State state;
 	std::vector<std::function<void()>> func_;
 
+	//弾の出現ポイント
+	static const int maxBulletNum = 12;
+	int addBulletNum;
+	std::array<BulletAddPointInfo, maxBulletNum> bulletAddPoint;
+	float angleSpeed;
+
+	//弾配列
 	std::forward_list<BulletInfo> bullet;
 
+	//使用ポイント番号
+	std::array<int, 2> usePoint;
+
+	DirectX::XMFLOAT4 bulletColor = { 1.0f,1.0f,1.0f,1.0f };
+	DirectX::XMFLOAT4 effectColor = { 1.0f,0.3f,0.3f,0.3f };
 };
+

@@ -75,7 +75,7 @@ void TextTypeWriter::AllWrite()
 	//ëSÇƒÇÃï\é¶Ç™èIóπÇµÇƒÇ¢ÇÍÇŒî≤ÇØÇÈ
 	if (GetIsAllWrite()) { return; }
 	//ì¸óÕÇ™Ç»ÇØÇÍÇŒî≤ÇØÇÈ
-	if (!(DirectInput::GetInstance()->TriggerKey(DIK_E) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
+	if (!(DirectInput::GetInstance()->TriggerKey(DIK_SPACE) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
 	//ê∂ê¨Ç≥ÇÍÇΩèuä‘Ç»ÇÁî≤ÇØÇÈ
 	if (isCreateFrame) { return; }
 

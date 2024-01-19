@@ -24,7 +24,7 @@ private: //メンバ関数
 
 private: //静的メンバ変数
 	//回避にかかる時間
-	static const int avoidTime = 40;
+	static const int avoidTime = 36;
 	//先行入力を開始する時間
 	static const int actionChangeStartTime = 15;
 	//回避開始時の移動スピード

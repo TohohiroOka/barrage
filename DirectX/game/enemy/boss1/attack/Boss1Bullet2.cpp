@@ -1,7 +1,7 @@
 #include "Boss1Bullet2.h"
-#include "../boss1/Boss1Model.h"
 #include "GameHelper.h"
-#include "../BaseBoss.h"
+#include "../Boss1Model.h"
+#include "../game/enemy/BaseBoss.h"
 #include "Math/Easing/Easing.h"
 #include <iterator>
 
@@ -124,7 +124,7 @@ void Boss1Bullet2::End()
 
 void Boss1Bullet2::AddBullet(bool _easing)
 {
-	Vector3 bossPos = boss->GetCenter()->GetPosition();
+	Vector3 bossPos = boss->GetBaseModel()->GetPosition();
 	Vector3 targetPos = boss->GetTargetPos();
 
 	//Žû‘©”ÍˆÍ

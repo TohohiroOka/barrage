@@ -157,20 +157,20 @@ void PlayerSwordAttack2::AttackAction1()
 	timer->Update();
 
 	//攻撃に合わせてプレイヤーを動かす
-	MovePlayer(actionChangeStartTime);
+	MovePlayer(actionChangeStartTime1);
 
 	//攻撃判定をONにする
-	if (*timer.get() == collisionValidStartTime && !isHitAttack) {
+	if (*timer.get() == collisionValidStartTime1 && !isHitAttack) {
 		isCollisionValid = true;
 	}
 
 	//次の行動を入力可能にする
-	if (*timer.get() == actionChangeStartTime) {
+	if (*timer.get() == actionChangeStartTime1) {
 		isNextActionInput = true;
 	}
 
 	//タイマーが指定した時間になったら
-	if (*timer.get() >= attackTime) {
+	if (*timer.get() >= attackTime1) {
 		//攻撃行動終了
 		isAttackActionEnd = true;
 	}
@@ -182,20 +182,20 @@ void PlayerSwordAttack2::AttackAction2()
 	timer->Update();
 
 	//攻撃に合わせてプレイヤーを動かす
-	MovePlayer(actionChangeStartTime);
+	MovePlayer(actionChangeStartTime2);
 
 	//攻撃判定をONにする
-	if (*timer.get() == collisionValidStartTime && !isHitAttack) {
+	if (*timer.get() == collisionValidStartTime2 && !isHitAttack) {
 		isCollisionValid = true;
 	}
 
 	//次の行動を入力可能にする
-	if (*timer.get() == actionChangeStartTime) {
+	if (*timer.get() == actionChangeStartTime2) {
 		isNextActionInput = true;
 	}
 
 	//タイマーが指定した時間になったら
-	if (*timer.get() >= attackTime) {
+	if (*timer.get() >= attackTime2) {
 		//攻撃行動終了
 		isAttackActionEnd = true;
 	}
@@ -207,20 +207,20 @@ void PlayerSwordAttack2::AttackAction3()
 	timer->Update();
 
 	//攻撃に合わせてプレイヤーを動かす
-	MovePlayer(actionChangeStartTime);
+	MovePlayer(actionChangeStartTime3);
 
 	//攻撃判定をONにする
-	if (*timer.get() == collisionValidStartTime && !isHitAttack) {
+	if (*timer.get() == collisionValidStartTime3 && !isHitAttack) {
 		isCollisionValid = true;
 	}
 
 	//次の行動を入力可能にする
-	if (*timer.get() == actionChangeStartTime) {
+	if (*timer.get() == actionChangeStartTime3) {
 		isNextActionInput = true;
 	}
 
 	//タイマーが指定した時間になったら
-	if (*timer.get() >= attackTime) {
+	if (*timer.get() >= attackTime3) {
 		//攻撃行動終了
 		isAttackActionEnd = true;
 	}

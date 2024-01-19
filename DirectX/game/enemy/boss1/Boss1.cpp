@@ -2,15 +2,15 @@
 #include "GameHelper.h"
 
 #include "Boss1Model.h"
-#include "Boss1NearAttack1.h"
-#include "Boss1Move1.h"
-#include "Boss1Move2.h"
-#include "Boss1Move3.h"
-#include "Boss1Bullet1.h"
-#include "Boss1Bullet2.h"
-#include "Boss1Bullet3.h"
-#include "Boss1Bullet4.h"
-#include "Boss1HalfAttack.h"
+#include "../game/enemy/boss1/attack/Boss1NearAttack1.h"
+#include "../game/enemy/boss1/move/Boss1Move1.h"
+#include "../game/enemy/boss1/move/Boss1Move2.h"
+#include "../game/enemy/boss1/move/Boss1Move3.h"
+#include "../game/enemy/boss1/attack/Boss1Bullet1.h"
+#include "../game/enemy/boss1/attack/Boss1Bullet2.h"
+#include "../game/enemy/boss1/attack/Boss1Bullet3.h"
+#include "../game/enemy/boss1/attack/Boss1Bullet4.h"
+#include "../game/enemy/boss1/attack/Boss1HalfAttack.h"
 
 #include "Boss1Wince.h"
 
@@ -66,11 +66,11 @@ void Boss1::SetAction()
 	//‰Šú‰»
 	action.reset();
 
-	Vector3 pos = bossModel->GetObjectInst()->GetPosition();
+	Vector3 pos = bossModel->GetPosition();
 	Vector3 dist = targetPos - pos;
 
-	action = std::make_unique<Boss1Move3>();
-	return;
+	//action = std::make_unique<Boss1Move3>();
+	//return;
 
 	//ƒvƒŒƒCƒ„[‚ª‰“‹——£‚É‚¢‚é
 	if (dist.length() > 100.0f) {
