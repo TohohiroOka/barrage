@@ -6,9 +6,17 @@ TextCreator::TextCreator(const std::wstring& text, const DirectX::XMFLOAT2& left
 	//改行用カウント
 	DirectX::XMFLOAT2 pos = leftTopPos;
 
-	//ボタンスプライト生成用
+	//コマンドモード名
+	enum class CommandMode
+	{
+		NormalMode,
+		ButtonMode,
+		NumberMode,
+	};
+	//コマンド用
 	std::wstring command;
-	bool isCommandMode = false;
+	CommandMode commandMode = CommandMode::NormalMode;
+
 
 	//テキストの文字数の分回す
 	for (int i = 0; i < text.size(); i++) {
@@ -16,17 +24,20 @@ TextCreator::TextCreator(const std::wstring& text, const DirectX::XMFLOAT2& left
 		const std::wstring character = text.substr(i, 1);
 
 		//空白は飛ばす
-		if (character == L"　") { continue; }
+		if (character == L"　") {
+			pos.x += CharSprite::charTextureSize * scale;
+			continue; 
+		}
 
 		//「＠」が検出されたら改行
 		if (character == L"＠") {
 			pos.x = leftTopPos.x;
-			pos.y += (CharSprite::charTextureSize + 10);
+			pos.y += (CharSprite::charTextureSize + 12) * scale;
 			continue;
 		}
 
 		//ボタンスプライト状態のとき
-		if (isCommandMode) {
+		if (commandMode == CommandMode::ButtonMode) {
 			//「]」がでてくるまで文字をコマンドとして保存
 			if (character != L"]") {
 				command.push_back(*character.c_str());
@@ -44,14 +55,45 @@ TextCreator::TextCreator(const std::wstring& text, const DirectX::XMFLOAT2& left
 				command.clear();
 
 				//ボタンスプライト状態終了
-				isCommandMode = false;
+				commandMode = CommandMode::NormalMode;
 			}
+		}		
+		//数字スプライト状態のとき
+		else if (commandMode == CommandMode::NumberMode) {
+			//「)」がでてくると数字スプライト状態終了
+			if (character == L")") {
+				//数字挿入終了
+				numberTexts.back()->InsertEnd();
+
+				commandMode = CommandMode::NormalMode;
+				continue;
+			}
+
+			//文字スプライト生成
+			std::unique_ptr<CharSprite> newCharSprite = std::make_unique<CharSprite>(character, pos, scale, isStartDraw);
+
+			//次の文字を横にずらす
+			pos.x += newCharSprite->GetSprite()->GetSize().x;
+			charSprites.push_back(std::move(newCharSprite));
+
+			//生成した文字スプライトの要素を数字テキストに貸し出す
+			numberTexts.back()->InsertCharSprite(charSprites.back().get());
 		}
 		//通常状態のとき
 		else {
 			//「[」←小文字が検出されたらボタンスプライト状態に変更
 			if (character == L"[") {
-				isCommandMode = true;
+				commandMode = CommandMode::ButtonMode;
+				continue;
+			}
+			//「(」←小文字が検出されたら数字スプライト状態に変更
+			if (character == L"(") {
+				commandMode = CommandMode::NumberMode;
+
+				//数字テキスト生成
+				std::unique_ptr<NumberText> newNumberText = std::make_unique<NumberText>();
+				numberTexts.push_back(std::move(newNumberText));
+
 				continue;
 			}
 

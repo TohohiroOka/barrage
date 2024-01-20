@@ -20,6 +20,12 @@ public: //ƒƒ“ƒoŠÖ”
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// •¶š•ÏX
+	/// </summary>
+	/// <param name="character">•¶š</param>
+	void ChangeCharacter(const std::wstring& character);
+
 	//getter
 	Sprite* GetSprite() { return charSprite.get(); }
 	bool GetIsDraw() { return isDraw; }
@@ -51,6 +57,8 @@ protected: //ƒƒ“ƒo•Ï”
 	std::unique_ptr<Sprite> charSprite;
 	//•¶š
 	std::wstring character;
+	//‘å‚«‚³
+	float scale;
 	//•`‰æ‚·‚é‚©
 	bool isDraw = true;
 };

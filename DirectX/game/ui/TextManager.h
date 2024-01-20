@@ -30,7 +30,8 @@ public: //構造体
 	/// </summary>
 	struct Sentence
 	{
-		std::unique_ptr<TextTypeWriter> text; //テキスト
+		std::unique_ptr<TextCreator> textCreator; //テキスト表示
+		std::wstring text;//テキスト
 		SentenceData::SentenceName sentenceName; //文章名
 	};
 
@@ -81,7 +82,7 @@ public: //メンバ関数
 	void ChoicesDrawEnd();
 
 	//getter
-	bool GetIsTextDraw() { return sentence.text || choices.question; }
+	bool GetIsTextDraw() { return sentence.textCreator || choices.question; }
 	const Sentence& GetSentece() { return sentence; }
 	bool GetIsSentenceEnd(SentenceData::SentenceName sentenceName) {
 		//文章名が違っていたらfalse
@@ -144,7 +145,9 @@ private: //メンバ変数
 	//1文章のテキスト更新回数
 	int textCount = 0;
 	//文章を表示し終えたか
-	bool isSentenceEnd = false;
+	bool isSentenceEnd = true;
+	//テキスト更新入力を可能にするか
+	bool isInputNextText = true;
 
 	//選択肢
 	Choices choices;

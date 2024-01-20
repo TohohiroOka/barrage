@@ -135,7 +135,7 @@ void QuestionSystem::ChangeSelectChoices()
 void QuestionSystem::SelectChoice()
 {
 	//入力がなければ抜ける
-	if (!(DirectInput::GetInstance()->TriggerKey(DIK_SPACE) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
+	if (!GameInputManager::TriggerInputAction(GameInputManager::Select)) { return; }
 
 	//選択確定フェーズへの移行
 	phase = QuestionPhase::CONFIRM_SELECTION;

@@ -5,7 +5,7 @@
 /// <summary>
 /// タイプライター(1文字ずつ描画するやつ)
 /// </summary>
-class TextTypeWriter
+class TextTypeWriter : public TextCreator
 {
 public: //メンバ関数
 	TextTypeWriter(const std::wstring& text, const DirectX::XMFLOAT2& leftTopPos, float scale, int writeWaitFrame = 1);
@@ -14,15 +14,7 @@ public: //メンバ関数
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
-
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw();
-
-	//getter
-	bool GetIsAllWrite() { return text->GetCharSprite(text->GetTextLength() - 1)->GetIsDraw(); }
+	void Update() override;
 
 private: //メンバ関数
 	/// <summary>
@@ -42,8 +34,6 @@ private: //静的メンバ変数
 	static const int periodWaitFrame = 20;
 
 private: //メンバ変数
-	//文章
-	std::unique_ptr<TextCreator> text;
 	//表示用用タイマー
 	std::unique_ptr<Engine::Timer> timer;
 	//1文字表示に待機するフレーム数

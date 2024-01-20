@@ -1,5 +1,6 @@
 #pragma once
 #include "CharSprite.h"
+#include "NumberText.h"
 #include "system/GameInputManager.h"
 
 /// <summary>
@@ -14,7 +15,7 @@ public: //メンバ関数
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	virtual void Update();
 
 	/// <summary>
 	/// 描画
@@ -24,8 +25,10 @@ public: //メンバ関数
 	//getter
 	int GetTextLength() { return (int)charSprites.size(); }
 	CharSprite* GetCharSprite(int num) { return charSprites[num].get(); }
+	NumberText* GetNumberText(int num) { return numberTexts[num].get(); }
+	bool GetIsAllWrite() { return charSprites.back()->GetIsDraw(); }
 
-private: //メンバ関数
+protected: //メンバ関数
 	/// <summary>
 	/// 行動入力コマンドを解析
 	/// </summary>
@@ -33,7 +36,9 @@ private: //メンバ関数
 	/// <returns>行動入力</returns>
 	GameInputManager::InputAction ActionInputCommand(const std::wstring& command);
 
-private: //メンバ変数
+protected: //メンバ変数
 	//文字スプライト
 	std::vector<std::unique_ptr<CharSprite>> charSprites;
+	//数字テキスト
+	std::vector<std::unique_ptr<NumberText>> numberTexts;
 };

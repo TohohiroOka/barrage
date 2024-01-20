@@ -8,6 +8,8 @@
 #include "player/Player.h"
 #include "field/Field.h"
 
+#include "ui/OKSprite.h"
+
 #include <memory>
 
 class TutorialScene : public InterfaceScene
@@ -22,11 +24,16 @@ private:// エイリアス
 
 private: //enum
 	/// <summary>
-	/// チュートリアルの流れフェーズ
+	/// チュートリアルのフェーズ
 	/// </summary>
 	enum class TutorialPhase
 	{
-		JUMP_
+		TUTORIAL_START,
+		TUTORIAL_RUN,
+		TUTORIAL_JUMP,
+		TUTORIAL_ATTACK,
+		TUTORIAL_AVOID,
+		TUTORIAL_FREE,
 	};
 
 public:
@@ -76,6 +83,16 @@ public:
 	/// </summary>
 	void CollisionCheck();
 
+	//チュートリアルフェーズごとの更新内容
+	void TutorialStartUpdate();
+	void TutorialRunUpdate();
+	void TutorialJumpUpdate();
+	void TutorialAttackUpdate();
+	void TutorialAvoidUpdate();
+	void TutorialFreeUpdate();
+
+	void TutorialActionClearAfterUpdate(TutorialPhase nextTutorialPhase, SentenceData::SentenceName nextTutorialSentenceName);
+
 private:
 	//カメラ
 	bool isNormalCamera = true;
@@ -83,12 +100,21 @@ private:
 	std::unique_ptr<TitleCamera> camera;
 	std::unique_ptr<LightCamera> lightCamera;
 
-	//スプライト
-
 	//地形
 	std::unique_ptr<Field> field;
 	//プレイヤー
 	std::unique_ptr<Player> player;
+
+	//チュートリアルフェーズ
+	TutorialPhase tutorialPhase = TutorialPhase::TUTORIAL_START;
+	//各フェーズの更新処理
+	std::vector<std::function<void()>> tutorialFunc;
+	//OK表示スプライト
+	std::unique_ptr<OKSprite> okSprite;
+	//チュートリアルお試し行動がクリアしているか
+	bool isTutorialActionClear = false;
+	//チュートリアルお試し行動がクリア後の待機時間タイマー
+	std::unique_ptr<Engine::Timer> tutorialActionClearTimer;
 
 	//行動入力設定
 	std::unique_ptr<ActionInputConfig> actionInputConfig;

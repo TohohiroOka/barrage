@@ -222,7 +222,7 @@ void TitleScene::IntoPortalCheck()
 	//テキストがなにも描画されていなければ
 	if (!TextManager::Instance()->GetIsTextDraw()) {
 		//入力がなければ抜ける
-		if (!(DirectInput::GetInstance()->TriggerKey(DIK_SPACE) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
+		if (!GameInputManager::TriggerInputAction(GameInputManager::Select)) { return; }
 		//カメラが通常状態でなければ抜ける
 		if (!(camera->GetTitleCameraPhase() == TitleCamera::TitleCameraPhase::NORMAL)) { return; }
 
@@ -256,7 +256,7 @@ void TitleScene::IntoPortalCheck()
 		if (TextManager::Instance()->GetIsChoiceEnd()) {
 			//選択が0番ならポータルに入る行動を開始
 			if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::YES_OR_NO) == 0) {
-				IntoPortalStart(); 
+				IntoPortalStart();
 			}
 			//選択が1番なら元に戻る
 			else if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::YES_OR_NO) == 1) {
