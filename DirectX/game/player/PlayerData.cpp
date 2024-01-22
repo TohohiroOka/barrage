@@ -26,6 +26,7 @@ PlayerData::PlayerData()
 	actionInput.isAvoid = true;
 	actionInput.isBlink = true;
 
+	isDash = false;
 	moveSpeed = 0.0f;
 	
 	jumpMaxNum = 2;

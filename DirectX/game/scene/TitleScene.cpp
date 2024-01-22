@@ -2,6 +2,7 @@
 #include "Input/DirectInput.h"
 #include "Input/XInputManager.h"
 #include "engine/Scene/SceneManager.h"
+#include "scene/TutorialScene.h"
 #include "scene/Scene1.h"
 #include "cutscene/SceneChangeDirection.h"
 #include "Audio/Audio.h"
@@ -37,8 +38,8 @@ void TitleScene::Initialize()
 	const float stageSize = GameHelper::Instance()->GetStageSize();
 	const float portalPosY = 11.0f;
 	portals[0] = std::make_unique<Portal>(Vector3{ stageSize * 0.75f, portalPosY, stageSize / 2 }, gameScene);
-	TitleScene* titleScene = new TitleScene;
-	portals[1] = std::make_unique<Portal>(Vector3{ stageSize * 0.25f, portalPosY, stageSize / 2 }, titleScene);
+	TutorialScene* tutorialScene = new TutorialScene;
+	portals[1] = std::make_unique<Portal>(Vector3{ stageSize * 0.25f, portalPosY, stageSize / 2 }, tutorialScene);
 	portals[2] = std::make_unique<Portal>(Vector3{ stageSize / 2, portalPosY, stageSize * 0.75f }, nullptr);
 
 	//カメラ生成
@@ -221,7 +222,7 @@ void TitleScene::IntoPortalCheck()
 	//テキストがなにも描画されていなければ
 	if (!TextManager::Instance()->GetIsTextDraw()) {
 		//入力がなければ抜ける
-		if (!(DirectInput::GetInstance()->TriggerKey(DIK_SPACE) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
+		if (!GameInputManager::TriggerInputAction(GameInputManager::Select)) { return; }
 		//カメラが通常状態でなければ抜ける
 		if (!(camera->GetTitleCameraPhase() == TitleCamera::TitleCameraPhase::NORMAL)) { return; }
 
@@ -248,17 +249,17 @@ void TitleScene::IntoPortalCheck()
 		if (TextManager::Instance()->GetIsSentenceEnd(SentenceData::SentenceName::GO_TO_GAME_CHECK) ||
 			TextManager::Instance()->GetIsSentenceEnd(SentenceData::SentenceName::GO_TO_TUTORIAL_CHECK) ||
 			TextManager::Instance()->GetIsSentenceEnd(SentenceData::SentenceName::EXIT_GAME_CHECK)) {
-			TextManager::Instance()->ChoicesCreate(ChoicesData::ChoicesName::KANSAI);
+			TextManager::Instance()->ChoicesCreate(ChoicesData::ChoicesName::YES_OR_NO);
 		}
 
 		//選択肢の選択肢を終えていれば
 		if (TextManager::Instance()->GetIsChoiceEnd()) {
 			//選択が0番ならポータルに入る行動を開始
-			if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::KANSAI) == 0) {
-				IntoPortalStart(); 
+			if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::YES_OR_NO) == 0) {
+				IntoPortalStart();
 			}
 			//選択が1番なら元に戻る
-			else if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::KANSAI) == 1) {
+			else if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::YES_OR_NO) == 1) {
 				selectPortal = nullptr;
 
 				//プレイヤーとカメラ行動の入力を全復活させる

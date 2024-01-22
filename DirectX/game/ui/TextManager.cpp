@@ -13,11 +13,7 @@ TextManager::TextManager()
 	sentenceFrameSprite->SetSize(backSize);
 
 	//次のテキストを生成する入力スプライトを生成
-	std::string textureName;
-	if (XInputManager::GetInstance()->ControllerConnectCheck()) { textureName = "pad_" + std::to_string(XInputManager::PAD_A); }
-	else { textureName = "key_" + std::to_string(DIK_SPACE); }
-	inputNextTextSprite = Sprite::Create(textureName, { 1150, 775 }, { 0.5, 0.5f });
-	inputNextTextSprite->SetScale(1.0f);
+	inputNextTextSprite = std::make_unique<CharActionInputSprite>(GameInputManager::InputAction::Select, DirectX::XMFLOAT2{ 1150, 780 }, 1.0f, true);
 
 	//各状態の内容をセット
 	func.emplace_back([this] { return UpdateSentenceNonePhase(); });
@@ -40,14 +36,12 @@ void TextManager::Update()
 		sentenceFrameSprite->Update();
 	}
 	//入力スプライト描画
-	if (sentence.text && !choices.question) {
-		if (sentence.text->GetIsAllWrite()) {
-			std::string textureName;
-			if (XInputManager::GetInstance()->ControllerConnectCheck()) { textureName = "pad_" + std::to_string(XInputManager::PAD_A); }
-			else { textureName = "key_" + std::to_string(DIK_SPACE); }
-			inputNextTextSprite->SetTexture(textureName);
-			inputNextTextSprite->SetScale(1.f);
-			inputNextTextSprite->Update();
+	if (sentence.textCreator && !choices.question) {
+		//テキストごとの「入力によるテキスト更新フラグ」がtrueなら
+		if (isInputNextText) {
+			if (sentence.textCreator->GetIsAllWrite()) {
+				inputNextTextSprite->Update();
+			}
 		}
 	}
 
@@ -69,14 +63,17 @@ void TextManager::Draw()
 
 	//文章生成状態ならテキスト描画
 	if (sentenceCreatePhase == SentenceCreatePhase::SENTENCE_CREATE) {
-		sentence.text->Draw();
+		sentence.textCreator->Draw();
 	}
 
 	//テキストの表示が終了していれば入力スプライト描画
-	if (sentence.text && !choices.question) {
-		if (sentence.text->GetIsAllWrite()) {
-			inputNextTextSprite->Draw();
-		}
+	if (sentence.textCreator && !choices.question) {
+		//テキストごとの「入力によるテキスト更新フラグ」がtrueなら
+		if (isInputNextText) {
+			if (sentence.textCreator->GetIsAllWrite()) {
+				inputNextTextSprite->Draw();
+			}
+		} 
 	}
 
 	//選択肢がセットされているなら選択肢更新
@@ -87,17 +84,40 @@ void TextManager::Draw()
 
 void TextManager::SentenceCreate(SentenceData::SentenceName sentenceName)
 {
-	//既に文章テキストが表示されていたら抜ける
-	if (sentence.text) { return; }
+	//テキストの表示が終了していれば
+	if (!isSentenceEnd && sentence.textCreator->GetIsAllWrite()) {
+		//文章のテキスト数に表示回数が達していたら終了フラグを立てる
+		if (textCount >= (int)SentenceData::sentenceData[(int)sentence.sentenceName].size()) {
+			isSentenceEnd = true;
+		}
+	}
+
+	//それでも文章表示し終えていなければ抜ける
+	if (!isSentenceEnd) { return; }
 
 	//テキスト表示回数をリセット
 	textCount = 0;
 	isSentenceEnd = false;
 
+	//表示を終えた文章が表示されたままなら、新たな文章を入れるため文章のテキストを解放しておく
+	if (sentence.textCreator) {
+		sentence.textCreator.reset();
+	}
+
 	//文章に文章名をセット
 	sentence.sentenceName = sentenceName;
 	//セットされた文章の最初のテキストを読み込み
-	sentence.text = std::make_unique<TextTypeWriter>(TextData::textData[(int)SentenceData::sentenceData[(int)sentence.sentenceName][textCount]], textPos, textScale, textWriteSpeed);
+	sentence.text = TextData::textData[(int)SentenceData::sentenceData[(int)sentence.sentenceName][textCount]].text;
+	//入力によるテキスト更新を可能にするか
+	isInputNextText = TextData::textData[(int)SentenceData::sentenceData[(int)sentence.sentenceName][textCount]].isInputNextText;
+
+	//テキストごとに指定した、タイプライターシステムを使用するか判定
+	if (TextData::textData[(int)SentenceData::sentenceData[(int)sentence.sentenceName][textCount]].isTypeWriter) {
+		sentence.textCreator = std::make_unique<TextTypeWriter>(sentence.text, textPos, textScale, textWriteSpeed);
+	}
+	else {
+		sentence.textCreator = std::make_unique<TextCreator>(sentence.text, textPos, textScale, true);
+	}
 
 	//テキスト表示回数を更新
 	textCount++;
@@ -114,11 +134,11 @@ void TextManager::SentenceDrawEnd()
 	sentenceCreatePhase = SentenceCreatePhase::FRAME_SUBMERGE;
 
 	//テキストを解放する
-	sentence.text.reset();
+	sentence.textCreator.reset();
 
 	//テキスト表示回数をリセット
 	textCount = 0;
-	isSentenceEnd = false;
+	isSentenceEnd = true;
 }
 
 void TextManager::ChoicesCreate(ChoicesData::ChoicesName choicesName)
@@ -177,7 +197,7 @@ void TextManager::UpdateSentenceCreatePhase()
 	SentenceNextText();
 
 	//スプライト更新
-	sentence.text->Update();
+	sentence.textCreator->Update();
 }
 
 void TextManager::UpdateSentenceFrameSubemergePhase()
@@ -204,10 +224,13 @@ void TextManager::UpdateSentenceFrameSubemergePhase()
 
 void TextManager::SentenceNextText()
 {
+	//テキストごとの「入力によるテキスト更新フラグ」がfalseなら抜ける
+	if (!isInputNextText) { return; }
+
 	//テキストの表示が終了していなければ抜ける
-	if (!sentence.text->GetIsAllWrite()) { return; }
+	if (!sentence.textCreator->GetIsAllWrite()) { return; }
 	//入力がなければ抜ける
-	if (!(DirectInput::GetInstance()->TriggerKey(DIK_SPACE) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A))) { return; }
+	if (!GameInputManager::TriggerInputAction(GameInputManager::Select)) { return; }
 
 	//文章のテキスト数に表示回数が達していたら終了フラグを立てて抜ける
 	if (textCount >= (int)SentenceData::sentenceData[(int)sentence.sentenceName].size()) {
@@ -215,8 +238,19 @@ void TextManager::SentenceNextText()
 		return;
 	}
 
+	//テキストを更新
 	//セットされている文章の次のテキストを読み込み
-	sentence.text = std::make_unique<TextTypeWriter>(TextData::textData[(int)SentenceData::sentenceData[(int)sentence.sentenceName][textCount]], textPos, textScale, textWriteSpeed);
+	sentence.text = TextData::textData[(int)SentenceData::sentenceData[(int)sentence.sentenceName][textCount]].text;
+	//入力によるテキスト更新を可能にするか
+	isInputNextText = TextData::textData[(int)SentenceData::sentenceData[(int)sentence.sentenceName][textCount]].isInputNextText;
+
+	//テキストごとに指定した、タイプライターシステムを使用するか判定
+	if (TextData::textData[(int)SentenceData::sentenceData[(int)sentence.sentenceName][textCount]].isTypeWriter) {
+		sentence.textCreator = std::make_unique<TextTypeWriter>(sentence.text, textPos, textScale, textWriteSpeed);
+	}
+	else {
+		sentence.textCreator = std::make_unique<TextCreator>(sentence.text, textPos, textScale, true);
+	}
 
 	//テキスト表示回数を更新
 	textCount++;

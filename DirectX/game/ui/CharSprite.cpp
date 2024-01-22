@@ -6,6 +6,9 @@ CharSprite::CharSprite(const std::wstring& character, const DirectX::XMFLOAT2& p
 {
 	//文字を保存しておく
 	this->character = character;
+	//子クラスでL""を設定することがあるため抜ける
+	if (character == L"") { return; }
+
 	//wstring型をstring型に変換
 	std::string str = WStringToString(character);
 
@@ -15,6 +18,8 @@ CharSprite::CharSprite(const std::wstring& character, const DirectX::XMFLOAT2& p
 	//スプライト生成
 	charSprite = Sprite::Create(str, pos, { 0.5f, 0.5f });
 	charSprite->SetScale(scale);
+	//大きさを保存
+	this->scale = scale;
 
 	//描画するかセット
 	this->isDraw = isDraw;
@@ -26,6 +31,7 @@ CharSprite::~CharSprite()
 
 void CharSprite::Update()
 {
+	//描画しない設定なら抜ける
 	if (!isDraw) { return; }
 
 	charSprite->Update();
@@ -33,9 +39,28 @@ void CharSprite::Update()
 
 void CharSprite::Draw()
 {
+	//描画しない設定なら抜ける
 	if (!isDraw) { return; }
 
 	charSprite->Draw();
+}
+
+void CharSprite::ChangeCharacter(const std::wstring& character)
+{
+	//文字を保存しておく
+	this->character = character;
+	//子クラスでL""を設定することがあるため抜ける
+	if (character == L"") { return; }
+
+	//wstring型をstring型に変換
+	std::string str = WStringToString(character);
+
+	//テクスチャ読み込み
+	LoadCharTexture(str);
+
+	//スプライト生成
+	charSprite->SetTexture(str);
+	charSprite->SetScale(scale);
 }
 
 void CharSprite::LoadCharTexture(const std::string& character)

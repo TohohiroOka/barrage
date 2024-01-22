@@ -29,6 +29,8 @@ public: //enum
 		CameraRightRota,//カメラ回転(右)
 		Lockon,			//ロックオン
 
+		Select,			//選択
+
 		InputActionNum,	//入力対応数
 	};
 

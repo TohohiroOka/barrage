@@ -1,5 +1,5 @@
 #pragma once
-#include "Object/2d/Sprite.h"
+#include "ui/CharActionInputSprite.h"
 
 /// <summary>
 /// 選択ボタンが押せる状況を教えるUI(「A:入る」など)
@@ -25,6 +25,6 @@ private: //静的メンバ変数
 	static const DirectX::XMFLOAT2 position;
 
 private: //メンバ変数
-	std::unique_ptr<Sprite> buttonSprite;
+	std::unique_ptr<CharActionInputSprite> buttonSprite;
 	std::unique_ptr<Sprite> textSprite;
 };

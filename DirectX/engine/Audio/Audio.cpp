@@ -122,7 +122,7 @@ bool Audio::SoundPlayWava(const Sound::SoundName _number, const bool _roop, cons
 	soundData[number]->pSourceVoice->GetState(&xa3state);
 
 	//0‚Å‚È‚¢‚È‚ç‰¹Šy‚ªÄ¶’†‚É‚È‚é‚½‚ßƒXƒ‹[‚·‚é
-	if (xa3state.BuffersQueued != 0)
+	if (_roop && xa3state.BuffersQueued != 0)
 	{
 		return false;
 	}
