@@ -199,6 +199,9 @@ void Player::SetMoveRotate(const Vector3& vec, float rotSpeed)
 
 void Player::UseEndurance(const int enduranceUseNum, const int enduranceRecoveryStartTime, bool isDecreaseDiffMode)
 {
+	//持久力を消費しない状態ならそのまま抜ける
+	if (!data->isUseEndurance) { return; }
+
 	//持久力を減らす
 	data->endurance -= enduranceUseNum;
 	data->endurance = max(data->endurance, 0);

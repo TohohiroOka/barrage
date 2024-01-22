@@ -122,8 +122,8 @@ void TextManager::SentenceCreate(SentenceData::SentenceName sentenceName)
 	//テキスト表示回数を更新
 	textCount++;
 
-	//文章生成状態がなにもないフェーズなら枠が出てくるフェーズに更新
-	if (sentenceCreatePhase == SentenceCreatePhase::NONE) {
+	//文章生成状態がなにもないフェーズか枠が消えていく状態フェーズなら枠が出てくるフェーズに変更
+	if (sentenceCreatePhase == SentenceCreatePhase::NONE || sentenceCreatePhase == SentenceCreatePhase::FRAME_SUBMERGE) {
 		sentenceCreatePhase = SentenceCreatePhase::FRAME_EMERGE;
 	}
 }

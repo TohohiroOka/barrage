@@ -41,6 +41,7 @@ PlayerData::PlayerData()
 
 	isNoGravity = false;
 	isNoDamage = false;
+	isUseEndurance = true;
 	isDead = false;
 }
 

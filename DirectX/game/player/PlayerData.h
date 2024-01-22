@@ -116,5 +116,6 @@ public: //メンバ変数 (変更しやすいようにpublic)
 
 	bool isNoGravity; //落下無効フラグ
 	bool isNoDamage; //無敵フラグ
+	bool isUseEndurance; //持久力消費フラグ
 	bool isDead; //死亡フラグ
 };

@@ -33,6 +33,7 @@ void TitleScene::Initialize()
 	field = std::make_unique<Field>();
 	//プレイヤー生成
 	player = std::make_unique<Player>();
+	player->GetData()->isUseEndurance = false; //持久力を消費しない状態にしておく
 	//ポータル生成
 	Scene1* gameScene = new Scene1;
 	const float stageSize = GameHelper::Instance()->GetStageSize();
@@ -160,7 +161,7 @@ void TitleScene::NonPostEffectDraw(const int _cameraNum)
 	TextManager::Instance()->Draw();
 
 	//テキストがなにも描画されていなければ押下可能UI描画
-	if (!TextManager::Instance()->GetIsTextDraw()) {
+	if (!(TextManager::Instance()->GetSentece().textCreator || TextManager::Instance()->GetChoices().question)) {
 		for (int i = 0; i < 3; i++) {
 			if (portals[i]->GetIsIntoPortal()) {
 				pressSelectButtonUI->Draw();
@@ -173,7 +174,6 @@ void TitleScene::NonPostEffectDraw(const int _cameraNum)
 	if (isInputConfigMode) {
 		actionInputConfig->Draw();
 	}
-
 
 	SceneChangeDirection::Instance()->Draw();
 }
@@ -220,7 +220,7 @@ void TitleScene::IntoPortalCheck()
 	if (isIntoPortal) { return; }
 
 	//テキストがなにも描画されていなければ
-	if (!TextManager::Instance()->GetIsTextDraw()) {
+	if (!TextManager::Instance()->GetSentece().textCreator) {
 		//入力がなければ抜ける
 		if (!GameInputManager::TriggerInputAction(GameInputManager::Select)) { return; }
 		//カメラが通常状態でなければ抜ける

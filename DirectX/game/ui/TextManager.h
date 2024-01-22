@@ -87,7 +87,6 @@ public: //ƒƒ“ƒoŠÖ”
 	void Finalize();
 
 	//getter
-	bool GetIsTextDraw() { return sentence.textCreator || choices.question; }
 	const Sentence& GetSentece() { return sentence; }
 	bool GetIsSentenceEnd(SentenceData::SentenceName sentenceName) {
 		//•¶Í–¼‚ªˆá‚Á‚Ä‚¢‚½‚çfalse
