@@ -56,7 +56,7 @@ void PlayerActionMoveNormal::Move()
 	const float moveAccel = 0.025f * GameHelper::Instance()->GetGameSpeed();
 	if (player->GetData()->isMoveKey || player->GetData()->isMovePad) {
 		player->GetData()->moveSpeed += moveAccel;
-		if (isDash) { player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, dashSpeedMax); }
+		if (player->GetData()->isDash) { player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, dashSpeedMax); }
 		else { player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, moveSpeedMax); }
 
 		Vector3 inputMoveVec{};
@@ -118,10 +118,10 @@ void PlayerActionMoveNormal::Dash()
 	//地面にいない場合は、変更を受け付けないで抜ける
 	if (!player->GetData()->onGround) { return; }
 
-	if (!isDash) {
+	if (!player->GetData()->isDash) {
 		//ダッシュ開始可能で地面接地しているかつ、ダッシュ入力があって移動した場合にダッシュ状態にする
 		if (isDashStart && (player->GetData()->isMoveKey || player->GetData()->isMovePad) && player->GetData()->endurance > 0 && GameInputManager::PushInputAction(GameInputManager::Avoid_Blink_Dash)) {
-			isDash = true;
+			player->GetData()->isDash = true;
 			isDashStart = false;
 		}
 
@@ -137,7 +137,7 @@ void PlayerActionMoveNormal::Dash()
 		}
 		//入力が途切れたときにダッシュを終了する
 		else {
-			isDash = false;
+			player->GetData()->isDash = false;
 		}
 	}
 }

@@ -92,7 +92,8 @@ public: //メンバ変数 (変更しやすいようにpublic)
 
 	bool isMoveKey; //移動入力がされているか(キーボード)
 	bool isMovePad; //移動入力がされているか(ゲームパッド)
-
+	
+	bool isDash; //ダッシュ中か
 	float moveSpeed; //移動スピード
 
 	int jumpMaxNum; //ジャンプ可能回数

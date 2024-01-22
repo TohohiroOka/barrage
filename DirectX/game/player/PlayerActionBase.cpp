@@ -9,6 +9,9 @@ PlayerActionBase::PlayerActionBase(Player* player)
 {
 	//プレイヤーをセット
 	this->player = player;
+
+	//どの行動を開始するときでもダッシュ状態を解除
+	player->GetData()->isDash = false;
 }
 
 PlayerActionBase::~PlayerActionBase()

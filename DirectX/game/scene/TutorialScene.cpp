@@ -178,10 +178,10 @@ void TutorialScene::TutorialRunUpdate()
 			}
 
 			//移動するほど数字を減らしていく
-			if (GameInputManager::PushInputAction(GameInputManager::Avoid_Blink_Dash)) {
+			if (player->GetData()->isDash) {
 				//数字テキストの数字を減らしていく
-				int runNum = TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->GetNumber();
-				runNum--;
+				float runNum = (float)TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->GetNumber();
+				runNum -= player->GetData()->moveSpeed;
 				//指定した数を減らしきったらチュートリアルお試し行動クリア
 				if (runNum <= 0) {
 					runNum = 0;
@@ -193,7 +193,7 @@ void TutorialScene::TutorialRunUpdate()
 					player->GetData()->SetAllActionInput(false);
 				}
 
-				TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->ChangeNumber(runNum);
+				TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->ChangeNumber((int)runNum);
 			}
 		}
 	}
@@ -216,7 +216,7 @@ void TutorialScene::TutorialJumpUpdate()
 			}
 
 			//移動するほど数字を減らしていく
-			if (GameInputManager::TriggerInputAction(GameInputManager::Jump)) {
+			if (player->GetData()->action == PlayerActionName::JUMP) {
 				//数字テキストの数字を減らしていく
 				int jumpNum = TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->GetNumber();
 				jumpNum--;

@@ -1,39 +1,39 @@
-#pragma once
+﻿#pragma once
 #include <vector>
 #include <string>
 
 /// <summary>
-/// �Q�[���Ŏg�p����e�L�X�g�f�[�^
+/// ゲームで使用するテキストデータ
 /// </summary>
 namespace TextData {
 	/// <summary>
-	/// �e�L�X�g�f�[�^��
+	/// テキストデータ名
 	/// </summary>
 	enum class TextName {
-		//�^�C�g���V�[���p
-		GO_TO_GAME_CHECK_TEXT,		//�Q�[�����J�n���܂����H
-		GO_TO_TUTORIAL_CHECK_TEXT,	//�`���[�g���A�����s���܂����H
-		EXIT_GAME_CHECK_TEXT,		//�Q�[�����I�����܂����H
+		//タイトルシーン用
+		GO_TO_GAME_CHECK_TEXT,		//ゲームを開始しますか？
+		GO_TO_TUTORIAL_CHECK_TEXT,	//チュートリアルを行いますか？
+		EXIT_GAME_CHECK_TEXT,		//ゲームを終了しますか？
 
 
-		//�`���[�g���A���V�[���p
-		TUTORIAL_START_TEXT,		//�`���[�g���A���ւ悤�����B�������ł͑�����@�ƃ��[���̐������s���܂��B
+		//チュートリアルシーン用
+		TUTORIAL_START_TEXT,		//チュートリアルへようこそ。＠ここでは操作方法とルールの説明を行います。
 
-		TUTORIAL_RUN_TEXT,			//�܂��́u�_�b�V���ړ��v�ł��B���ړ����Ȃ���[action_input_dash]����͂��邱�Ƃő����ړ��ł��܂��B
-		TUTORIAL_RUN_ACTION_TEXT,	//�_�b�V���F�ړ����Ȃ���[action_input_dash]�������@�@�@�@�@�@�@�@�@�@�@�@�@�@�@�@����(1000)��
+		TUTORIAL_RUN_TEXT,			//まずは「ダッシュ移動」です。＠移動しながら[action_input_dash]を入力することで速く移動できます。
+		TUTORIAL_RUN_ACTION_TEXT,	//ダッシュ：移動しながら[action_input_dash]＠＠＠　　　　　　　　　　　　　　　　あと(1000)ｍ
 		
-		TUTORIAL_JUMP_TEXT,			//���́u�W�����v�v�ł��B��[action_input_jump]����͂��邱�Ƃŏ�����ɒ��Ԃ��Ƃ��ł��܂��B
-		TUTORIAL_JUMP_ACTION_TEXT,	//�W�����v�F[action_input_dash]�������@�@�@�@�@�@�@�@�@�@�@�@�@�@�@�@����(5)��
+		TUTORIAL_JUMP_TEXT,			//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
+		TUTORIAL_JUMP_ACTION_TEXT,	//ジャンプ：[action_input_dash]＠＠＠　　　　　　　　　　　　　　　　あと(5)回
 
-		TUTORIAL_ATTACK_TEXT_1,		//���́u�W�����v�v�ł��B��[action_input_jump]����͂��邱�Ƃŏ�����ɒ��Ԃ��Ƃ��ł��܂��B
-		TUTORIAL_ATTACK_TEXT_2,		//���́u�W�����v�v�ł��B��[action_input_jump]����͂��邱�Ƃŏ�����ɒ��Ԃ��Ƃ��ł��܂��B
-		TUTORIAL_ATTACK_ACTION_TEXT,//�W�����v�F[action_input_dash]�������@�@�@�@�@�@�@�@�@�@�@�@�@�@�@�@����(5)��
+		TUTORIAL_ATTACK_TEXT_1,		//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
+		TUTORIAL_ATTACK_TEXT_2,		//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
+		TUTORIAL_ATTACK_ACTION_TEXT,//ジャンプ：[action_input_dash]＠＠＠　　　　　　　　　　　　　　　　あと(5)回
 
-		TUTORIAL_AVOID_TEXT,			//���́u�W�����v�v�ł��B��[action_input_jump]����͂��邱�Ƃŏ�����ɒ��Ԃ��Ƃ��ł��܂��B
-		TUTORIAL_AVOID_ACTION_TEXT,	//�W�����v�F[action_input_dash]������
+		TUTORIAL_AVOID_TEXT,			//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
+		TUTORIAL_AVOID_ACTION_TEXT,	//ジャンプ：[action_input_dash]＠＠＠
 
-		TUTORIAL_FREE_TEXT,			//���́u�W�����v�v�ł��B��[action_input_jump]����͂��邱�Ƃŏ�����ɒ��Ԃ��Ƃ��ł��܂��B
-		TUTORIAL_FREE_ACTION_TEXT,	//�W�����v�F[action_input_dash]������
+		TUTORIAL_FREE_TEXT,			//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
+		TUTORIAL_FREE_ACTION_TEXT,	//ジャンプ：[action_input_dash]＠＠＠
 	};
 
 	struct TextDataContents {
@@ -42,58 +42,58 @@ namespace TextData {
 		bool isInputNextText;
 	};
 
-	//�e�L�X�g�f�[�^
+	//テキストデータ
 	static std::vector<TextDataContents> textData = {
-		{ L"�Q�[�����J�n���܂����H", true, true },
-		{ L"�`���[�g���A�����s���܂����H", true, true },
-		{ L"�Q�[�����I�����܂����H", true, true },
+		{ L"ゲームを開始しますか？", true, true },
+		{ L"チュートリアルを行いますか？", true, true },
+		{ L"ゲームを終了しますか？", true, true },
 		
 
-		{ L"�`���[�g���A���ւ悤�����B�������ł͑�����@�̐������s���܂��B", true, true },
+		{ L"チュートリアルへようこそ。＠ここでは操作方法の説明を行います。", true, true },
 
-		{ L"�܂��́u�_�b�V���ړ��v�ł��B���ړ����Ȃ���[action_input_dash]����͂��邱�Ƃő����ړ��ł��܂��B", true, true },
-		{ L"�_�b�V���F�ړ����Ȃ���[action_input_dash]�������@�@�@�@�@�@�@�@�@�@�@�@�@�@�@�@����(100)��", false, false },
+		{ L"まずは「ダッシュ移動」です。＠移動しながら[action_input_dash]を入力することで速く移動できます。", true, true },
+		{ L"ダッシュ：移動しながら[action_input_dash]＠＠＠　　　　　　　　　　　　　　　　あと(300)ｍ", false, false },
 
-		{ L"���́u�W�����v�v�ł��B��[action_input_jump]����͂��邱�Ƃŏ�����ɒ��Ԃ��Ƃ��ł��܂��B", true, true },
-		{ L"�W�����v�F[action_input_jump]�������@�@�@�@�@�@�@�@�@�@�@�@�@�@�@�@����(5)��", false, false },
+		{ L"つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。", true, true },
+		{ L"ジャンプ：[action_input_jump]＠＠＠　　　　　　　　　　　　　　　　あと(5)回", false, false },
 
-		{ L"�����Ắu�U���v�ł��B���U���ɂ͎�U���Ƌ��U����2��ނ�����܂��B", true, true },
-		{ L"[action_input_light_attack]����͂��邱�ƂŎ�U���A[action_input_strong_attack]����͂��邱�ƂŁ����U�����o�����Ƃ��ł��܂��B���ǂ�����ő�3��܂ŘA�������邱�Ƃ��ł��܂��B", true, true },
-		{ L"��U���F[action_input_light_attack]�����U���F[action_input_strong_attack]�����@�@�@�@�@�@�@�@�@�@�@�@�@�@�@�@����(1)��", false, false },
+		{ L"続いては「攻撃」です。＠攻撃には弱攻撃と強攻撃の2種類があります。", true, true },
+		{ L"[action_input_light_attack]を入力することで弱攻撃、[action_input_strong_attack]を入力することで＠強攻撃を出すことができます。＠どちらも最大3回まで連撃をすることができます。", true, true },
+		{ L"弱攻撃：[action_input_light_attack]＠強攻撃：[action_input_strong_attack]＠＠　　　　　　　　　　　　　　　　あと(1)回", false, false },
 
-		{ L"�Ō�́u����v�ł��B��[action_input_avoid]����͂��邱�ƂœG�̍U��������邱�Ƃ��ł��܂��B", true, true },
-		{ L"����F[action_input_avoid]�������@�@�@�@�@�@�@�@�@�@�@�@�@�@�@�@����(3)��", false, false },
+		{ L"最後は「回避」です。＠[action_input_avoid]を入力することで敵の攻撃を避けることができます。", true, true },
+		{ L"回避：[action_input_avoid]＠＠＠　　　　　　　　　　　　　　　　あと(3)回", false, false },
 
-		{ L"�ȏ�ő�������͏I���ł��B�����R�ɍs�����Ă݂܂��傤�B", true, true },
-		{ L"���R�ɍs�����Ă݂悤�B�������@�@�@�@�@�@�@�@�@�@�@�@�@�@�@�@[action_input_select]�F�|�[�Y", false, false },
+		{ L"以上で操作説明は終了です。＠自由に行動してみましょう。", true, true },
+		{ L"自由に行動してみよう。＠＠＠　　　　　　　　　　　　　　　　[action_input_select]：ポーズ", false, false },
 	};
 }
 
 /// <summary>
-/// �Q�[���Ŏg�p���镶�̓f�[�^
+/// ゲームで使用する文章データ
 /// </summary>
 namespace SentenceData {
 	/// <summary>
-	/// ���͖�
+	/// 文章名
 	/// </summary>
 	enum class SentenceName
 	{
-		//�^�C�g���V�[���p
-		GO_TO_GAME_CHECK,		//�Q�[�����J�n���邩�`�F�b�N
-		GO_TO_TUTORIAL_CHECK,	//�`���[�g���A���s�����`�F�b�N
-		EXIT_GAME_CHECK,		//�Q�[���I���`�F�b�N
+		//タイトルシーン用
+		GO_TO_GAME_CHECK,		//ゲームを開始するかチェック
+		GO_TO_TUTORIAL_CHECK,	//チュートリアル行くかチェック
+		EXIT_GAME_CHECK,		//ゲーム終了チェック
 
 
-		//�`���[�g���A���V�[���p
-		TUTORIAL_START,		//�`���[�g���A���J�n
-		TUTORIAL_RUN,		//�_�b�V���������
-		TUTORIAL_JUMP,		//�W�����v�������
+		//チュートリアルシーン用
+		TUTORIAL_START,		//チュートリアル開始
+		TUTORIAL_RUN,		//ダッシュ操作説明
+		TUTORIAL_JUMP,		//ジャンプ操作説明
 		TUTORIAL_ATTACK,
 		TUTORIAL_AVOID,
 		TUTORIAL_FREE
 	};
 
-	//���̓f�[�^
+	//文章データ
 	static std::vector<std::vector<TextData::TextName>> sentenceData = {
 		{
 			TextData::TextName::GO_TO_GAME_CHECK_TEXT,
@@ -132,27 +132,27 @@ namespace SentenceData {
 }
 
 /// <summary>
-/// �Q�[���Ŏg�p����I�����f�[�^
+/// ゲームで使用する選択肢データ
 /// </summary>
 namespace ChoicesData {
 	/// <summary>
-	/// �I�����f�[�^��
+	/// 選択肢データ名
 	/// </summary>
 	enum class ChoicesName {
-		YES_OR_NO,		//�͂�or������
-		KANSAI,			//�Ȃ�ł�˂�or�A�z��or�ǂ��܂킷��
+		YES_OR_NO,		//はいorいいえ
+		KANSAI,			//なんでやねんorアホかorどつきまわすぞ
 	};
 
 
 	static std::vector<std::vector<std::wstring>> choicesData = {
 		{
-			L"�͂�",
-			L"������"
+			L"はい",
+			L"いいえ"
 		},
 		{
-			L"�Ȃ�ł�˂�",
-			L"�A�z��",
-			L"�ǂ��܂킷��",
+			L"なんでやねん",
+			L"アホか",
+			L"どつきまわすぞ",
 		}
 	};
 }
