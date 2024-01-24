@@ -13,7 +13,9 @@ void BaseBoss::Initialize()
 
 void BaseBoss::Update()
 {
-	Collider();
+	if (isCollider) {
+		Collider();
+	}
 
 	hpGauge->Update();
 

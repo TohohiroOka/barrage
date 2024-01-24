@@ -32,7 +32,8 @@ public:
 		nearAttak_start = 12,
 		runAttack_end = 13,
 		runAttack_start = 14,
-		standBy = 15,
+		screen_break_attack = 15,
+		standBy = 16,
 	};
 
 	enum class AttachName {
@@ -65,7 +66,7 @@ public:
 
 	void ChangesScale(const int _num, const float _maxTime, const Vector3& _scale) override;
 
-	void ModelReset() override;
+	void ModelReset(const float _maxTime = 15.0f) override;
 
 	void IsAttachEffect(int _num, bool _isAlive) override {
 		effectAlive[_num] = _isAlive;

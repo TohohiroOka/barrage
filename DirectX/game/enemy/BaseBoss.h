@@ -53,7 +53,7 @@ public:
 			return nullptr;
 		}
 	}
-
+	void SetIsCollider(const bool _isCollider) { isCollider = _isCollider; }
 
 protected:
 
@@ -94,5 +94,8 @@ protected:
 
 	//hp‚ªˆê’è‰»‚É‚È‚Á‚½‚Ìs“®
 	std::unique_ptr<BaseAction> breakAction;
+
+	//’n–Ê‚Æ‚Ì”»’è‚ğs‚¤‚©
+	bool isCollider;
 };
 

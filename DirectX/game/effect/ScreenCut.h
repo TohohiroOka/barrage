@@ -4,7 +4,6 @@
 #include <array>
 #include <functional>
 #include <forward_list>
-#include "../Math/Timer.h"
 
 class ScreenCut
 {
@@ -26,9 +25,9 @@ public:
 
 	void Draw();
 
-	void SetEffect(const bool _isEffect) { isEffect = _isEffect; }
+	static void SetEffect(const bool _isEffect) { isEffect = _isEffect; }
 
-	void DrawImgui();
+	static void Reset() { isReset = true; }
 
 private:
 
@@ -54,7 +53,10 @@ private:
 	static const std::array<float, panelNum> rota;
 
 	//エフェクトを行うか
-	bool isEffect;
+	static bool isEffect;
+
+	//初期化を行うか
+	static bool isReset;
 
 	State state;
 	std::vector<std::function<void()>> func_;
@@ -67,8 +69,5 @@ private:
 
 	float panelMoveSpeed;
 
-	int drawNum;
-	bool isReset;
-	bool allDraw;
-	float cameraDist;
+	bool isEnd;
 };

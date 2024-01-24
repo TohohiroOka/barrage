@@ -181,6 +181,7 @@
     <ClCompile Include="game\enemy\boss1\attack\Boss1Bullet4.cpp" />
     <ClCompile Include="game\enemy\boss1\attack\Boss1HalfAttack.cpp" />
     <ClCompile Include="game\enemy\boss1\attack\Boss1NearAttack1.cpp" />
+    <ClCompile Include="game\enemy\boss1\attack\ScreenBreakAttack.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1Model.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1Wince.cpp" />
@@ -527,6 +528,7 @@
     <ClInclude Include="game\enemy\boss1\attack\Boss1Bullet4.h" />
     <ClInclude Include="game\enemy\boss1\attack\Boss1HalfAttack.h" />
     <ClInclude Include="game\enemy\boss1\attack\Boss1NearAttack1.h" />
+    <ClInclude Include="game\enemy\boss1\attack\ScreenBreakAttack.h" />
     <ClInclude Include="game\enemy\boss1\Boss1.h" />
     <ClInclude Include="game\enemy\boss1\Boss1Model.h" />
     <ClInclude Include="game\enemy\boss1\Boss1Wince.h" />

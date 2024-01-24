@@ -51,7 +51,10 @@ public:
 
 private:
 
-	//break‚ğs‚Á‚½hp
-	float nowBreakHp;
+	//break‚ğs‚Á‚½‰ñ”
+	int breakNum;
+
+	//break‚·‚éhp
+	std::array<float, 2> breakHp;
 };
 

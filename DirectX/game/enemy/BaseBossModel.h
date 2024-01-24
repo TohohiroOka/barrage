@@ -37,7 +37,7 @@ public:
 
 	virtual void ChangesScale(const int _num, const float _maxTime, const Vector3& _scale) {};
 
-	virtual void ModelReset() {};
+	virtual void ModelReset(const float _maxTime = 15.0f) {};
 
 	virtual void IsAttachEffect(int _num, bool _isAlive) {};
 
@@ -63,4 +63,3 @@ protected:
 	//ç¿ïW
 	Vector3 bossPos;
 };
-
