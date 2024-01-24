@@ -172,7 +172,7 @@ GameInputManager::InputAction TextCreator::ActionInputCommand(const std::wstring
 	if (command == commandCommon + L"camera_right_rota") {
 		return GameInputManager::InputAction::CameraRightRota;
 	}
-	if (command == commandCommon + L"camera_lockon_rota") {
+	if (command == commandCommon + L"camera_lockon") {
 		return GameInputManager::InputAction::Lockon;
 	}
 	if (command == commandCommon + L"select") {

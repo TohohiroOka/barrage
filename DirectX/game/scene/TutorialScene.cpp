@@ -7,6 +7,10 @@
 #include "WindowApp.h"
 #include "Object/3d/collider/Collision.h"
 #include "TitleScene.h"
+#include "../effect/AllHitEffect.h"
+
+
+const DirectX::XMFLOAT3 TutorialScene::enemyBornPos = { 90, 10, 150 };
 
 TutorialScene::~TutorialScene()
 {
@@ -23,7 +27,7 @@ void TutorialScene::Initialize()
 	//カメラ生成
 	GameCamera::SetPlayer(player.get());
 	debugCamera = DebugCamera::Create({ 300, 40, 0 });
-	camera = std::make_unique<TitleCamera>();
+	camera = std::make_unique<TutorialCamera>();
 	player->SetGameCamera(camera.get());
 
 	//影用光源カメラ初期化
@@ -38,7 +42,6 @@ void TutorialScene::Initialize()
 	ParticleManager::SetCamera(camera.get());
 
 
-
 	//チュートリアル用初期設定
 	player->GetData()->SetAllActionInput(false); //動けなくしておく
 	TextManager::Instance()->SentenceCreate(SentenceData::SentenceName::TUTORIAL_START);
@@ -46,9 +49,16 @@ void TutorialScene::Initialize()
 	tutorialFunc.emplace_back([this] { return TutorialStartUpdate(); });
 	tutorialFunc.emplace_back([this] { return TutorialRunUpdate(); });
 	tutorialFunc.emplace_back([this] { return TutorialJumpUpdate(); });
+	tutorialFunc.emplace_back([this] { return TutorialCameraUpdate(); });
 	tutorialFunc.emplace_back([this] { return TutorialAttackUpdate(); });
 	tutorialFunc.emplace_back([this] { return TutorialAvoidUpdate(); });
 	tutorialFunc.emplace_back([this] { return TutorialFreeUpdate(); });
+	//カメラチュートリアルフェーズの内容をセット
+	tutorialCameraFunc.emplace_back([this] { return TutorialCameraText1(); });
+	tutorialCameraFunc.emplace_back([this] { return TutorialCameraZoomEnemyBorn(); });
+	tutorialCameraFunc.emplace_back([this] { return TutorialCameraEnemyBorn(); });
+	tutorialCameraFunc.emplace_back([this] { return TutorialCameraReturnPos(); });
+	tutorialCameraFunc.emplace_back([this] { return TutorialCameraText2Action(); });
 	//OKスプライト生成
 	okSprite = std::make_unique<OKSprite>();
 	//チュートリアルお試し行動終了後タイマー生成
@@ -59,6 +69,9 @@ void TutorialScene::Initialize()
 
 	//遷移初期化
 	SceneChangeDirection::Instance()->Init();
+
+	lockonUI = std::make_unique<LockonUI>();
+	lockonUI->Init(camera.get());
 }
 
 void TutorialScene::Update()
@@ -76,6 +89,9 @@ void TutorialScene::Update()
 		//オブジェクト更新
 		player->Update();
 		field->Update(player->GetData()->pos, camera->GetEye());
+		if (tutorialEnemy) {
+			tutorialEnemy->Update();
+		}
 
 		//当たり判定
 		CollisionCheck();
@@ -86,6 +102,9 @@ void TutorialScene::Update()
 			if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
 				isNormalCamera = !isNormalCamera;
 				Base3D::SetCamera(debugCamera.get());
+			}
+			if (tutorialEnemy) {
+				lockonUI->Update(tutorialEnemy->GetObject3d()->GetPosition());
 			}
 		}
 		else {
@@ -101,6 +120,8 @@ void TutorialScene::Update()
 			isInputConfigMode = true;
 			actionInputConfig->Reset();
 		}
+
+		if (!camera->GetIsLockon()) { lockonUI->EndLockOnDraw(); }
 	}
 	else {
 		//入力設定更新
@@ -111,6 +132,7 @@ void TutorialScene::Update()
 
 	//スプライト更新
 	TextManager::Instance()->Update();
+	AllHitEffect::Instance()->Update();
 	SceneChangeDirection::Instance()->Update();
 	okSprite->Update();
 }
@@ -119,6 +141,10 @@ void TutorialScene::Draw(const int _cameraNum)
 {
 	player->Draw();
 	field->Draw();
+	if (tutorialEnemy) {
+		tutorialEnemy->Draw();
+	}
+	AllHitEffect::Instance()->Draw();
 }
 
 void TutorialScene::DrawLightView(const int _cameraNum)
@@ -128,10 +154,11 @@ void TutorialScene::DrawLightView(const int _cameraNum)
 
 void TutorialScene::NonPostEffectDraw(const int _cameraNum)
 {
-	TextManager::Instance()->Draw();
+	lockonUI->Draw();
 
 	player->DrawSprite();
 
+	TextManager::Instance()->Draw();
 	okSprite->Draw();
 
 	//入力設定描画
@@ -155,6 +182,88 @@ void TutorialScene::FrameReset()
 
 void TutorialScene::CollisionCheck()
 {
+	//敵関係の当たり判定しかないので、敵が存在しなければ抜ける
+	if (!tutorialEnemy) { return; }
+
+#pragma region プレイヤーと敵の衝突判定
+	{
+		const Vector3 ppos = player->GetData()->pos;
+		Sphere playerSphere;
+		playerSphere.center = { ppos.x, ppos.y, ppos.z, 1.0f };
+		playerSphere.radius = player->GetFbxObject()->GetScale().x;
+
+		Sphere enemySphere;
+		enemySphere.center = { tutorialEnemy->GetObject3d()->GetPosition().x, tutorialEnemy->GetObject3d()->GetPosition().y, tutorialEnemy->GetObject3d()->GetPosition().z, 1.0f };
+		enemySphere.radius = tutorialEnemy->GetObject3d()->GetScale().x;
+
+		XMVECTOR inter;
+		XMVECTOR reject;
+		if (Collision::CheckSphere2Sphere(playerSphere, enemySphere, &inter, &reject)) {
+			//プレイヤーを押し戻す
+			player->PushBack(reject);
+		}
+	}
+#pragma endregion
+
+#pragma region プレイヤーの攻撃と敵の衝突判定
+	{
+		//プレイヤーの攻撃がある場合のみ判定 
+		if (player->GetData()->attackAction) {
+			Sphere enemySphere;
+			enemySphere.center = { tutorialEnemy->GetObject3d()->GetPosition().x, tutorialEnemy->GetObject3d()->GetPosition().y, tutorialEnemy->GetObject3d()->GetPosition().z, 1.0f};
+			enemySphere.radius = tutorialEnemy->GetObject3d()->GetScale().x;
+
+			Capsule attackCapsule;
+			attackCapsule.startPosition = player->GetData()->attackAction->GetAttackCollisionData().startPosition;
+			attackCapsule.endPosition = player->GetData()->attackAction->GetAttackCollisionData().endPosition;
+			attackCapsule.radius = player->GetData()->attackAction->GetAttackCollisionData().radius;
+
+			float dist;
+			Vector3 collisionPos;
+			if (Collision::CheckSphereCapsule(enemySphere, attackCapsule, &dist, &collisionPos)) {
+
+				//敵にヒットエフェクトを出す
+				AllHitEffect::Instance()->AddParticle(collisionPos);
+
+				//攻撃が判定を有効にしていたらダメージを与える
+				if (player->GetData()->attackAction->GetIsCollisionValid()) {
+					//毎フレーム多段ヒットするのを防ぐため、この攻撃の衝突判定をoffにしておく。
+					player->GetData()->attackAction->AttackCollision();
+
+					//ダメージ
+					tutorialEnemy->Damage();
+
+					//ヒットストップ
+					const int hitStopFrame = 5;
+					GameHelper::Instance()->SetSlow(0, hitStopFrame);
+					//攻撃ヒット音再生
+					Audio::Instance()->SoundPlayWava(Sound::SoundName::attack_hit, false, 0.1f);
+				}
+			}
+		}
+	}
+#pragma endregion
+
+#pragma region カメラのロックオンターゲット設定
+	{
+		//カメラがロックオンターゲットを検出している場合のみ判定
+		if (camera->GetisLockonStart()) {
+			//敵座標
+			const XMFLOAT2 pos = tutorialEnemy->GetObject3d()->GetScreenPosition();
+
+			//敵のスクリーン座標が検出対象範囲内なら処理
+			const float targetScreenDistance = 100;
+			const bool isInsideTargetScreen = (pos.x <= WindowApp::GetWindowWidth() - targetScreenDistance && pos.x >= targetScreenDistance &&
+				pos.y <= WindowApp::GetWindowHeight() - targetScreenDistance && pos.y >= targetScreenDistance);
+			if (isInsideTargetScreen) {
+				//ロックオン対象を確定させる
+				camera->Lockon(tutorialEnemy->GetObject3d());
+				//ロックオンUI表示
+				lockonUI->StartLockOnAnimation();
+			}
+		}
+	}
+#pragma endregion
 }
 
 void TutorialScene::TutorialStartUpdate()
@@ -215,7 +324,7 @@ void TutorialScene::TutorialJumpUpdate()
 				player->GetData()->actionInput.isJump = true;
 			}
 
-			//移動するほど数字を減らしていく
+			//ジャンプするほど数字を減らしていく
 			if (player->GetData()->action == PlayerActionName::JUMP) {
 				//数字テキストの数字を減らしていく
 				int jumpNum = TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->GetNumber();
@@ -237,8 +346,15 @@ void TutorialScene::TutorialJumpUpdate()
 	}
 	//チュートリアルお試し行動をクリアしている場合
 	else {
-		TutorialActionClearAfterUpdate(TutorialPhase::TUTORIAL_ATTACK, SentenceData::SentenceName::TUTORIAL_ATTACK);
+		if (XInputManager::GetInstance()->ControllerConnectCheck()) { TutorialActionClearAfterUpdate(TutorialPhase::TUTORIAL_CAMERA, SentenceData::SentenceName::TUTORIAL_CAMERA_1_PAD); }
+		else { TutorialActionClearAfterUpdate(TutorialPhase::TUTORIAL_CAMERA, SentenceData::SentenceName::TUTORIAL_CAMERA_1_KEY); }
 	}
+}
+
+void TutorialScene::TutorialCameraUpdate()
+{
+	//各チュートリアルフェーズの内容更新
+	tutorialCameraFunc[int(tutorialCameraPhasePhase)]();
 }
 
 void TutorialScene::TutorialAttackUpdate()
@@ -255,14 +371,14 @@ void TutorialScene::TutorialAttackUpdate()
 				player->GetData()->actionInput.isStrongAttack = true;
 			}
 
-			//移動するほど数字を減らしていく
-			if (GameInputManager::TriggerInputAction(GameInputManager::LightAttack)) {
+			//攻撃でダメージを当たれる度に数字を減らしていく
+			if (tutorialEnemy->GetIsDamage()) {
 				//数字テキストの数字を減らしていく
-				int destroyNum = TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->GetNumber();
-				destroyNum--;
+				int damageNum = TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->GetNumber();
+				damageNum--;
 				//指定した数を減らしきったらチュートリアルお試し行動クリア
-				if (destroyNum <= 0) {
-					destroyNum = 0;
+				if (damageNum <= 0) {
+					damageNum = 0;
 					isTutorialActionClear = true;
 
 					//OKスプライト描画開始
@@ -271,7 +387,7 @@ void TutorialScene::TutorialAttackUpdate()
 					player->GetData()->SetAllActionInput(false);
 				}
 
-				TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->ChangeNumber(destroyNum);
+				TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->ChangeNumber(damageNum);
 			}
 		}
 	}
@@ -295,7 +411,7 @@ void TutorialScene::TutorialAvoidUpdate()
 				player->GetData()->actionInput.isBlink = true;
 			}
 
-			//移動するほど数字を減らしていく
+			//回避するほど数字を減らしていく
 			if (GameInputManager::TriggerInputAction(GameInputManager::Avoid_Blink_Dash)) {
 				//数字テキストの数字を減らしていく
 				int avoidNum = TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->GetNumber();
@@ -329,6 +445,112 @@ void TutorialScene::TutorialFreeUpdate()
 		if (!player->GetData()->actionInput.isMove) {
 			player->GetData()->SetAllActionInput(true);
 		}
+	}
+}
+
+void TutorialScene::TutorialCameraText1()
+{
+	//カメラ説明文章1が終了していなければ抜ける
+	if (!(TextManager::Instance()->GetIsSentenceEnd(SentenceData::SentenceName::TUTORIAL_CAMERA_1_KEY) ||
+		TextManager::Instance()->GetIsSentenceEnd(SentenceData::SentenceName::TUTORIAL_CAMERA_1_PAD))) {
+		return;
+	}
+
+	//テキスト表示終了
+	TextManager::Instance()->SentenceDrawEnd();
+
+	//カメラを敵生成が行われる位置まで移動させる
+	camera->SetZoomTargetPos(enemyBornPos);
+	camera->ChangePhase(TutorialCamera::TutorialCameraPhase::ZOOM_ENEMY_BORN);
+
+	//次のフェーズへ
+	tutorialCameraPhasePhase = TutorialCameraPhasePhase::TUTORIAL_CAMERA_ZOOM_ENEMY_BORN;
+}
+
+void TutorialScene::TutorialCameraZoomEnemyBorn()
+{
+	//カメラのズームが終了していなければ抜ける
+	if (!(camera->GetTutorialCameraPhase() == TutorialCamera::TutorialCameraPhase::ZOOM_ENEMY_BORN)) { return; }
+	if (!camera->GetIsPhaseActionEnd()) { return; }
+
+	//次のフェーズへ
+	tutorialCameraPhasePhase = TutorialCameraPhasePhase::TUTORIAL_CAMERA_ENEMY_BORN;
+}
+
+void TutorialScene::TutorialCameraEnemyBorn()
+{
+	//敵が生成前のとき
+	if (!tutorialEnemy) {
+		enemyBornTimer++;
+		if (enemyBornTimer <= 30) { return; }
+
+		tutorialEnemy = std::make_unique<TutorialEnemy>(enemyBornPos);
+
+		enemyBornTimer = 0;
+	}
+	else {
+		enemyBornTimer++;
+		if (enemyBornTimer <= 30) { return; }
+
+		//カメラを元の位置まで戻す
+		camera->ChangePhase(TutorialCamera::TutorialCameraPhase::ZOOM_END_RETURN);
+
+		//次のフェーズへ
+		tutorialCameraPhasePhase = TutorialCameraPhasePhase::TUTORIAL_CAMERA_RETURN_POS;
+	}
+}
+
+void TutorialScene::TutorialCameraReturnPos()
+{
+	//カメラの元に戻る処理が終了していなければ抜ける
+	if (!(camera->GetTutorialCameraPhase() == TutorialCamera::TutorialCameraPhase::ZOOM_END_RETURN)) { return; }
+	if (!camera->GetIsPhaseActionEnd()) { return; }
+
+	//カメラ説明文章2を生成する
+	TextManager::Instance()->SentenceCreate(SentenceData::SentenceName::TUTORIAL_CAMERA_2);
+
+	//カメラ状態を通常状態に戻す
+	camera->ChangePhase(TutorialCamera::TutorialCameraPhase::NORMAL);
+
+	//次のフェーズへ
+	tutorialCameraPhasePhase = TutorialCameraPhasePhase::TUTORIAL_CAMERA_TEXT_2_ACTION;
+}
+
+void TutorialScene::TutorialCameraText2Action()
+{
+	//チュートリアルお試し行動をクリアしていない場合
+	if (!isTutorialActionClear) {
+		//表示されているテキストがロックオン行動中に表示させるテキストなら
+		if (TextManager::Instance()->GetSentece().text == TextData::textData[(int)TextData::TextName::TUTORIAL_CAMERA_ACTION_TEXT].text) {
+			//移動入力が不可能なら可能にしておく
+			if (!player->GetData()->actionInput.isMove) {
+				player->GetData()->actionInput.isMove = true;
+				player->GetData()->actionInput.isJump = true;
+			}
+			
+			//ロックオンするほど数字を減らしていく
+			if (camera->GetIsLockon()) {
+				//数字テキストの数字を減らしていく
+				int lockonNum = TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->GetNumber();
+				lockonNum--;
+				//指定した数を減らしきったらチュートリアルお試し行動クリア
+				if (lockonNum <= 0) {
+					lockonNum = 0;
+					isTutorialActionClear = true;
+
+					//OKスプライト描画開始
+					okSprite->DrawStart();
+					//プレイヤーの行動入力の受け付けを禁止にする
+					player->GetData()->SetAllActionInput(false);
+				}
+
+				TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->ChangeNumber(lockonNum);
+			}
+		}
+	}
+	//チュートリアルお試し行動をクリアしている場合
+	else {
+		TutorialActionClearAfterUpdate(TutorialPhase::TUTORIAL_ATTACK, SentenceData::SentenceName::TUTORIAL_ATTACK);
 	}
 }
 

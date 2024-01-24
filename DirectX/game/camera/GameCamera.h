@@ -41,7 +41,7 @@ public: //ƒƒ“ƒoŠÖ”
 	const XMFLOAT3& GetCameraRota() { return rotation; }
 	CameraActionInput GetActionInput() { return actionInput; }
 	Base3D* GetLockonTarget() { return lockonTarget; }
-	bool GetisLockon() { return isLockon; }
+	bool GetIsLockon() { return isLockon; }
 	bool GetisLockonStart() { return isLockonStart; }
 
 	//setter

@@ -25,11 +25,19 @@ namespace TextData {
 		TUTORIAL_JUMP_TEXT,			//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
 		TUTORIAL_JUMP_ACTION_TEXT,	//ジャンプ：[action_input_dash]＠＠＠　　　　　　　　　　　　　　　　あと(5)回
 
+		TUTORIAL_CAMERA_TEXT_1_KEY,	//
+		TUTORIAL_CAMERA_TEXT_1_PAD,	//
+		TUTORIAL_CAMERA_TEXT_2,		//
+		TUTORIAL_CAMERA_TEXT_3,		//
+		TUTORIAL_CAMERA_TEXT_4,		//
+		TUTORIAL_CAMERA_ACTION_TEXT,//
+
 		TUTORIAL_ATTACK_TEXT_1,		//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
 		TUTORIAL_ATTACK_TEXT_2,		//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
+		TUTORIAL_ATTACK_TEXT_3,		//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
 		TUTORIAL_ATTACK_ACTION_TEXT,//ジャンプ：[action_input_dash]＠＠＠　　　　　　　　　　　　　　　　あと(5)回
 
-		TUTORIAL_AVOID_TEXT,			//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
+		TUTORIAL_AVOID_TEXT,		//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
 		TUTORIAL_AVOID_ACTION_TEXT,	//ジャンプ：[action_input_dash]＠＠＠
 
 		TUTORIAL_FREE_TEXT,			//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
@@ -51,18 +59,26 @@ namespace TextData {
 
 		{ L"チュートリアルへようこそ。＠ここでは操作方法の説明を行います。", true, true },
 
-		{ L"まずは「ダッシュ移動」です。＠移動しながら[action_input_dash]を入力することで速く移動できます。", true, true },
-		{ L"ダッシュ：移動しながら[action_input_dash]＠＠＠　　　　　　　　　　　　　　　　あと(300)ｍ", false, false },
+		{ L"まずは「ダッシュ移動」です。＠[action_input_dash]を入力しながら移動することで速く移動できます。", true, true },
+		{ L"ダッシュ：[action_input_dash]を入力しながら移動＠＠＠　　　　　　　　　　　　　　　　あと(300)ｍ", false, false },
 
 		{ L"つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。", true, true },
 		{ L"ジャンプ：[action_input_jump]＠＠＠　　　　　　　　　　　　　　　　あと(5)回", false, false },
 
+		{ L"つぎは「カメラ操作」です。＠[action_input_camera_up_rota][action_input_camera_left_rota][action_input_camera_down_rota][action_input_camera_right_rota]入力でカメラ回転ができます。", true, true },
+		{ L"つぎは「カメラ操作」です。＠[action_input_camera_up_rota]でカメラ回転ができます。", true, true },
+		{ L"敵がいる場合は、＠[action_input_camera_lockon]で「ロックオン」ができます。", true, true },
+		{ L"おや・・・・・？", true, true },
+		{ L"ちょうどいいタイミングで敵が出てきました！＠敵をロックオンしてみましょう。", true, true },
+		{ L"ロックオン：敵が画面内にいるときに[action_input_camera_lockon]＠＠＠　　　　　　　　　　　　　　　　あと(1)回", false, false },
+
 		{ L"続いては「攻撃」です。＠攻撃には弱攻撃と強攻撃の2種類があります。", true, true },
 		{ L"[action_input_light_attack]を入力することで弱攻撃、[action_input_strong_attack]を入力することで＠強攻撃を出すことができます。＠どちらも最大3回まで連撃をすることができます。", true, true },
-		{ L"弱攻撃：[action_input_light_attack]＠強攻撃：[action_input_strong_attack]＠＠　　　　　　　　　　　　　　　　あと(1)回", false, false },
+		{ L"それでは敵に攻撃を当ててみましょう。", true, true },
+		{ L"弱攻撃：[action_input_light_attack]＠強攻撃：[action_input_strong_attack]＠＠　　　　　　　　　　　　　　　　あと(10)回", false, false },
 
-		{ L"最後は「回避」です。＠[action_input_avoid]を入力することで敵の攻撃を避けることができます。", true, true },
-		{ L"回避：[action_input_avoid]＠＠＠　　　　　　　　　　　　　　　　あと(3)回", false, false },
+		{ L"最後は「回避」です。＠移動しながら[action_input_avoid]を入力することで、敵の攻撃を＠避けることができます。", true, true },
+		{ L"回避：移動しながら[action_input_avoid]＠＠＠　　　　　　　　　　　　　　　　あと(3)回", false, false },
 
 		{ L"以上で操作説明は終了です。＠自由に行動してみましょう。", true, true },
 		{ L"自由に行動してみよう。＠＠＠　　　　　　　　　　　　　　　　[action_input_select]：ポーズ", false, false },
@@ -88,6 +104,9 @@ namespace SentenceData {
 		TUTORIAL_START,		//チュートリアル開始
 		TUTORIAL_RUN,		//ダッシュ操作説明
 		TUTORIAL_JUMP,		//ジャンプ操作説明
+		TUTORIAL_CAMERA_1_KEY,
+		TUTORIAL_CAMERA_1_PAD,
+		TUTORIAL_CAMERA_2,
 		TUTORIAL_ATTACK,
 		TUTORIAL_AVOID,
 		TUTORIAL_FREE
@@ -116,8 +135,23 @@ namespace SentenceData {
 			TextData::TextName::TUTORIAL_JUMP_ACTION_TEXT,
 		},
 		{
+			TextData::TextName::TUTORIAL_CAMERA_TEXT_1_KEY,
+			TextData::TextName::TUTORIAL_CAMERA_TEXT_2,
+			TextData::TextName::TUTORIAL_CAMERA_TEXT_3,
+		},
+		{
+			TextData::TextName::TUTORIAL_CAMERA_TEXT_1_PAD,
+			TextData::TextName::TUTORIAL_CAMERA_TEXT_2,
+			TextData::TextName::TUTORIAL_CAMERA_TEXT_3,
+		},
+		{
+			TextData::TextName::TUTORIAL_CAMERA_TEXT_4,
+			TextData::TextName::TUTORIAL_CAMERA_ACTION_TEXT,
+		},
+		{
 			TextData::TextName::TUTORIAL_ATTACK_TEXT_1,
 			TextData::TextName::TUTORIAL_ATTACK_TEXT_2,
+			TextData::TextName::TUTORIAL_ATTACK_TEXT_3,
 			TextData::TextName::TUTORIAL_ATTACK_ACTION_TEXT,
 		},
 		{

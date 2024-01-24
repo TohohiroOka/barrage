@@ -139,7 +139,7 @@ void Scene1::Update()
 			actionInputConfig->Reset();
 		}
 
-		if (!camera->GetisLockon()) { lockonUI->EndLockOnDraw(); }
+		if (!camera->GetIsLockon()) { lockonUI->EndLockOnDraw(); }
 	}
 	else {
 		//“ü—Íİ’èXV
