@@ -178,6 +178,7 @@ void TutorialScene::FrameReset()
 {
 	player->FrameReset();
 	field->FrameReset();
+	tutorialEnemy->FrameReset();
 }
 
 void TutorialScene::CollisionCheck()
@@ -239,6 +240,36 @@ void TutorialScene::CollisionCheck()
 					//攻撃ヒット音再生
 					Audio::Instance()->SoundPlayWava(Sound::SoundName::attack_hit, false, 0.1f);
 				}
+			}
+		}
+	}
+#pragma endregion
+
+#pragma region プレイヤーと敵の攻撃の衝突判定
+	//球と球
+	{
+		std::vector<Sphere> bossAttackDatas;
+		tutorialEnemy->GetAttackCollision(bossAttackDatas);
+
+		const Vector3 ppos = player->GetData()->pos;
+		Sphere playerSphere;
+		playerSphere.center = { ppos.x, ppos.y, ppos.z, 1.0f };
+		playerSphere.radius = player->GetFbxObject()->GetScale().x;
+
+		int num = -1;
+		for (auto& i : bossAttackDatas) {
+			num++;
+			if (Collision::CheckSphere2Sphere(playerSphere, i)) {
+				Vector3 knockbackVec = ppos - Vector3{ i.center.m128_f32[0], i.center.m128_f32[1], i.center.m128_f32[2] };
+
+				//ダメージ処理
+				player->Damage(1, knockbackVec, 5, 1, true);
+				camera->ShakeStart(10, 10);
+				tutorialEnemy->DeleteBullet({ num });
+				//ダメージ音再生
+				Audio::Instance()->SoundPlayWava(Sound::SoundName::damage, false, 0.1f);
+
+				break;
 			}
 		}
 	}
@@ -484,7 +515,7 @@ void TutorialScene::TutorialCameraEnemyBorn()
 		enemyBornTimer++;
 		if (enemyBornTimer <= 30) { return; }
 
-		tutorialEnemy = std::make_unique<TutorialEnemy>(enemyBornPos);
+		tutorialEnemy = std::make_unique<TutorialEnemy>(enemyBornPos,player->GetData());
 
 		enemyBornTimer = 0;
 	}

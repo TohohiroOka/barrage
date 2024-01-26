@@ -1,5 +1,12 @@
 #pragma once
 #include "Object/3d/Object3d.h"
+#include "TutorialEnemyBullet.h"
+#include "Object/3d/collider/SphereCollider.h"
+#include <forward_list>
+#include "Math/Timer.h"
+#include <vector>
+
+class PlayerData;
 
 /// <summary>
 /// チュートリアル用敵
@@ -7,7 +14,7 @@
 class TutorialEnemy
 {
 public: //メンバ関数
-	TutorialEnemy(const DirectX::XMFLOAT3& position);
+	TutorialEnemy(const DirectX::XMFLOAT3& position, PlayerData* _playerData);
 	~TutorialEnemy();
 
 	/// <summary>
@@ -25,6 +32,17 @@ public: //メンバ関数
 	/// </summary>
 	void Damage();
 
+	/// <summary>
+	/// 
+	/// </summary>
+	void AddBullet();
+
+	void DeleteBullet(std::vector<int> _deleteNum);
+
+	void FrameReset();
+
+	void GetAttackCollision(std::vector<Sphere>& _info);
+
 	//getter
 	Object3d* GetObject3d() { return object.get(); }
 	bool GetIsDamage() { return isDamage; }
@@ -36,4 +54,11 @@ private: //メンバ変数
 
 	//ダメージフラグ
 	bool isDamage = false;
+
+	bool isBulletShot;
+	std::forward_list<TutorialEnemyBullet> bullet;
+
+	std::unique_ptr<Engine::Timer> timer;
+
+	PlayerData* playerData;
 };

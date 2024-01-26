@@ -3,6 +3,10 @@
 
 AllHitEffect::AllHitEffect()
 {
+}
+
+void AllHitEffect::Initialize()
+{
 	for (int i = 0; i < 3; i++) {
 		std::string num = std::to_string(i + 1);
 		TextureManager::LoadTexture("triangle" + num, "Resources/particle/triangle" + num + ".png");
