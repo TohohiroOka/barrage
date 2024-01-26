@@ -11,7 +11,6 @@
 #include "titleObject/Portal.h"
 #include "titleObject/SpeechBubble.h"
 #include "ui/PressSelectButtonUI.h"
-#include "ui/MessageBoxDrawer.h"
 
 #include <memory>
 
@@ -121,8 +120,5 @@ private:
 
 	//シーン遷移待機中か
 	bool isSceneChangeWait = false;
-
-	//メッセージウィンドウ
-	std::unique_ptr<MessageBoxDrawer> msDrawer;
 };
 
