@@ -69,6 +69,8 @@ protected:
 	int HP;
 	//体力ゲージ
 	std::unique_ptr<Gauge> hpGauge;
+	//ボスの名前
+	std::unique_ptr<Sprite> bossNameSprite;
 
 	//行動中断フラグ
 	bool isBreak;
