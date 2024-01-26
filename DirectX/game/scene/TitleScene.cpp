@@ -64,7 +64,7 @@ void TitleScene::Initialize()
 	for (int i = 0; i < 3; i++) {
 		std::string modelName = "speechBubble";
 		XMFLOAT3 pos = portals[i]->GetObject3d()->GetPosition();
-		const float upNum = 21;
+		const float upNum = 23;
 		pos.y += upNum;
 		const float scale = 10.0f;
 		speechBubbles[i] = std::make_unique<SpeechBubble>(camera.get(), modelName, pos, scale);

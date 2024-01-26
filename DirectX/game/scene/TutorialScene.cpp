@@ -31,6 +31,7 @@ void TutorialScene::Initialize()
 	GameCamera::SetPlayer(player.get());
 	debugCamera = DebugCamera::Create({ 300, 40, 0 });
 	camera = std::make_unique<TutorialCamera>();
+	camera->actionInput.isLockon = false; //ロックオンできなくしておく
 	player->SetGameCamera(camera.get());
 
 	//影用光源カメラ初期化
@@ -214,7 +215,7 @@ void TutorialScene::CollisionCheck()
 		//プレイヤーの攻撃がある場合のみ判定 
 		if (player->GetData()->attackAction) {
 			Sphere enemySphere;
-			enemySphere.center = { tutorialEnemy->GetObject3d()->GetPosition().x, tutorialEnemy->GetObject3d()->GetPosition().y, tutorialEnemy->GetObject3d()->GetPosition().z, 1.0f};
+			enemySphere.center = { tutorialEnemy->GetObject3d()->GetPosition().x, tutorialEnemy->GetObject3d()->GetPosition().y, tutorialEnemy->GetObject3d()->GetPosition().z, 1.0f };
 			enemySphere.radius = tutorialEnemy->GetObject3d()->GetScale().x;
 
 			Capsule attackCapsule;
@@ -259,20 +260,40 @@ void TutorialScene::CollisionCheck()
 		playerSphere.center = { ppos.x, ppos.y, ppos.z, 1.0f };
 		playerSphere.radius = player->GetFbxObject()->GetScale().x;
 
-		int num = -1;
-		for (auto& i : bossAttackDatas) {
-			num++;
-			if (Collision::CheckSphere2Sphere(playerSphere, i)) {
-				Vector3 knockbackVec = ppos - Vector3{ i.center.m128_f32[0], i.center.m128_f32[1], i.center.m128_f32[2] };
+		//プレイヤーダメージ判定用
+		//プレイヤーが回避またはブリンクをしていなければ衝突判定
+		if (!player->GetData()->isNoDamage) {
+			int num = -1;
+			for (auto& bossAttackData : bossAttackDatas) {
+				num++;
+				if (Collision::CheckSphere2Sphere(playerSphere, bossAttackData)) {
+					Vector3 knockbackVec = ppos - Vector3{ bossAttackData.center.m128_f32[0], bossAttackData.center.m128_f32[1], bossAttackData.center.m128_f32[2] };
 
-				//ダメージ処理
-				player->Damage(1, knockbackVec, 5, 1, true);
-				camera->ShakeStart(10, 10);
-				tutorialEnemy->DeleteBullet({ num });
-				//ダメージ音再生
-				Audio::Instance()->SoundPlayWava(Sound::SoundName::damage, false, 0.1f);
+					//ダメージ処理
+					player->Damage(1, knockbackVec, 5, 1, true);
+					camera->ShakeStart(10, 10);
+					tutorialEnemy->DeleteBullet({ num });
+					//ダメージ音再生
+					Audio::Instance()->SoundPlayWava(Sound::SoundName::damage, false, 0.1f);
 
-				break;
+					break;
+				}
+			}
+		}
+
+		//プレイヤーが回避判定をする状態なら回避判定をする
+		if (player->GetData()->isEnemyAttackAvoidJudge) {
+			int num = -1;
+			for (auto& bossAttackData : bossAttackDatas) {
+				num++;
+				const float avoidCheckRadiusMulti = 50.0f;
+				bossAttackData.radius *= avoidCheckRadiusMulti;
+				if (Collision::CheckSphere2Sphere(playerSphere, bossAttackData)) {
+					//回避処理
+					player->EnemyAttackAvoid();
+
+					break;
+				}
 			}
 		}
 	}
@@ -404,6 +425,10 @@ void TutorialScene::TutorialAttackUpdate()
 				player->GetData()->actionInput.isLightAttack = true;
 				player->GetData()->actionInput.isStrongAttack = true;
 			}
+			//カメラロックオンが不可能なら可能にしておく
+			if (!camera->actionInput.isLockon) {
+				camera->actionInput.isLockon = true;
+			}
 
 			//攻撃でダメージを当たれる度に数字を減らしていく
 			if (tutorialEnemy->GetIsDamage()) {
@@ -419,6 +444,8 @@ void TutorialScene::TutorialAttackUpdate()
 					okSprite->DrawStart();
 					//プレイヤーの行動入力の受け付けを禁止にする
 					player->GetData()->SetAllActionInput(false);
+					//カメラロックオンの受け付けを禁止にする
+					camera->actionInput.isLockon = false;
 				}
 
 				TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->ChangeNumber(damageNum);
@@ -444,12 +471,21 @@ void TutorialScene::TutorialAvoidUpdate()
 				player->GetData()->actionInput.isAvoid = true;
 				player->GetData()->actionInput.isBlink = true;
 			}
+			//カメラロックオンが不可能なら可能にしておく
+			if (!camera->actionInput.isLockon) {
+				camera->actionInput.isLockon = true;
+			}
+			//敵の弾発射フラグを立てる
+			if (!tutorialEnemy->GetIsBulletShot()) {
+				tutorialEnemy->SetIsBulletShot(true);
+			}
 
 			//回避するほど数字を減らしていく
-			if (GameInputManager::TriggerInputAction(GameInputManager::Avoid_Blink_Dash)) {
+			if (player->GetData()->isEnemyAttackAvoid) {
 				//数字テキストの数字を減らしていく
 				int avoidNum = TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->GetNumber();
 				avoidNum--;
+				player->GetData()->isEnemyAttackAvoid = false;
 				//指定した数を減らしきったらチュートリアルお試し行動クリア
 				if (avoidNum <= 0) {
 					avoidNum = 0;
@@ -459,6 +495,10 @@ void TutorialScene::TutorialAvoidUpdate()
 					okSprite->DrawStart();
 					//プレイヤーの行動入力の受け付けを禁止にする
 					player->GetData()->SetAllActionInput(false);
+					//カメラロックオンの受け付けを禁止にする
+					camera->actionInput.isLockon = false;
+					//敵の弾発射フラグを下ろす
+					tutorialEnemy->SetIsBulletShot(false);
 				}
 
 				TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->ChangeNumber(avoidNum);
@@ -478,6 +518,14 @@ void TutorialScene::TutorialFreeUpdate()
 		//移動入力が不可能なら可能にしておく
 		if (!player->GetData()->actionInput.isMove) {
 			player->GetData()->SetAllActionInput(true);
+		}
+		//カメラロックオンが不可能なら可能にしておく
+		if (!camera->actionInput.isLockon) {
+			camera->actionInput.isLockon = true;
+		}
+		//敵の弾発射フラグを立てる
+		if (!tutorialEnemy->GetIsBulletShot()) {
+			tutorialEnemy->SetIsBulletShot(true);
 		}
 	}
 }
@@ -518,7 +566,7 @@ void TutorialScene::TutorialCameraEnemyBorn()
 		enemyBornTimer++;
 		if (enemyBornTimer <= 30) { return; }
 
-		tutorialEnemy = std::make_unique<TutorialEnemy>(enemyBornPos,player->GetData());
+		tutorialEnemy = std::make_unique<TutorialEnemy>(enemyBornPos, player->GetData());
 
 		enemyBornTimer = 0;
 	}
@@ -561,7 +609,11 @@ void TutorialScene::TutorialCameraText2Action()
 				player->GetData()->actionInput.isMove = true;
 				player->GetData()->actionInput.isJump = true;
 			}
-			
+			//カメラロックオンが不可能なら可能にしておく
+			if (!camera->actionInput.isLockon) {
+				camera->actionInput.isLockon = true;
+			}
+
 			//ロックオンするほど数字を減らしていく
 			if (camera->GetIsLockon()) {
 				//数字テキストの数字を減らしていく
@@ -576,6 +628,8 @@ void TutorialScene::TutorialCameraText2Action()
 					okSprite->DrawStart();
 					//プレイヤーの行動入力の受け付けを禁止にする
 					player->GetData()->SetAllActionInput(false);
+					//カメラロックオンの受け付けを禁止にする
+					camera->actionInput.isLockon = false;
 				}
 
 				TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->ChangeNumber(lockonNum);
