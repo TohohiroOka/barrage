@@ -220,6 +220,7 @@
     <ClCompile Include="game\ui\GameOver.cpp" />
     <ClCompile Include="game\ui\Gauge.cpp" />
     <ClCompile Include="game\ui\LockonUI.cpp" />
+    <ClCompile Include="game\ui\MessageBoxDrawer.cpp" />
     <ClCompile Include="game\ui\PressSelectButtonUI.cpp" />
     <ClCompile Include="game\ui\QuestionSystem.cpp" />
     <ClCompile Include="game\ui\TextCreator.cpp" />
@@ -567,6 +568,7 @@
     <ClInclude Include="game\ui\GameOver.h" />
     <ClInclude Include="game\ui\Gauge.h" />
     <ClInclude Include="game\ui\LockonUI.h" />
+    <ClInclude Include="game\ui\MessageBoxDrawer.h" />
     <ClInclude Include="game\ui\PressSelectButtonUI.h" />
     <ClInclude Include="game\ui\QuestionSystem.h" />
     <ClInclude Include="game\ui\TextCreator.h" />
