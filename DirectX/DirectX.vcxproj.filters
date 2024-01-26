@@ -578,6 +578,9 @@
     <ClCompile Include="game\enemy\TutorialEnemy.cpp">
       <Filter>ゲームシステム\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="game\enemy\boss1\attack\ScreenBreakAttack.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -1178,6 +1181,9 @@
     </ClInclude>
     <ClInclude Include="game\enemy\TutorialEnemy.h">
       <Filter>ゲームシステム\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\attack\ScreenBreakAttack.h">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

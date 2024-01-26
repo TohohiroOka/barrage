@@ -165,10 +165,12 @@ void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 		i.second.attachWorld = i.second.matWorld * model->GetBornMatWorld(i.second.boneName) * matWorld;
 
 		if (!i.second.isDraw) { continue; }
-		boneObject[i.second.instanceName]->DrawInstance(i.second.attachWorld, { 1,1,1,1 });
+		boneObject[i.second.instanceName]->DrawInstance(i.second.attachWorld, color);
 	}
 	for (auto& i : boneObject) {
 		if (i.second->GetInstanceDrawNum() == 0) { continue; }
+		i.second->SetBloom(isBloom);
+		i.second->SetOutline(isOutline);
 		i.second->Update();
 	}
 }

@@ -218,7 +218,6 @@ void Scene1::ImguiDraw()
 
 	ImGui::SliderInt("HitStopNum", &hitStopFrame, 0, 20);
 
-	screenCut->DrawImgui();
 	XMFLOAT2 mousePos = DirectInput::GetInstance()->GetMousePoint();
 	ImGui::Text("mouse : x %f:y %f", mousePos.x, mousePos.y);
 	ImGui::End();

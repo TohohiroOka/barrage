@@ -11,6 +11,7 @@
 #include "../game/enemy/boss1/attack/Boss1Bullet3.h"
 #include "../game/enemy/boss1/attack/Boss1Bullet4.h"
 #include "../game/enemy/boss1/attack/Boss1HalfAttack.h"
+#include "../game/enemy/boss1/attack/ScreenBreakAttack.h"
 
 #include "Boss1Wince.h"
 
@@ -24,20 +25,26 @@ Boss1::Boss1()
 
 	BaseAction::SetBossPtr(this);
 
-	action = std::make_unique<Boss1Move3>();
+	action = std::make_unique<Boss1Move1>();
 
 	hitScale = bossModel->GetObjectInst()->GetScale().y * 5000.0f;
 
-	nowBreakHp = maxHP-50.0f;
+	breakHp[0] = maxHP * 0.7f;
+	breakHp[1] = maxHP * 0.3f;
 }
 
 void Boss1::Update()
 {
-	if (HP < nowBreakHp) {
+	if (HP < breakHp[0] && breakNum==0) {
+		action->SetActionBreak();
+		breakAction = std::make_unique<ScreenBreakAttack>();
+		isBreak = true;
+		breakNum++;
+	} else if (HP < breakHp[1] && breakNum == 1) {
 		action->SetActionBreak();
 		breakAction = std::make_unique<Boss1HalfAttack>();
 		isBreak = true;
-		nowBreakHp = 0;
+		breakNum++;
 	}
 
 	if (winceValue >= 400 && !isBreak) {

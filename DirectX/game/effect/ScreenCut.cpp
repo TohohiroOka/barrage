@@ -19,6 +19,9 @@ const std::array<float, ScreenCut::panelNum> ScreenCut::rota = {
 	100.0f,50.0f,300.0f,200.0f,100.0f,360.0f,280.0f,200.0f,150.0f,90.0f,100.0f,310.0f,270.0f,220.0f
 };
 
+bool ScreenCut::isEffect = false;
+bool ScreenCut::isReset = false;
+
 ScreenCut::ScreenCut()
 {
 	for (int i = 1; i < 4; i++) {
@@ -39,8 +42,6 @@ ScreenCut::ScreenCut()
 	}
 
 	Initialize();
-
-	cameraDist = 0.992f;
 
 	func_.emplace_back([this] {return LightHalf(); });
 	func_.emplace_back([this] {return LightOther(); });
@@ -70,6 +71,8 @@ void ScreenCut::Initialize()
 	isEffect = false;
 
 	effectPos = { 0.0f,center.y };
+
+	isEnd = false;
 }
 
 void ScreenCut::Update()
@@ -80,6 +83,13 @@ void ScreenCut::Update()
 	}
 
 	if (!isEffect) { return; }
+
+	if (!isEnd) {
+		GameHelper::Instance()->SetGameSpeed(0.0f);
+	} else {
+		GameHelper::Instance()->SetGameSpeed(1.0f);
+	}
+
 	if (state != State::non) {
 		func_[int(state)]();
 	}
@@ -96,25 +106,12 @@ void ScreenCut::Update()
 
 void ScreenCut::Draw()
 {
-	if (allDraw) {
-		for (auto& i : panel) {
-			i->Draw();
-		}
-	} else {
-		panel[drawNum]->Draw();
+	for (auto& i : panel) {
+		i->Draw();
 	}
 	for (auto& i : effect) {
 		i->Draw();
 	}
-}
-
-void ScreenCut::DrawImgui()
-{
-	ImGui::Checkbox("screenCut", &isEffect);
-	ImGui::Checkbox("isReset", &isReset);
-	ImGui::Checkbox("AllDraw", &allDraw);
-	ImGui::SliderInt("DrawNum &d", &drawNum, 0, panelNum - 1);
-	ImGui::SliderFloat("CameraDist &d", &cameraDist, 0.0f, 1.0f);
 }
 
 void ScreenCut::LightHalf()
@@ -214,6 +211,7 @@ void ScreenCut::PanelBreak()
 
 	if (rate < 1.0f) { return; }
 	state = State::non;
+	isEnd = true;
 }
 
 void ScreenCut::AddSpriteHalf(const float _rate)
@@ -222,7 +220,7 @@ void ScreenCut::AddSpriteHalf(const float _rate)
 	int num = RandomInt(29) / 10;
 	XMFLOAT3 worldPos;
 	const XMFLOAT2 dist = { (RandomFloat(3000.0f) - (3000.0f * _rate)) * 0.1f,0.0f };
-	Collision::CalcScreenToWorld(&worldPos, ParticleManager::GetCamera(), effectPos + dist, cameraDist);
+	Collision::CalcScreenToWorld(&worldPos, ParticleManager::GetCamera(), effectPos + dist, 0.992f);
 
 	const XMFLOAT4 _color = { 0.4f,0.1f,0.4f,1.0f };
 	const float _scale = (RandomFloat(30.0f) + 20.0f) * 0.1f;
@@ -235,7 +233,7 @@ void ScreenCut::AddSpriteOther(const float _rate)
 	using namespace DirectX;
 	int num = RandomInt(29) / 10;
 	XMFLOAT3 worldPos;
-	Collision::CalcScreenToWorld(&worldPos, ParticleManager::GetCamera(), effectPos, cameraDist);
+	Collision::CalcScreenToWorld(&worldPos, ParticleManager::GetCamera(), effectPos, 0.992f);
 	const XMFLOAT2 dist = { 0.0f,0.0f };
 	const XMFLOAT4 _color = { 0.4f,0.1f,0.4f,1.0f };
 	const float _scale = (RandomFloat(30.0f - (30.0f * _rate)) + 5.0f) * 0.1f;

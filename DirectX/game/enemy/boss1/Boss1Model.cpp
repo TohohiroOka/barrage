@@ -4,7 +4,7 @@
 const float transformScale = 8.5f;
 
 std::array<std::string, 2> bone = {
-	"Hips","Spine"
+	"Neck","Spine"
 };
 
 std::array<std::string, 4> boneT = {
@@ -29,12 +29,21 @@ Boss1Model::Boss1Model()
 	using namespace DirectX;
 	attachInfo.resize(int(bone.size()) + int(boneT.size()) + 1);
 	for (int i = 0; i < bone.size(); i++) {
-		attachInfo[i].pos.now = {};
-		attachInfo[i].scale.now = { 6.0f, 6.0f, 6.0f };
-		attachInfo[i].rota.now = {};
 		XMMATRIX world = DirectX::XMMatrixIdentity();
-		XMMATRIX matScale = XMMatrixScaling(attachInfo[i].scale.now.x, attachInfo[i].scale.now.y, attachInfo[i].scale.now.z);
-		world *= matScale;
+		if (i == 1) {
+			attachInfo[i].pos.now = {};
+			attachInfo[i].scale.now = { 6.0f, 6.0f, 6.0f };
+			attachInfo[i].rota.now = {};
+			XMMATRIX matScale = XMMatrixScaling(attachInfo[i].scale.now.x, attachInfo[i].scale.now.y, attachInfo[i].scale.now.z);
+			world *= matScale;
+		}
+		else if (i == 1) {
+			attachInfo[i].pos.now = {};
+			attachInfo[i].scale.now = { 6.0f, 6.0f, 6.0f };
+			attachInfo[i].rota.now = {};
+			XMMATRIX matScale = XMMatrixScaling(attachInfo[i].scale.now.x, attachInfo[i].scale.now.y, attachInfo[i].scale.now.z);
+			world *= matScale;
+		}
 		attachInfo[i].name = fbxObject->SetBoneObject(bone[i], "normal", objModel[int(ObjectType::core)].get(), world);
 	}
 
@@ -118,6 +127,7 @@ void Boss1Model::Update()
 
 void Boss1Model::Draw()
 {
+	if (fbxObject->GetColor().w <= 0.001f) { return; }
 	fbxObject->Draw();
 }
 
@@ -149,7 +159,7 @@ void Boss1Model::ChangesScale(const int _num, const float _maxTime, const Vector
 	}
 }
 
-void Boss1Model::ModelReset()
+void Boss1Model::ModelReset(const float _maxTime)
 {
 	using namespace DirectX;
 	for (int i = 0; i < bone.size(); i++) {
@@ -157,10 +167,12 @@ void Boss1Model::ModelReset()
 		attachInfo[i].pos.before = attachInfo[i].pos.now;
 		attachInfo[i].pos.after = {};
 		attachInfo[i].pos.time->Reset();
+		attachInfo[i].pos.maxTime = _maxTime;
 		attachInfo[i].scale.isChange = true;
 		attachInfo[i].scale.before = attachInfo[i].scale.now;
 		attachInfo[i].scale.after = { 6.0f, 6.0f, 6.0f };
 		attachInfo[i].scale.time->Reset();
+		attachInfo[i].scale.maxTime = _maxTime;
 	}
 
 	for (int i = 0; i < boneT.size(); i++) {
@@ -169,8 +181,10 @@ void Boss1Model::ModelReset()
 		attachInfo[number].pos.before = attachInfo[number].pos.now;
 		attachInfo[number].pos.after = {};
 		attachInfo[number].pos.time->Reset();
+		attachInfo[number].pos.maxTime = _maxTime;
 		attachInfo[number].scale.isChange = true;
 		attachInfo[number].scale.time->Reset();
+		attachInfo[number].scale.maxTime = _maxTime;
 		attachInfo[number].scale.before = attachInfo[number].scale.now;
 		if (i < 2) {
 			attachInfo[number].scale.after = { 6.0f, 9.0f, 6.0f };
@@ -187,10 +201,12 @@ void Boss1Model::ModelReset()
 		attachInfo[number].pos.before = attachInfo[number].pos.now;
 		attachInfo[number].pos.after = { 0.0f, attachInfo[5].scale.now.y * transformScale, 0.0f };
 		attachInfo[number].scale.time->Reset();
+		attachInfo[number].pos.maxTime = _maxTime;
 		attachInfo[number].scale.isChange = true;
 		attachInfo[number].scale.before = attachInfo[number].scale.now;
 		attachInfo[number].scale.after = { 0.0f, 0.0f, 0.0f };
 		attachInfo[number].scale.time->Reset();
+		attachInfo[number].scale.maxTime = _maxTime;
 	}
 }
 

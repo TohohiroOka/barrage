@@ -122,6 +122,11 @@ void Boss1HalfAttack::Move()
 	state = State::smaller;
 	timer->Reset();
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_start));
+	for (int i = 0; i< int(Boss1Model::AttachName::LowerArm_R_Non); i++) {
+		if (i == int(Boss1Model::AttachName::core1)) { continue; }
+		boss->GetBaseModel()->ChangesScale(i, 10.0f, { 0.0f, 0.0f, 0.0f });
+	}
+
 }
 
 void Boss1HalfAttack::Small()
@@ -129,11 +134,6 @@ void Boss1HalfAttack::Small()
 	const float maxTime = 20.0f;
 	const float rate = *timer.get() / maxTime;
 
-	for (int i = 0; i< int(Boss1Model::AttachName::LowerArm_R_Non); i++) {
-		if (i == int(Boss1Model::AttachName::core1)) { continue; }
-		boss->GetBaseModel()->ChangesScale(i, 10.0f, { 0.0f, 0.0f, 0.0f });
-	}
-	
 	if (rate < 1.0f) { return; }
 	state = State::attackstart;
 	timer->Reset();
