@@ -101,7 +101,7 @@ bool PlayerSwordAttack2::NextAttack()
 		attackCollisionData.power = attackPower;
 
 		//攻撃1アニメーション
-		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::HEAVY_ATTACK1_ANIMATION);
+		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::HEAVY_ATTACK1_ANIMATION_1);
 
 	}
 	else if (attackNum == 2) {
@@ -109,7 +109,7 @@ bool PlayerSwordAttack2::NextAttack()
 		state = State::ATTACK2;
 
 		//攻撃2アニメーション
-		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::HEAVY_ATTACK2_ANIMATION);
+		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::HEAVY_ATTACK2_ANIMATION_2);
 
 	}
 
@@ -118,7 +118,7 @@ bool PlayerSwordAttack2::NextAttack()
 		state = State::ATTACK3;
 
 		//攻撃3アニメーション
-		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::HEAVY_ATTACK3_ANIMATION);
+		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::HEAVY_ATTACK3_ANIMATION_3);
 
 	}
 
