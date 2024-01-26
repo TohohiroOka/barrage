@@ -43,6 +43,8 @@ public: //ƒƒ“ƒoŠÖ”
 
 	void GetAttackCollision(std::vector<Sphere>& _info);
 
+	void SetPlayerDirection();
+
 	//getter
 	Object3d* GetObject3d() { return object.get(); }
 	bool GetIsDamage() { return isDamage; }

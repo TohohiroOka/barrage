@@ -45,6 +45,8 @@ void TutorialEnemy::Update()
 		}
 	);
 
+	SetPlayerDirection();
+
 	//オブジェクト更新
 	object->Update();
 }
@@ -85,6 +87,13 @@ void TutorialEnemy::GetAttackCollision(std::vector<Sphere>& _info)
 		add.radius = 0.5f;
 		_info.emplace_back(add);
 	}
+}
+
+void TutorialEnemy::SetPlayerDirection()
+{
+	Vector3 rota = VelocityRotate(Vector3(object->GetPosition())- playerData->pos);
+	//rota.x += 90.0f;
+	object->SetRotation(rota);
 }
 
 void TutorialEnemy::DeleteBullet(std::vector<int> _deleteNum)
