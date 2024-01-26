@@ -22,7 +22,7 @@ Portal::Portal(const Vector3& position, InterfaceScene* changeScene)
 	//変更後のシーンをセット
 	this->changeScene = changeScene;
 
-	effect = std::make_unique<PortalEffect>(position,Vector2(12.0f, 29.0f));
+	effect = std::make_unique<PortalEffect>(position,Vector2(12.0f, 21.0f));
 }
 
 Portal::~Portal()

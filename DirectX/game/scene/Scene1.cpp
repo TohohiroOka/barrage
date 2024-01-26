@@ -28,6 +28,8 @@ void Scene1::Initialize()
 {
 	TextureManager::LoadTexture("gauge", "Resources/SpriteTexture/gauge.png");
 
+	AllHitEffect::Instance()->Initialize();
+
 	//ínå`ê∂ê¨
 	field = std::make_unique<Field>();
 

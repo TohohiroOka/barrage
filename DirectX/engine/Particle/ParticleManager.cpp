@@ -14,6 +14,7 @@ XMMATRIX ParticleManager::matBillboardY = XMMatrixIdentity();
 
 ParticleManager::~ParticleManager()
 {
+	ParticlAllDelete();
 	vertBuff.Reset();
 	constBuff.Reset();
 }

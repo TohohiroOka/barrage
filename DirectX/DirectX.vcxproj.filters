@@ -584,6 +584,12 @@
     <ClCompile Include="game\enemy\TutorialEnemy.cpp">
       <Filter>ゲームシステム\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="game\enemy\boss1\attack\ScreenBreakAttack.cpp">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClCompile>
+    <ClCompile Include="game\enemy\TutorialEnemyBullet.cpp">
+      <Filter>ゲームシステム\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -1189,6 +1195,12 @@
       <Filter>ゲームシステム\camera</Filter>
     </ClInclude>
     <ClInclude Include="game\enemy\TutorialEnemy.h">
+      <Filter>ゲームシステム\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\boss1\attack\ScreenBreakAttack.h">
+      <Filter>ゲームシステム\Enemy\Boss1\attack</Filter>
+    </ClInclude>
+    <ClInclude Include="game\enemy\TutorialEnemyBullet.h">
       <Filter>ゲームシステム\Enemy</Filter>
     </ClInclude>
   </ItemGroup>

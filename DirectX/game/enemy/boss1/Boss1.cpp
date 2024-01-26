@@ -17,7 +17,7 @@
 
 Boss1::Boss1()
 {
-	maxHP = 1000;
+	maxHP = 1;
 
 	BaseBoss::Initialize();
 

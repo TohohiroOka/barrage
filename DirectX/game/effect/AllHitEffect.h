@@ -12,6 +12,8 @@ public:
 	AllHitEffect();
 	~AllHitEffect() {};
 
+	void Initialize();
+
 	void AddParticle(const DirectX::XMFLOAT3& _pos);
 
 	void Update();
