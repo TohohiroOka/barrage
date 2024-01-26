@@ -4,7 +4,7 @@
 TutorialEnemy::TutorialEnemy(const DirectX::XMFLOAT3& position, PlayerData* _playerData)
 {
 	//オブジェクト生成
-	model = Model::CreateFromOBJ("warp");
+	model = Model::CreateFromOBJ("tutorialEnemy");
 	object = Object3d::Create(model.get());
 	object->SetPosition(position);
 	const float size = 10.0f;

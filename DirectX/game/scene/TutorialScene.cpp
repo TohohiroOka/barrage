@@ -14,10 +14,13 @@ const DirectX::XMFLOAT3 TutorialScene::enemyBornPos = { 90, 10, 150 };
 
 TutorialScene::~TutorialScene()
 {
+	AllHitEffect::Instance()->Finalize();
 }
 
 void TutorialScene::Initialize()
 {
+	AllHitEffect::Instance()->Initialize();
+
 	//地形生成
 	field = std::make_unique<Field>();
 	//プレイヤー生成
