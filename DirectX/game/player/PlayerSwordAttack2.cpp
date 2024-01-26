@@ -20,7 +20,8 @@ PlayerSwordAttack2::PlayerSwordAttack2(Player* player)
 {
 	//プレイヤーをセット
 	this->player = player;
-
+	player->GetSword()->GetSlashEffect()->SetIsParticleEmit(true); //仮で斬撃演出生成を開始しておく。
+	player->GetSword()->GetSlashEffect()->SetStartColor(DirectX::XMFLOAT4{ 0.1f, 0.01f, 0.025f, 1.0f });
 	//当たり判定可視化用オブジェクト生成
 	model = Model::CreateFromOBJ("bullet");
 

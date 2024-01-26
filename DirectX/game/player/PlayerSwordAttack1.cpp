@@ -16,11 +16,12 @@ const DirectX::XMFLOAT4 PlayerSwordAttack1::nonAttackColor = { 0, 0, 1, 0.3f };
 const float PlayerSwordAttack1::attackStartMoveSpeedMax = 1.5f;
 const float PlayerSwordAttack1::attackStartMoveSpeedMin = 0.5f;
 
-PlayerSwordAttack1::PlayerSwordAttack1(Player *player)
+PlayerSwordAttack1::PlayerSwordAttack1(Player* player)
 {
 	//プレイヤーをセット
 	this->player = player;
 	player->GetSword()->GetSlashEffect()->SetIsParticleEmit(true); //仮で斬撃演出生成を開始しておく。
+	player->GetSword()->GetSlashEffect()->SetStartColor(DirectX::XMFLOAT4{ 0.02f, 0.05f, 0.2f, 1.0f });
 	//当たり判定可視化用オブジェクト生成
 	model = Model::CreateFromOBJ("bullet");
 
@@ -239,7 +240,7 @@ void PlayerSwordAttack1::MovePlayer(int moveTime)
 
 void PlayerSwordAttack1::PlayerChangeRotate()
 {
-	DirectInput *input = DirectInput::GetInstance();
+	DirectInput* input = DirectInput::GetInstance();
 
 	//キー入力を判定
 	player->GetData()->isMoveKey = (input->PushKey(GameInputManager::GetKeyInputActionData(GameInputManager::MoveRight).key) ||
