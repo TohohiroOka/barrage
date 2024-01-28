@@ -13,6 +13,8 @@ void BaseBoss::Initialize()
 	bossNameSprite = Sprite::Create("bossName", {}, { 0,0.5f });
 	bossNameSprite->SetPosition(DirectX::XMFLOAT2({ WindowApp::GetWindowWidth() / 2 - length / 2, 625.0f }));
 	bossNameSprite->Update();
+
+	isCollider = true;
 }
 
 void BaseBoss::Update()
@@ -37,8 +39,7 @@ void BaseBoss::Update()
 			action->SetEnd();
 			breakAction.reset();
 		}
-	}
-	else if (winceAction) {
+	} else if (winceAction) {
 		if (!winceAction->GetEnd()) {
 			winceAction->Update();
 		} else {
@@ -89,7 +90,7 @@ void BaseBoss::Collider()
 	Vector3 pos = Vector3(bossModel->GetPosition());
 
 	const XMFLOAT3 moveMinPos = { 0,100,0 };
-	const XMFLOAT3 moveMaxPos = { GameHelper::Instance()->GetStageSize(),0.0f,GameHelper::Instance()->GetStageSize() };
+	const XMFLOAT3 moveMaxPos = { GameHelper::Instance()->GetStageSize() - 5.0f,10.0f,GameHelper::Instance()->GetStageSize() - 5.0f };
 
 	//•Ç”»’è
 	pos.x = max(pos.x, moveMinPos.x);
