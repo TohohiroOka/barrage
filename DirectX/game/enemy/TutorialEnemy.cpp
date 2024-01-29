@@ -11,7 +11,7 @@ TutorialEnemy::TutorialEnemy(const DirectX::XMFLOAT3& position, PlayerData* _pla
 	object->SetScale({ size, size, size });
 	object->SetShadowMap(true);
 
-	timer = std::make_unique<Engine::Timer>();
+	bulletShotTimer = std::make_unique<Engine::Timer>();
 	TutorialEnemyBullet::StaticInitialize();
 
 	playerData = _playerData;
@@ -23,15 +23,18 @@ TutorialEnemy::~TutorialEnemy()
 
 void TutorialEnemy::Update()
 {
-	timer->Update();
-
 	//ダメージフラグが立っていたら下ろしておく
 	if (isDamage) {
 		isDamage = false;
 	}
 
-	if (*timer.get() % 50 == 0) {
-		AddBullet();
+	if (isBulletShot) {
+		bulletShotTimer->Update();
+		const int bulletShotInterval = 120;
+		if (*bulletShotTimer.get() >= bulletShotInterval) {
+			AddBullet();
+			bulletShotTimer->Reset();
+		}
 	}
 
 	for (std::forward_list<TutorialEnemyBullet>::iterator it = bullet.begin();
@@ -91,7 +94,7 @@ void TutorialEnemy::GetAttackCollision(std::vector<Sphere>& _info)
 
 void TutorialEnemy::SetPlayerDirection()
 {
-	Vector3 rota = VelocityRotate(Vector3(object->GetPosition())- playerData->pos);
+	Vector3 rota = VelocityRotate(Vector3(object->GetPosition()) - playerData->pos);
 	//rota.x += 90.0f;
 	object->SetRotation(rota);
 }

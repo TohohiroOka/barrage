@@ -18,6 +18,9 @@ PlayerActionAvoid::PlayerActionAvoid(Player* player)
 	//無敵状態
 	player->GetData()->isNoDamage = true;
 
+	//敵の攻撃を避けたか判定を開始する
+	player->GetData()->isEnemyAttackAvoidJudge = true;
+
 	//回避方向を向くようにする
 	Vector3 moveRotaVelocity = player->GetData()->avoidBlinkMoveVec;
 	moveRotaVelocity.y = 0; //プレイヤー回転にジャンプは関係ないので、速度Yは0にしておく

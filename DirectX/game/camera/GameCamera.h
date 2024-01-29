@@ -39,13 +39,11 @@ public: //メンバ関数
 
 	//getter
 	const XMFLOAT3& GetCameraRota() { return rotation; }
-	CameraActionInput GetActionInput() { return actionInput; }
 	Base3D* GetLockonTarget() { return lockonTarget; }
 	bool GetIsLockon() { return isLockon; }
 	bool GetisLockonStart() { return isLockonStart; }
 
 	//setter
-	void SetActionInput(bool& actionInputFlag, bool isInput) { actionInputFlag = isInput; }
 	void SetAllActionInput(bool isInput) {
 		actionInput.isCameraMove = isInput;
 		actionInput.isLockon = isInput;
@@ -116,6 +114,10 @@ protected: //静的メンバ変数
 	static const float rotateCenterDistanceNormal;
 	static const Vector3 targetDistanceNormal;
 
+public: //メンバ変数
+	//入力で行動が可能か
+	CameraActionInput actionInput;
+
 protected: //メンバ変数
 	//カメラ座標
 	Vector3 position;
@@ -129,9 +131,6 @@ protected: //メンバ変数
 	Vector3 targetDistance;
 	//ワールド変換行列
 	XMMATRIX matWorld = {};
-
-	//入力で行動が可能か
-	CameraActionInput actionInput;
 
 	//ロックオンターゲット
 	Base3D* lockonTarget = nullptr;

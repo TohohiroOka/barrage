@@ -68,7 +68,6 @@ public: //メンバ関数
 	~PlayerData();
 
 	//setter
-	void SetActionInput(bool& actionInputFlag, bool isInput) { actionInputFlag = isInput; }
 	void SetAllActionInput(bool isInput) {
 		actionInput.isMove = isInput;
 		actionInput.isJump = isInput;
@@ -112,6 +111,9 @@ public: //メンバ変数 (変更しやすいようにpublic)
 
 	Vector3 avoidBlinkMoveVec; //回避ブリンク用移動ベクトル
 	int blinkCount; //ブリンク回数
+
+	bool isEnemyAttackAvoid; //敵の攻撃を避けたか
+	bool isEnemyAttackAvoidJudge; //敵の攻撃を避けたか判定するか
 
 	int maxHP; //最大体力
 	int HP; //体力

@@ -141,6 +141,10 @@ void Player::ImguiDraw()
 void Player::FrameReset()
 {
 	object->FrameReset();
+
+	if (data->isEnemyAttackAvoidJudge) {
+		data->isEnemyAttackAvoidJudge = false;
+	}
 }
 
 void Player::Damage(int damageNum, const Vector3& knockbackVec, int knockbackPower, int knockbackTime, bool isKnockbackStart)
@@ -184,6 +188,11 @@ void Player::PushBack(const XMVECTOR& reject)
 	//押し戻し
 	Vector3 rejectNum = { reject.m128_f32[0],reject.m128_f32[1], reject.m128_f32[2] };
 	data->pos += rejectNum;
+}
+
+void Player::EnemyAttackAvoid()
+{
+	data->isEnemyAttackAvoid = true;
 }
 
 void Player::SetMoveRotate(const Vector3& vec, float rotSpeed)

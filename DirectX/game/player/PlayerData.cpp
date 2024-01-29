@@ -32,6 +32,9 @@ PlayerData::PlayerData()
 	jumpMaxNum = 2;
 	jumpCount = 0;
 	isInputJump = false;
+
+	isEnemyAttackAvoid = false;
+	isEnemyAttackAvoidJudge = false;
 	
 	maxHP = 100;
 	HP = maxHP;

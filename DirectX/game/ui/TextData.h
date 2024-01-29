@@ -37,7 +37,8 @@ namespace TextData {
 		TUTORIAL_ATTACK_TEXT_3,		//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
 		TUTORIAL_ATTACK_ACTION_TEXT,//ジャンプ：[action_input_dash]＠＠＠　　　　　　　　　　　　　　　　あと(5)回
 
-		TUTORIAL_AVOID_TEXT,		//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
+		TUTORIAL_AVOID_TEXT_1,		//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
+		TUTORIAL_AVOID_TEXT_2,		//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
 		TUTORIAL_AVOID_ACTION_TEXT,	//ジャンプ：[action_input_dash]＠＠＠
 
 		TUTORIAL_FREE_TEXT,			//つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。
@@ -78,6 +79,7 @@ namespace TextData {
 		{ L"弱攻撃：[action_input_light_attack]＠強攻撃：[action_input_strong_attack]＠＠　　　　　　　　　　　　　　　　あと(10)回", false, false },
 
 		{ L"最後は「回避」です。＠移動しながら[action_input_avoid]を入力することで、敵の攻撃を＠避けることができます。", true, true },
+		{ L"敵の攻撃を引き付けてから、回避で避けてみましょう。", true, true },
 		{ L"回避：移動しながら[action_input_avoid]＠＠＠　　　　　　　　　　　　　　　　あと(3)回", false, false },
 
 		{ L"以上で操作説明は終了です。＠自由に行動してみましょう。", true, true },
@@ -155,7 +157,8 @@ namespace SentenceData {
 			TextData::TextName::TUTORIAL_ATTACK_ACTION_TEXT,
 		},
 		{
-			TextData::TextName::TUTORIAL_AVOID_TEXT,
+			TextData::TextName::TUTORIAL_AVOID_TEXT_1,
+			TextData::TextName::TUTORIAL_AVOID_TEXT_2,
 			TextData::TextName::TUTORIAL_AVOID_ACTION_TEXT,
 		},
 		{

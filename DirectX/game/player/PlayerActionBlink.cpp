@@ -22,6 +22,9 @@ PlayerActionBlink::PlayerActionBlink(Player* player)
 	//無敵状態
 	player->GetData()->isNoDamage = true;
 
+	//敵の攻撃を避けたか判定を開始する
+	player->GetData()->isEnemyAttackAvoidJudge = true;
+
 	//ブリンク方向を向くようにする
 	const Vector3 moveRotaVelocity = { player->GetData()->avoidBlinkMoveVec.x, 0, player->GetData()->avoidBlinkMoveVec.z }; //プレイヤー回転にジャンプは関係ないので、速度Yは0にしておく
 	player->SetMoveRotate(moveRotaVelocity, 15.0f);

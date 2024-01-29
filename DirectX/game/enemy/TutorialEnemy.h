@@ -48,6 +48,12 @@ public: //メンバ関数
 	//getter
 	Object3d* GetObject3d() { return object.get(); }
 	bool GetIsDamage() { return isDamage; }
+	bool GetIsBulletShot() { return isBulletShot; }
+
+	//setter
+	void SetIsBulletShot(bool isBulletShot) { 
+		this->isBulletShot = isBulletShot;
+	}
 
 private: //メンバ変数
 	//オブジェクト3d
@@ -57,10 +63,10 @@ private: //メンバ変数
 	//ダメージフラグ
 	bool isDamage = false;
 
-	bool isBulletShot;
+	bool isBulletShot = false;
 	std::forward_list<TutorialEnemyBullet> bullet;
 
-	std::unique_ptr<Engine::Timer> timer;
+	std::unique_ptr<Engine::Timer> bulletShotTimer;
 
 	PlayerData* playerData;
 };

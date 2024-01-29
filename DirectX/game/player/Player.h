@@ -75,6 +75,11 @@ public: //メンバ関数
 	void PushBack(const XMVECTOR& reject);
 
 	/// <summary>
+	/// 敵の攻撃を避けた際の処理
+	/// </summary>
+	void EnemyAttackAvoid();
+
+	/// <summary>
 	/// 移動方向を向く回転開始
 	/// </summary>
 	/// <param name="vec"></param>
