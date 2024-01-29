@@ -102,6 +102,7 @@ bool PlayerSwordAttack1::NextAttack()
 
 		//攻撃1アニメーション
 		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK1_ANIMATION);
+		player->GetFbxObject()->SetIsRoop(false);
 	}
 	else if (attackNum == 2) {
 		//攻撃2へ
@@ -109,6 +110,7 @@ bool PlayerSwordAttack1::NextAttack()
 
 		//攻撃2アニメーション
 		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK2_ANIMATION);
+		player->GetFbxObject()->SetIsRoop(false);
 	}
 
 	else if (attackNum == 3) {
@@ -117,6 +119,7 @@ bool PlayerSwordAttack1::NextAttack()
 
 		//攻撃3アニメーション
 		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::ATTACK3_ANIMATION);
+		player->GetFbxObject()->SetIsRoop(false);
 	}
 
 	//攻撃で移動するとき用に移動スピードをセット(既にスピードがある場合は変更しない)

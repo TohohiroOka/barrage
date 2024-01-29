@@ -14,6 +14,11 @@ PlayerActionKnockback::PlayerActionKnockback(Player* player, const Vector3& knoc
 	player->GetData()->attackAction.reset();
 	player->GetSword()->GetSlashEffect()->SetIsParticleEmit(false); //斬撃演出生成も停止させておく
 
+	//死亡アニメーションに変更
+	player->GetFbxObject()->AnimationReset();
+	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::FEAR_ANIMATION);
+	player->GetFbxObject()->SetIsRoop(false);
+
 	//予め次の行動を設定しておく(終了後は通常移動)
 	nextAction = PlayerActionName::MOVE_NORMAL;
 }

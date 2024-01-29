@@ -272,10 +272,11 @@ void Player::ObjectUpdate()
 			data->jumpCount = 0;
 			data->blinkCount = 0; //連続ブリンク回数を0にする
 
-			//ジャンプアニメーションなら待機アニメーションに変更(現在は待機アニメーションがないので代用中)
+			//ジャンプアニメーションなら待機アニメーションに変更
 			if (object->GetUseAnimation() == PlayerAnimationName::JUMP_ANIMATION) {
 				object->AnimationReset();
 				object->SetUseAnimation(PlayerAnimationName::STAY_ANIMATION);
+				object->SetIsRoop(true);
 			}
 		}
 	}

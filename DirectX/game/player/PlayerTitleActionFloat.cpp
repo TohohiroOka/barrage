@@ -24,6 +24,7 @@ PlayerTitleActionFloat::PlayerTitleActionFloat(Player* player, const Vector3& po
 	if (!(player->GetFbxObject()->GetUseAnimation() == PlayerAnimationName::STAY_ANIMATION)) {
 		player->GetFbxObject()->AnimationReset();
 		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::STAY_ANIMATION);
+		player->GetFbxObject()->SetIsRoop(true);
 	}
 
 	//タイマー生成

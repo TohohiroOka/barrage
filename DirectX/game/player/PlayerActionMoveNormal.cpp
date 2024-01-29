@@ -16,6 +16,7 @@ PlayerActionMoveNormal::PlayerActionMoveNormal(Player* player)
 	if (player->GetFbxObject()->GetUseAnimation() == PlayerAnimationName::JUMP_ANIMATION) { return; }
 	player->GetFbxObject()->AnimationReset();
 	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::STAY_ANIMATION);
+	player->GetFbxObject()->SetIsRoop(true);
 }
 
 PlayerActionMoveNormal::~PlayerActionMoveNormal()
@@ -95,6 +96,7 @@ void PlayerActionMoveNormal::Move()
 		if (player->GetFbxObject()->GetUseAnimation() == PlayerAnimationName::STAY_ANIMATION) {
 			player->GetFbxObject()->AnimationReset();
 			player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::RUN_ANIMATION);
+			player->GetFbxObject()->SetIsRoop(true);
 		}
 	}
 	else {
@@ -105,6 +107,7 @@ void PlayerActionMoveNormal::Move()
 		if (player->GetFbxObject()->GetUseAnimation() == PlayerAnimationName::RUN_ANIMATION && player->GetData()->moveSpeed <= 0) {
 			player->GetFbxObject()->AnimationReset();
 			player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::STAY_ANIMATION);
+			player->GetFbxObject()->SetIsRoop(true);
 		}
 	}
 

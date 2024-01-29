@@ -18,6 +18,7 @@ PlayerActionJump::PlayerActionJump(Player* player)
 	//ジャンプアニメーションに変更
 	player->GetFbxObject()->AnimationReset();
 	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::JUMP_ANIMATION);
+	player->GetFbxObject()->SetIsRoop(false);
 
 	//予め次の行動を設定しておく(終了後は通常移動)
 	nextAction = PlayerActionName::MOVE_NORMAL;

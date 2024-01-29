@@ -13,7 +13,8 @@ PlayerActionDead::PlayerActionDead(Player* player)
 	
 	//死亡アニメーションに変更
 	player->GetFbxObject()->AnimationReset();
-	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::STAY_ANIMATION);
+	player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::DEAD_ANIMATION);
+	player->GetFbxObject()->SetIsRoop(false);
 }
 
 PlayerActionDead::~PlayerActionDead()
