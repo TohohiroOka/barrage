@@ -7,7 +7,6 @@ PortalEffect::PortalEffect(const Vector3& _postion, const Vector2& _range)
 	pos.x += 6.0f;
 	range = _range;
 	for (int i = 0; i < 2; i++) {
-		std::string num = std::to_string(i + 1);
 		TextureManager::LoadTexture("SquareEffect", "Resources/particle/gridSmokeEffect2.png");
 		particle[i] = ParticleManager::Create("SquareEffect");
 		particle[i]->SetBloom(true);

@@ -1,24 +1,27 @@
 #pragma once
-#include "../game/enemy/BaseBullet.h"
+#include "../game/enemy/BaseAction.h"
+#include "Object/3d/InstanceObject.h"
 #include <functional>
+#include "../game/effect/BulletAttack2Effect.h"
 
 /// <summary>
 /// 外側に出てからプレイヤーに追従する
 /// </summary>
-class Boss1Bullet2 : public BaseBullet
+class Boss1Bullet2 : public BaseAction
 {
 public:
 
 	struct BulletInfo {
 		bool isAlive;//出現しているか
-		bool easing;
-		Vector3 nowPos;//座標
-		Vector3 beforePos;
-		Vector3 afterPos;
-		bool isSetVec;
-		Vector3 moveVec;
-		std::unique_ptr<Engine::Timer> timer;//出現時間
-		std::vector<Vector3> predictionLinePoint;
+		Vector3 pos;//座標
+		Vector3 moveVec;//移動方向
+		Vector3 rota;
+	};
+
+	struct OutPosInfo {
+		bool isAlive;//出現しているか
+		Vector3 pos;//座標
+		std::unique_ptr<BulletAttack2Effect> effect;
 	};
 
 private:
@@ -36,11 +39,15 @@ public:
 
 	void Update() override;
 
-	void GetAttackCollisionSphere(std::vector<Sphere>& _info) override;
+	void Draw() override;
+
+	void FrameReset() override;
+
+	void GetAttackCollisionSphere(std::vector<Sphere>& _info) override {};
 
 	void GetAttackCollisionBox(std::vector<Box>& _info) override {};
 
-	void GetAttackCollisionCapsule(std::vector<Capsule>& _info) override {};
+	void GetAttackCollisionCapsule(std::vector<Capsule>& _info) override;
 
 	void DeleteBullet(std::vector<int> _deleteNum) override;
 
@@ -57,16 +64,40 @@ public:
 
 	void End();
 
-	void AddBullet(bool _easing);
+	void OutPosEffectAdd();
 
 	void BulletUpdate();
 
 private:
 
+	std::unique_ptr<Model> model;
+	std::unique_ptr<InstanceObject> instanceObject;
+
 	//状態
 	State state;
 	std::vector<std::function<void()>> func_;
 
-	std::forward_list<BulletInfo> bullet;
+	Vector3 inPlayerPos;
+
+	static const int bulletNum=100;
+	std::array<BulletInfo, bulletNum> bullet;
+
+	static const int outPosNum = 10;
+	static const std::array<Vector3, outPosNum> outPos;
+	std::array<OutPosInfo, outPosNum> outPosInfo;
+	int nowNum;
+
+	//弾の移動方向
+	Vector3 allMoveVec;
+
+	//距離
+	float dist;
+
+	//弾の更新を終えたか
+	bool isAttackEnd;
+	bool isAllBulletAlive;
+
+	//判定用ベクトル
+	Vector3 hitVec;
 
 };

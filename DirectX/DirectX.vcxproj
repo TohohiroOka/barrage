@@ -168,6 +168,7 @@
     <ClCompile Include="game\cutscene\Boss1OnStage.cpp" />
     <ClCompile Include="game\cutscene\SceneChangeDirection.cpp" />
     <ClCompile Include="game\effect\AllHitEffect.cpp" />
+    <ClCompile Include="game\effect\BulletAttack2Effect.cpp" />
     <ClCompile Include="game\effect\PortalEffect.cpp" />
     <ClCompile Include="game\effect\ScreenCut.cpp" />
     <ClCompile Include="game\effect\SlashEffect.cpp" />
@@ -523,6 +524,7 @@
     <ClInclude Include="game\cutscene\Boss1OnStage.h" />
     <ClInclude Include="game\cutscene\SceneChangeDirection.h" />
     <ClInclude Include="game\effect\AllHitEffect.h" />
+    <ClInclude Include="game\effect\BulletAttack2Effect.h" />
     <ClInclude Include="game\effect\PortalEffect.h" />
     <ClInclude Include="game\effect\ScreenCut.h" />
     <ClInclude Include="game\effect\SlashEffect.h" />

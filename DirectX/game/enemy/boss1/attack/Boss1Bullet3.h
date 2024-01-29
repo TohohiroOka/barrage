@@ -76,4 +76,3 @@ private:
 
 	std::unique_ptr<Engine::Timer> timer;
 };
-
