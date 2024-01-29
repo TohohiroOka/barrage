@@ -34,7 +34,7 @@ void TutorialScene::Initialize()
 	GameCamera::SetPlayer(player.get());
 	debugCamera = DebugCamera::Create({ 300, 40, 0 });
 	camera = std::make_unique<TutorialCamera>();
-	camera->actionInput.isLockon = false; //ロックオンできなくしておく
+	camera->SetAllActionInput(false); //全ての行動入力を受け付けない
 	player->SetGameCamera(camera.get());
 
 	//影用光源カメラ初期化
@@ -367,6 +367,10 @@ void TutorialScene::TutorialRunUpdate()
 			if (!player->GetData()->actionInput.isMove) {
 				player->GetData()->actionInput.isMove = true;
 			}
+			//カメラ回転入力が不可能なら可能にしておく
+			if (!camera->actionInput.isCameraMove) {
+				camera->actionInput.isCameraMove = true;
+			}
 
 			//移動するほど数字を減らしていく
 			if (player->GetData()->isDash) {
@@ -382,6 +386,8 @@ void TutorialScene::TutorialRunUpdate()
 					okSprite->DrawStart();
 					//プレイヤーの行動入力の受け付けを禁止にする
 					player->GetData()->SetAllActionInput(false);
+					//カメラの入力の受け付けを禁止にする
+					camera->SetAllActionInput(false);
 				}
 
 				TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->ChangeNumber((int)runNum);
@@ -405,6 +411,10 @@ void TutorialScene::TutorialJumpUpdate()
 				player->GetData()->actionInput.isMove = true;
 				player->GetData()->actionInput.isJump = true;
 			}
+			//カメラ回転入力が不可能なら可能にしておく
+			if (!camera->actionInput.isCameraMove) {
+				camera->actionInput.isCameraMove = true;
+			}
 
 			//ジャンプするほど数字を減らしていく
 			if (player->GetData()->action == PlayerActionName::JUMP) {
@@ -420,6 +430,8 @@ void TutorialScene::TutorialJumpUpdate()
 					okSprite->DrawStart();
 					//プレイヤーの行動入力の受け付けを禁止にする
 					player->GetData()->SetAllActionInput(false);
+					//カメラの入力の受け付けを禁止にする
+					camera->SetAllActionInput(false);
 				}
 
 				TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->ChangeNumber(jumpNum);
@@ -452,9 +464,9 @@ void TutorialScene::TutorialAttackUpdate()
 				player->GetData()->actionInput.isLightAttack = true;
 				player->GetData()->actionInput.isStrongAttack = true;
 			}
-			//カメラロックオンが不可能なら可能にしておく
-			if (!camera->actionInput.isLockon) {
-				camera->actionInput.isLockon = true;
+			//カメラ入力が不可能なら可能にしておく
+			if (!camera->actionInput.isCameraMove) {
+				camera->SetAllActionInput(true);
 			}
 
 			//攻撃でダメージを当たれる度に数字を減らしていく
@@ -471,8 +483,8 @@ void TutorialScene::TutorialAttackUpdate()
 					okSprite->DrawStart();
 					//プレイヤーの行動入力の受け付けを禁止にする
 					player->GetData()->SetAllActionInput(false);
-					//カメラロックオンの受け付けを禁止にする
-					camera->actionInput.isLockon = false;
+					//カメラの入力の受け付けを禁止にする
+					camera->SetAllActionInput(false);
 				}
 
 				TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->ChangeNumber(damageNum);
@@ -498,9 +510,9 @@ void TutorialScene::TutorialAvoidUpdate()
 				player->GetData()->actionInput.isAvoid = true;
 				player->GetData()->actionInput.isBlink = true;
 			}
-			//カメラロックオンが不可能なら可能にしておく
-			if (!camera->actionInput.isLockon) {
-				camera->actionInput.isLockon = true;
+			//カメラ入力が不可能なら可能にしておく
+			if (!camera->actionInput.isCameraMove) {
+				camera->SetAllActionInput(true);
 			}
 			//敵の弾発射フラグを立てる
 			if (!tutorialEnemy->GetIsBulletShot()) {
@@ -522,8 +534,8 @@ void TutorialScene::TutorialAvoidUpdate()
 					okSprite->DrawStart();
 					//プレイヤーの行動入力の受け付けを禁止にする
 					player->GetData()->SetAllActionInput(false);
-					//カメラロックオンの受け付けを禁止にする
-					camera->actionInput.isLockon = false;
+					//カメラの入力の受け付けを禁止にする
+					camera->SetAllActionInput(false);
 					//敵の弾発射フラグを下ろす
 					tutorialEnemy->SetIsBulletShot(false);
 				}
@@ -546,9 +558,9 @@ void TutorialScene::TutorialFreeUpdate()
 		if (!player->GetData()->actionInput.isMove) {
 			player->GetData()->SetAllActionInput(true);
 		}
-		//カメラロックオンが不可能なら可能にしておく
-		if (!camera->actionInput.isLockon) {
-			camera->actionInput.isLockon = true;
+		//カメラ回転が不可能なら可能にしておく
+		if (!camera->actionInput.isCameraMove) {
+			camera->SetAllActionInput(true);
 		}
 		//敵の弾発射フラグを立てる
 		if (!tutorialEnemy->GetIsBulletShot()) {
@@ -636,9 +648,9 @@ void TutorialScene::TutorialCameraText2Action()
 				player->GetData()->actionInput.isMove = true;
 				player->GetData()->actionInput.isJump = true;
 			}
-			//カメラロックオンが不可能なら可能にしておく
-			if (!camera->actionInput.isLockon) {
-				camera->actionInput.isLockon = true;
+			//カメラ入力が不可能なら可能にしておく
+			if (!camera->actionInput.isCameraMove) {
+				camera->SetAllActionInput(true);
 			}
 
 			//ロックオンするほど数字を減らしていく
@@ -655,8 +667,8 @@ void TutorialScene::TutorialCameraText2Action()
 					okSprite->DrawStart();
 					//プレイヤーの行動入力の受け付けを禁止にする
 					player->GetData()->SetAllActionInput(false);
-					//カメラロックオンの受け付けを禁止にする
-					camera->actionInput.isLockon = false;
+					//カメラの入力の受け付けを禁止にする
+					camera->SetAllActionInput(false);
 				}
 
 				TextManager::Instance()->GetSentece().textCreator->GetNumberText(0)->ChangeNumber(lockonNum);
