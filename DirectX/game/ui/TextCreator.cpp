@@ -178,6 +178,9 @@ GameInputManager::InputAction TextCreator::ActionInputCommand(const std::wstring
 	if (command == commandCommon + L"select") {
 		return GameInputManager::InputAction::Select;
 	}
+	if (command == commandCommon + L"pause") {
+		return GameInputManager::InputAction::Pause;
+	}
 
 	assert(0);
 	return GameInputManager::InputAction::InputActionNum;

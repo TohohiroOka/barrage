@@ -220,6 +220,7 @@
     <ClCompile Include="game\scene\TutorialScene.cpp" />
     <ClCompile Include="game\system\ActionInputConfig.cpp" />
     <ClCompile Include="game\system\GameInputManager.cpp" />
+    <ClCompile Include="game\system\TutorialPause.cpp" />
     <ClCompile Include="game\titleObject\Portal.cpp" />
     <ClCompile Include="game\titleObject\SpeechBubble.cpp" />
     <ClCompile Include="game\ui\CharActionInputSprite.cpp" />
@@ -578,6 +579,7 @@
     <ClInclude Include="game\system\ActionInputConfig.h" />
     <ClInclude Include="game\system\GameInputManager.h" />
     <ClInclude Include="game\system\Sound.h" />
+    <ClInclude Include="game\system\TutorialPause.h" />
     <ClInclude Include="game\titleObject\Portal.h" />
     <ClInclude Include="game\titleObject\SpeechBubble.h" />
     <ClInclude Include="game\ui\CharActionInputSprite.h" />

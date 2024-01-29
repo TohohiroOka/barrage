@@ -16,8 +16,8 @@ QuestionSystem::QuestionSystem(const std::vector<std::wstring>& choices)
 	for (int i = 0; i < choicesNum; i++) {
 		std::unique_ptr<TextCreator> newText;
 		const DirectX::XMFLOAT2 pos = {
-			centerPos.x - ((CharSprite::charTextureSize - 2) * textScale) / 2 * (float)(choices[i].size() - 1),
-			(centerPos.y - ((CharSprite::charTextureSize + 15) * textScale / 2 * (float)(choices.size() - 1)) + (CharSprite::charTextureSize + 15) * textScale * i)
+			centerPos.x - (CharSprite::charTextureSize * textScale) / 2 * (float)(choices[i].size() - 1),
+			(centerPos.y - ((CharSprite::charTextureSize + 20) * textScale / 2 * (float)(choices.size() - 1)) + (CharSprite::charTextureSize + 20) * textScale * i)
 		};
 		newText = std::make_unique<TextCreator>(choices[i], pos, textScale);
 		choiceTextSprites.push_back(std::move(newText));
@@ -32,7 +32,7 @@ QuestionSystem::QuestionSystem(const std::vector<std::wstring>& choices)
 
 	//背景スプライト生成
 	backSprite = Sprite::Create("white", centerPos, { 0.5f, 0.5f }, { 0.1f, 0.1f, 0.1f, 0.8f });
-	DirectX::XMFLOAT2 backSize = { (CharSprite::charTextureSize - 2) * textScale * charNumMax + 80, (CharSprite::charTextureSize + 15) * (float)(choices.size()) * textScale + 30 };
+	DirectX::XMFLOAT2 backSize = { CharSprite::charTextureSize * textScale * charNumMax + 80, (CharSprite::charTextureSize + 20) * (float)(choices.size()) * textScale + 30 };
 	//枠が小さすぎるとしょぼいので、最小値を設定
 	backSize.x = max(backSize.x, 350);
 	backSize.y = max(backSize.y, 150);
@@ -40,7 +40,7 @@ QuestionSystem::QuestionSystem(const std::vector<std::wstring>& choices)
 
 	//選択強調背景用スプライト生成
 	choiceBackSprite = Sprite::Create("white", DirectX::XMFLOAT2{ centerPos.x, textPosYs[selectNum] }, { 0.5f, 0.5f }, { 1, 0, 0, 0.8f });
-	DirectX::XMFLOAT2 choiceBackSize = { backSize.x - 60, CharSprite::charTextureSize * textScale + 4 };
+	DirectX::XMFLOAT2 choiceBackSize = { backSize.x - 60, CharSprite::charTextureSize * textScale + 6 };
 	choiceBackSprite->SetSize(choiceBackSize);
 
 	//各状態の内容をセット

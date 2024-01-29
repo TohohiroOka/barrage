@@ -61,29 +61,29 @@ namespace TextData {
 		{ L"チュートリアルへようこそ。＠ここでは操作方法の説明を行います。", true, true },
 
 		{ L"まずは「ダッシュ移動」です。＠[action_input_dash]を入力しながら移動することで速く移動できます。", true, true },
-		{ L"ダッシュ：[action_input_dash]を入力しながら移動＠＠＠　　　　　　　　　　　　　　　　あと(300)ｍ", false, false },
+		{ L"ダッシュ：[action_input_dash]を入力しながら移動＠＠＠　　　　　　　　　　　　　　　　　あと(300)ｍ", false, false },
 
 		{ L"つぎは「ジャンプ」です。＠[action_input_jump]を入力することで上方向に跳ぶことができます。", true, true },
-		{ L"ジャンプ：[action_input_jump]＠＠＠　　　　　　　　　　　　　　　　あと(5)回", false, false },
+		{ L"ジャンプ：[action_input_jump]＠＠＠　　　　　　　　　　　　　　　　　　　あと(5)回", false, false },
 
 		{ L"つぎは「カメラ操作」です。＠[action_input_camera_up_rota][action_input_camera_left_rota][action_input_camera_down_rota][action_input_camera_right_rota]入力でカメラ回転ができます。", true, true },
 		{ L"つぎは「カメラ操作」です。＠[action_input_camera_up_rota]でカメラ回転ができます。", true, true },
 		{ L"敵がいる場合は、＠[action_input_camera_lockon]で「ロックオン」ができます。", true, true },
 		{ L"おや・・・・・？", true, true },
 		{ L"ちょうどいいタイミングで敵が出てきました！＠敵をロックオンしてみましょう。", true, true },
-		{ L"ロックオン：敵が画面内にいるときに[action_input_camera_lockon]＠＠＠　　　　　　　　　　　　　　　　あと(1)回", false, false },
+		{ L"ロックオン：敵が画面内にいるときに[action_input_camera_lockon]＠＠＠　　　　　　　　　　　　　　　　　　　あと(1)回", false, false },
 
 		{ L"続いては「攻撃」です。＠攻撃には弱攻撃と強攻撃の2種類があります。", true, true },
 		{ L"[action_input_light_attack]を入力することで弱攻撃、[action_input_strong_attack]を入力することで＠強攻撃を出すことができます。＠どちらも最大3回まで連撃をすることができます。", true, true },
 		{ L"それでは敵に攻撃を当ててみましょう。", true, true },
-		{ L"弱攻撃：[action_input_light_attack]＠強攻撃：[action_input_strong_attack]＠＠　　　　　　　　　　　　　　　　あと(10)回", false, false },
+		{ L"弱攻撃：[action_input_light_attack]＠強攻撃：[action_input_strong_attack]＠＠　　　　　　　　　　　　　　　　　　あと(10)回", false, false },
 
 		{ L"最後は「回避」です。＠移動しながら[action_input_avoid]を入力することで、敵の攻撃を＠避けることができます。", true, true },
 		{ L"敵の攻撃を引き付けてから、回避で避けてみましょう。", true, true },
-		{ L"回避：移動しながら[action_input_avoid]＠＠＠　　　　　　　　　　　　　　　　あと(3)回", false, false },
+		{ L"回避：移動しながら[action_input_avoid]＠＠＠　　　　　　　　　　　　　　　　　　　あと(3)回", false, false },
 
 		{ L"以上で操作説明は終了です。＠自由に行動してみましょう。", true, true },
-		{ L"自由に行動してみよう。＠＠＠　　　　　　　　　　　　　　　　[action_input_select]：ポーズ", false, false },
+		{ L"自由に行動してみよう。＠＠＠　　　　　　　　　　　　　　　　　　　[action_input_pause]：ポーズ", false, false },
 	};
 }
 
@@ -111,7 +111,7 @@ namespace SentenceData {
 		TUTORIAL_CAMERA_2,
 		TUTORIAL_ATTACK,
 		TUTORIAL_AVOID,
-		TUTORIAL_FREE
+		TUTORIAL_FREE,
 	};
 
 	//文章データ
@@ -177,6 +177,7 @@ namespace ChoicesData {
 	/// </summary>
 	enum class ChoicesName {
 		YES_OR_NO,		//はいorいいえ
+		TUTORIAL_PAUSE_CHOICE,
 		KANSAI,			//なんでやねんorアホかorどつきまわすぞ
 	};
 
@@ -185,6 +186,11 @@ namespace ChoicesData {
 		{
 			L"はい",
 			L"いいえ"
+		},
+		{
+			L"チュートリアルに戻る",
+			L"ゲームを開始する",
+			L"タイトルに戻る",
 		},
 		{
 			L"なんでやねん",

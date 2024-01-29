@@ -136,7 +136,7 @@ void Scene1::Update()
 		if (DirectInput::GetInstance()->TriggerKey(DIK_4)) { gameoverUi->StartGameOverUI(); }
 		if (player->GetData()->isDead && !gameoverUi->GetIsGameOver()) { gameoverUi->StartGameOverUI(); }
 
-		if (DirectInput::GetInstance()->TriggerKey(DIK_TAB) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_START)) {
+		if (GameInputManager::TriggerInputAction(GameInputManager::Pause)) {
 			isInputConfigMode = true;
 			actionInputConfig->Reset();
 		}

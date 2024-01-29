@@ -3,7 +3,7 @@
 #include "engine/camera/DebugCamera.h"
 #include "engine/Camera/LightCamera.h"
 
-#include "system/ActionInputConfig.h"
+#include "system/TutorialPause.h"
 #include "camera/TutorialCamera.h"
 #include "player/Player.h"
 #include "field/Field.h"
@@ -154,9 +154,10 @@ private:
 	//ロックオン
 	std::unique_ptr<LockonUI> lockonUI;
 
-	//行動入力設定
-	std::unique_ptr<ActionInputConfig> actionInputConfig;
-	bool isInputConfigMode = false;
+	//ポーズ画面
+	std::unique_ptr<TutorialPause> tutorialPause;
+	//次のシーン
+	InterfaceScene* changeScene;
 
 	//シーン遷移待機中か
 	bool isSceneChangeWait = false;

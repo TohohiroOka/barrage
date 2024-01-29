@@ -30,6 +30,7 @@ public: //enum
 		Lockon,			//ロックオン
 
 		Select,			//選択
+		Pause,			//ポーズ
 
 		InputActionNum,	//入力対応数
 	};

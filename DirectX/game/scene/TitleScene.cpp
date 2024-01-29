@@ -118,7 +118,7 @@ void TitleScene::Update()
 		//当たり判定
 		CollisionCheck();
 
-		if ((!isIntoPortal) && (DirectInput::GetInstance()->TriggerKey(DIK_TAB) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_START))) {
+		if ((!isIntoPortal) && GameInputManager::TriggerInputAction(GameInputManager::Pause)) {
 			isInputConfigMode = true;
 			actionInputConfig->Reset();
 		}
@@ -132,7 +132,8 @@ void TitleScene::Update()
 
 	//スプライト更新
 	pressSelectButtonUI->Update();
-	TextManager::Instance()->Update();
+	TextManager::Instance()->UpdateSentence();
+	TextManager::Instance()->UpdateChoices();
 	SceneChangeDirection::Instance()->Update();
 }
 
@@ -158,7 +159,8 @@ void TitleScene::NonPostEffectDraw(const int _cameraNum)
 {
 	titleLogoSprite->Draw();
 
-	TextManager::Instance()->Draw();
+	TextManager::Instance()->DrawSentence();
+	TextManager::Instance()->DrawChoices();
 
 	//テキストがなにも描画されていなければ押下可能UI描画
 	if (!(TextManager::Instance()->GetSentece().textCreator || TextManager::Instance()->GetChoices().question)) {

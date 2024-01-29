@@ -49,14 +49,24 @@ public: //メンバ関数
 	~TextManager();
 
 	/// <summary>
-	/// 更新
+	/// 文章更新
 	/// </summary>
-	void Update();
+	void UpdateSentence();
 
 	/// <summary>
-	/// 描画
+	/// 選択肢更新
 	/// </summary>
-	void Draw();
+	void UpdateChoices();
+
+	/// <summary>
+	/// 文章描画
+	/// </summary>
+	void DrawSentence();
+
+	/// <summary>
+	/// 選択肢描画
+	/// </summary>
+	void DrawChoices();
 
 	/// <summary>
 	/// 文章生成

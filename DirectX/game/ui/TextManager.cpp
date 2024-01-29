@@ -29,7 +29,7 @@ TextManager::~TextManager()
 {
 }
 
-void TextManager::Update()
+void TextManager::UpdateSentence()
 {
 	//枠スプライト更新
 	if (!(sentenceCreatePhase == SentenceCreatePhase::NONE)) {
@@ -47,14 +47,17 @@ void TextManager::Update()
 
 	//文章の各状態の内容を更新
 	func[int(sentenceCreatePhase)]();
+}
 
+void TextManager::UpdateChoices()
+{
 	//選択肢がセットされているなら選択肢更新
 	if (choices.question) {
 		choices.question->Update();
 	}
 }
 
-void TextManager::Draw()
+void TextManager::DrawSentence()
 {
 	//枠スプライト描画
 	if (!(sentenceCreatePhase == SentenceCreatePhase::NONE)) {
@@ -75,7 +78,10 @@ void TextManager::Draw()
 			}
 		} 
 	}
+}
 
+void TextManager::DrawChoices()
+{
 	//選択肢がセットされているなら選択肢更新
 	if (choices.question) {
 		choices.question->Draw();

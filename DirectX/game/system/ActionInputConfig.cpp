@@ -411,7 +411,7 @@ void ActionInputConfig::SelectModeUpdate()
 		}
 	}
 	//“ü—ÍÝ’èI—¹
-	else if (DirectInput::GetInstance()->TriggerKey(DIK_TAB) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_B)) {
+	else if (GameInputManager::TriggerInputAction(GameInputManager::Pause)) {
 		isInputConfigEnd = true;
 	}
 }

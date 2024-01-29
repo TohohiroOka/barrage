@@ -2,6 +2,8 @@
 #include "Input/DirectInput.h"
 #include "Input/XInputManager.h"
 #include "engine/Scene/SceneManager.h"
+#include "scene/TitleScene.h"
+#include "scene/Scene1.h"
 #include "cutscene/SceneChangeDirection.h"
 #include "Audio/Audio.h"
 #include "WindowApp.h"
@@ -69,8 +71,8 @@ void TutorialScene::Initialize()
 	//チュートリアルお試し行動終了後タイマー生成
 	tutorialActionClearTimer = std::make_unique<Engine::Timer>();
 
-	//行動入力設定
-	actionInputConfig = std::make_unique<ActionInputConfig>();
+	//チュートリアル用ポーズ画面生成
+	tutorialPause = std::make_unique<TutorialPause>();
 
 	//遷移初期化
 	SceneChangeDirection::Instance()->Init();
@@ -81,13 +83,7 @@ void TutorialScene::Initialize()
 
 void TutorialScene::Update()
 {
-	if (!isInputConfigMode) {
-		//暗転が完了したら次のシーンへ
-		if (isSceneChangeWait && SceneChangeDirection::Instance()->IsDirectionEnd()) {
-			TitleScene* titleScene = new TitleScene;
-			SceneManager::SetNextScene(titleScene);
-		}
-
+	if (!tutorialPause->GetIsPauseDraw()) {
 		//各チュートリアルフェーズの内容更新
 		tutorialFunc[int(tutorialPhase)]();
 
@@ -121,25 +117,57 @@ void TutorialScene::Update()
 		}
 		lightCamera->Update();
 
-		if ((DirectInput::GetInstance()->TriggerKey(DIK_TAB) || XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_START))) {
-			isInputConfigMode = true;
-			actionInputConfig->Reset();
+		//ポーズ画面表示
+		if (GameInputManager::TriggerInputAction(GameInputManager::Pause)) {
+			tutorialPause->PauseStart();
 		}
 
 		if (!camera->GetIsLockon()) { lockonUI->EndLockOnDraw(); }
+
+		TextManager::Instance()->UpdateSentence();
+		okSprite->Update();
 	}
 	else {
-		//入力設定更新
-		actionInputConfig->Update();
-
-		if (actionInputConfig->GetIsInputConfigEnd()) { isInputConfigMode = false; }
+		//ポーズ画面表示終了
+		if (GameInputManager::TriggerInputAction(GameInputManager::Pause)) {
+			tutorialPause->PauseEnd();
+		}
+		//暗転が完了したら次のシーンへ
+		if (isSceneChangeWait && SceneChangeDirection::Instance()->IsDirectionEnd()) {
+			SceneManager::SetNextScene(changeScene);
+		}
+		//選択肢の選択を終えていれば
+		if (TextManager::Instance()->GetIsChoiceEnd()) {
+			//選択が0番ならゲームシーン開始
+			if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::TUTORIAL_PAUSE_CHOICE) == 0) {
+				tutorialPause->PauseEnd(); 
+			}
+			//選択が1番ならタイトルシーンに戻る
+			else if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::TUTORIAL_PAUSE_CHOICE) == 1) {
+				if (!isSceneChangeWait) {
+					Scene1* gameScene = new Scene1;
+					changeScene = gameScene;
+					isSceneChangeWait = true;
+					SceneChangeDirection::Instance()->PlayFadeOut();
+				}
+			}
+			//選択が2番なら元に戻る
+			else if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::TUTORIAL_PAUSE_CHOICE) == 2) {
+				if (!isSceneChangeWait) {
+					TitleScene* titleScene = new TitleScene;
+					changeScene = titleScene;
+					isSceneChangeWait = true;
+					SceneChangeDirection::Instance()->PlayFadeOut();
+				}
+			}
+		}
 	}
 
-	//スプライト更新
-	TextManager::Instance()->Update();
+	//スプライト更新	
 	AllHitEffect::Instance()->Update();
 	SceneChangeDirection::Instance()->Update();
-	okSprite->Update();
+	TextManager::Instance()->UpdateChoices();
+	tutorialPause->Update();
 }
 
 void TutorialScene::Draw(const int _cameraNum)
@@ -163,14 +191,12 @@ void TutorialScene::NonPostEffectDraw(const int _cameraNum)
 
 	player->DrawSprite();
 
-	TextManager::Instance()->Draw();
+
+	TextManager::Instance()->DrawSentence();
 	okSprite->Draw();
 
-	//入力設定描画
-	if (isInputConfigMode) {
-		actionInputConfig->Draw();
-	}
-
+	tutorialPause->Draw();
+	TextManager::Instance()->DrawChoices();
 
 	SceneChangeDirection::Instance()->Draw();
 }
