@@ -26,6 +26,7 @@ void TutorialScene::Initialize()
 	//プレイヤー生成
 	player = std::make_unique<Player>();
 	player->GetData()->SetAllActionInput(false); //全ての行動入力を受け付けない
+	player->GetData()->isNoDead = true; //死なないようにしておく
 
 	//カメラ生成
 	GameCamera::SetPlayer(player.get());
@@ -286,7 +287,7 @@ void TutorialScene::CollisionCheck()
 			int num = -1;
 			for (auto& bossAttackData : bossAttackDatas) {
 				num++;
-				const float avoidCheckRadiusMulti = 50.0f;
+				const float avoidCheckRadiusMulti = 75.0f;
 				bossAttackData.radius *= avoidCheckRadiusMulti;
 				if (Collision::CheckSphere2Sphere(playerSphere, bossAttackData)) {
 					//回避処理

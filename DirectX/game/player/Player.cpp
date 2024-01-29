@@ -35,7 +35,7 @@ Player::Player()
 
 	//剣生成
 	sword = std::make_unique<PlayerSword>(object.get());
-	
+
 
 	//データ生成
 	data = std::make_unique<PlayerData>();
@@ -151,7 +151,10 @@ void Player::Damage(int damageNum, const Vector3& knockbackVec, int knockbackPow
 {
 	//HPからダメージ量を引く
 	data->HP -= damageNum;
-	data->HP = max(data->HP, 0);
+
+	//死なないフラグがtrueなら1残す。falseなら0を下回らないようにする
+	if (data->isNoDead) { data->HP = max(data->HP, 1); }
+	else { data->HP = max(data->HP, 0); }
 
 	hpGauge->ChangeLength(data->HP, true);
 
