@@ -122,15 +122,9 @@ void PlayerActionMoveNormal::Dash()
 	if (!player->GetData()->onGround) { return; }
 
 	if (!player->GetData()->isDash) {
-		//ダッシュ開始可能で地面接地しているかつ、ダッシュ入力があって移動した場合にダッシュ状態にする
-		if (isDashStart && (player->GetData()->isMoveKey || player->GetData()->isMovePad) && player->GetData()->endurance > 0 && GameInputManager::PushInputAction(GameInputManager::Avoid_Blink_Dash)) {
+		//地面接地しているかつ、ダッシュ入力があって移動した場合にダッシュ状態にする
+		if ((player->GetData()->isMoveKey || player->GetData()->isMovePad) && player->GetData()->endurance > 0 && GameInputManager::PushInputAction(GameInputManager::Avoid_Blink_Dash)) {
 			player->GetData()->isDash = true;
-			isDashStart = false;
-		}
-
-		//ダッシュ開始不能時は、ダッシュボタン入力を一度離すことで可能になる
-		if ((!isDashStart) && (!GameInputManager::PushInputAction(GameInputManager::Avoid_Blink_Dash))) {
-			isDashStart = true;
 		}
 	}
 	else {

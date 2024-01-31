@@ -255,7 +255,8 @@ void Scene1::CollisionCheck()
 #pragma endregion
 
 #pragma region プレイヤーと敵の攻撃の衝突判定
-	{
+	//死亡していなければ判定する
+	if (!player->GetData()->isDead) {
 		BaseAction* action = boss->GetBaseAction();
 		//プレイヤーが回避またはブリンクをしていなければ衝突判定
 		//攻撃の判定を行わない時間なら判定を取らない
@@ -305,7 +306,7 @@ void Scene1::CollisionCheck()
 					num++;
 					if (Collision::CheckSphere2Sphere(playerSphere, i)) {
 						Vector3 knockbackVec = ppos - Vector3{ i.center.m128_f32[0],i.center.m128_f32[1], i.center.m128_f32[2] };
-						
+
 						//ダメージの情報取得
 						int damageNum;
 						int knockbackPower;
@@ -337,7 +338,7 @@ void Scene1::CollisionCheck()
 					Vector3 collisionPos;
 					if (Collision::CheckSphereCapsule(playerSphere, i, &dist, &collisionPos)) {
 						Vector3 knockbackVec = ppos - i.startPosition;
-						
+
 						//ダメージの情報取得
 						int damageNum;
 						int knockbackPower;
@@ -362,7 +363,7 @@ void Scene1::CollisionCheck()
 #pragma endregion
 
 #pragma region プレイヤーと敵の攻撃の衝突判定2
-	if(boss->GetBaseAction2()){
+	if (!player->GetData()->isDead && boss->GetBaseAction2()) {
 		BaseAction* action = boss->GetBaseAction2();
 		//プレイヤーが回避またはブリンクをしていなければ衝突判定
 		//攻撃の判定を行わない時間なら判定を取らない
@@ -382,7 +383,7 @@ void Scene1::CollisionCheck()
 					num++;
 					if (Collision::CheckSphere2Box(playerSphere, i)) {
 						Vector3 knockbackVec = ppos - (Vector3)i.point1;
-						
+
 						//ダメージの情報取得
 						int damageNum;
 						int knockbackPower;
@@ -412,7 +413,7 @@ void Scene1::CollisionCheck()
 					num++;
 					if (Collision::CheckSphere2Sphere(playerSphere, i)) {
 						Vector3 knockbackVec = ppos - Vector3{ i.center.m128_f32[0], i.center.m128_f32[1], i.center.m128_f32[2] };
-					
+
 						//ダメージの情報取得
 						int damageNum;
 						int knockbackPower;
@@ -444,8 +445,8 @@ void Scene1::CollisionCheck()
 					Vector3 collisionPos;
 					if (Collision::CheckSphereCapsule(playerSphere, i, &dist, &collisionPos)) {
 						Vector3 knockbackVec = ppos - i.startPosition;
-					
-					//ダメージの情報取得
+
+						//ダメージの情報取得
 						int damageNum;
 						int knockbackPower;
 						int knockbackTime;
@@ -480,7 +481,7 @@ void Scene1::CollisionCheck()
 			attackCapsule.startPosition = player->GetData()->attackAction->GetAttackCollisionData().startPosition;
 			attackCapsule.endPosition = player->GetData()->attackAction->GetAttackCollisionData().endPosition;
 			attackCapsule.radius = player->GetData()->attackAction->GetAttackCollisionData().radius;
-			
+
 			float dist;
 			Vector3 collisionPos;
 			if (Collision::CheckSphereCapsule(enemySphere, attackCapsule, &dist, &collisionPos)) {

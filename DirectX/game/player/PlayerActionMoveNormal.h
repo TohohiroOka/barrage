@@ -36,8 +36,4 @@ public: //静的メンバ変数 (変更しやすいようにpublic)
 	static float moveSpeedMax;
 	//最大ダッシュスピード
 	static float dashSpeedMax;
-
-private: //メンバ変数
-	//ダッシュ開始できるか
-	bool isDashStart = true;
 };
