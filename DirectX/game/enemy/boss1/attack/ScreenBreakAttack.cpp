@@ -106,7 +106,8 @@ void ScreenBreakAttack::Move1End()
 
 void ScreenBreakAttack::AttackWait()
 {
-	if (*timer.get() < 200.0f) { return; }
+	//UŒ‚—P—\
+	if (*timer.get() < 100.0f) { return; }
 	timer->Reset();
 	isCollision = true;
 	ScreenCut::Reset();
