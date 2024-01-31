@@ -14,6 +14,8 @@ void BaseBoss::Initialize()
 	bossNameSprite->SetPosition(DirectX::XMFLOAT2({ WindowApp::GetWindowWidth() / 2 - length / 2, 625.0f }));
 	bossNameSprite->Update();
 
+	damageTimer = std::make_unique<Engine::Timer>();
+
 	isCollider = true;
 }
 
@@ -28,6 +30,8 @@ void BaseBoss::Update()
 	action->Update();
 
 	bossModel->Update();
+
+	DamageEffect();
 
 	//’†’fs“®
 	//breaks“®—Dæ
@@ -82,6 +86,30 @@ void BaseBoss::Damage(int damageNum)
 	HP = max(HP, 0);
 
 	hpGauge->ChangeLength(HP, true);
+	isDamage = true;
+	damageTimer->Reset();
+}
+
+void BaseBoss::DamageEffect()
+{
+	if (isDamage) {
+		if (isDamageRed) {
+			bossModel->GetObjectInst()->SetColor({ 0.9f,0.1f,0.1f,1.0f });
+		} else {
+			bossModel->GetObjectInst()->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+		}
+		damageTimer->Update();
+
+		if (*damageTimer.get() % 5 == 0) {
+			isDamageRed = !isDamageRed;
+		}
+
+		if (*damageTimer.get() < 25.0f) { return; }
+		bossModel->GetObjectInst()->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+		isDamage = false;
+		isDamageRed = false;
+		damageTimer->Reset();
+	}
 }
 
 void BaseBoss::Collider()

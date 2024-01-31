@@ -93,6 +93,10 @@ void Boss1Bullet2::Update()
 			func_[int(state)]();
 		}
 	}else {
+		for (auto& i : outPosInfo) {
+			i.isAlive = false;
+			i.effect->Finalize();
+		}
 		isEnd = true;
 		return;
 	}
@@ -100,7 +104,9 @@ void Boss1Bullet2::Update()
 	OutPosEffectAdd();
 
 	for (auto& i : outPosInfo) {
-		i.effect->Update();
+		if (i.effect) {
+			i.effect->Update();
+		}
 	}
 
 	BulletUpdate();
@@ -120,6 +126,7 @@ void Boss1Bullet2::Draw()
 {
 	instanceObject->Draw(ObjectBase::DrawMode::add);
 	for (auto& i : outPosInfo) {
+		if (!i.isAlive) { continue; }
 		i.effect->Draw();
 	}
 }

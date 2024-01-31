@@ -1,5 +1,5 @@
 #include "SceneManager.h"
-#include "Scene/TitleScene.h"
+#include "Scene/Scene1.h"
 #include "Object/2d/PostEffect/PostEffect.h"
 #include "Object/2d/PostEffect/BasePostEffect.h"
 #include "Loader/JsonLoader.h"
@@ -71,9 +71,9 @@ void SceneManager::Initialize()
 	SceneChangeDirection::Instance()->Create();
 
 	//Å‰‚ÌƒV[ƒ“Ý’è
-	TitleScene* firstScene = new TitleScene();
+	Scene1* firstScene = new Scene1();
 	firstScene->Initialize();
-	scene = std::unique_ptr<TitleScene>(firstScene);
+	scene = std::unique_ptr<Scene1>(firstScene);
 
 	
 }

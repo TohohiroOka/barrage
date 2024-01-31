@@ -26,6 +26,8 @@ ScreenBreakAttack::ScreenBreakAttack()
 
 	boss->SetIsCollider(false);
 
+	boss->GetBaseModel()->GetObjectInst()->SetRotation({ 0.0f,180.0f,0.0f });
+
 	panelBreak = false;
 
 	moveBefore = boss->GetBaseModel()->GetPosition();

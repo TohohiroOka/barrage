@@ -32,6 +32,8 @@ public:
 
 	virtual void Damage(int damageNum);
 
+	void DamageEffect();
+
 	void Collider();
 
 	void SetPlayerDirection();
@@ -67,6 +69,12 @@ protected:
 	int maxHP;
 	//体力
 	int HP;
+	//ダメージ
+	bool isDamage;
+	//ダメージ演出時間
+	std::unique_ptr<Engine::Timer> damageTimer;
+	//ダメージ時の現在の色
+	bool isDamageRed;
 	//体力ゲージ
 	std::unique_ptr<Gauge> hpGauge;
 	//ボスの名前
