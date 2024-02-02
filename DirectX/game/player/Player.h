@@ -179,14 +179,10 @@ private: //メンバ変数
 	int healAfterHP;
 	//体力ゲージ
 	std::unique_ptr<Gauge> hpGauge;
-	//体力アイコン
-	std::unique_ptr<Sprite> hpIcon;
 	//持久力回復開始までのタイマー
 	std::unique_ptr<Engine::Timer> enduranceRecoveryStartTimer;
 	////持久力ゲージ
 	std::unique_ptr<Gauge> enduranceGauge;
-	//スタミナアイコン
-	std::unique_ptr<Sprite> staminaIcon;
 
 	//タイトルシーン用ポータル座標
 	Vector3 portalPos;

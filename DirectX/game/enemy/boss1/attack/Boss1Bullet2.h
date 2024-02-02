@@ -28,6 +28,7 @@ private:
 
 	enum class State {
 		start,
+		attackWait,
 		attack,
 		end,
 		non,
@@ -59,6 +60,8 @@ public:
 	}
 
 	void Start();
+
+	void AttackWait();
 
 	void Attack();
 

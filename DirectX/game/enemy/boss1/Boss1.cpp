@@ -25,7 +25,7 @@ Boss1::Boss1()
 
 	BaseAction::SetBossPtr(this);
 
-	action = std::make_unique<Boss1Bullet2>();
+	action = std::make_unique<Boss1Move1>();
 
 	hitScale = bossModel->GetObjectInst()->GetScale().y * 5000.0f;
 
@@ -76,8 +76,8 @@ void Boss1::SetAction()
 	Vector3 pos = bossModel->GetPosition();
 	Vector3 dist = targetPos - pos;
 
-	action = std::make_unique<Boss1Bullet2>();
-	return;
+	//action = std::make_unique<Boss1Bullet2>();
+	//return;
 
 	//ƒvƒŒƒCƒ„[‚ª‰“‹——£‚É‚¢‚é
 	if (dist.length() > 100.0f) {

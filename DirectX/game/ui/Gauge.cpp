@@ -40,11 +40,13 @@ void Gauge::Update()
 
 void Gauge::Draw()
 {
-	gaugeFrame->Draw();
 	gaugeBar->Draw();
 
-	if (!isDecreaseDiffMode) { return; }
-	gaugeDecreaseDiff->Draw();
+	if (isDecreaseDiffMode) {
+		gaugeDecreaseDiff->Draw();
+	}
+
+	gaugeFrame->Draw();
 }
 
 void Gauge::ChangeLength(int newGaugeNum, bool isDecreaseDiffMode)

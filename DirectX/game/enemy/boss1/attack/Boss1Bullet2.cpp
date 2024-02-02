@@ -82,6 +82,7 @@ Boss1Bullet2::Boss1Bullet2()
 
 	//çsìÆä÷êî
 	func_.emplace_back([this] {return Start(); });
+	func_.emplace_back([this] {return AttackWait(); });
 	func_.emplace_back([this] {return Attack(); });
 	func_.emplace_back([this] {return End(); });
 }
@@ -170,6 +171,15 @@ void Boss1Bullet2::Start()
 	}
 
 	if (rate < 1.0f) { return; }
+	state = State::attackWait;
+	timer->Reset();
+}
+
+void Boss1Bullet2::AttackWait()
+{
+	const float maxTime = 20.0f;
+
+	if (*timer.get() < maxTime) { return; }
 	state = State::attack;
 	timer->Reset();
 	isCollision = true;
