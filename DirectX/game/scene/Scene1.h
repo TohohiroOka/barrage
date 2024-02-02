@@ -12,6 +12,7 @@
 #include "game/cutscene/Boss1Defeat.h"
 #include "ui/LockonUI.h"
 #include "../game/effect/ScreenCut.h"
+#include "PauseScene.h"
 
 class Scene1 : public InterfaceScene
 {
@@ -105,4 +106,8 @@ private:
 
 	//シーン遷移待機中か
 	bool isSceneChangeWait = false;
+
+	//ポースシーン管理
+	std::unique_ptr<PauseScene> pauseScene;
+
 };

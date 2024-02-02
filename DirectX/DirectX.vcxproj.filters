@@ -593,6 +593,9 @@
     <ClCompile Include="game\effect\BulletAttack2Effect.cpp">
       <Filter>ゲームシステム\Effect</Filter>
     </ClCompile>
+    <ClCompile Include="game\scene\PauseScene.cpp">
+      <Filter>ゲームシステム\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="game\system\TutorialPause.cpp" />
     <ClCompile Include="game\enemy\boss1\BreakAction.cpp">
       <Filter>ゲームシステム\Enemy\Boss1</Filter>
@@ -1215,6 +1218,9 @@
     </ClInclude>
     <ClInclude Include="game\effect\BulletAttack2Effect.h">
       <Filter>ゲームシステム\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="game\scene\PauseScene.h">
+      <Filter>ゲームシステム\Scene</Filter>
     </ClInclude>
     <ClInclude Include="game\system\TutorialPause.h">
       <Filter>ゲームシステム\system</Filter>
