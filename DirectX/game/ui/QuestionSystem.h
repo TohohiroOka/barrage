@@ -22,6 +22,11 @@ public: //ƒƒ“ƒoŠÖ”
 	~QuestionSystem();
 
 	/// <summary>
+	/// ‰Šú‰»
+	/// </summary>
+	void Init();
+
+	/// <summary>
 	/// XV
 	/// </summary>
 	void Update();

@@ -56,11 +56,20 @@ QuestionSystem::~QuestionSystem()
 {
 }
 
+void QuestionSystem::Init()
+{
+	choiceBackSprite->SetColor({0.8f,0,0,1.f});
+	selectDirectionCount = 0;
+	isEnd = false;
+	timer->Reset();
+	phase = QuestionPhase::START_WAIT;
+}
+
 void QuestionSystem::Update()
 {
 	//各状態の内容を更新
 	func[int(phase)]();
-
+	
 	//スプライト更新
 	backSprite->Update();
 	choiceBackSprite->Update();

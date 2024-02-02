@@ -73,6 +73,9 @@ void Scene1::Initialize()
 	lockonUI->Init(camera.get());
 
 	screenCut = std::make_unique<ScreenCut>();
+
+	pauseScene = std::make_unique<PauseScene>();
+	pauseScene->Init();
 }
 
 void Scene1::Update()
@@ -83,7 +86,7 @@ void Scene1::Update()
 
 	screenCut->Update();
 
-	if (!isInputConfigMode) {
+	if (!pauseScene->GetIsPause()) {
 		//撃破演出再生
 		//デバッグ用再生
 		if (DirectInput::GetInstance()->TriggerKey(DIK_H)) {
@@ -142,16 +145,23 @@ void Scene1::Update()
 		}
 
 		if (!camera->GetIsLockon()) { lockonUI->EndLockOnDraw(); }
+
+		//ポース判定
+		pauseScene->InPause();
 	}
 	else {
 		//入力設定更新
-		actionInputConfig->Update();
-
-		if (actionInputConfig->GetIsInputConfigEnd()) { isInputConfigMode = false; }
+		//actionInputConfig->Update();
+		//if (actionInputConfig->GetIsInputConfigEnd()) { isInputConfigMode = false; }
+		pauseScene->Update();
 	}
 
 	defeatDirection->Update();
 	if (defeatDirection->GetDirectionEnd() && isSceneChangeWait == false) {
+		isSceneChangeWait = true;
+		SceneChangeDirection::Instance()->PlayFadeOut();
+	}
+	if (pauseScene->GetIsChangeScene() && isSceneChangeWait == false) {
 		isSceneChangeWait = true;
 		SceneChangeDirection::Instance()->PlayFadeOut();
 	}
@@ -202,11 +212,13 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 	gameoverUi->Draw();
 
 	//入力設定描画
-	if (isInputConfigMode) {
-		actionInputConfig->Draw();
-	}
+	//if (isInputConfigMode) {
+	//	actionInputConfig->Draw();
+	//}
 
 	defeatDirection->Draw2D();
+
+	pauseScene->Draw();
 
 	SceneChangeDirection::Instance()->Draw();
 }
