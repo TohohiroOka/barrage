@@ -7,7 +7,7 @@
 class Gauge
 {
 public: //メンバ変数
-	Gauge(const DirectX::XMFLOAT2& position, float length, int maxGaugeNum, int gaugeNum, float decreaseGaugeLengthChangeSpeed, const DirectX::XMFLOAT4& color);
+	Gauge(const DirectX::XMFLOAT2& position, const std::string& frameTexName, const DirectX::XMFLOAT2& barShiftNum, int maxGaugeNum, int gaugeNum, float decreaseGaugeLengthChangeSpeed, const DirectX::XMFLOAT4& color);
 	~Gauge();
 
 	/// <summary>
@@ -36,17 +36,13 @@ private: //メンバ関数
 	/// </summary>
 	void ChangeDecreaseDiffLength();
 
-private: //静的メンバ変数
-	//太さ
-	static const float thickness;
-
 private: //メンバ変数
 	std::unique_ptr<Sprite> gaugeFrame;
 	std::unique_ptr<Sprite> gaugeBar;
 	std::unique_ptr<Sprite> gaugeDecreaseDiff;
 
-	float maxLength;
 	float length;
+	float thickness;
 	int maxGaugeNum;
 	int gaugeNum;
 

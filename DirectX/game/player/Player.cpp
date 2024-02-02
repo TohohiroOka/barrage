@@ -43,10 +43,10 @@ Player::Player()
 	ActionChange();
 
 	//体力ゲージ
-	hpGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 60.0f, 50.0f }), 600.0f, data->maxHP, data->HP, 2.0f, DirectX::XMFLOAT4({ 0.6f, 0.1f, 0.1f, 1.0f }));
+	hpGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 60.0f, 50.0f }), "playerGaugeFrame", DirectX::XMFLOAT2({ 5.0f, 5.0f }), data->maxHP, data->HP, 2.0f, DirectX::XMFLOAT4({0.8f, 0.2f, 0.2f, 1.0f}));
 
 	//持久力ゲージ
-	enduranceGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 60.0f, 90.0f }), 600.0f, data->maxEndurance, data->endurance, 1.5f, DirectX::XMFLOAT4({ 0.1f, 0.6f, 0.1f, 1.0f }));
+	enduranceGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 60.0f, 90.0f }), "playerGaugeFrame", DirectX::XMFLOAT2({ 5.0f, 5.0f }), data->maxEndurance, data->endurance, 1.5f, DirectX::XMFLOAT4({ 0.2f, 0.8f, 0.2f, 1.0f }));
 
 	//アイコン生成
 	TextureManager::LoadTexture("healthIcon", "Resources/SpriteTexture/healthIcon.png");

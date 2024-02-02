@@ -1,23 +1,25 @@
 #include "Gauge.h"
 
-const float Gauge::thickness = 16.0f;
-
-Gauge::Gauge(const DirectX::XMFLOAT2& position, float length, int maxGaugeNum, int gaugeNum, float decreaseGaugeLengthChangeSpeed, const DirectX::XMFLOAT4& color)
+Gauge::Gauge(const DirectX::XMFLOAT2& position, const std::string& frameTexName, const DirectX::XMFLOAT2& barShiftNum, int maxGaugeNum, int gaugeNum, float decreaseGaugeLengthChangeSpeed, const DirectX::XMFLOAT4& color)
 {
-	this->length = length;
 	this->maxGaugeNum = maxGaugeNum;
 	this->gaugeNum = gaugeNum;
 	this->decreaseLengthChangeSpeed = decreaseGaugeLengthChangeSpeed;
 
-	const std::string textureName = "gauge";
-	
-	const DirectX::XMFLOAT4 frameColor = { 0.1f, 0.1f, 0.1f, 1.0f };
-	gaugeFrame = Sprite::Create(textureName, position, { 0, 0.5f }, frameColor);
-	gaugeFrame->SetSize({ length, thickness });
-	gaugeBar = Sprite::Create(textureName, position, { 0, 0.5f }, color);
+	//枠生成
+	TextureManager::LoadTexture(frameTexName, "Resources/SpriteTexture/" + frameTexName + ".png");
+	gaugeFrame = Sprite::Create(frameTexName, position, { 0, 0.5f });
+
+	//バー生成
+	//バーの長さと太さをセット(バーの長さ = フレームの長さ - 枠の分ずらす量 * 2(左右or上下))
+	this->length = gaugeFrame->GetSize().x - barShiftNum.x * 2;
+	this->thickness = gaugeFrame->GetSize().y - barShiftNum.y * 2;
+	TextureManager::LoadTexture("gauge", "Resources/SpriteTexture/gauge.png");
+	const DirectX::XMFLOAT2 barPos = { position.x + barShiftNum.x, position.y };
+	gaugeBar = Sprite::Create("gauge", barPos, { 0, 0.5f }, color);
 	gaugeBar->SetSize({ length, thickness });
-	const DirectX::XMFLOAT4 decreaseDiffColor = { 0.6f, 0.6f, 0.1f, 1.0f };
-	gaugeDecreaseDiff = Sprite::Create(textureName, position, { 0, 0.5f }, decreaseDiffColor);
+	const DirectX::XMFLOAT4 decreaseDiffColor = { 0.8f, 0.8f, 0.2f, 1.0f };
+	gaugeDecreaseDiff = Sprite::Create("gauge", barPos, { 0, 0.5f }, decreaseDiffColor);
 	gaugeDecreaseDiff->SetSize({ 0, thickness });
 }
 
