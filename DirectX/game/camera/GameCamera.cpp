@@ -69,6 +69,27 @@ void GameCamera::Lockon(Base3D* lockonTarget)
 	isLockon = true;
 }
 
+void GameCamera::LockonEnd(bool isLockonEndRotateStart)
+{
+	//そもそもロックオンしていなければ抜ける
+	if (!isLockon) { return; }
+
+	//ロックオン解除
+	lockonTarget = nullptr;
+	isLockon = false;
+
+	if (!isLockonEndRotateStart) { return; }
+
+	//ロックオン解除時に回転角を戻すか
+	const float rotateLine = 5.0f; //回転角をイージングで動かすかを決定する差分
+	if (rotation.x > rotateLine || rotation.x < -rotateLine) {
+		easeBeforeRota = rotation;
+		lockonChangeRotaTimer->Reset();
+
+		isLockonEndRotate = true;
+	}
+}
+
 void GameCamera::UpdateMatWorld(const XMMATRIX& matTrans)
 {
 	//回転　
@@ -373,17 +394,7 @@ void GameCamera::LockonInput()
 	}
 	//ロックオン中ならロックオンを解除する
 	else {
-		lockonTarget = nullptr;
-		isLockon = false;
-
-		//ロックオン解除時に回転角を戻すか
-		const float rotateLine = 5.0f; //回転角をイージングで動かすかを決定する差分
-		if (rotation.x > rotateLine || rotation.x < -rotateLine) {
-			easeBeforeRota = rotation;
-			lockonChangeRotaTimer->Reset();
-
-			isLockonEndRotate = true;
-		}
+		LockonEnd(true);
 	}
 }
 

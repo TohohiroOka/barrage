@@ -45,7 +45,6 @@ void TitleScene::Initialize()
 
 	//カメラ生成
 	GameCamera::SetPlayer(player.get());
-	debugCamera = DebugCamera::Create({ 300, 40, 0 });
 	camera = std::make_unique<TitleCamera>();
 	player->SetGameCamera(camera.get());
 
@@ -91,20 +90,7 @@ void TitleScene::Update()
 		}
 
 		//カメラ更新
-		if (isNormalCamera) {
-			camera->Update();
-			if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
-				isNormalCamera = !isNormalCamera;
-				Base3D::SetCamera(debugCamera.get());
-			}
-		}
-		else {
-			debugCamera->Update();
-			if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
-				isNormalCamera = !isNormalCamera;
-				Base3D::SetCamera(camera.get());
-			}
-		}
+		camera->Update();
 		lightCamera->Update();
 
 		//オブジェクト更新

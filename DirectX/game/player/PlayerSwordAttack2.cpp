@@ -101,7 +101,7 @@ bool PlayerSwordAttack2::NextAttack()
 		attackCollisionData.power = attackPower;
 
 		//攻撃1アニメーション
-		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::HEAVY_ATTACK3_ANIMATION);
+		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::HEAVY_ATTACK1_ANIMATION);
 		player->GetFbxObject()->SetIsRoop(false);
 
 	}
@@ -128,7 +128,7 @@ bool PlayerSwordAttack2::NextAttack()
 	player->GetData()->moveSpeed = max(player->GetData()->moveSpeed, attackStartMoveSpeedMin);
 	attackStartMoveSpeed = player->GetData()->moveSpeed;
 
-	
+
 	//攻撃音再生
 	Audio::Instance()->SoundPlayWava(Sound::SoundName::attack, false, 0.1f);
 
@@ -233,9 +233,24 @@ void PlayerSwordAttack2::MovePlayer(int moveTime)
 	//移動時間を過ぎていたら抜ける
 	if (*timer.get() > moveTime) { return; }
 
-	//スピードを落としていく
-	const float easeTime = *timer.get() / (float)moveTime;
-	player->GetData()->moveSpeed = Easing::OutSine(attackStartMoveSpeed, 0, easeTime);
+	//スピードを変化させる
+	const float decreaseTime = 25.0f;
+	const float increaseTime = (float)moveTime - 1.0f;
+	const float attackMoveSpeed = 2.0f;
+	if (*timer.get() < decreaseTime) {
+		const float easeTime = *timer.get() / decreaseTime;
+		player->GetData()->moveSpeed = Easing::OutQuad(attackStartMoveSpeed, 0, easeTime);
+	}
+	else if (*timer.get() < increaseTime) {
+		const float easeTime = (*timer.get() - decreaseTime) / (increaseTime - decreaseTime);
+		player->GetData()->moveSpeed = Easing::InQuint(0, attackMoveSpeed, easeTime);
+	}
+	else {
+		const float easeTime = (*timer.get() - increaseTime) / ((float)moveTime - increaseTime);
+		player->GetData()->moveSpeed = Easing::OutQuad(attackMoveSpeed, 0.5f, easeTime);
+	}
+
+
 
 	//速度をセット
 	player->GetData()->velocity.x = player->GetData()->moveVec.x * player->GetData()->moveSpeed;

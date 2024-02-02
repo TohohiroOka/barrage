@@ -36,7 +36,6 @@ void Scene1::Initialize()
 	player = std::make_unique<Player>();
 
 	GameCamera::SetPlayer(player.get());
-	debugCamera = DebugCamera::Create({ 300, 40, 0 });
 	camera = std::make_unique<GameCamera>();
 	player->SetGameCamera(camera.get());
 
@@ -97,27 +96,12 @@ void Scene1::Update()
 		CollisionCheck();
 
 		//カメラ更新
-		if (isNormalCamera) {
-			camera->Update();
-			if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
-				isNormalCamera = !isNormalCamera;
-				Base3D::SetCamera(debugCamera.get());
-			}
-			lockonUI->Update(boss->GetCenter()->GetPosition());
-		}
-		else {
-			debugCamera->Update();
-			Base3D::SetCamera(debugCamera.get());
-			if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
-				isNormalCamera = !isNormalCamera;
-				Base3D::SetCamera(camera.get());
-			}
-		}
+		camera->Update();
+		lockonUI->Update(boss->GetCenter()->GetPosition());
 		if (DirectInput::GetInstance()->TriggerKey(DIK_9)) {
 			OnStageTestScene* testScene = new OnStageTestScene;
 			SceneManager::SetNextScene(testScene);
 		}
-		//camera->Update();
 		lightCamera->Update();
 
 		//オブジェクト更新
@@ -137,7 +121,13 @@ void Scene1::Update()
 		//デバッグ用ゲームオーバー表示
 		if (DirectInput::GetInstance()->TriggerKey(DIK_F4)) { gameoverUi->ResetGameOverUI(); }
 		if (DirectInput::GetInstance()->TriggerKey(DIK_4)) { gameoverUi->StartGameOverUI(); }
-		if (player->GetData()->isDead && !gameoverUi->GetIsGameOver()) { gameoverUi->StartGameOverUI(); }
+		if (player->GetData()->isDead && !gameoverUi->GetIsGameOver()) { 
+			gameoverUi->StartGameOverUI();
+
+			//カメラロックオンを解除して操作出来なくする
+			camera->LockonEnd(false);
+			camera->SetAllActionInput(false);
+		}
 
 		if (GameInputManager::TriggerInputAction(GameInputManager::Pause)) {
 			isInputConfigMode = true;
@@ -185,8 +175,6 @@ void Scene1::Draw(const int _cameraNum)
 
 	defeatDirection->Draw();
 	field->Draw();
-
-
 }
 
 void Scene1::DrawLightView(const int _cameraNum)

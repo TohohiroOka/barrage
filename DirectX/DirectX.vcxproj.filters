@@ -596,12 +596,14 @@
     <ClCompile Include="game\scene\PauseScene.cpp">
       <Filter>ゲームシステム\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="game\system\TutorialPause.cpp" />
     <ClCompile Include="game\enemy\boss1\BreakAction.cpp">
       <Filter>ゲームシステム\Enemy\Boss1</Filter>
     </ClCompile>
     <ClCompile Include="game\effect\Boss1DestroyEffect.cpp">
       <Filter>ゲームシステム\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="game\system\TutorialPause.cpp">
+      <Filter>ゲームシステム\system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

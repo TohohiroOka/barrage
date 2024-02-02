@@ -252,7 +252,7 @@ void Player::ObjectUpdate()
 	//速度を加算して座標更新
 	Vector3 modelMove = (Vector3)object->GetModelMove();
 	if (object->GetUseAnimation() == PlayerAnimationName::STAY_ANIMATION) { modelMove = { 0,0,0 }; }
-	data->pos += data->velocity * GameHelper::Instance()->GetGameSpeed() + modelMove;
+	data->pos += data->velocity * GameHelper::Instance()->GetGameSpeed();
 
 	//壁判定
 	data->pos.x = max(data->pos.x, moveMinPos.x + object->GetScale().x);
