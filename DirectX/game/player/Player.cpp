@@ -43,22 +43,10 @@ Player::Player()
 	ActionChange();
 
 	//体力ゲージ
-	hpGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 60.0f, 50.0f }), "playerGaugeFrame", DirectX::XMFLOAT2({ 5.0f, 5.0f }), data->maxHP, data->HP, 2.0f, DirectX::XMFLOAT4({0.8f, 0.2f, 0.2f, 1.0f}));
+	hpGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 20.0f, 50.0f }), "playerGaugeFrameHp", DirectX::XMFLOAT2({ 43.0f, 12.0f }), data->maxHP, data->HP, 2.0f, DirectX::XMFLOAT4({0.8f, 0.2f, 0.2f, 1.0f}));
 
 	//持久力ゲージ
-	enduranceGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 60.0f, 90.0f }), "playerGaugeFrame", DirectX::XMFLOAT2({ 5.0f, 5.0f }), data->maxEndurance, data->endurance, 1.5f, DirectX::XMFLOAT4({ 0.2f, 0.8f, 0.2f, 1.0f }));
-
-	//アイコン生成
-	TextureManager::LoadTexture("healthIcon", "Resources/SpriteTexture/healthIcon.png");
-	TextureManager::LoadTexture("staminaIcon", "Resources/SpriteTexture/staminaIcon.png");
-	hpIcon = Sprite::Create("healthIcon", {}, { 0,0.5f });
-	hpIcon->SetPosition({ 20.f,50.f });
-	hpIcon->SetSize({ 24.f,24.f });
-	hpIcon->Update();
-	staminaIcon = Sprite::Create("staminaIcon", {}, { 0,0.5f });
-	staminaIcon->SetPosition({ 20.f,90.f });
-	staminaIcon->SetSize({ 24.f,24.f });
-	staminaIcon->Update();
+	enduranceGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ 20.0f, 90.0f }), "playerGaugeFrameStamina", DirectX::XMFLOAT2({ 43.0f, 12.0f }), data->maxEndurance, data->endurance, 1.5f, DirectX::XMFLOAT4({ 0.2f, 0.8f, 0.2f, 1.0f }));
 
 	//タイマー生成
 	healTimer = std::make_unique<Engine::Timer>();
@@ -112,9 +100,7 @@ void Player::DrawLightView()
 
 void Player::DrawSprite()
 {
-	hpIcon->Draw();
 	hpGauge->Draw();
-	staminaIcon->Draw();
 	enduranceGauge->Draw();
 }
 
