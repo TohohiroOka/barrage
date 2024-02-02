@@ -101,7 +101,7 @@ bool PlayerSwordAttack2::NextAttack()
 		attackCollisionData.power = attackPower;
 
 		//攻撃1アニメーション
-		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::HEAVY_ATTACK3_ANIMATION);
+		player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::HEAVY_ATTACK1_ANIMATION);
 		player->GetFbxObject()->SetIsRoop(false);
 
 	}
