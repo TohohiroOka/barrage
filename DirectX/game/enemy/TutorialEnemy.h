@@ -32,6 +32,8 @@ public: //メンバ関数
 	/// </summary>
 	void Damage();
 
+	void DamageEffect();
+
 	/// <summary>
 	/// 
 	/// </summary>
@@ -69,4 +71,11 @@ private: //メンバ変数
 	std::unique_ptr<Engine::Timer> bulletShotTimer;
 
 	PlayerData* playerData;
+
+	//ダメージ
+	bool isDamegeColor;
+	//ダメージ演出時間
+	std::unique_ptr<Engine::Timer> damageTimer;
+	//ダメージ時の現在の色
+	bool isDamageRed;
 };

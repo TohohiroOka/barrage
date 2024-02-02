@@ -168,6 +168,7 @@
     <ClCompile Include="game\cutscene\Boss1OnStage.cpp" />
     <ClCompile Include="game\cutscene\SceneChangeDirection.cpp" />
     <ClCompile Include="game\effect\AllHitEffect.cpp" />
+    <ClCompile Include="game\effect\Boss1DestroyEffect.cpp" />
     <ClCompile Include="game\effect\BulletAttack2Effect.cpp" />
     <ClCompile Include="game\effect\PortalEffect.cpp" />
     <ClCompile Include="game\effect\ScreenCut.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="game\enemy\boss1\Boss1.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1Model.cpp" />
     <ClCompile Include="game\enemy\boss1\Boss1Wince.cpp" />
+    <ClCompile Include="game\enemy\boss1\BreakAction.cpp" />
     <ClCompile Include="game\enemy\boss1\move\Boss1Move1.cpp" />
     <ClCompile Include="game\enemy\boss1\move\Boss1Move2.cpp" />
     <ClCompile Include="game\enemy\boss1\move\Boss1Move3.cpp" />
@@ -525,6 +527,7 @@
     <ClInclude Include="game\cutscene\Boss1OnStage.h" />
     <ClInclude Include="game\cutscene\SceneChangeDirection.h" />
     <ClInclude Include="game\effect\AllHitEffect.h" />
+    <ClInclude Include="game\effect\Boss1DestroyEffect.h" />
     <ClInclude Include="game\effect\BulletAttack2Effect.h" />
     <ClInclude Include="game\effect\PortalEffect.h" />
     <ClInclude Include="game\effect\ScreenCut.h" />
@@ -544,6 +547,7 @@
     <ClInclude Include="game\enemy\boss1\Boss1.h" />
     <ClInclude Include="game\enemy\boss1\Boss1Model.h" />
     <ClInclude Include="game\enemy\boss1\Boss1Wince.h" />
+    <ClInclude Include="game\enemy\boss1\BreakAction.h" />
     <ClInclude Include="game\enemy\boss1\move\Boss1Move1.h" />
     <ClInclude Include="game\enemy\boss1\move\Boss1Move2.h" />
     <ClInclude Include="game\enemy\boss1\move\Boss1Move3.h" />

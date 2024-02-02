@@ -105,6 +105,9 @@ protected:
 	//hpが一定化になった時の行動
 	std::unique_ptr<BaseAction> breakAction;
 
+	//敵が倒された時の演出
+	std::unique_ptr<BaseAction> hpBreakAction;
+
 	//地面との判定を行うか
 	bool isCollider;
 };
