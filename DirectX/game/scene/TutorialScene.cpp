@@ -32,7 +32,6 @@ void TutorialScene::Initialize()
 
 	//カメラ生成
 	GameCamera::SetPlayer(player.get());
-	debugCamera = DebugCamera::Create({ 300, 40, 0 });
 	camera = std::make_unique<TutorialCamera>();
 	camera->SetAllActionInput(false); //全ての行動入力を受け付けない
 	player->SetGameCamera(camera.get());
@@ -98,22 +97,9 @@ void TutorialScene::Update()
 		CollisionCheck();
 
 		//カメラ更新
-		if (isNormalCamera) {
-			camera->Update();
-			if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
-				isNormalCamera = !isNormalCamera;
-				Base3D::SetCamera(debugCamera.get());
-			}
-			if (tutorialEnemy) {
-				lockonUI->Update(tutorialEnemy->GetObject3d()->GetPosition());
-			}
-		}
-		else {
-			debugCamera->Update();
-			if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
-				isNormalCamera = !isNormalCamera;
-				Base3D::SetCamera(camera.get());
-			}
+		camera->Update();
+		if (tutorialEnemy) {
+			lockonUI->Update(tutorialEnemy->GetObject3d()->GetPosition());
 		}
 		lightCamera->Update();
 
@@ -140,7 +126,7 @@ void TutorialScene::Update()
 		if (TextManager::Instance()->GetIsChoiceEnd()) {
 			//選択が0番ならゲームシーン開始
 			if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::TUTORIAL_PAUSE_CHOICE) == 0) {
-				tutorialPause->PauseEnd(); 
+				tutorialPause->PauseEnd();
 			}
 			//選択が1番ならタイトルシーンに戻る
 			else if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::TUTORIAL_PAUSE_CHOICE) == 1) {

@@ -23,7 +23,7 @@ void GameInputManager::Initialize()
 	keyInputActions[CameraRightRota] = { DIK_RIGHT, false };
 	keyInputActions[Lockon] = { DIK_X, true };
 	keyInputActions[Select] = { DIK_SPACE, false };
-	keyInputActions[Pause] = { DIK_TAB, false };
+	keyInputActions[Pause] = { DIK_ESCAPE, false };
 
 	//パッド入力初期設定
 	const int LStickNum = 16; //ボタン入力でない用の仮置きボタン番号(左スティック：16)

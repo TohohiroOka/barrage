@@ -37,6 +37,12 @@ public: //メンバ関数
 	/// <param name="lockonTarget">ロックオンターゲットオブジェクト</param>
 	void Lockon(Base3D* lockonTarget);
 
+	/// <summary>
+	/// ロックオン解除
+	/// </summary>
+	/// <param name="isLockonEndRotateStart">ロックオン解除回転をするか</param>
+	void LockonEnd(bool isLockonEndRotateStart);
+
 	//getter
 	const XMFLOAT3& GetCameraRota() { return rotation; }
 	Base3D* GetLockonTarget() { return lockonTarget; }

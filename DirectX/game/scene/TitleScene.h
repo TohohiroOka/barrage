@@ -1,6 +1,5 @@
 #pragma once
 #include "Scene/InterfaceScene.h"
-#include "engine/camera/DebugCamera.h"
 #include "engine/Camera/LightCamera.h"
 
 #include "ui/ChoiceEmphasisDrawer.h"
@@ -88,8 +87,6 @@ public:
 
 private:
 	//ÉJÉÅÉâ
-	bool isNormalCamera = true;
-	std::unique_ptr<DebugCamera> debugCamera;
 	std::unique_ptr<TitleCamera> camera;
 	std::unique_ptr<LightCamera> lightCamera;
 

@@ -1,7 +1,6 @@
 #pragma once
 #include "Scene/InterfaceScene.h"
 #include "Math/Vector3.h"
-#include "engine/camera/DebugCamera.h"
 #include "player/Player.h"
 #include "game/camera/GameCamera.h"
 #include "engine/Camera/LightCamera.h"
@@ -68,9 +67,6 @@ public:
 	void CollisionCheck();
 
 private:
-	bool isNormalCamera = true;
-
-	std::unique_ptr<DebugCamera> debugCamera;
 	std::unique_ptr<GameCamera> camera;
 	std::unique_ptr<LightCamera> lightCamera;
 

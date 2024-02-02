@@ -112,9 +112,6 @@ bool MainEngine::Update()
 	input->Update();
 	xinput->Update();
 
-	//エスケープか×が押されたときゲーム終了
-	if (input->PushKey(DIK_ESCAPE)) { return true; }
-
 	//更新
 	scene->Update();
 

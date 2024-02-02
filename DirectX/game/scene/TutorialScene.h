@@ -1,6 +1,5 @@
 #pragma once
 #include "Scene/InterfaceScene.h"
-#include "engine/camera/DebugCamera.h"
 #include "engine/Camera/LightCamera.h"
 
 #include "system/TutorialPause.h"
@@ -122,8 +121,6 @@ private: //’è”
 
 private:
 	//ƒJƒƒ‰
-	bool isNormalCamera = true;
-	std::unique_ptr<DebugCamera> debugCamera;
 	std::unique_ptr<TutorialCamera> camera;
 	std::unique_ptr<LightCamera> lightCamera;
 
