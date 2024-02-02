@@ -15,6 +15,8 @@ TutorialEnemy::TutorialEnemy(const DirectX::XMFLOAT3& position, PlayerData* _pla
 	TutorialEnemyBullet::StaticInitialize();
 
 	playerData = _playerData;
+
+	damageTimer = std::make_unique<Engine::Timer>();
 }
 
 TutorialEnemy::~TutorialEnemy()
@@ -27,6 +29,8 @@ void TutorialEnemy::Update()
 	if (isDamage) {
 		isDamage = false;
 	}
+
+	DamageEffect();
 
 	if (isBulletShot) {
 		bulletShotTimer->Update();
@@ -66,6 +70,32 @@ void TutorialEnemy::Damage()
 {
 	//ダメージフラグをtrueに
 	isDamage = true;
+
+	isDamegeColor = true;
+
+	damageTimer->Reset();
+}
+
+void TutorialEnemy::DamageEffect()
+{
+	if (isDamegeColor) {
+		if (*damageTimer.get() % 5 == 0) {
+			isDamageRed = !isDamageRed;
+		}
+
+		if (isDamageRed) {
+			object->SetColor({ 0.9f,0.1f,0.1f,1.0f });
+		} else {
+			object->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+		}
+		damageTimer->Update();
+
+		if (*damageTimer.get() < 200.0f) { return; }
+		object->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+		isDamegeColor = false;
+		isDamageRed = false;
+		damageTimer->Reset();
+	}
 }
 
 void TutorialEnemy::AddBullet()

@@ -3,6 +3,8 @@
 #include "Object/3d/collider/CollisionManager.h"
 #include "Object/3d/collider/CollisionAttribute.h"
 #include "WindowApp.h"
+#include "../game/enemy/boss1/BreakAction.h"
+
 
 void BaseBoss::Initialize()
 {
@@ -20,43 +22,52 @@ void BaseBoss::Initialize()
 
 void BaseBoss::Update()
 {
-	if (isCollider) {
-		Collider();
+	if (HP > 0) {
+		if (isCollider) {
+			Collider();
+		}
+
+		action->Update();
+
+		DamageEffect();
+
+		//中断行動
+		//break行動優先
+		if (breakAction) {
+			if (!breakAction->GetEnd()) {
+				breakAction->Update();
+			} else {
+				isBreak = false;
+				action->SetEnd();
+				breakAction.reset();
+			}
+		} else if (winceAction) {
+			if (!winceAction->GetEnd()) {
+				winceAction->Update();
+			} else {
+				isWince = false;
+				action->SetEnd();
+				winceAction.reset();
+			}
+		}
+	} else {
+		hpBreakAction->Update();
 	}
 
 	hpGauge->Update();
 
-	action->Update();
-
 	bossModel->Update();
-
-	DamageEffect();
-
-	//中断行動
-	//break行動優先
-	if (breakAction) {
-		if (!breakAction->GetEnd()) {
-			breakAction->Update();
-		} else {
-			isBreak = false;
-			action->SetEnd();
-			breakAction.reset();
-		}
-	} else if (winceAction) {
-		if (!winceAction->GetEnd()) {
-			winceAction->Update();
-		} else {
-			isWince = false;
-			action->SetEnd();
-			winceAction.reset();
-		}
-	}
 }
 
 void BaseBoss::Draw()
 {
 	bossModel->Draw();
-	action->Draw();
+	if (hpBreakAction) {
+		hpBreakAction->Draw();
+	} else {
+		action->Draw();
+	}
+	
 	if (breakAction) {
 		breakAction->Draw();
 	}
@@ -83,6 +94,10 @@ void BaseBoss::Damage(int damageNum)
 	//HPからダメージ量を引く
 	HP -= damageNum;
 	HP = max(HP, 0);
+
+	if (!hpBreakAction && HP == 0) {
+		hpBreakAction = std::make_unique<BreakAction>();
+	}
 
 	hpGauge->ChangeLength(HP, true);
 	isDamage = true;

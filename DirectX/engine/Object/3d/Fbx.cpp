@@ -177,6 +177,7 @@ void Fbx::Update(const float _motionBlendRate1, const float _motionBlendRate2)
 
 void Fbx::Draw(const DrawMode _drawMode)
 {
+	if (color.w < 0.01f) { return; }
 	// nullptrチェック
 	assert(device);
 	assert(ObjectBase::cmdList);
@@ -210,6 +211,8 @@ void Fbx::Draw(const DrawMode _drawMode)
 
 void Fbx::DrawLightView()
 {
+	if (color.w < 0.01f) { return; }
+
 	// nullptrチェック
 	assert(device);
 	assert(ObjectBase::cmdList);
