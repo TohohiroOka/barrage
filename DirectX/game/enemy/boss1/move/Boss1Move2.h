@@ -42,6 +42,8 @@ public:
 		_isKnockbackStart = false;
 	}
 
+	bool SetCameraTarget() override { return true; }
+
 	void UpMove();
 
 	void SideMove();

@@ -59,6 +59,8 @@ public:
 		_isKnockbackStart = true;
 	}
 
+	bool SetCameraTarget() override { return true; }
+
 	void Start();
 
 	void AttackWait();

@@ -33,6 +33,8 @@ public:
 
 	virtual void GetDamageInfo(int& _damageNum, int& _knockbackPower, int& _knockbackTime, bool& _isKnockbackStart) = 0;
 
+	virtual bool SetCameraTarget() = 0;
+
 	void SetActionBreak() {
 		if (timer) {
 			timer->Reset();

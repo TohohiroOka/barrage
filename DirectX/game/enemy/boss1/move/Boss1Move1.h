@@ -33,6 +33,8 @@ public:
 		_isKnockbackStart = false;
 	}
 
+	bool SetCameraTarget() override { return true; }
+
 private:
 
 	//イージングタイマー

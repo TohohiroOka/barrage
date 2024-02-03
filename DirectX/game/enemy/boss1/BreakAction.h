@@ -29,6 +29,8 @@ public:
 		_isKnockbackStart = true;
 	}
 
+	bool SetCameraTarget() override { return true; }
+
 private:
 
 	//エフェクト

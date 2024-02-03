@@ -14,6 +14,7 @@ private:
 		move1End,
 		attackWait,
 		attack,
+		attackEnd,
 		move2Start,
 		move2End,
 		non,
@@ -45,6 +46,8 @@ public:
 		_isKnockbackStart = false;
 	}
 
+	bool SetCameraTarget() override { return isCameraTarget; }
+
 private:
 
 	void FieldMove();
@@ -56,6 +59,8 @@ private:
 	void AttackWait();
 
 	void Attack();
+
+	void AttackEnd();
 
 	void Move2Start();
 
@@ -74,4 +79,6 @@ private:
 
 	//ˆÚ“®‘O
 	Vector3 moveBefore;
+
+	bool isCameraTarget;
 };

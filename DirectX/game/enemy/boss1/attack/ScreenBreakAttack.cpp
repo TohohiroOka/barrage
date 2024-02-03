@@ -8,7 +8,9 @@
 ScreenBreakAttack::ScreenBreakAttack()
 {
 	boss->SetPlayerDirection();
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::screen_break_attack));
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::screen_break_attack_end));
+	boss->GetBaseModel()->AnimationReset();
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::screen_break_attack_start));
 	boss->GetBaseModel()->AnimationReset();
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::standBy));
 
@@ -32,11 +34,14 @@ ScreenBreakAttack::ScreenBreakAttack()
 
 	moveBefore = boss->GetBaseModel()->GetPosition();
 
+	isCameraTarget = true;
+
 	func_.emplace_back([this] {return FieldMove(); });
 	func_.emplace_back([this] {return Move1Start(); });
 	func_.emplace_back([this] {return Move1End(); });
 	func_.emplace_back([this] {return AttackWait(); });
 	func_.emplace_back([this] {return Attack(); });
+	func_.emplace_back([this] {return AttackEnd(); });
 	func_.emplace_back([this] {return Move2Start(); });
 	func_.emplace_back([this] {return Move2End(); });
 }
@@ -102,6 +107,7 @@ void ScreenBreakAttack::Move1End()
 	if (*timer.get() < maxTime) { return; }
 	timer->Reset();
 	state = State::attackWait;
+	isCameraTarget = false;
 }
 
 void ScreenBreakAttack::AttackWait()
@@ -112,21 +118,28 @@ void ScreenBreakAttack::AttackWait()
 	isCollision = true;
 	ScreenCut::Reset();
 	state = State::attack;
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::screen_break_attack));
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::screen_break_attack_start));
 }
 
 void ScreenBreakAttack::Attack()
 {
-	if (*timer.get() > 90.0f && !panelBreak && !isCollision) {
+	if (!boss->GetBaseModel()->GetIsAnimationEnd()) { return; }
+	if (!panelBreak && !isCollision) {
 		ScreenCut::SetEffect(true);
 		panelBreak = true;
 	}
+	timer->Reset();
+	state = State::attackEnd;
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::screen_break_attack_end));
+	isCollision = false;
+}
 
+void ScreenBreakAttack::AttackEnd()
+{
 	if (!boss->GetBaseModel()->GetIsAnimationEnd()) { return; }
+	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::standBy));
 	timer->Reset();
 	state = State::move2Start;
-	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::standBy));
-	isCollision = false;
 }
 
 void ScreenBreakAttack::Move2Start()
@@ -141,6 +154,7 @@ void ScreenBreakAttack::Move2Start()
 
 	timer->Reset();
 	state = State::move2End;
+	isCameraTarget = true;
 }
 
 void ScreenBreakAttack::Move2End()

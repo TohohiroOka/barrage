@@ -32,6 +32,8 @@ public:
 		_isKnockbackStart = false;
 	}
 
+	bool SetCameraTarget() override { return true; }
+
 private:
 
 	std::unique_ptr<Engine::Timer> timer;

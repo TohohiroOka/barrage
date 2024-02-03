@@ -20,6 +20,8 @@ public:
 
 	virtual void FrameReset() override;
 
+	bool SetCameraTarget() override { return true; }
+
 protected:
 
 	static const DirectX::XMFLOAT3 moveMaxPos;

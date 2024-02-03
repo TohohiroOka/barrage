@@ -32,8 +32,9 @@ public:
 		nearAttak_start = 12,
 		runAttack_end = 13,
 		runAttack_start = 14,
-		screen_break_attack = 15,
-		standBy = 16,
+		screen_break_attack_end=15,
+		screen_break_attack_start = 16,
+		standBy = 17,
 	};
 
 	enum class AttachName {
