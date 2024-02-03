@@ -70,7 +70,8 @@ void TitleScene::Initialize()
 	}
 
 	//行動入力設定
-	actionInputConfig = std::make_unique<ActionInputConfig>();
+	actionInputConfigKey = std::make_unique<ActionInputConfigKey>();
+	actionInputConfigPad = std::make_unique<ActionInputConfigPad>();
 
 	//遷移初期化
 	SceneChangeDirection::Instance()->Init();
@@ -78,7 +79,7 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-	if (!isInputConfigMode) {
+	if (!(isInputConfigKey || isInputConfigPad)) {
 		//ポータルに入る行動
 		IntoPortalCheck();
 		IntoPortal();
@@ -104,16 +105,28 @@ void TitleScene::Update()
 		//当たり判定
 		CollisionCheck();
 
-		if ((!isIntoPortal) && GameInputManager::TriggerInputAction(GameInputManager::Pause)) {
-			isInputConfigMode = true;
-			actionInputConfig->Reset();
+		if (!isIntoPortal) {
+			if (DirectInput::GetInstance()->TriggerKey(DIK_1)) {
+				isInputConfigKey = true;
+				actionInputConfigKey->Reset();
+			}
+			else if (DirectInput::GetInstance()->TriggerKey(DIK_2)) {
+				isInputConfigPad = true;
+				actionInputConfigPad->Reset();
+			}
 		}
 	}
-	else {
+	else if (isInputConfigKey){
 		//入力設定更新
-		actionInputConfig->Update();
+		actionInputConfigKey->Update();
 
-		if (actionInputConfig->GetIsInputConfigEnd()) { isInputConfigMode = false; }
+		if (actionInputConfigKey->GetIsInputConfigEnd()) { isInputConfigKey = false; }
+	}
+	else if (isInputConfigPad) {
+		//入力設定更新
+		actionInputConfigPad->Update();
+
+		if (actionInputConfigPad->GetIsInputConfigEnd()) { isInputConfigPad = false; }
 	}
 
 	//スプライト更新
@@ -159,8 +172,11 @@ void TitleScene::NonPostEffectDraw(const int _cameraNum)
 	}
 
 	//入力設定描画
-	if (isInputConfigMode) {
-		actionInputConfig->Draw();
+	if (isInputConfigKey) {
+		actionInputConfigKey->Draw();
+	}
+	if (isInputConfigPad) {
+		actionInputConfigPad->Draw();
 	}
 
 	SceneChangeDirection::Instance()->Draw();

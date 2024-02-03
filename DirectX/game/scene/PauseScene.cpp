@@ -20,7 +20,7 @@ void PauseScene::Init()
 	pauseText = Sprite::Create("pausetext", { 1500.f / 2.f,150.f }, { 0.5f,0.5f });
 	pauseText->Update();
 
-	aic = std::make_unique<ActionInputConfig>();
+	aic = std::make_unique<ActionInputConfigKey>();
 
 	TextureManager::LoadTexture("screenback", "Resources/SubTexture/white1x1.png");
 	screenBack = Sprite::Create("screenback", {}, {});

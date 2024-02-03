@@ -23,6 +23,7 @@ void GameInputManager::Initialize()
 	keyInputActions[CameraRightRota] = { DIK_RIGHT, false };
 	keyInputActions[Lockon] = { DIK_X, true };
 	keyInputActions[Select] = { DIK_SPACE, false };
+	keyInputActions[Back] = { DIK_ESCAPE, false };
 	keyInputActions[Pause] = { DIK_ESCAPE, false };
 
 	//ƒpƒbƒh“ü—Í‰Šúİ’è
@@ -42,6 +43,7 @@ void GameInputManager::Initialize()
 	padInputActions[CameraRightRota] = { RStickNum, false };
 	padInputActions[Lockon] = { XInputManager::PAD_RIGHT_STICK_PUSH, true };
 	padInputActions[Select] = { XInputManager::PAD_A, true };
+	padInputActions[Back] = { XInputManager::PAD_B, true };
 	padInputActions[Pause] = { XInputManager::PAD_START, true };
 }
 

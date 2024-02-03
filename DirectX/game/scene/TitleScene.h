@@ -3,7 +3,8 @@
 #include "engine/Camera/LightCamera.h"
 
 #include "ui/ChoiceEmphasisDrawer.h"
-#include "system/ActionInputConfig.h"
+#include "system/ActionInputConfigKey.h"
+#include "system/ActionInputConfigPad.h"
 #include "camera/TitleCamera.h"
 #include "player/Player.h"
 #include "field/Field.h"
@@ -104,8 +105,10 @@ private:
 	std::array<std::unique_ptr<SpeechBubble>, 3> speechBubbles;
 
 	//行動入力設定
-	std::unique_ptr<ActionInputConfig> actionInputConfig;
-	bool isInputConfigMode = false;
+	std::unique_ptr<ActionInputConfigKey> actionInputConfigKey;
+	std::unique_ptr<ActionInputConfigPad> actionInputConfigPad;
+	bool isInputConfigKey = false;
+	bool isInputConfigPad = false;
 
 	//選択ボタンが押下可能UI
 	std::unique_ptr<PressSelectButtonUI> pressSelectButtonUI;

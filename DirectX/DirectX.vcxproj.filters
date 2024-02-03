@@ -400,7 +400,7 @@
     <ClCompile Include="game\field\BackGround.cpp">
       <Filter>ゲームシステム\Field</Filter>
     </ClCompile>
-    <ClCompile Include="game\system\ActionInputConfig.cpp">
+    <ClCompile Include="game\system\ActionInputConfigBase.cpp">
       <Filter>ゲームシステム\system</Filter>
     </ClCompile>
     <ClCompile Include="game\system\GameInputManager.cpp">
@@ -603,6 +603,12 @@
       <Filter>ゲームシステム\Effect</Filter>
     </ClCompile>
     <ClCompile Include="game\system\TutorialPause.cpp">
+      <Filter>ゲームシステム\system</Filter>
+    </ClCompile>
+    <ClCompile Include="game\system\ActionInputConfigPad.cpp">
+      <Filter>ゲームシステム\system</Filter>
+    </ClCompile>
+    <ClCompile Include="game\system\ActionInputConfigKey.cpp">
       <Filter>ゲームシステム\system</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1016,7 +1022,7 @@
     <ClInclude Include="game\field\BackGround.h">
       <Filter>ゲームシステム\Field</Filter>
     </ClInclude>
-    <ClInclude Include="game\system\ActionInputConfig.h">
+    <ClInclude Include="game\system\ActionInputConfigBase.h">
       <Filter>ゲームシステム\system</Filter>
     </ClInclude>
     <ClInclude Include="game\system\GameInputManager.h">
@@ -1232,6 +1238,12 @@
     </ClInclude>
     <ClInclude Include="game\effect\Boss1DestroyEffect.h">
       <Filter>ゲームシステム\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="game\system\ActionInputConfigKey.h">
+      <Filter>ゲームシステム\system</Filter>
+    </ClInclude>
+    <ClInclude Include="game\system\ActionInputConfigPad.h">
+      <Filter>ゲームシステム\system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

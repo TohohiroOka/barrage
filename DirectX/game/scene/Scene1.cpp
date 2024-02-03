@@ -58,9 +58,6 @@ void Scene1::Initialize()
 	gameoverUi->Initialize();
 	gameoverUi->SetPlayerObject(player->GetFbxObject());
 
-
-	actionInputConfig = std::make_unique<ActionInputConfig>();
-
 	BulletEffect::LoadResources();
 
 	defeatDirection = std::make_unique<Boss1Defeat>();
@@ -129,20 +126,12 @@ void Scene1::Update()
 			camera->SetAllActionInput(false);
 		}
 
-		if (GameInputManager::TriggerInputAction(GameInputManager::Pause)) {
-			isInputConfigMode = true;
-			actionInputConfig->Reset();
-		}
-
 		if (!camera->GetIsLockon()) { lockonUI->EndLockOnDraw(); }
 
 		//ポース判定
 		pauseScene->InPause();
 	}
 	else {
-		//入力設定更新
-		//actionInputConfig->Update();
-		//if (actionInputConfig->GetIsInputConfigEnd()) { isInputConfigMode = false; }
 		pauseScene->Update();
 	}
 
@@ -198,11 +187,6 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 	player->DrawSprite();
 	boss->DrawSprite();
 	gameoverUi->Draw();
-
-	//入力設定描画
-	//if (isInputConfigMode) {
-	//	actionInputConfig->Draw();
-	//}
 
 	defeatDirection->Draw2D();
 

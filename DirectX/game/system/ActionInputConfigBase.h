@@ -5,7 +5,7 @@
 /// <summary>
 /// 入力設定画面
 /// </summary>
-class ActionInputConfig
+class ActionInputConfigBase
 {
 public: //enum
 	/// <summary>
@@ -22,8 +22,7 @@ public: //enum
 	/// </summary>
 	enum InputType 
 	{
-		Key,
-		PadButton,
+		Config,
 		CameraRota,
 
 		InputTypeNum,
@@ -45,11 +44,12 @@ public: //enum
 	/// </summary>
 	enum InfoName
 	{
-		A_Button,
-		Select,
-		B_Button,
-		Back,
-		SelectButton,
+		Select_Button,
+		Select_Text,
+		Back_Button,
+		Back_Text,
+		Button_Choice_Text,
+
 		InfoNameNum,
 	};
 
@@ -59,7 +59,7 @@ public: //静的メンバ関数
 	/// </summary>
 	static void LoadTexture();
 
-private: //静的メンバ関数
+protected: //静的メンバ関数
 	/// <summary>
 	/// 行動名テクスチャ読み込み(行動名に対応させるため、入力行動型の名前を付ける)
 	/// </summary>
@@ -76,13 +76,8 @@ private: //静的メンバ関数
 	static void LoadPadTexture(int num, const std::string& fileName);
 
 public: //メンバ関数
-	ActionInputConfig();
-	~ActionInputConfig();
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize();
+	ActionInputConfigBase();
+	~ActionInputConfigBase();
 
 	/// <summary>
 	/// 更新
@@ -97,25 +92,30 @@ public: //メンバ関数
 	/// <summary>
 	/// リセット
 	/// </summary>
-	void Reset();
+	virtual void Reset();
 
 	//getter
 	bool GetIsInputConfigEnd() { return isInputConfigEnd; }
 
-private: //メンバ関数
+protected: //メンバ関数
 	/// <summary>
 	/// 選択
 	/// </summary>
-	void SelectModeUpdate();
+	virtual void SelectModeUpdate() = 0;
 
 	/// <summary>
 	/// 入力変更
 	/// </summary>
-	void InputChangeModeUpdate();
+	virtual void InputChangeModeUpdate() = 0;
+
+	/// <summary>
+	/// カメラの回転方向を変更
+	/// </summary>
+	void CameraRotationChange();
 
 public: //静的メンバ変数
 	//フェーズの挙動関数
-	static void (ActionInputConfig::* phaseFuncTable[])();
+	static void (ActionInputConfigBase::* phaseFuncTable[])();
 	//通常の色
 	static DirectX::XMFLOAT4 normalColor;
 	//変更できない状態の枠の色
@@ -123,7 +123,7 @@ public: //静的メンバ変数
 	//選択中の色
 	static DirectX::XMFLOAT4 selectColor;
 
-private: //メンバ変数
+protected: //メンバ変数
 	//仮置き背景用黒スプライト
 	std::unique_ptr<Sprite> backSprite;
 

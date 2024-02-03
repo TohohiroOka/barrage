@@ -221,7 +221,9 @@
     <ClCompile Include="game\scene\Scene1.cpp" />
     <ClCompile Include="game\scene\TitleScene.cpp" />
     <ClCompile Include="game\scene\TutorialScene.cpp" />
-    <ClCompile Include="game\system\ActionInputConfig.cpp" />
+    <ClCompile Include="game\system\ActionInputConfigBase.cpp" />
+    <ClCompile Include="game\system\ActionInputConfigKey.cpp" />
+    <ClCompile Include="game\system\ActionInputConfigPad.cpp" />
     <ClCompile Include="game\system\GameInputManager.cpp" />
     <ClCompile Include="game\system\TutorialPause.cpp" />
     <ClCompile Include="game\titleObject\Portal.cpp" />
@@ -582,7 +584,9 @@
     <ClInclude Include="game\scene\Scene1.h" />
     <ClInclude Include="game\scene\TitleScene.h" />
     <ClInclude Include="game\scene\TutorialScene.h" />
-    <ClInclude Include="game\system\ActionInputConfig.h" />
+    <ClInclude Include="game\system\ActionInputConfigBase.h" />
+    <ClInclude Include="game\system\ActionInputConfigKey.h" />
+    <ClInclude Include="game\system\ActionInputConfigPad.h" />
     <ClInclude Include="game\system\GameInputManager.h" />
     <ClInclude Include="game\system\Sound.h" />
     <ClInclude Include="game\system\TutorialPause.h" />

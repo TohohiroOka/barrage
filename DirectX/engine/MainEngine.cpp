@@ -7,7 +7,7 @@
 #include "Texture/TextureManager.h"
 #include "Object/3d/FbxModel.h"
 #include "system/GameInputManager.h"
-#include "system/ActionInputConfig.h"
+#include "system/ActionInputConfigBase.h"
 #include "WindowApp.h"
 #include "GameHelper.h"
 
@@ -80,7 +80,7 @@ void MainEngine::Initialize()
 
 	//ÉQÅ[ÉÄì¸óÕ
 	GameInputManager::Initialize();
-	ActionInputConfig::LoadTexture();
+	ActionInputConfigBase::LoadTexture();
 
 	scene = SceneManager::Create();
 

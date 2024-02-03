@@ -5,7 +5,8 @@
 #include "Object/2d/Sprite.h"
 #include "ui/MessageBoxDrawer.h"
 #include "ui/QuestionSystem.h"
-#include "system/ActionInputConfig.h"
+#include "system/ActionInputConfigKey.h"
+#include "system/ActionInputConfigPad.h"
 
 
 //ÉVÅ[ÉìÇæÇØÇ«åpè≥ÇÕÇµÇ»Ç¢
@@ -68,7 +69,7 @@ private:
 	std::unique_ptr<QuestionSystem> pauseQsys;
 	std::vector<std::wstring> choice;
 
-	std::unique_ptr<ActionInputConfig> aic;
+	std::unique_ptr<ActionInputConfigKey> aic;
 
 	std::unique_ptr<Sprite> screenBack;
 

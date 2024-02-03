@@ -7,7 +7,7 @@
 #include "../enemy/boss1/Boss1.h"
 #include "../field/Field.h"
 #include "game/ui/GameOver.h"
-#include "system/ActionInputConfig.h"
+#include "system/ActionInputConfigBase.h"
 #include "game/cutscene/Boss1Defeat.h"
 #include "ui/LockonUI.h"
 #include "../game/effect/ScreenCut.h"
@@ -88,14 +88,8 @@ private:
 	//死亡演出
 	std::unique_ptr<Boss1Defeat> defeatDirection;
 
-	//行動入力設定
-	std::unique_ptr<ActionInputConfig> actionInputConfig;
-
 	//ロックオン
 	std::unique_ptr<LockonUI> lockonUI;
-
-	//行動入力設定中か
-	bool isInputConfigMode = false;
 
 	//ヒットストップフレーム数
 	int hitStopFrame = 5;
