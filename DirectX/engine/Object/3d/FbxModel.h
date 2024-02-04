@@ -40,6 +40,12 @@ private://構造体宣言
 		float boneWhight[MAX_BONE_INDICES];
 	};
 
+	struct VectexProcess {
+		XMFLOAT3 pos;
+		UINT boneIndex[MAX_BONE_INDICES];
+		float boneWhight[MAX_BONE_INDICES];
+	};
+
 	//マテリアル用
 	struct Material
 	{
@@ -163,7 +169,7 @@ private://メンバ関数
 	/// スキニング情報の読み取り
 	/// </summary>
 	/// <param name="fbxMesh">メッシュ</param>
-	void CollectSkin(FbxMesh* fbxMesh);
+	void CollectSkin(FbxMesh* fbxMesh, std::vector<VectexProcess>& _vectexProcess);
 
 	/// <summary>
 	/// マテリアル読み込み

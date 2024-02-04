@@ -162,34 +162,19 @@ void FbxModel::CollectMesh(FbxNode* fbxNode)
 	//マテリアルの読み取り
 	LoadMaterial(fbxNode);
 
-	//スキニング情報の読み取り
-	CollectSkin(fbxMesh);
-
 	elementsNum++;
 }
 
 void FbxModel::CollectVertices(FbxMesh* fbxMesh)
 {
-	//頂点座標データ数
-	const int controlPointCount = fbxMesh->GetControlPointsCount();
-
-	//Fbxメッシュの頂点座標取得
-	FbxVector4* vertex = fbxMesh->GetControlPoints();
-
-	//配列のサイズ変更
-	data->buffData[elementsNum].vertices.resize(controlPointCount);
-
-	//頂点をコピー
-	for (int i = 0; i < controlPointCount; i++)
-	{
-		data->buffData[elementsNum].vertices[i].pos.x = (float)vertex[i][0];
-		data->buffData[elementsNum].vertices[i].pos.y = (float)vertex[i][1];
-		data->buffData[elementsNum].vertices[i].pos.z = (float)vertex[i][2];
-	}
 }
 
 void FbxModel::CollectMeshFaces(FbxMesh* fbxMesh)
 {
+	//スキニング情報の読み取り
+	std::vector<VectexProcess> vectexProcess;
+	CollectSkin(fbxMesh, vectexProcess);
+
 	//面の数
 	const int polygonCount = fbxMesh->GetPolygonCount();
 
@@ -199,6 +184,8 @@ void FbxModel::CollectMeshFaces(FbxMesh* fbxMesh)
 	//UV名リスト
 	FbxStringList uvNames;
 	fbxMesh->GetUVSetNames(uvNames);
+
+	int inIndex = 0;
 
 	//面ごとの情報
 	for (int i = 0; i < polygonCount; i++)
@@ -216,12 +203,23 @@ void FbxModel::CollectMeshFaces(FbxMesh* fbxMesh)
 			//取得した法線を一時格納する
 			FbxVector4 normal;
 
+			Vertex add = {};
+
+			//頂点格納
+			add.pos = vectexProcess[index].pos;
+			for (int num = 0; num < MAX_BONE_INDICES; num++) {
+				add.boneWhight[num] = vectexProcess[index].boneWhight[num];
+			}
+			for (int num = 0; num < MAX_BONE_INDICES; num++) {
+				add.boneIndex[num] = vectexProcess[index].boneIndex[num];
+			}
+
 			//法線読み込み
 			if (fbxMesh->GetPolygonVertexNormal(i, j, normal))
 			{
-				data->buffData[elementsNum].vertices[index].normal.x = (float)normal[0];
-				data->buffData[elementsNum].vertices[index].normal.y = (float)normal[1];
-				data->buffData[elementsNum].vertices[index].normal.z = (float)normal[2];
+				add.normal.x = (float)normal[0];
+				add.normal.y = (float)normal[1];
+				add.normal.z = (float)normal[2];
 			}
 
 			//テクスチャuv読み込み
@@ -232,35 +230,56 @@ void FbxModel::CollectMeshFaces(FbxMesh* fbxMesh)
 
 				if (fbxMesh->GetPolygonVertexUV(i, j, uvNames[0], uvs, LUnmappedUV))
 				{
-					data->buffData[elementsNum].vertices[index].uv.x = (float)uvs[0];
-					data->buffData[elementsNum].vertices[index].uv.y = 1 - (float)uvs[1];
+					add.uv.x = (float)uvs[0];
+					add.uv.y = 1 - (float)uvs[1];
 				}
 			}
 
 			//3頂点までのインデックス追加
 			if (j < 3)
 			{
-				data->buffData[elementsNum].indices.push_back(index);
+				data->buffData[elementsNum].indices.push_back(inIndex);
+				data->buffData[elementsNum].vertices.push_back(add);
 			}
-			//4頂点目がある場合
-			else
-			{
-				//仮格納
-				int index2 = data->buffData[elementsNum].indices[data->buffData[elementsNum].indices.size() - 1];
-				int index3 = index;
-				int index0 = data->buffData[elementsNum].indices[data->buffData[elementsNum].indices.size() - 3];
+			////4頂点目がある場合
+			//else
+			//{
+			//	//仮格納
+			//	int index2 = data->buffData[elementsNum].indices[data->buffData[elementsNum].indices.size() - 1];
+			//	int index3 = index;
+			//	int index0 = data->buffData[elementsNum].indices[data->buffData[elementsNum].indices.size() - 3];
 
-				//本格納
-				data->buffData[elementsNum].indices.push_back(index2);
-				data->buffData[elementsNum].indices.push_back(index3);
-				data->buffData[elementsNum].indices.push_back(index0);
-			}
+			//	//本格納
+			//	data->buffData[elementsNum].indices.push_back(index2);
+			//	data->buffData[elementsNum].indices.push_back(index3);
+			//	data->buffData[elementsNum].indices.push_back(index0);
+			//}
+
+			inIndex++;
 		}
 	}
 }
 
-void FbxModel::CollectSkin(FbxMesh* fbxMesh)
+void FbxModel::CollectSkin(FbxMesh* fbxMesh, std::vector<VectexProcess>& _vectexProcess)
 {
+	//頂点座標データ数
+	const int controlPointCount = fbxMesh->GetControlPointsCount();
+
+	//Fbxメッシュの頂点座標取得
+	FbxVector4* vertex = fbxMesh->GetControlPoints();
+
+	//配列のサイズ変更
+	std::vector<XMFLOAT3> vertList;
+	_vectexProcess.resize(controlPointCount);
+
+	//頂点をコピー
+	for (int i = 0; i < controlPointCount; i++)
+	{
+		_vectexProcess[i].pos.x = (float)vertex[i][0];
+		_vectexProcess[i].pos.y = (float)vertex[i][1];
+		_vectexProcess[i].pos.z = (float)vertex[i][2];
+	}
+
 	//スキニング情報
 	FbxSkin* fbxSkin =
 		static_cast<FbxSkin*>(fbxMesh->GetDeformer(0, FbxDeformer::eSkin));
@@ -317,7 +336,7 @@ void FbxModel::CollectSkin(FbxMesh* fbxMesh)
 	};
 
 	//保存用配列
-	std::vector<std::list<WeightSet>> weightLists(data->buffData[elementsNum].vertices.size());
+	std::vector<std::list<WeightSet>> weightLists(_vectexProcess.size());
 
 	//全てのボーンについて
 	for (int i = 0; i < clusterCount; i++)
@@ -345,7 +364,7 @@ void FbxModel::CollectSkin(FbxMesh* fbxMesh)
 	}
 
 	//頂点配列書き換え用の参照
-	auto& vertices = data->buffData[elementsNum].vertices;
+	auto& vertices = _vectexProcess;
 
 	//各頂点について処理
 	for (int i = 0; i < vertices.size(); i++)
