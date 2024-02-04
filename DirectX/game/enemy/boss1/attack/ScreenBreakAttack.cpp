@@ -91,6 +91,8 @@ void ScreenBreakAttack::Move1Start()
 	boss->GetBaseModel()->SetPosition({ GameHelper::Instance()->GetStageSize() / 2.0f ,
 		-460.0f,GameHelper::Instance()->GetStageSize() + 40.0f });
 
+	isCameraTarget = false;
+
 	//サイズ変更
 	const float scale = 0.04f;
 	boss->GetBaseModel()->GetObjectInst()->SetScale({scale, scale, scale});
@@ -107,7 +109,6 @@ void ScreenBreakAttack::Move1End()
 	if (*timer.get() < maxTime) { return; }
 	timer->Reset();
 	state = State::attackWait;
-	isCameraTarget = false;
 }
 
 void ScreenBreakAttack::AttackWait()

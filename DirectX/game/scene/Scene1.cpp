@@ -80,7 +80,20 @@ void Scene1::Update()
 
 	//GameHelper::Instance()->SetStop(stop);
 
+	//敵演出用のクラス
 	screenCut->Update();
+
+	//ロックオン強制解除
+	if (boss->GetBaseAction2()) {
+		if (!boss->GetBaseAction2()->SetCameraTarget()) {
+			camera->LockonEnd(true);
+		} else {
+			//ロックオン対象を確定させる
+			camera->Lockon(boss->GetCenter());
+			//ロックオンUI表示
+			lockonUI->StartLockOnAnimation();
+		}
+	}
 
 	if (!pauseScene->GetIsPause()) {
 		//撃破演出再生
