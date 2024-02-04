@@ -84,11 +84,7 @@ void ScreenCut::Update()
 
 	if (!isEffect) { return; }
 
-	if (!isEnd) {
-		GameHelper::Instance()->SetGameSpeed(0.0f);
-	} else {
-		GameHelper::Instance()->SetGameSpeed(1.0f);
-	}
+	GameHelper::Instance()->SetGameSpeed(0.0f);
 
 	if (state != State::non) {
 		func_[int(state)]();
@@ -211,8 +207,10 @@ void ScreenCut::PanelBreak()
 	}
 
 	if (rate < 1.0f) { return; }
+	GameHelper::Instance()->SetGameSpeed(1.0f);
 	state = State::non;
 	isEnd = true;
+	isEffect = false;
 }
 
 void ScreenCut::AddSpriteHalf(const float _rate)
