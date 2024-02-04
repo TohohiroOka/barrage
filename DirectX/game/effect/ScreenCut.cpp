@@ -106,6 +106,7 @@ void ScreenCut::Update()
 
 void ScreenCut::Draw()
 {
+	if (!isEffect) { false; }
 	for (auto& i : panel) {
 		i->Draw();
 	}
