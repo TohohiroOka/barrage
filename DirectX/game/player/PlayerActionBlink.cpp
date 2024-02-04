@@ -58,7 +58,7 @@ void PlayerActionBlink::Blink()
 	const float time = *blinkTimer.get() / (float)blinkTime;
 
 	//イージングで速度を落としていく
-	player->GetData()->moveSpeed = Easing::OutCirc(4, 2, time);
+	player->GetData()->moveSpeed = Easing::OutCirc(4, 1.25f, time);
 	player->GetData()->velocity = player->GetData()->avoidBlinkMoveVec.normalize() * player->GetData()->moveSpeed;
 
 	//タイマーが指定した時間になったら行動変更先行入力
