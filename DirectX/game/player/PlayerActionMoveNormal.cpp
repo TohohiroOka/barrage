@@ -56,9 +56,12 @@ void PlayerActionMoveNormal::Move()
 	//入力があれば
 	const float moveAccel = 0.05f * GameHelper::Instance()->GetGameSpeed();
 	if (player->GetData()->isMoveKey || player->GetData()->isMovePad) {
-		player->GetData()->moveSpeed += moveAccel;
-		if (player->GetData()->isDash) { player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, dashSpeedMax); }
-		else { player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, moveSpeedMax); }
+
+		if (player->GetData()->onGround) {
+			player->GetData()->moveSpeed += moveAccel;
+			if (player->GetData()->isDash) { player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, dashSpeedMax); }
+			else { player->GetData()->moveSpeed = min(player->GetData()->moveSpeed, moveSpeedMax); }
+		}
 
 		Vector3 inputMoveVec{};
 
@@ -100,7 +103,10 @@ void PlayerActionMoveNormal::Move()
 		}
 	}
 	else {
-		player->GetData()->moveSpeed -= moveAccel * 2;
+		//減速量(空中時は数値が小さくなるようにする)
+		float moveDecAccel = moveAccel * 2;
+		if (!player->GetData()->onGround) { moveDecAccel /= 10; }
+		player->GetData()->moveSpeed -= moveDecAccel;
 		player->GetData()->moveSpeed = max(player->GetData()->moveSpeed, 0);
 
 		//スピードがなくなったら待機アニメーションに変更(設計中)

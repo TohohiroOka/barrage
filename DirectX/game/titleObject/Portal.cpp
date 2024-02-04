@@ -14,10 +14,10 @@ Portal::Portal(const Vector3& position, InterfaceScene* changeScene)
 	object->SetShadowMap(true);
 
 	//ポータルに入れる範囲の最小値と最大値をセット
-	intoPortalRangeMin.x = position.x - size;
-	intoPortalRangeMin.z = position.z - size - 7.5f;
-	intoPortalRangeMax.x = position.x + size;
-	intoPortalRangeMax.z = position.z - size / 2;
+	intoPortalRangeMin.x = position.x - (size + 5);
+	intoPortalRangeMin.z = position.z - size - 10;
+	intoPortalRangeMax.x = position.x + (size + 5);
+	intoPortalRangeMax.z = position.z - size / 4;
 
 	//変更後のシーンをセット
 	this->changeScene = changeScene;
@@ -85,7 +85,7 @@ bool Portal::CheckLineSightInPortal(const PlayerData& playerData)
 	//ポータルの球を生成
 	Sphere portalSphere;
 	portalSphere.center = { object->GetPosition().x, object->GetPosition().y, object->GetPosition().z, 1 };
-	portalSphere.radius = object->GetScale().x * 1.1f;
+	portalSphere.radius = object->GetScale().x * 1.25f;
 
 	//視線レイとポータル球が衝突していなければfalse
 	if (!Collision::CheckRay2Sphere(lineSightRay, portalSphere)) { return false; }

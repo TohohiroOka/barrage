@@ -11,6 +11,7 @@
 #include "TitleScene.h"
 #include "../effect/AllHitEffect.h"
 
+using namespace DirectX;
 
 const DirectX::XMFLOAT3 TutorialScene::enemyBornPos = { 90, 10, 150 };
 
@@ -323,7 +324,23 @@ void TutorialScene::CollisionCheck()
 			const float targetScreenDistance = 100;
 			const bool isInsideTargetScreen = (pos.x <= WindowApp::GetWindowWidth() - targetScreenDistance && pos.x >= targetScreenDistance &&
 				pos.y <= WindowApp::GetWindowHeight() - targetScreenDistance && pos.y >= targetScreenDistance);
-			if (isInsideTargetScreen) {
+
+			//カメラと敵が向かい合っていたら処理
+			XMMATRIX cameraFrontMatWorld;
+			XMMATRIX matTrans = XMMatrixTranslation(0, 0, 1);
+			cameraFrontMatWorld = XMMatrixIdentity(); // 変形をリセット
+			cameraFrontMatWorld *= matTrans; // ワールド行列に平行移動を反映
+			cameraFrontMatWorld *= camera->GetMatWorld();
+
+			Vector3 cameraFrontVec = camera->GetEye() - Vector3{ cameraFrontMatWorld.r[3].m128_f32[0], cameraFrontMatWorld.r[3].m128_f32[1], cameraFrontMatWorld.r[3].m128_f32[2] };
+			cameraFrontVec.normalize();
+			Vector3 cameraEnemyVec = camera->GetEye() - Vector3(tutorialEnemy->GetObject3d()->GetPosition());
+			cameraEnemyVec.normalize();
+
+			float dot = cameraFrontVec.dot(cameraEnemyVec);
+			bool isCameraEnemyFront = (dot >= 0);
+
+			if (isInsideTargetScreen && isCameraEnemyFront) {
 				//ロックオン対象を確定させる
 				camera->Lockon(tutorialEnemy->GetObject3d());
 				//ロックオンUI表示
