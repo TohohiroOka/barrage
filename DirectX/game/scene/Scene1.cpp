@@ -502,7 +502,23 @@ void Scene1::CollisionCheck()
 			const float targetScreenDistance = 100;
 			const bool isInsideTargetScreen = (pos.x <= WindowApp::GetWindowWidth() - targetScreenDistance && pos.x >= targetScreenDistance &&
 				pos.y <= WindowApp::GetWindowHeight() - targetScreenDistance && pos.y >= targetScreenDistance);
-			if (isInsideTargetScreen) {
+
+			//カメラと敵が向かい合っていたら処理
+			XMMATRIX cameraFrontMatWorld;
+			XMMATRIX matTrans = XMMatrixTranslation(0, 0, 1);
+			cameraFrontMatWorld = XMMatrixIdentity(); // 変形をリセット
+			cameraFrontMatWorld *= matTrans; // ワールド行列に平行移動を反映
+			cameraFrontMatWorld *= camera->GetMatWorld();
+
+			Vector3 cameraFrontVec = camera->GetEye() - Vector3{ cameraFrontMatWorld.r[3].m128_f32[0], cameraFrontMatWorld.r[3].m128_f32[1], cameraFrontMatWorld.r[3].m128_f32[2] };
+			cameraFrontVec.normalize();
+			Vector3 cameraEnemyVec = camera->GetEye() - Vector3(boss->GetCenter()->GetPosition());
+			cameraEnemyVec.normalize();
+
+			float dot = cameraFrontVec.dot(cameraEnemyVec);
+			bool isCameraEnemyFront = (dot >= 0);
+
+			if (isInsideTargetScreen && isCameraEnemyFront) {
 				//ロックオン対象を確定させる
 				camera->Lockon(boss->GetCenter());
 				//ロックオンUI表示

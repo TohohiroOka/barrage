@@ -45,6 +45,7 @@ public: //ƒƒ“ƒoŠÖ”
 
 	//getter
 	const XMFLOAT3& GetCameraRota() { return rotation; }
+	const XMMATRIX& GetMatWorld() { return matWorld; }
 	Base3D* GetLockonTarget() { return lockonTarget; }
 	bool GetIsLockon() { return isLockon; }
 	bool GetisLockonStart() { return isLockonStart; }
