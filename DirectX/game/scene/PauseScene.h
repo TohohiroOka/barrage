@@ -24,7 +24,7 @@ public:
 	void Draw();
 
 	//ポース遷移判定
-	void InPause();
+	void CheckPauseInput();
 
 	//ポース画面か?
 	bool GetIsPause() { return isPause; }
@@ -42,6 +42,8 @@ private:
 	bool Select();
 
 	bool Back();
+
+	bool CheckNowInputIsPad();
 
 	bool isPause = false;
 
@@ -69,8 +71,11 @@ private:
 	std::unique_ptr<QuestionSystem> pauseQsys;
 	std::vector<std::wstring> choice;
 
-	std::unique_ptr<ActionInputConfigKey> aic;
+	std::unique_ptr<ActionInputConfigKey> aicKey;
+	std::unique_ptr<ActionInputConfigPad> aicPad;
 
 	std::unique_ptr<Sprite> screenBack;
+
+	bool oldPause = false;
 
 };

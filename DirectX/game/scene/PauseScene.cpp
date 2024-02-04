@@ -20,7 +20,8 @@ void PauseScene::Init()
 	pauseText = Sprite::Create("pausetext", { 1500.f / 2.f,150.f }, { 0.5f,0.5f });
 	pauseText->Update();
 
-	aic = std::make_unique<ActionInputConfigKey>();
+	aicKey = std::make_unique<ActionInputConfigKey>();
+	aicPad = std::make_unique<ActionInputConfigPad>();
 
 	TextureManager::LoadTexture("screenback", "Resources/SubTexture/white1x1.png");
 	screenBack = Sprite::Create("screenback", {}, {});
@@ -32,6 +33,8 @@ void PauseScene::Init()
 
 void PauseScene::Update()
 {
+	CheckPauseInput();
+
 	if (!isPause) { return; }
 
 	//選択肢判定
@@ -62,13 +65,24 @@ void PauseScene::Update()
 		//コンフィグ更新
 		if (isConfig) {
 			//コンフィグ終了
-			if (aic->GetIsInputConfigEnd()) {
-				aic->Reset();
-				isConfig = false;
-				isSelected = false;
-				pauseQsys->Init();
+			if (CheckNowInputIsPad()) {
+				if (aicPad->GetIsInputConfigEnd()) {
+					aicPad->Reset();
+					isConfig = false;
+					isSelected = false;
+					pauseQsys->Init();
+				}
+				aicPad->Update();
 			}
-			aic->Update();
+			else {
+				if (aicKey->GetIsInputConfigEnd()) {
+					aicKey->Reset();
+					isConfig = false;
+					isSelected = false;
+					pauseQsys->Init();
+				}
+				aicKey->Update();
+			}
 		}
 		//音量設定更新
 		if (isVolume) {
@@ -78,8 +92,7 @@ void PauseScene::Update()
 	//コンフィグなどの他モードを実行していないとき
 	else {
 		//ポース終了判定
-		if (DirectInput::GetInstance()->TriggerKey(DIK_TAB) ||
-			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_START)) {
+		if (oldPause && GameInputManager::TriggerInputAction(GameInputManager::Pause)) {
 			isPause = false;
 			pauseQsys->Init();
 		}
@@ -91,7 +104,6 @@ void PauseScene::Update()
 	}
 
 	pauseQsys->Update();
-
 }
 
 void PauseScene::Draw()
@@ -103,7 +115,12 @@ void PauseScene::Draw()
 	pauseText->Draw();
 
 	if (isConfig) {
-		aic->Draw();
+		if (CheckNowInputIsPad()) {
+			aicPad->Draw();
+		}
+		else {
+			aicKey->Draw();
+		}
 	}
 	else if (isVolume) {
 
@@ -115,10 +132,10 @@ void PauseScene::Draw()
 
 }
 
-void PauseScene::InPause()
+void PauseScene::CheckPauseInput()
 {
-	if (DirectInput::GetInstance()->TriggerKey(DIK_TAB) ||
-		XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_START)) {
+	oldPause = isPause;
+	if (GameInputManager::TriggerInputAction(GameInputManager::Pause)){
 		isPause = true;
 	}
 }
@@ -151,4 +168,11 @@ bool PauseScene::Select()
 bool PauseScene::Back()
 {
 	return GameInputManager::TriggerInputAction(GameInputManager::Avoid_Blink_Dash);
+}
+
+bool PauseScene::CheckNowInputIsPad()
+{
+	bool result = XInputManager::GetInstance()->ControllerConnectCheck();
+
+	return result;
 }

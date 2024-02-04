@@ -95,6 +95,7 @@ void Scene1::Update()
 		}
 	}
 
+	//ポーズ中ではないときゲーム本編の更新処理
 	if (!pauseScene->GetIsPause()) {
 		//撃破演出再生
 		//デバッグ用再生
@@ -141,14 +142,12 @@ void Scene1::Update()
 
 		if (!camera->GetIsLockon()) { lockonUI->EndLockOnDraw(); }
 
-		//ポース判定
-		pauseScene->InPause();
-	}
-	else {
-		pauseScene->Update();
+		AllHitEffect::Instance()->Update();
+
+		defeatDirection->Update();
 	}
 
-	defeatDirection->Update();
+
 	if (defeatDirection->GetDirectionEnd() && isSceneChangeWait == false) {
 		isSceneChangeWait = true;
 		SceneChangeDirection::Instance()->PlayFadeOut();
@@ -162,9 +161,10 @@ void Scene1::Update()
 		SceneManager::SetNextScene(titleScene);
 	}
 
-	AllHitEffect::Instance()->Update();
-
 	SceneChangeDirection::Instance()->Update();
+
+	//ポースシーン更新
+	pauseScene->Update();
 }
 
 void Scene1::Draw(const int _cameraNum)

@@ -75,11 +75,33 @@ void TitleScene::Initialize()
 
 	//遷移初期化
 	SceneChangeDirection::Instance()->Init();
+
+
 }
 
 void TitleScene::Update()
 {
-	if (!(isInputConfigKey || isInputConfigPad)) {
+	if (!isConfigActive && 
+		GameInputManager::TriggerInputAction(GameInputManager::Pause) && 
+		!isIntoPortal && 
+		!isDrawMessage) {
+		isConfigActive = true;
+	}
+	else if (isConfigActive && GameInputManager::TriggerInputAction(GameInputManager::Pause)) {
+		isConfigActive = false;
+	}
+
+	if (isConfigActive) {
+		if (XInputManager::GetInstance()->ControllerConnectCheck()) {
+			//入力設定更新
+			actionInputConfigPad->Update();
+		}
+		else {
+			//入力設定更新
+			actionInputConfigKey->Update();
+		}
+	}
+	else {
 		//ポータルに入る行動
 		IntoPortalCheck();
 		IntoPortal();
@@ -104,29 +126,6 @@ void TitleScene::Update()
 
 		//当たり判定
 		CollisionCheck();
-
-		if (!isIntoPortal) {
-			if (DirectInput::GetInstance()->TriggerKey(DIK_1)) {
-				isInputConfigKey = true;
-				actionInputConfigKey->Reset();
-			}
-			else if (DirectInput::GetInstance()->TriggerKey(DIK_2)) {
-				isInputConfigPad = true;
-				actionInputConfigPad->Reset();
-			}
-		}
-	}
-	else if (isInputConfigKey){
-		//入力設定更新
-		actionInputConfigKey->Update();
-
-		if (actionInputConfigKey->GetIsInputConfigEnd()) { isInputConfigKey = false; }
-	}
-	else if (isInputConfigPad) {
-		//入力設定更新
-		actionInputConfigPad->Update();
-
-		if (actionInputConfigPad->GetIsInputConfigEnd()) { isInputConfigPad = false; }
 	}
 
 	//スプライト更新
@@ -169,14 +168,20 @@ void TitleScene::NonPostEffectDraw(const int _cameraNum)
 				break;
 			}
 		}
+		//コンフィグの入力拒否用
+		isDrawMessage = false;
 	}
+	else { isDrawMessage = true; }
 
 	//入力設定描画
-	if (isInputConfigKey) {
-		actionInputConfigKey->Draw();
-	}
-	if (isInputConfigPad) {
-		actionInputConfigPad->Draw();
+	if (isConfigActive) {
+		if (XInputManager::GetInstance()->ControllerConnectCheck()) {
+			//入力設定更新
+			actionInputConfigPad->Draw();
+		}
+		else {
+			actionInputConfigKey->Draw();
+		}
 	}
 
 	SceneChangeDirection::Instance()->Draw();

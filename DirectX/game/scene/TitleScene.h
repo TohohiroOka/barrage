@@ -11,6 +11,7 @@
 #include "titleObject/Portal.h"
 #include "titleObject/SpeechBubble.h"
 #include "ui/PressSelectButtonUI.h"
+#include "Scene/PauseScene.h"
 
 #include <memory>
 
@@ -120,5 +121,11 @@ private:
 
 	//シーン遷移待機中か
 	bool isSceneChangeWait = false;
+
+	
+	//コンフィグフラグ
+	bool isConfigActive = false;
+	bool isDrawMessage = false;
+
 };
 
