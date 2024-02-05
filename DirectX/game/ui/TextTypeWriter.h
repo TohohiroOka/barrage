@@ -23,6 +23,11 @@ private: //メンバ関数
 	void Write();
 
 	/// <summary>
+	/// カタカタ音管理
+	/// </summary>
+	void TextSound();
+
+	/// <summary>
 	/// 一気に全文字表示
 	/// </summary>
 	void AllWrite();
@@ -44,4 +49,7 @@ private: //メンバ変数
 	int writeCount = 0;
 	//テキスト更新と同じ入力を使用している場合、トリガー判定が通ってしまい文章が全表示されてしまうので生成した瞬間かのフラグを設置
 	bool isCreateFrame = true;
+
+	//サウンド番号
+	int soundNumber = 0;
 };
