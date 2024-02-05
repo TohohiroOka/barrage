@@ -90,7 +90,7 @@ void TutorialEnemy::DamageEffect()
 		}
 		damageTimer->Update();
 
-		if (*damageTimer.get() < 200.0f) { return; }
+		if (*damageTimer.get() < 25.0f) { return; }
 		object->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 		isDamegeColor = false;
 		isDamageRed = false;
