@@ -65,8 +65,7 @@ namespace Sound {
 		"near_attack",
 		"boss_slash",
 		"onstage",
-		"half_attack_start"
-		"onstage",
+		"half_attack_start",
 		"gameover"
 
 	};
