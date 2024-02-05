@@ -74,6 +74,9 @@ void Boss1HalfAttack::Update()
 	line->VertexInit();
 	line->Update();
 	timer->Update();
+	if (effect) {
+		effect->Update();
+	}
 
 	if (!isCollision) {
 		hitTimer->Update();
@@ -89,6 +92,10 @@ void Boss1HalfAttack::Draw()
 	instanceObject->Draw();
 
 	line->Draw();
+
+	if (effect) {
+		effect->Draw();
+	}
 }
 
 void Boss1HalfAttack::GetAttackCollisionCapsule(std::vector<Capsule>& _info)
@@ -109,7 +116,7 @@ void Boss1HalfAttack::GetAttackCollisionCapsule(std::vector<Capsule>& _info)
 
 void Boss1HalfAttack::Move()
 {
-	const float maxTime = 20.0f;
+	const float maxTime = 50.0f;
 	const float rate = *timer.get() / maxTime;
 
 	Vector3 pos={};
@@ -125,15 +132,20 @@ void Boss1HalfAttack::Move()
 	boss->GetBaseModel()->SetAnimation(int(Boss1Model::Movement::attack1_start));
 	for (int i = 0; i< int(Boss1Model::AttachName::LowerArm_R_Non); i++) {
 		if (i == int(Boss1Model::AttachName::core1)) { continue; }
-		boss->GetBaseModel()->ChangesScale(i, 10.0f, { 0.0f, 0.0f, 0.0f });
+		boss->GetBaseModel()->ChangesScale(i, 90.0f, { 0.0f, 0.0f, 0.0f });
 	}
-
+	effect = std::make_unique<Boss1HalfAttackEffect>(boss->GetBaseModel()->GetPosition());
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::half_attack_start, false, 0.1f);
 }
 
 void Boss1HalfAttack::Small()
 {
-	const float maxTime = 20.0f;
+	const float maxTime = 100.0f;
 	const float rate = *timer.get() / maxTime;
+
+	if (rate < 0.7f) {
+		effect->AddParticle();
+	}
 
 	if (rate < 1.0f) { return; }
 	state = State::attackstart;

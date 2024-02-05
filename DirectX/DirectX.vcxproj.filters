@@ -611,6 +611,9 @@
     <ClCompile Include="game\system\ActionInputConfigKey.cpp">
       <Filter>ゲームシステム\system</Filter>
     </ClCompile>
+    <ClCompile Include="game\effect\Boss1HalfAttackEffect.cpp">
+      <Filter>ゲームシステム\Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
@@ -1244,6 +1247,9 @@
     </ClInclude>
     <ClInclude Include="game\system\ActionInputConfigPad.h">
       <Filter>ゲームシステム\system</Filter>
+    </ClInclude>
+    <ClInclude Include="game\effect\Boss1HalfAttackEffect.h">
+      <Filter>ゲームシステム\Effect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
