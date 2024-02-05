@@ -5,8 +5,9 @@
 void Boss1OnStage::Init()
 {
 	//ÉÇÉfÉãì«Ç›çûÇ›
-	playerModel = FbxModel::Create("player");
-	playerObject = Fbx::Create(playerModel.get());
+	playerObject = std::make_unique<Player>();
+	playerObject->GetData()->pos = playerObjectPos;
+	playerObject->GetData()->SetAllActionInput(false);
 	boss1Model = std::make_unique<Boss1Model>();
 	boss1Model->SetPosition(bossObjectPos);
 	boss1Model->Update();
@@ -16,12 +17,7 @@ void Boss1OnStage::Init()
 	boss1Model->AnimationReset();
 	boss1Model->SetIsRoop(false);
 
-	playerObject->SetPosition(playerObjectPos);
-	playerObject->SetUseAnimation(5);
-	playerObject->SetShadowMap(true);
-	playerObject->SetAnimation(true);
-	playerObject->SetIsBoneDraw(true);
-	playerObject->SetScale({ 5,5,5 });
+
 
 	TextureManager::LoadTexture("first_name", "Resources/SpriteTexture/firstname.png");
 	TextureManager::LoadTexture("second_name", "Resources/SpriteTexture/secondname.png");

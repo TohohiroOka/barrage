@@ -32,6 +32,7 @@ namespace Sound {
 		boss_slash,
 		onstage,
 		half_attack_start,
+		gameover,
 		size,
 	};
 
@@ -65,5 +66,8 @@ namespace Sound {
 		"boss_slash",
 		"onstage",
 		"half_attack_start"
+		"onstage",
+		"gameover"
+
 	};
 }

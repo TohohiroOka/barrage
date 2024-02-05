@@ -5,6 +5,7 @@
 #include "Object/3d/FbxModel.h"
 #include "enemy/boss1/Boss1Model.h"
 #include "engine/Audio/Audio.h"
+#include "player/Player.h"
 
 class Boss1OnStage : public BaseOnStageDirection
 {
@@ -39,8 +40,7 @@ private:
 	DirectX::XMFLOAT3 bossObjectPos = { 100,10,170 };
 
 	//オブジェクト
-	std::unique_ptr<Fbx> playerObject;
-	std::unique_ptr<FbxModel> playerModel;
+	std::unique_ptr<Player> playerObject;
 	std::unique_ptr<Boss1Model> boss1Model;
 
 	//文字アニメーション用

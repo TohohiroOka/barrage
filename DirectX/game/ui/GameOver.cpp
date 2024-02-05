@@ -70,6 +70,7 @@ void GameOver::Update()
 		}
 		break;
 	case GameOver::GAMEOVER_PHASE::PHASE_UI_FADEIN:
+		Audio::Instance()->SoundPlayWava(Sound::SoundName::gameover, false, 0.02f);
 		//グリッジ的なテキスト表示
 		if (frame % 3 == 0) {
 			if (isWide) {

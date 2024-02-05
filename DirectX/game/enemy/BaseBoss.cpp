@@ -10,9 +10,10 @@ void BaseBoss::Initialize()
 {
 	HP = maxHP;
 	hpGauge = std::make_unique<Gauge>(DirectX::XMFLOAT2({ WindowApp::GetWindowWidth() / 2 - 600.0f, 650.0f }), "bossGaugeFrame", DirectX::XMFLOAT2({ 2.0f, 2.0f }), maxHP, HP, 2.0f, DirectX::XMFLOAT4({ 0.5f, 0.1f, 0.1f, 1.0f }));
-	TextureManager::LoadTexture("bossName", "Resources/SpriteTexture/firstname.png");
+	TextureManager::LoadTexture("bossName", "Resources/SpriteTexture/bossgaugeName.png");
 	bossNameSprite = Sprite::Create("bossName", {}, { 0,0.5f });
-	bossNameSprite->SetPosition(DirectX::XMFLOAT2({ WindowApp::GetWindowWidth() / 2 - 800.0f / 2, 625.0f }));
+	bossNameSprite->SetPosition(DirectX::XMFLOAT2({ WindowApp::GetWindowWidth() / 2 - 1200.0f / 2, 620.0f }));
+	bossNameSprite->SetScale(0.8f);
 	bossNameSprite->Update();
 
 	damageTimer = std::make_unique<Engine::Timer>();
