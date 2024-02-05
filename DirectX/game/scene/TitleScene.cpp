@@ -8,6 +8,7 @@
 #include "Audio/Audio.h"
 #include "WindowApp.h"
 #include <Object/3d/collider/Collision.h>
+#include "Scene/OnStageTest.h"
 
 #include "ui/TextManager.h"
 
@@ -35,10 +36,10 @@ void TitleScene::Initialize()
 	player = std::make_unique<Player>();
 	player->GetData()->isUseEndurance = false; //持久力を消費しない状態にしておく
 	//ポータル生成
-	Scene1* gameScene = new Scene1;
+	OnStageTestScene* onStage = new OnStageTestScene;
 	const float stageSize = GameHelper::Instance()->GetStageSize();
 	const float portalPosY = 11.0f;
-	portals[0] = std::make_unique<Portal>(Vector3{ stageSize * 0.75f, portalPosY, stageSize / 2 }, gameScene);
+	portals[0] = std::make_unique<Portal>(Vector3{ stageSize * 0.75f, portalPosY, stageSize / 2 }, onStage);
 	TutorialScene* tutorialScene = new TutorialScene;
 	portals[1] = std::make_unique<Portal>(Vector3{ stageSize * 0.25f, portalPosY, stageSize / 2 }, tutorialScene);
 	portals[2] = std::make_unique<Portal>(Vector3{ stageSize / 2, portalPosY, stageSize * 0.75f }, nullptr);

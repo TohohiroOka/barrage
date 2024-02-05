@@ -16,7 +16,9 @@ public:
 
 	virtual void Update() {};
 
-	virtual void Draw() {};
+	virtual void Draw3D() {};
+
+	virtual void Draw2D() {};
 
 	virtual void ImguiDraw();
 

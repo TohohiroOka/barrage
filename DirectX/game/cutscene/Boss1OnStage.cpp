@@ -4,6 +4,25 @@
 
 void Boss1OnStage::Init()
 {
+	//モデル読み込み
+	playerModel = FbxModel::Create("player");
+	playerObject = Fbx::Create(playerModel.get());
+	boss1Model = std::make_unique<Boss1Model>();
+	boss1Model->SetPosition(bossObjectPos);
+	boss1Model->Update();
+	boss1Model->SetAnimation(int(Boss1Model::Movement::back_end));
+	boss1Model->AnimationReset();
+	boss1Model->SetAnimation(int(Boss1Model::Movement::back_start));
+	boss1Model->AnimationReset();
+	boss1Model->SetIsRoop(false);
+
+	playerObject->SetPosition(playerObjectPos);
+	playerObject->SetUseAnimation(5);
+	playerObject->SetShadowMap(true);
+	playerObject->SetAnimation(true);
+	playerObject->SetIsBoneDraw(true);
+	playerObject->SetScale({ 5,5,5 });
+
 	TextureManager::LoadTexture("first_name", "Resources/SpriteTexture/firstname.png");
 	TextureManager::LoadTexture("second_name", "Resources/SpriteTexture/secondname.png");
 	TextureManager::LoadTexture("letterbox", "Resources/SubTexture/white1x1.png");
@@ -32,14 +51,15 @@ void Boss1OnStage::Init()
 	camera = std::make_unique<CutSceneCamera>();
 	camera->Init();
 	//フィールド全域撮影
-	camera->SetPan({ 100,15,60 }, { 500,15,200 }, { 0,-100,+300 }, 180, CutSceneCamera::EASE_LERP);
+	//camera->SetPan({ 100,20,-100 }, { 100,20,-100 }, { 0,-10,+30 }, 240, CutSceneCamera::EASE_LERP);
+	camera->SetPan({ 0,15,0 }, { 200,15,0 }, { 0,-10,+30 }, 120, CutSceneCamera::EASE_LERP);
 	//プレイヤーキャラクターをズーム表示
-	camera->SetZoom({ 250,15,100 }, { 250,0,50 }, { 250,10,30 }, 180, CutSceneCamera::EASE_LERP);
+	camera->SetZoom({ 100,15,50 }, { 100,0,30 }, { 100,10,20 }, 120, CutSceneCamera::EASE_LERP);
 	//敵をズーム表示
-	camera->SetZoom({ 250,50,400 }, { 250,50,450 }, { 250,60,450 }, 60, CutSceneCamera::EASE_LERP);
+	camera->SetZoom({ 100,15,150 }, { 100,25,160 }, { 100,20,150 }, 60, CutSceneCamera::EASE_LERP);
 	//敵全体表示&ボスの名前表示
-	camera->SetTrack({ 250,60,450 }, { 250,50,400 }, { 250,10,250 }, 15, CutSceneCamera::EASE_IN_QUAD);
-	camera->SetTrack({ 250,60,450 }, { 250,10,250 }, { 250,5,200 }, 120, CutSceneCamera::EASE_LERP);
+	camera->SetTrack(bossObjectPos, { 100,15,150 }, { 100,10,130 }, 15, CutSceneCamera::EASE_IN_QUAD);
+	camera->SetTrack(bossObjectPos, { 100,10,130 }, { 100,5,120 }, 120, CutSceneCamera::EASE_LERP);
 }
 
 void Boss1OnStage::Update()
@@ -47,7 +67,12 @@ void Boss1OnStage::Update()
 	if (camera->GetIsCameraMoveEnd()) { return; }
 	camera->Update();
 
-	if (camera->GetUsingCameraNum() == 3) { isDisplayBossText = true; }
+	if (camera->GetUsingCameraNum() == 2) {
+		boss1Model->SetMovement(int(Boss1Model::Movement::back_start));
+	}
+	if (camera->GetUsingCameraNum() == 3) { 
+		isDisplayBossText = true; 
+	}
 
 	if (isDisplayBossText) {
 		if (frame < TEXTANIM_MAXFRAME) { frame++; }
@@ -60,11 +85,20 @@ void Boss1OnStage::Update()
 		secondName->Update();
 	}
 
+	playerObject->Update();
+	boss1Model->Update();
+
 	letterBox->Update();
 	letterBoxUnder->Update();
 }
 
-void Boss1OnStage::Draw()
+void Boss1OnStage::Draw3D()
+{
+	playerObject->Draw();
+	boss1Model->Draw();
+}
+
+void Boss1OnStage::Draw2D()
 {
 	letterBox->Draw();
 	letterBoxUnder->Draw();
@@ -91,4 +125,16 @@ void Boss1OnStage::Reset()
 	camera->StartCameraMove();
 	frame = 0;
 	isDisplayBossText = false;
+}
+
+void Boss1OnStage::FrameReset()
+{
+	playerObject->FrameReset();
+	boss1Model->RrameReset();
+}
+
+void Boss1OnStage::DrawLightView()
+{
+	playerObject->DrawLightView();
+	boss1Model->DrawLightView();
 }
