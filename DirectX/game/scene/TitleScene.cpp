@@ -62,6 +62,7 @@ void TitleScene::Initialize()
 	//吹き出しオブジェクト生成
 	for (int i = 0; i < 3; i++) {
 		std::string modelName = "speechBubble";
+		modelName = modelName + std::to_string(i + 1);
 		XMFLOAT3 pos = portals[i]->GetObject3d()->GetPosition();
 		const float upNum = 23;
 		pos.y += upNum;
