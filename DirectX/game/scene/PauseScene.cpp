@@ -174,12 +174,12 @@ bool PauseScene::DownInput()
 
 bool PauseScene::Select()
 {
-	return GameInputManager::TriggerInputAction(GameInputManager::Jump);
+	return GameInputManager::TriggerInputAction(GameInputManager::Select);
 }
 
 bool PauseScene::Back()
 {
-	return GameInputManager::TriggerInputAction(GameInputManager::Avoid_Blink_Dash);
+	return GameInputManager::TriggerInputAction(GameInputManager::Back);
 }
 
 bool PauseScene::CheckNowInputIsPad()
