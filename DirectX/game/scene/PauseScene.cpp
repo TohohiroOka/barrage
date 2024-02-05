@@ -12,13 +12,13 @@ void PauseScene::Init(bool isTitleScene)
 	
 	if (isTitleScene) {
 		choice.push_back(L"ゲームをつづける");
-		choice.push_back(L"ゲームパッドせってい");
-		choice.push_back(L"キーボードせってい");
+		choice.push_back(L"ゲームパッド設定");
+		choice.push_back(L"キーボード設定");
 	}
 	else {
 		choice.push_back(L"ゲームをつづける");
-		choice.push_back(L"ゲームパッドせってい");
-		choice.push_back(L"キーボードせってい");
+		choice.push_back(L"ゲームパッド設定");
+		choice.push_back(L"キーボード設定");
 		choice.push_back(L"タイトルにもどる");
 	}
 
