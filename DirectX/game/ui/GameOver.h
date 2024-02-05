@@ -4,6 +4,7 @@
 #include "engine/Math/Vector2.h"
 
 #include "ui/ChoiceEmphasisDrawer.h"
+#include "QuestionSystem.h"
 
 #include <memory>
 
@@ -64,7 +65,7 @@ private:
 
 	int			frame = 0;
 	//プレイヤー消滅にかかる時間
-	const int	UI_FADEIN_FRAME = 60;
+	const int	UI_FADEIN_FRAME = 30;
 	//フェードインにかかる時間
 	const int	PLAYER_FADE_FRAME = 60;
 
@@ -76,7 +77,7 @@ private:
 	const int GAMEOVERTEXT_WIDTH	= 512;
 	const int CONTINUE_EXIT_WIDTH	= 448;
 	//表示座標
-	const Vector2 GAMEOVERTEXT_LT	= Vector2(WINDOW_WIDTH / 2.f, 300.f);
+	const Vector2 GAMEOVERTEXT_LT = Vector2(WINDOW_WIDTH / 2.f, WINDOW_HEIGHT / 2.f);
 	const Vector2 CONTINUE_POS		= Vector2(WINDOW_WIDTH / 4.f, 600.f);
 	const Vector2 EXIT_POS			= Vector2((WINDOW_WIDTH / 4.f) * 3.f, 600.f);
 
@@ -98,5 +99,14 @@ private:
 
 #pragma endregion
 
+	std::unique_ptr<QuestionSystem> qsys;
+	enum class USER_SELECT
+	{
+		SELECT_RETRY,
+		SELECT_END,
+	};
 
+	const float glitchAnimScaleWide = 2.f;
+	const float glitchAnimScaleSmall = 0.4f;
+	bool isWide = false;
 };

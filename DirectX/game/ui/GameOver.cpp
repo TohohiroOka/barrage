@@ -22,7 +22,7 @@ void GameOver::Initialize()
 	exitText->SetTexSize({ 448.f,64.f });
 	gameoverBack->SetSize({ 1600.f,900.f * 0.9f });
 	//座標、色設定
-	gameoverText->SetColor({ 1,1,1,0 });
+	gameoverText->SetColor({ 1,1,1,1 });
 	continueText->SetColor({ 1,1,1,0 });
 	exitText->SetColor({ 1,1,1,0 });
 	gameoverBack->SetColor({ 1,1,1,0 });
@@ -32,6 +32,11 @@ void GameOver::Initialize()
 	gameoverBack->SetPosition({ float(WINDOW_WIDTH) / 2.f,float(WINDOW_HEIGHT) / 2.f });
 	continueText->SetAnchorpoint({ 0.5f,0.5f });
 	exitText->SetAnchorpoint({ 0.5f,0.5f });
+
+	//質問システム
+	std::vector<std::wstring> q;
+	q.push_back(L"リトライ");
+	q.push_back(L"ギブアップ");
 	
 	//更新
 	gameoverText->Update();
@@ -61,69 +66,39 @@ void GameOver::Update()
 	case GameOver::GAMEOVER_PHASE::PHASE_MODELFADE:
 		if (frame > PLAYER_FADE_FRAME) {
 			phase = GAMEOVER_PHASE::PHASE_UI_FADEIN;
-			if (playerObject) { playerObject->SetColor({ 1,1,1,0 }); }
 			frame = 0;
-		}
-		rate = float(frame) / float(PLAYER_FADE_FRAME);
-		if (playerObject) { 
-			playerObject->SetColor({ 1,1,1,1 - rate }); 
 		}
 		break;
 	case GameOver::GAMEOVER_PHASE::PHASE_UI_FADEIN:
+		//グリッジ的なテキスト表示
+		if (frame % 3 == 0) {
+			if (isWide) {
+				isWide = false;
+				gameoverText->SetSize({ 672 * glitchAnimScaleWide ,64 * glitchAnimScaleSmall });
+			}
+			else {
+				isWide = true;
+				gameoverText->SetSize({ 672 * glitchAnimScaleSmall ,64 * glitchAnimScaleWide });
+			}
+		}
 		if (frame > UI_FADEIN_FRAME) {
 			phase = GAMEOVER_PHASE::PHASE_UI_SHOW;
+			gameoverText->SetSize({ 672,64 });
 			gameoverText->SetColor({ 1,1,1,1 });
-			continueText->SetColor({ 1,1,1,1 });
-			exitText->SetColor({ 1,1,1,1 });
-			gameoverBack->SetColor({ 1,1,1,1 });
 			frame = 0;
-		}
-		else {
-			//フェードイン
-			rate = float(frame) / float(UI_FADEIN_FRAME);
-			gameoverText->SetColor({ 1,1,1,rate });
-			continueText->SetColor({ 1,1,1,rate });
-			exitText->SetColor({ 1,1,1,rate });
-			gameoverBack->SetColor({ 1,1,1,rate });
 		}
 		break;
 	case GameOver::GAMEOVER_PHASE::PHASE_UI_SHOW:
-		if (DirectInput::GetInstance()->TriggerKey(DIK_LEFT) ||
-			XInputManager::GetInstance()->TriggerLeftStickX(true)) {
-			if (playerSelecting != PlayerSelect::SELECT_CONTINUE) {
-				playerSelecting = PlayerSelect(int(playerSelecting) - 1);
-			}
-		}
-		if (DirectInput::GetInstance()->TriggerKey(DIK_RIGHT) ||
-			XInputManager::GetInstance()->TriggerLeftStickX(false)) {
-			if (playerSelecting != PlayerSelect::SELECT_EXIT) {
-				playerSelecting = PlayerSelect(int(playerSelecting) + 1);
-			}
-		}
 		//決定
-		if (DirectInput::GetInstance()->TriggerKey(DIK_SPACE) ||
-			XInputManager::GetInstance()->TriggerButton(XInputManager::PAD_A)) {
-			choiceDrawer->PlayChoiseAnimation();
+		if (frame > 120) {
+			frame = 0;
+			SceneChangeDirection::Instance()->PlayFadeOut();
 			phase = GAMEOVER_PHASE::PHASE_DECISION;
 		}
-
 		break;
 	case GameOver::GAMEOVER_PHASE::PHASE_DECISION:
-		if (choiceDrawer->IsChooseAnimEnd()) {
-			SceneChangeDirection::Instance()->PlayFadeOut();
-		}
 		if (SceneChangeDirection::Instance()->IsDirectionEnd()) {
-			switch (playerSelecting)
-			{
-			case GameOver::PlayerSelect::SELECT_CONTINUE:
-				newScene = new Scene1;
-				break;
-			case GameOver::PlayerSelect::SELECT_EXIT:
-				newScene = new TitleScene;
-				break;
-			default:
-				break;
-			}
+			newScene = new Scene1;
 			if (newScene) { SceneManager::SetNextScene(newScene); }
 		}
 		break;
@@ -131,24 +106,16 @@ void GameOver::Update()
 		break;
 	}
 
-	//選択肢強調表示
-	switch (playerSelecting)
-	{
-	case GameOver::PlayerSelect::SELECT_CONTINUE:
-		choiceDrawer->SetEmphasisPos(CONTINUE_POS.x, CONTINUE_POS.y, 600, 120);
-		break;
-	case GameOver::PlayerSelect::SELECT_EXIT:
-		choiceDrawer->SetEmphasisPos(EXIT_POS.x, EXIT_POS.y, 600, 120);
-		break;
-	default:
-		break;
+	if (int(phase) >= 3 &&  frame % 3 == 0) { 
+		gameoverText->SetPosition({ GAMEOVERTEXT_LT.x + 
+			RandomFloat(0.f,5.f) * RandomSign()
+			,GAMEOVERTEXT_LT.y + 
+			RandomFloat(0.f,5.f) * RandomSign()
+			});
 	}
 
 	//スプライト更新
-	gameoverBack->Update();
 	gameoverText->Update();
-	continueText->Update();
-	exitText->Update();
 }
 
 void GameOver::Draw()
@@ -156,16 +123,9 @@ void GameOver::Draw()
 	if (phase == GAMEOVER_PHASE::PHASE_UI_FADEIN ||
 		phase == GAMEOVER_PHASE::PHASE_UI_SHOW ||
 		phase == GAMEOVER_PHASE::PHASE_DECISION) {
-		gameoverBack->Draw();
 		gameoverText->Draw();
-		continueText->Draw();
-		exitText->Draw();
 	}
 
-	if (phase == GAMEOVER_PHASE::PHASE_UI_SHOW ||
-		phase == GAMEOVER_PHASE::PHASE_DECISION) {
-		choiceDrawer->Draw();
-	}
 }
 
 void GameOver::StartGameOverUI()

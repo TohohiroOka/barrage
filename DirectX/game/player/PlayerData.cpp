@@ -36,7 +36,7 @@ PlayerData::PlayerData()
 	isEnemyAttackAvoid = false;
 	isEnemyAttackAvoidJudge = false;
 	
-	maxHP = 100;
+	maxHP = 1;
 	HP = maxHP;
 	
 	maxEndurance = 400;
