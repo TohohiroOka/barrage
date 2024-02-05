@@ -3,6 +3,7 @@
 #include "Camera/GameCamera.h"
 #include "system/GameInputManager.h"
 #include "GameHelper.h"
+#include "engine/Audio/Audio.h"
 
 using namespace DirectX;
 
@@ -12,6 +13,9 @@ float PlayerActionMoveNormal::dashSpeedMax = 1.0f;
 PlayerActionMoveNormal::PlayerActionMoveNormal(Player* player)
 	: PlayerActionBase(player)
 {
+	//足音用タイマー生成
+	moveSoundTimer = std::make_unique<Engine::Timer>();
+
 	//ジャンプアニメーション以外なら待機アニメーションに変更
 	if (player->GetFbxObject()->GetUseAnimation() == PlayerAnimationName::JUMP_ANIMATION) { return; }
 	player->GetFbxObject()->AnimationReset();
@@ -100,6 +104,7 @@ void PlayerActionMoveNormal::Move()
 			player->GetFbxObject()->AnimationReset();
 			player->GetFbxObject()->SetUseAnimation(PlayerAnimationName::RUN_ANIMATION);
 			player->GetFbxObject()->SetIsRoop(true);
+			moveSoundTimer->Reset();
 		}
 	}
 	else {
@@ -120,8 +125,29 @@ void PlayerActionMoveNormal::Move()
 	//速度をセット
 	player->GetData()->velocity.x = player->GetData()->moveVec.x * player->GetData()->moveSpeed;
 	player->GetData()->velocity.z = player->GetData()->moveVec.z * player->GetData()->moveSpeed;
-}
 
+	//足音を再生
+	if (player->GetFbxObject()->GetUseAnimation() == PlayerAnimationName::RUN_ANIMATION) {
+		//タイマー更新
+		if (player->GetFbxObject()->GetIsAnimationEnd()) {
+			if (player->GetFbxObject()->GetIsAnimationEnd()) {
+				moveSoundTimer->Reset();
+			}
+		}
+		moveSoundTimer->Update();
+
+
+		//一定間隔で足音再生
+		const int soundTime1 = 2;
+		const int soundTime2 = 17;
+		const int soundTime3 = 32;
+		const int soundTime4 = 47;
+		if (player->GetData()->onGround && ((int)moveSoundTimer.get()->time == soundTime1 || (int)moveSoundTimer.get()->time == soundTime2 ||
+			(int)moveSoundTimer.get()->time == soundTime3 || (int)moveSoundTimer.get()->time == soundTime4)) {
+			Audio::Instance()->SoundPlayWava(Sound::SoundName::select_cursor, false, 0.3f);
+		}
+	}
+}
 void PlayerActionMoveNormal::Dash()
 {
 	//地面にいない場合は、変更を受け付けないで抜ける

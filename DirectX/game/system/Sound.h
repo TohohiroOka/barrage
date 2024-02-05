@@ -9,6 +9,12 @@ namespace Sound {
 		jump,
 		avoid,
 		damage,
+		text_1,
+		text_2,
+		text_3,
+		text_all_draw,
+		select,
+		select_cursor,
 		size,
 	};
 
@@ -19,5 +25,11 @@ namespace Sound {
 		"jump",
 		"avoid",
 		"damage",
+		"text_1",
+		"text_2",
+		"text_3",
+		"text_all_draw",
+		"select",
+		"select_cursor",
 	};
 }

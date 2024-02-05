@@ -1,5 +1,7 @@
 #pragma once
 #include "PlayerActionBase.h"
+#include "Math/Timer.h"
+#include <memory>
 
 /// <summary>
 /// プレイヤー通常移動行動
@@ -36,4 +38,8 @@ public: //静的メンバ変数 (変更しやすいようにpublic)
 	static float moveSpeedMax;
 	//最大ダッシュスピード
 	static float dashSpeedMax;
+
+private: //メンバ変数
+	//足音再生用タイマー
+	std::unique_ptr<Engine::Timer> moveSoundTimer;
 };

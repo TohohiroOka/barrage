@@ -3,6 +3,7 @@
 #include "Input/DirectInput.h"
 #include "Input/XInputManager.h"
 #include "Math/Easing/Easing.h"
+#include "engine/Audio/Audio.h"
 
 QuestionSystem::QuestionSystem(const std::vector<std::wstring>& choices)
 {
@@ -139,6 +140,9 @@ void QuestionSystem::ChangeSelectChoices()
 
 	//選択強調背景スプライトの座標を更新
 	choiceBackSprite->SetPosition({ centerPos.x, textPosYs[selectNum] });
+
+	//選択カーソル音再生
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::select_cursor, false, 0.3f);
 }
 
 void QuestionSystem::SelectChoice()
@@ -148,6 +152,9 @@ void QuestionSystem::SelectChoice()
 
 	//選択確定フェーズへの移行
 	phase = QuestionPhase::CONFIRM_SELECTION;
+
+	//選択音再生
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::select, false, 0.5f);
 }
 
 void QuestionSystem::ConfirmSelectionUpdate()
