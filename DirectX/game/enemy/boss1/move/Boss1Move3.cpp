@@ -3,6 +3,7 @@
 #include "../game/enemy/BaseBoss.h"
 #include "GameHelper.h"
 #include "Math/Easing/Easing.h"
+#include "Audio/Audio.h"
 
 Boss1Move3::Boss1Move3()
 {
@@ -21,12 +22,16 @@ Boss1Move3::Boss1Move3()
 
 	timer = std::make_unique<Engine::Timer>();
 	hitTimer = std::make_unique<Engine::Timer>();
+	swordSoundTimer = std::make_unique<Engine::Timer>();
 
 	useCollision = UseCollision::box;
 
 	DirectX::XMFLOAT4 startColor = { 0.2f, 0.1f, 0.02f, 1.0f };
 	DirectX::XMFLOAT4 endColor = { 0.01f, 0.005f, 0.001f, 1.0f };
 	swordEffect = std::make_unique<SlashEffect>("effect", 10, 10, 10.0f, 1.0f, 0.0f, startColor, endColor);
+
+	isSwordSound = false;
+	isSwordAttackSound = false;
 
 	func_.emplace_back([this] {return Start(); });
 	func_.emplace_back([this] {return Move(); });
@@ -67,6 +72,12 @@ void Boss1Move3::GetAttackCollisionBox(std::vector<Box>& _info)
 
 void Boss1Move3::Start()
 {
+	swordSoundTimer->Update();
+	if (*swordSoundTimer.get() > 60.0f && !isSwordSound) {
+		isSwordSound = true;
+		Audio::Instance()->SoundPlayWava(Sound::SoundName::boss_nearAttack_sword, false, 0.2f);
+	}
+
 	boss->SetPlayerDirection();
 	if (!boss->GetBaseModel()->GetIsAnimationEnd()) { return; }
 	state = State::move;
@@ -115,6 +126,11 @@ void Boss1Move3::Attack()
 	if (*timer.get() <= maxTimer) {
 		const float rate = *timer.get() / maxTimer;
 		swordPos.y = Easing::OutCubic(-20.0f, 10.0f, rate);
+	}
+
+	if (*timer.get() > 20 && !isSwordAttackSound) {
+		Audio::Instance()->SoundPlayWava(Sound::SoundName::boss_slash, false, 0.4f);
+		isSwordAttackSound = true;
 	}
 
 	if (*timer.get() < maxTimer * 2.0f) { return; }

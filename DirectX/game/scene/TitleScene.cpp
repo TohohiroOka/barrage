@@ -27,8 +27,6 @@ void TitleScene::Initialize()
 
 	pressSelectButtonUI = std::make_unique<PressSelectButtonUI>();
 
-	//Audio::Instance()->SoundPlayWava(Sound::SoundName::msp_bgm, true, 0.1f);
-
 	//地形生成
 	field = std::make_unique<Field>();
 	//プレイヤー生成

@@ -3,6 +3,7 @@
 #include "../Boss1Model.h"
 #include "../game/enemy/BaseBoss.h"
 #include "Math/Easing/Easing.h"
+#include "Audio/Audio.h"
 
 Boss1Bullet1::Boss1Bullet1()
 {
@@ -107,6 +108,8 @@ void Boss1Bullet1::DeleteBullet(std::vector<int> _deleteNum)
 
 void Boss1Bullet1::Start()
 {
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::bullet1_start, false, 0.02f);
+
 	//出現ポイント出し
 	if ((*timer.get() / 2.0f) >= addBulletNum && addBulletNum < maxBulletNum) {
 		bulletAddPoint[addBulletNum].isAlive = true;
@@ -136,6 +139,8 @@ void Boss1Bullet1::Start()
 
 void Boss1Bullet1::Attack()
 {
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::bullet1, false, 0.1f);
+
 	for (auto& i : bulletAddPoint) {
 		if (!i.isAlive) { continue; }
 		BulletRotate(i);

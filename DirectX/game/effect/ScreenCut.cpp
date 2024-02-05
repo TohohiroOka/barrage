@@ -4,6 +4,7 @@
 #include <imgui.h>
 #include "GameHelper.h"
 #include "Object/3d/collider/Collision.h"
+#include "Audio/Audio.h"
 
 const std::array<DirectX::XMFLOAT2, ScreenCut::otherNum> ScreenCut::otherMin = {
 DirectX::XMFLOAT2{0.832f,0.5f},{0.698f,0.5f},{0.514f,0.5f},{0.497f,0.5f},
@@ -133,6 +134,10 @@ void ScreenCut::LightHalf()
 		panel[i]->SetPosition(_pos);
 	}
 
+	if (int(timer) % 2 == 0) {
+		Audio::Instance()->SoundPlayWava(Sound::SoundName::screen_break1, false, 0.1f);
+	}
+
 	if (rate < 1.0f) { return; }
 	state = State::light_other;
 	timer = 0;
@@ -164,9 +169,14 @@ void ScreenCut::LightOther()
 		panel[i]->SetPosition(_pos);
 	}
 
+	if (int(timer) % 5 == 0) {
+		Audio::Instance()->SoundPlayWava(Sound::SoundName::screen_break1, false, 0.1f);
+	}
+
 	if (rate < 1.0f) { return; }
 	timer = 0.0f;
 	state = State::panelBreak;
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::screen_break2, false, 0.1f);
 }
 
 void ScreenCut::PanelBreak()

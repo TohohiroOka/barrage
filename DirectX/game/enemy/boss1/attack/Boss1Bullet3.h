@@ -77,4 +77,6 @@ private:
 	std::vector<std::function<void()>> func_;
 
 	std::unique_ptr<Engine::Timer> timer;
+
+	bool isSwordSound;
 };
