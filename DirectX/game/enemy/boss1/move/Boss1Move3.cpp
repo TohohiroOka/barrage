@@ -86,17 +86,17 @@ void Boss1Move3::Start()
 
 void Boss1Move3::Move()
 {
-	const float maxTimer = 60.0f;
+	const float maxTimer = 50.0f;
 	const float rate = *timer.get() / maxTimer;
 	Vector3 pos = Vector3(boss->GetBaseModel()->GetPosition());
 
-	if (*timer.get() < maxTimer - 40.0f) {
+	if (*timer.get() < maxTimer - 10.0f) {
 		boss->SetPlayerDirection();
 		endPos = boss->GetTargetPos();
 	}
 
-	pos.x = Easing::OutCubic(startPos.x, endPos.x, rate);
-	pos.z = Easing::OutCubic(startPos.z, endPos.z, rate);
+	pos.x = Easing::InCubic(startPos.x, endPos.x, rate);
+	pos.z = Easing::InCubic(startPos.z, endPos.z, rate);
 
 	boss->GetBaseModel()->SetPosition(pos);
 
@@ -118,22 +118,24 @@ void Boss1Move3::Attack()
 {
 	const float maxTimer = 40.0f;
 
-	if (!isHit && *timer.get() >= 30.0f) {
+	if (!isHit && *timer.get() >= 10.0f) {
 		isCollision = true;
 		isHit = true;
 	}
 
-	if (*timer.get() <= maxTimer) {
-		const float rate = *timer.get() / maxTimer;
-		swordPos.y = Easing::OutCubic(-20.0f, 10.0f, rate);
-	}
+	const float rate = *timer.get() / (maxTimer - 20.0f);
+	swordPos.y = Easing::OutCubic(-20.0f, 10.0f, rate);
 
-	if (*timer.get() > 20 && !isSwordAttackSound) {
+	if (*timer.get() > 10 && !isSwordAttackSound) {
 		Audio::Instance()->SoundPlayWava(Sound::SoundName::boss_slash, false, 0.4f);
 		isSwordAttackSound = true;
 	}
 
-	if (*timer.get() < maxTimer * 2.0f) { return; }
+	if (*timer.get() > maxTimer - 20.0f) {
+		isCollision = false;
+	}
+
+	if (*timer.get() < maxTimer) { return; }
 	timer->Reset();
 	state = State::end;
 	boss->GetBaseModel()->ModelReset();
@@ -141,6 +143,6 @@ void Boss1Move3::Attack()
 
 void Boss1Move3::End()
 {
-	if (*timer.get() < 10) { return; }
+	if (*timer.get() < 30) { return; }
 	isEnd = true;
 }
