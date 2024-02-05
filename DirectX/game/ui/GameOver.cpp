@@ -75,11 +75,11 @@ void GameOver::Update()
 		if (frame % 3 == 0) {
 			if (isWide) {
 				isWide = false;
-				gameoverText->SetSize({ 672 * glitchAnimScaleWide ,64 * glitchAnimScaleSmall });
+				gameoverText->SetSize({ 672 * glitchAnimScaleWide * RandomFloat(1.f,2.f)  ,64 * glitchAnimScaleSmall });
 			}
 			else {
 				isWide = true;
-				gameoverText->SetSize({ 672 * glitchAnimScaleSmall ,64 * glitchAnimScaleWide });
+				gameoverText->SetSize({ 672 * glitchAnimScaleSmall ,64 * glitchAnimScaleWide * RandomFloat(1.f,2.f) });
 			}
 		}
 		if (frame > UI_FADEIN_FRAME) {
