@@ -64,7 +64,6 @@ private:
 	std::unique_ptr<Field> field;
 
 	std::unique_ptr<LightCamera> lightCamera;
-	std::unique_ptr<DebugCamera> debugCamera;
 
 	std::unique_ptr<Boss1OnStage> onStageDirection;
 

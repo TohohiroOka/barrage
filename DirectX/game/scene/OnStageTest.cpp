@@ -25,8 +25,6 @@ void OnStageTestScene::Initialize()
 	onStageDirection->SetBase3DCamera();
 	Base3D::SetLightCamera(lightCamera.get());
 
-	debugCamera = DebugCamera::Create({ 300, 40, 0 });
-
 	SceneChangeDirection::Instance()->PlayFadeIn();
 
 	
@@ -36,31 +34,16 @@ void OnStageTestScene::Update()
 {
 	lightCamera->Update();
 
-	if (isNormalCamera) {
-		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
-			isNormalCamera = !isNormalCamera;
-			Base3D::SetCamera(debugCamera.get());
-		}  
-
-		onStageDirection->Update();
-		onStageDirection->SetBase3DCamera();
-		if (onStageDirection->GetIsDirectEnd() && !isChangeSceneWait) {
-			SceneChangeDirection::Instance()->PlayFadeOut();
-			isChangeSceneWait = true;
-		}
-		if (isChangeSceneWait && SceneChangeDirection::Instance()->IsDirectionEnd()) {
-			InterfaceScene* newScene = nullptr;
-			newScene = new Scene1;
-			if (newScene) { SceneManager::SetNextScene(newScene); }
-		}
+	onStageDirection->Update();
+	onStageDirection->SetBase3DCamera();
+	if (onStageDirection->GetIsDirectEnd() && !isChangeSceneWait) {
+		SceneChangeDirection::Instance()->PlayFadeOut();
+		isChangeSceneWait = true;
 	}
-	else {
-		debugCamera->Update();
-		Base3D::SetCamera(debugCamera.get());
-		if (DirectInput::GetInstance()->TriggerKey(DIK_RETURN)) {
-			isNormalCamera = !isNormalCamera;
-			onStageDirection->SetBase3DCamera();
-		}
+	if (isChangeSceneWait && SceneChangeDirection::Instance()->IsDirectionEnd()) {
+		InterfaceScene* newScene = nullptr;
+		newScene = new Scene1;
+		if (newScene) { SceneManager::SetNextScene(newScene); }
 	}
 
 	SceneChangeDirection::Instance()->Update();

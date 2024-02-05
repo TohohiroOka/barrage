@@ -101,10 +101,6 @@ void Scene1::Update()
 	//ポーズ中ではないときゲーム本編の更新処理
 	if (!pauseScene->GetIsPause()) {
 		//撃破演出再生
-		//デバッグ用再生
-		if (DirectInput::GetInstance()->TriggerKey(DIK_H)) {
-			defeatDirection->StartDefeatDirection(boss->GetBaseModel()->GetPosition());
-		}
 		if (boss->GetBossIsAlive()) { defeatDirection->StartDefeatDirection(boss->GetBaseModel()->GetPosition()); }
 
 		CollisionCheck();
@@ -112,10 +108,6 @@ void Scene1::Update()
 		//カメラ更新
 		camera->Update();
 		lockonUI->Update(boss->GetCenter()->GetPosition());
-		if (DirectInput::GetInstance()->TriggerKey(DIK_9)) {
-			OnStageTestScene* testScene = new OnStageTestScene;
-			SceneManager::SetNextScene(testScene);
-		}
 		lightCamera->Update();
 
 		//オブジェクト更新
@@ -124,17 +116,8 @@ void Scene1::Update()
 		boss->SetTargetPos(player->GetData()->pos);
 		boss->Update();
 
-		//デバッグ用シーン切り替え
-		if (DirectInput::GetInstance()->ReleaseKey(DIK_1)) {
-			TitleScene* titleScene = new TitleScene;
-			SceneManager::SetNextScene(titleScene);
-		}
-
 		gameoverUi->Update();
 		//体力0でゲームオーバー表示
-		//デバッグ用ゲームオーバー表示
-		if (DirectInput::GetInstance()->TriggerKey(DIK_F4)) { gameoverUi->ResetGameOverUI(); }
-		if (DirectInput::GetInstance()->TriggerKey(DIK_4)) { gameoverUi->StartGameOverUI(); }
 		if (player->GetData()->isDead && !gameoverUi->GetIsGameOver()) { 
 			gameoverUi->StartGameOverUI();
 
