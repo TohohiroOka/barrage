@@ -59,7 +59,7 @@ void Boss1OnStage::Init()
 	camera->SetZoom({ 100,15,150 }, { 100,25,160 }, { 100,20,150 }, 30, CutSceneCamera::EASE_LERP);
 	//敵全体表示&ボスの名前表示
 	camera->SetTrack(bossObjectPos, { 100,15,150 }, { 100,10,130 }, 15, CutSceneCamera::EASE_IN_QUAD);
-	camera->SetTrack(bossObjectPos, { 100,10,130 }, { 100,5,120 }, 60, CutSceneCamera::EASE_LERP);
+	camera->SetTrack(bossObjectPos, { 100,10,130 }, { 100,5,120 }, 180, CutSceneCamera::EASE_LERP);
 
 	Audio::Instance()->SoundPlayWava(Sound::SoundName::onstage, false, 0.1f);
 }
