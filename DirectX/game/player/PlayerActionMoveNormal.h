@@ -29,6 +29,11 @@ private: //メンバ関数
 	void Dash();
 
 	/// <summary>
+	/// 足音効果音再生
+	/// </summary>
+	void MoveSound();
+
+	/// <summary>
 	/// 次の行動を開始
 	/// </summary>
 	void NextActionStart();
@@ -42,4 +47,6 @@ public: //静的メンバ変数 (変更しやすいようにpublic)
 private: //メンバ変数
 	//足音再生用タイマー
 	std::unique_ptr<Engine::Timer> moveSoundTimer;
+	//サウンド番号
+	int soundNumber = 0;
 };

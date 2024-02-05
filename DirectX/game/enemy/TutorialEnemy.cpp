@@ -1,5 +1,6 @@
 #include "TutorialEnemy.h"
 #include "game/player/PlayerData.h"
+#include "engine/Audio/Audio.h"
 
 TutorialEnemy::TutorialEnemy(const DirectX::XMFLOAT3& position, PlayerData* _playerData)
 {
@@ -105,6 +106,9 @@ void TutorialEnemy::AddBullet()
 	moveVec = moveVec.normalize();
 
 	bullet.emplace_front(TutorialEnemyBullet(object->GetPosition(), moveVec * 3.0f));
+
+	//”­ŽË‰¹Ä¶
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::bullet1, false, 0.5f);
 }
 
 void TutorialEnemy::FrameReset()

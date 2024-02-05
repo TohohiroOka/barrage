@@ -144,7 +144,7 @@ void PlayerActionMoveNormal::Move()
 		const int soundTime4 = 47;
 		if (player->GetData()->onGround && ((int)moveSoundTimer.get()->time == soundTime1 || (int)moveSoundTimer.get()->time == soundTime2 ||
 			(int)moveSoundTimer.get()->time == soundTime3 || (int)moveSoundTimer.get()->time == soundTime4)) {
-			Audio::Instance()->SoundPlayWava(Sound::SoundName::select_cursor, false, 0.3f);
+			MoveSound();
 		}
 	}
 }
@@ -168,6 +168,47 @@ void PlayerActionMoveNormal::Dash()
 		else {
 			player->GetData()->isDash = false;
 		}
+	}
+}
+
+void PlayerActionMoveNormal::MoveSound()
+{
+	//‰¹Ä¶
+	if (soundNumber == 0) { Audio::Instance()->SoundPlayWava(Sound::SoundName::run_1, false, 0.1f); }
+	else if (soundNumber == 1) { Audio::Instance()->SoundPlayWava(Sound::SoundName::run_2, false, 0.1f); }
+	else if (soundNumber == 2) { Audio::Instance()->SoundPlayWava(Sound::SoundName::run_3, false, 0.1f); }
+	else if (soundNumber == 3) { Audio::Instance()->SoundPlayWava(Sound::SoundName::run_4, false, 0.1f); }
+	else if (soundNumber == 4) { Audio::Instance()->SoundPlayWava(Sound::SoundName::run_5, false, 0.1f); }
+
+	//Ÿ‚É–Â‚ç‚·‰¹‚ğİ’è
+	int randamNum = RandomInt(3);
+	if (randamNum == 0) {
+		if (soundNumber == 0) { soundNumber = 1; }
+		else if (soundNumber == 1) { soundNumber = 2; }
+		else if (soundNumber == 2) { soundNumber = 3; }
+		else if (soundNumber == 3) { soundNumber = 4; }
+		else if (soundNumber == 4) { soundNumber = 0; }
+	}
+	else if (randamNum == 1) {
+		if (soundNumber == 0) { soundNumber = 2; }
+		else if (soundNumber == 1) { soundNumber = 3; }
+		else if (soundNumber == 2) { soundNumber = 4; }
+		else if (soundNumber == 3) { soundNumber = 0; }
+		else if (soundNumber == 4) { soundNumber = 1; }
+	}
+	else if (randamNum == 2) {
+		if (soundNumber == 0) { soundNumber = 3; }
+		else if (soundNumber == 1) { soundNumber = 4; }
+		else if (soundNumber == 2) { soundNumber = 0; }
+		else if (soundNumber == 3) { soundNumber = 1; }
+		else if (soundNumber == 4) { soundNumber = 2; }
+	}
+	else if (randamNum == 3) {
+		if (soundNumber == 0) { soundNumber = 4; }
+		else if (soundNumber == 1) { soundNumber = 0; }
+		else if (soundNumber == 2) { soundNumber = 1; }
+		else if (soundNumber == 3) { soundNumber = 2; }
+		else if (soundNumber == 4) { soundNumber = 3; }
 	}
 }
 

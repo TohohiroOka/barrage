@@ -67,6 +67,7 @@ bool GameInputManager::ChangeInputPadButton(InputAction inputAction, int padButt
 	//変更後のキーが他のキーと被りがないかをチェック
 	for (int i = 0; i < InputActionNum; i++) {
 		if (i == (int)Select) { continue; }
+		if (i == (int)Back) { continue; }
 		if (padButton == padInputActions[inputAction].padButton) { continue; }
 		if (padButton == padInputActions[i].padButton) { return false; }
 	}

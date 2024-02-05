@@ -4,6 +4,11 @@
 namespace Sound {
 	enum class SoundName {
 		bgm,
+		run_1,
+		run_2,
+		run_3,
+		run_4,
+		run_5,
 		attack,
 		attack_hit,
 		jump,
@@ -31,6 +36,11 @@ namespace Sound {
 
 	static std::array<std::string, int(SoundName::size)> SoundNameStr = {
 		"bgm",
+		"run_1",
+		"run_2",
+		"run_3",
+		"run_4",
+		"run_5",
 		"attack",
 		"attack_hit",
 		"jump",
