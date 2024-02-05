@@ -3,6 +3,7 @@
 #include "../Object/3d/PrimitiveObject3D.h"
 #include "../game/enemy/BaseAction.h"
 #include <functional>
+#include "../game/effect/Boss1HalfAttackEffect.h"
 
 /// <summary>
 /// オルガノン
@@ -96,6 +97,8 @@ private:
 	
 	//全体タイマー
 	std::unique_ptr<Engine::Timer> timer;
-
+	
+	//エフェクト
+	std::unique_ptr<Boss1HalfAttackEffect> effect;
 };
 
