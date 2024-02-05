@@ -5,6 +5,7 @@
 #include "Input/DirectInput.h"
 #include "Scene/SceneManager.h"
 #include "Scene1.h"
+#include "cutscene/SceneChangeDirection.h"
 
 void OnStageTestScene::Initialize()
 {
@@ -25,12 +26,14 @@ void OnStageTestScene::Initialize()
 	Base3D::SetLightCamera(lightCamera.get());
 
 	debugCamera = DebugCamera::Create({ 300, 40, 0 });
+
+	SceneChangeDirection::Instance()->PlayFadeIn();
+
+	
 }
 
 void OnStageTestScene::Update()
 {
-	field->Update(debugCamera->GetEye(), { 0,0,0 });
-
 	lightCamera->Update();
 
 	if (isNormalCamera) {
@@ -41,15 +44,14 @@ void OnStageTestScene::Update()
 
 		onStageDirection->Update();
 		onStageDirection->SetBase3DCamera();
-		if (onStageDirection->GetIsDirectEnd()) {
-			if (DirectInput::GetInstance()->TriggerKey(DIK_SPACE)) {
-				InterfaceScene* newScene = nullptr;
-				newScene = new Scene1;
-				if (newScene) { SceneManager::SetNextScene(newScene); }
-			}
-			else if (DirectInput::GetInstance()->TriggerKey(DIK_R)) {
-				onStageDirection->StartDirection();
-			}
+		if (onStageDirection->GetIsDirectEnd() && !isChangeSceneWait) {
+			SceneChangeDirection::Instance()->PlayFadeOut();
+			isChangeSceneWait = true;
+		}
+		if (isChangeSceneWait && SceneChangeDirection::Instance()->IsDirectionEnd()) {
+			InterfaceScene* newScene = nullptr;
+			newScene = new Scene1;
+			if (newScene) { SceneManager::SetNextScene(newScene); }
 		}
 	}
 	else {
@@ -61,36 +63,36 @@ void OnStageTestScene::Update()
 		}
 	}
 
+	SceneChangeDirection::Instance()->Update();
 }
 
 void OnStageTestScene::Draw(const int _cameraNum)
 {
 	field->Draw();
+	onStageDirection->Draw3D();
 }
 
 void OnStageTestScene::DrawLightView(const int _cameraNum)
 {
+	onStageDirection->DrawLightView();
 }
 
 void OnStageTestScene::NonPostEffectDraw(const int _cameraNum)
 {
-	onStageDirection->Draw();
+	onStageDirection->Draw2D();
+
+	SceneChangeDirection::Instance()->Draw();
 }
 
 void OnStageTestScene::ImguiDraw()
 {
 
-	//if (isNormalCamera) {
-	//	onStageDirection.ImguiDraw();
-	//}
-	//else {
-	//	ImGui::Begin("debug imgui");
+	if (isNormalCamera) {
+		//onStageDirection->ImguiDraw();
+	}
+	else {
 
-	//	ImGui::Text("Camera Pos    [ %f : %f : %f ]", debugCamera->GetEye().x, debugCamera->GetEye().y, debugCamera->GetEye().z);
-	//	ImGui::Text("Camera Target [ %f : %f : %f ]", debugCamera->GetTarget().x, debugCamera->GetTarget().x, debugCamera->GetTarget().x);
-
-	//	ImGui::End();
-	//}
+	}
 
 
 
@@ -98,6 +100,8 @@ void OnStageTestScene::ImguiDraw()
 
 void OnStageTestScene::FrameReset()
 {
+	field->FrameReset();
+	onStageDirection->FrameReset();
 }
 
 void OnStageTestScene::CollisionCheck()

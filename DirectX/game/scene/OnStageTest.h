@@ -69,4 +69,6 @@ private:
 	std::unique_ptr<Boss1OnStage> onStageDirection;
 
 	bool isNormalCamera = true;
+
+	bool isChangeSceneWait = false;
 };

@@ -9,6 +9,7 @@
 #include "WindowApp.h"
 #include "Object/3d/collider/Collision.h"
 #include "TitleScene.h"
+#include "OnStageTest.h"
 #include "../effect/AllHitEffect.h"
 
 using namespace DirectX;
@@ -132,7 +133,7 @@ void TutorialScene::Update()
 			//選択が1番ならタイトルシーンに戻る
 			else if (TextManager::Instance()->GetSelectNum(ChoicesData::ChoicesName::TUTORIAL_PAUSE_CHOICE) == 1) {
 				if (!isSceneChangeWait) {
-					Scene1* gameScene = new Scene1;
+					OnStageTestScene* gameScene = new OnStageTestScene;
 					changeScene = gameScene;
 					isSceneChangeWait = true;
 					SceneChangeDirection::Instance()->PlayFadeOut();
