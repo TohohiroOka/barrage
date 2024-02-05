@@ -15,6 +15,7 @@ namespace Sound {
 		text_all_draw,
 		select,
 		select_cursor,
+		onstage,
 		size,
 	};
 
@@ -31,5 +32,6 @@ namespace Sound {
 		"text_all_draw",
 		"select",
 		"select_cursor",
+		"onstage",
 	};
 }

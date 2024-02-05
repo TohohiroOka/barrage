@@ -54,12 +54,14 @@ void Boss1OnStage::Init()
 	//camera->SetPan({ 100,20,-100 }, { 100,20,-100 }, { 0,-10,+30 }, 240, CutSceneCamera::EASE_LERP);
 	camera->SetPan({ 0,15,0 }, { 200,15,0 }, { 0,-10,+30 }, 120, CutSceneCamera::EASE_LERP);
 	//プレイヤーキャラクターをズーム表示
-	camera->SetZoom({ 100,15,50 }, { 100,0,30 }, { 100,10,20 }, 120, CutSceneCamera::EASE_LERP);
+	camera->SetZoom({ 100,15,50 }, { 100,0,30 }, { 100,10,20 }, 60, CutSceneCamera::EASE_LERP);
 	//敵をズーム表示
-	camera->SetZoom({ 100,15,150 }, { 100,25,160 }, { 100,20,150 }, 60, CutSceneCamera::EASE_LERP);
+	camera->SetZoom({ 100,15,150 }, { 100,25,160 }, { 100,20,150 }, 30, CutSceneCamera::EASE_LERP);
 	//敵全体表示&ボスの名前表示
 	camera->SetTrack(bossObjectPos, { 100,15,150 }, { 100,10,130 }, 15, CutSceneCamera::EASE_IN_QUAD);
-	camera->SetTrack(bossObjectPos, { 100,10,130 }, { 100,5,120 }, 120, CutSceneCamera::EASE_LERP);
+	camera->SetTrack(bossObjectPos, { 100,10,130 }, { 100,5,120 }, 60, CutSceneCamera::EASE_LERP);
+
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::onstage, false, 0.1f);
 }
 
 void Boss1OnStage::Update()
