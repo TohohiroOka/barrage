@@ -7,7 +7,7 @@
 PlayerActionBlink::PlayerActionBlink(Player* player)
 	: PlayerActionBase(player)
 {
-	player->UseEndurance(PlayerData::blinkUseEndurance, 45, true); //持久力を使用
+	player->UseEndurance(PlayerData::blinkUseEndurance, 50, true); //持久力を使用
 
 	//ブリンク回数を増やす(地面に着けばリセット)
 	player->GetData()->blinkCount++;

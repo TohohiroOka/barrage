@@ -73,7 +73,7 @@ public: //静的メンバ変数 (変更しやすいようにpublic)
 	//先行入力を開始する時間
 	static const int actionChangeStartTime1 = 45;
 	//衝突判定が有効に切り替わる時間
-	static const int collisionValidStartTime1 = 10;
+	static const int collisionValidStartTime1 = 40;
 
 	//2回目の攻撃
 	//攻撃にかかる時間
@@ -81,7 +81,7 @@ public: //静的メンバ変数 (変更しやすいようにpublic)
 	//先行入力を開始する時間
 	static const int actionChangeStartTime2 = 45;
 	//衝突判定が有効に切り替わる時間
-	static const int collisionValidStartTime2 = 10;
+	static const int collisionValidStartTime2 = 35;
 
 	//3回目の攻撃
 	//攻撃にかかる時間
@@ -89,7 +89,7 @@ public: //静的メンバ変数 (変更しやすいようにpublic)
 	//先行入力を開始する時間
 	static const int actionChangeStartTime3 = 45;
 	//衝突判定が有効に切り替わる時間
-	static const int collisionValidStartTime3 = 10;
+	static const int collisionValidStartTime3 = 40;
 
 	//色
 	static const DirectX::XMFLOAT4 attackColor;
