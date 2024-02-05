@@ -13,6 +13,9 @@ Boss1Wince::Boss1Wince()
 	timer = std::make_unique<Engine::Timer>();
 
 	hitTimer = std::make_unique<Engine::Timer>();
+
+	Vector3 pos = boss->GetBaseModel()->GetPosition();
+	boss->GetBaseModel()->SetPosition({ pos.x,10.0f,pos.z });
 }
 
 void Boss1Wince::Update()

@@ -21,7 +21,6 @@ Boss1Bullet3::Boss1Bullet3()
 
 	//衝突判定
 	useCollision = UseCollision::box;
-	isCollision = true;
 
 	//オブジェクト
 	swordModel = Model::CreateFromOBJ("boss1/feet");;
@@ -118,6 +117,7 @@ void Boss1Bullet3::Start()
 	if (!boss->GetBaseModel()->GetIsAnimationEnd() || *timer.get() < maxTime) { return; }
 	state = State::cut;
 	timer->Reset();
+	isCollision = true;
 }
 
 void Boss1Bullet3::Cut()

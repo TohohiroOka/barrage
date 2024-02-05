@@ -26,7 +26,7 @@ Boss1HalfAttack::Boss1HalfAttack()
 
 	for (int ring = 0; ring < ringNum; ring++) {
 		ringInfo[ring].dist = 0.0f;
-		ringInfo[ring].maxDist = ring * 15.0f;
+		ringInfo[ring].maxDist = ring * 18.0f;
 		for (int sword = 0; sword < ringInfo[ring].swordObject.size(); sword++) {
 			ringInfo[ring].swordObject[sword].angle = {
 			360.0f / ringInfo[ring].swordObject.size() * sword,
@@ -193,7 +193,7 @@ void Boss1HalfAttack::Attack()
 		Audio::Instance()->SoundPlayWava(Sound::SoundName::half_attack, false, 0.1f);
 	}
 
-	const float maxTime = 80.0f;
+	const float maxTime = 200.0f;
 	const Vector3 bossPos = boss->GetBaseModel()->GetPosition();
 
 	int swordNum = 0;
