@@ -17,7 +17,7 @@ public:
 	PauseScene() = default;
 	~PauseScene() = default;
 
-	void Init();
+	void Init(bool isTitleScene);
 
 	void Update();
 
@@ -56,13 +56,13 @@ private:
 	enum class SELECT
 	{
 		SELECT_CONTINUE,
-		SELECT_CONFIG,
+		SELECT_CONFIG_PAD,
+		SELECT_CONFIG_KEY,
 		SELECT_TITLE,
 	};
 
 	//ëºÉÇÅ[Éhé¿çsíÜ
 	bool isSelected = false;
-
 
 	std::unique_ptr<MessageBoxDrawer> msDrawer;
 

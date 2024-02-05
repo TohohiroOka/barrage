@@ -6,13 +6,21 @@
 #include "WindowApp.h"
 
 
-void PauseScene::Init()
+void PauseScene::Init(bool isTitleScene)
 {
 	msDrawer = std::make_unique<MessageBoxDrawer>();
 	
-	choice.push_back(L"ゲームをつづける");
-	choice.push_back(L"コンフィグをひらく");
-	choice.push_back(L"タイトルにもどる");
+	if (isTitleScene) {
+		choice.push_back(L"ゲームをつづける");
+		choice.push_back(L"ゲームパッドせってい");
+		choice.push_back(L"キーボードせってい");
+	}
+	else {
+		choice.push_back(L"ゲームをつづける");
+		choice.push_back(L"ゲームパッドせってい");
+		choice.push_back(L"キーボードせってい");
+		choice.push_back(L"タイトルにもどる");
+	}
 
 	pauseQsys = std::make_unique<QuestionSystem>(choice);
 
@@ -33,8 +41,6 @@ void PauseScene::Init()
 
 void PauseScene::Update()
 {
-	CheckPauseInput();
-
 	if (!isPause) { return; }
 
 	//選択肢判定
@@ -45,12 +51,17 @@ void PauseScene::Update()
 		case PauseScene::SELECT::SELECT_CONTINUE:
 			//タイトルは即時遷移するのでここではなにもしない
 			break;
-		case PauseScene::SELECT::SELECT_CONFIG:
+		case PauseScene::SELECT::SELECT_CONFIG_PAD:
 			//コンフィグ画面のフラグを実行
 			isConfig = true;
 			//他モードフラグを実行
 			isSelected = true;
-			
+			break;
+		case PauseScene::SELECT::SELECT_CONFIG_KEY:
+			//コンフィグ画面のフラグを実行
+			isConfig = true;
+			//他モードフラグを実行
+			isSelected = true;
 			break;
 		case PauseScene::SELECT::SELECT_TITLE:
 			//シーン遷移処理実行
@@ -64,9 +75,9 @@ void PauseScene::Update()
 	if (isSelected) {
 		//コンフィグ更新
 		if (isConfig) {
-			//コンフィグ終了
-			if (CheckNowInputIsPad()) {
+			if (pauseQsys->GetSelectNum() == int(SELECT::SELECT_CONFIG_PAD)) {
 				if (aicPad->GetIsInputConfigEnd()) {
+					//終了
 					aicPad->Reset();
 					isConfig = false;
 					isSelected = false;
@@ -74,8 +85,9 @@ void PauseScene::Update()
 				}
 				aicPad->Update();
 			}
-			else {
+			else if (pauseQsys->GetSelectNum() == int(SELECT::SELECT_CONFIG_KEY)) {
 				if (aicKey->GetIsInputConfigEnd()) {
+					//終了
 					aicKey->Reset();
 					isConfig = false;
 					isSelected = false;
@@ -115,10 +127,10 @@ void PauseScene::Draw()
 	pauseText->Draw();
 
 	if (isConfig) {
-		if (CheckNowInputIsPad()) {
+		if (pauseQsys->GetSelectNum() == int(SELECT::SELECT_CONFIG_PAD)) {
 			aicPad->Draw();
 		}
-		else {
+		else if(pauseQsys->GetSelectNum() == int(SELECT::SELECT_CONFIG_KEY)) {
 			aicKey->Draw();
 		}
 	}

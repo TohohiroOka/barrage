@@ -77,32 +77,17 @@ void TitleScene::Initialize()
 	//遷移初期化
 	SceneChangeDirection::Instance()->Init();
 
-
+	pauseScene = std::make_unique<PauseScene>();
+	pauseScene->Init(true);
 }
 
 void TitleScene::Update()
 {
-	if (!isConfigActive && 
-		GameInputManager::TriggerInputAction(GameInputManager::Pause) && 
-		!isIntoPortal && 
-		!isDrawMessage) {
-		isConfigActive = true;
-	}
-	else if (isConfigActive && GameInputManager::TriggerInputAction(GameInputManager::Pause)) {
-		isConfigActive = false;
+	if (!isDrawMessage && !isIntoPortal) {
+		pauseScene->CheckPauseInput();
 	}
 
-	if (isConfigActive) {
-		if (XInputManager::GetInstance()->ControllerConnectCheck()) {
-			//入力設定更新
-			actionInputConfigPad->Update();
-		}
-		else {
-			//入力設定更新
-			actionInputConfigKey->Update();
-		}
-	}
-	else {
+	if (!pauseScene->GetIsPause()) {
 		//ポータルに入る行動
 		IntoPortalCheck();
 		IntoPortal();
@@ -128,6 +113,8 @@ void TitleScene::Update()
 		//当たり判定
 		CollisionCheck();
 	}
+
+	pauseScene->Update();
 
 	//スプライト更新
 	pressSelectButtonUI->Update();
@@ -175,14 +162,8 @@ void TitleScene::NonPostEffectDraw(const int _cameraNum)
 	else { isDrawMessage = true; }
 
 	//入力設定描画
-	if (isConfigActive) {
-		if (XInputManager::GetInstance()->ControllerConnectCheck()) {
-			//入力設定更新
-			actionInputConfigPad->Draw();
-		}
-		else {
-			actionInputConfigKey->Draw();
-		}
+	if (pauseScene->GetIsPause()) {
+		pauseScene->Draw();
 	}
 
 	SceneChangeDirection::Instance()->Draw();

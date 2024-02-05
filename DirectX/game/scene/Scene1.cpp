@@ -71,7 +71,7 @@ void Scene1::Initialize()
 	screenCut = std::make_unique<ScreenCut>();
 
 	pauseScene = std::make_unique<PauseScene>();
-	pauseScene->Init();
+	pauseScene->Init(false);
 }
 
 void Scene1::Update()
@@ -164,6 +164,7 @@ void Scene1::Update()
 	SceneChangeDirection::Instance()->Update();
 
 	//ポースシーン更新
+	pauseScene->CheckPauseInput();
 	pauseScene->Update();
 }
 

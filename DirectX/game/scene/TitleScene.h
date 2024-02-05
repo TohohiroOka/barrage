@@ -108,8 +108,6 @@ private:
 	//行動入力設定
 	std::unique_ptr<ActionInputConfigKey> actionInputConfigKey;
 	std::unique_ptr<ActionInputConfigPad> actionInputConfigPad;
-	bool isInputConfigKey = false;
-	bool isInputConfigPad = false;
 
 	//選択ボタンが押下可能UI
 	std::unique_ptr<PressSelectButtonUI> pressSelectButtonUI;
@@ -122,9 +120,9 @@ private:
 	//シーン遷移待機中か
 	bool isSceneChangeWait = false;
 
+	std::unique_ptr<PauseScene> pauseScene;
 	
 	//コンフィグフラグ
-	bool isConfigActive = false;
 	bool isDrawMessage = false;
 
 };
