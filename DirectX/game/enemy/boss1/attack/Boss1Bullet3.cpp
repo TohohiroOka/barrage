@@ -19,7 +19,8 @@ Boss1Bullet3::Boss1Bullet3()
 	state = State::start;
 
 	//衝突判定
-	useCollision = UseCollision::capsule;
+	useCollision = UseCollision::box;
+	isCollision = true;
 
 	//オブジェクト
 	swordModel = Model::CreateFromOBJ("boss1/feet");;
