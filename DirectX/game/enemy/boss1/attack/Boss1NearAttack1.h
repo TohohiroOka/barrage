@@ -45,7 +45,7 @@ public:
 	void DeleteBullet(std::vector<int> _deleteNum) override {};
 
 	void GetDamageInfo(int& _damageNum, int& _knockbackPower, int& _knockbackTime, bool& _isKnockbackStart) override {
-		_damageNum = 3;
+		_damageNum = 25;
 		_knockbackPower = 3;
 		_knockbackTime = 10;
 		_isKnockbackStart = true;

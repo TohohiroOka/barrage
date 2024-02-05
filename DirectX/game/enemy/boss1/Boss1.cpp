@@ -17,7 +17,7 @@
 
 Boss1::Boss1()
 {
-	maxHP = 1000;
+	maxHP = 2500;
 
 	BaseBoss::Initialize();
 
@@ -76,7 +76,7 @@ void Boss1::SetAction()
 	Vector3 pos = bossModel->GetPosition();
 	Vector3 dist = targetPos - pos;
 
-	//action = std::make_unique<Boss1Bullet2>();
+	//action = std::make_unique<Boss1Bullet1>();
 	//return;
 
 	//ƒvƒŒƒCƒ„[‚ª‰“‹——£‚É‚¢‚é

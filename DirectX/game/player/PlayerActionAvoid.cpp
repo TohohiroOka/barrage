@@ -10,7 +10,7 @@ const float PlayerActionAvoid::avoidEndMoveSpeed = 0.4f;
 PlayerActionAvoid::PlayerActionAvoid(Player* player)
 	: PlayerActionBase(player)
 {
-	player->UseEndurance(PlayerData::avoidUseEndurance, 45, true); //持久力を使用
+	player->UseEndurance(PlayerData::avoidUseEndurance, 50, true); //持久力を使用
 
 	//タイマー生成
 	avoidTimer = std::make_unique<Engine::Timer>();

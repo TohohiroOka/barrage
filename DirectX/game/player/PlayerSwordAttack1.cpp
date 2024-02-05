@@ -9,8 +9,8 @@
 
 using namespace DirectX;
 
-int PlayerSwordAttack1::attackUseEnduranceNum = 20;
-int PlayerSwordAttack1::attackPower = 50;
+int PlayerSwordAttack1::attackUseEnduranceNum = 40;
+int PlayerSwordAttack1::attackPower = 35;
 const DirectX::XMFLOAT4 PlayerSwordAttack1::attackColor = { 1, 0, 0, 0.3f };
 const DirectX::XMFLOAT4 PlayerSwordAttack1::nonAttackColor = { 0, 0, 1, 0.3f };
 const float PlayerSwordAttack1::attackStartMoveSpeedMax = 1.5f;
