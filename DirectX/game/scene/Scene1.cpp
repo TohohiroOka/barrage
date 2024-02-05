@@ -214,16 +214,16 @@ void Scene1::NonPostEffectDraw(const int _cameraNum)
 
 void Scene1::ImguiDraw()
 {
-	ImGui::Begin("debug imgui");
+	//ImGui::Begin("debug imgui");
 
-	ImGui::SetWindowSize(ImVec2(300, 300), ImGuiCond_::ImGuiCond_FirstUseEver);
-	player->ImguiDraw();
+	//ImGui::SetWindowSize(ImVec2(300, 300), ImGuiCond_::ImGuiCond_FirstUseEver);
+	//player->ImguiDraw();
 
-	ImGui::SliderInt("HitStopNum", &hitStopFrame, 0, 20);
+	//ImGui::SliderInt("HitStopNum", &hitStopFrame, 0, 20);
 
-	XMFLOAT2 mousePos = DirectInput::GetInstance()->GetMousePoint();
-	ImGui::Text("mouse : x %f:y %f", mousePos.x, mousePos.y);
-	ImGui::End();
+	//XMFLOAT2 mousePos = DirectInput::GetInstance()->GetMousePoint();
+	//ImGui::Text("mouse : x %f:y %f", mousePos.x, mousePos.y);
+	//ImGui::End();
 }
 
 void Scene1::FrameReset()
