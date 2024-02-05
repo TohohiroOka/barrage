@@ -21,6 +21,7 @@ const std::array<XMFLOAT4, 2> COLOR = { XMFLOAT4{ 0.0f,0.0f,0.8f,1.0f } ,{ 0.8f,
 
 Scene1::~Scene1()
 {
+	Audio::Instance()->StopSound(Sound::SoundName::bgm);
 	AllHitEffect::Instance()->Finalize();
 }
 
@@ -72,6 +73,8 @@ void Scene1::Initialize()
 
 	pauseScene = std::make_unique<PauseScene>();
 	pauseScene->Init(false);
+
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::bgm, true, 0.02f);
 }
 
 void Scene1::Update()

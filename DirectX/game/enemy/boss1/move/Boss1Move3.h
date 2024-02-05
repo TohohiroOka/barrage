@@ -71,5 +71,10 @@ private:
 
 	//Õ“Ë‚µ‚½Œã
 	bool isHit;
+
+	//Œ•‰¹
+	std::unique_ptr<Engine::Timer> swordSoundTimer;
+	bool isSwordSound;
+	bool isSwordAttackSound;
 };
 

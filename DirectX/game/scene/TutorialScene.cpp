@@ -3,13 +3,12 @@
 #include "Input/XInputManager.h"
 #include "engine/Scene/SceneManager.h"
 #include "scene/TitleScene.h"
-#include "scene/Scene1.h"
+#include "scene/OnStageTest.h"
 #include "cutscene/SceneChangeDirection.h"
 #include "Audio/Audio.h"
 #include "WindowApp.h"
 #include "Object/3d/collider/Collision.h"
 #include "TitleScene.h"
-#include "OnStageTest.h"
 #include "../effect/AllHitEffect.h"
 
 using namespace DirectX;
@@ -18,6 +17,7 @@ const DirectX::XMFLOAT3 TutorialScene::enemyBornPos = { 90, 10, 150 };
 
 TutorialScene::~TutorialScene()
 {
+	Audio::Instance()->StopSound(Sound::SoundName::bgm);
 	AllHitEffect::Instance()->Finalize();
 }
 
@@ -80,6 +80,8 @@ void TutorialScene::Initialize()
 
 	lockonUI = std::make_unique<LockonUI>();
 	lockonUI->Init(camera.get());
+
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::bgm, true, 0.02f);
 }
 
 void TutorialScene::Update()

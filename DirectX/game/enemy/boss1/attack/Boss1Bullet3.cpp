@@ -4,6 +4,7 @@
 #include "../game/enemy/BaseBoss.h"
 #include "Math/Easing/Easing.h"
 #include "../game/effect/AllHitEffect.h"
+#include "Audio/Audio.h"
 
 const float bulletSpeed = 5.0f;
 
@@ -54,6 +55,8 @@ Boss1Bullet3::Boss1Bullet3()
 		swordObject[i].rota = object[i].rota;
 		swordObject[i].alpha = 0.0f;
 	}
+
+	isSwordSound = false;
 
 	//s“®ŠÖ”
 	func_.emplace_back([this] {return Start(); });
@@ -127,6 +130,9 @@ void Boss1Bullet3::Cut()
 			instanceObject[0]->DrawInstance(i.pos, { 1.0f,2.0f,1.0f }, { i.rota.x,i.rota.y,i.rota.z }, { 1.0f,1.0f,1.0f ,i.alpha });
 		}
 		if (*timer.get() < maxTime - 3) { return; }
+		if (!isSwordSound) {
+			Audio::Instance()->SoundPlayWava(Sound::SoundName::sword_fly, false, 0.08f);
+		}
 		for (auto& i : object) {
 			i.isAlive = true;
 		}

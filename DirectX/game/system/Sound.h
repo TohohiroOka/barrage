@@ -3,7 +3,7 @@
 
 namespace Sound {
 	enum class SoundName {
-		msp_bgm,
+		bgm,
 		attack,
 		attack_hit,
 		jump,
@@ -15,12 +15,22 @@ namespace Sound {
 		text_all_draw,
 		select,
 		select_cursor,
+		boss_nearAttack_sword,
+		bullet1,
+		bullet1_start,
+		sword_fly,
+		bullet2_start,
+		screen_break1,
+		screen_break2,
+		half_attack,
+		near_attack,
+		boss_slash,
 		onstage,
 		size,
 	};
 
 	static std::array<std::string, int(SoundName::size)> SoundNameStr = {
-		"msp_bgm",
+		"bgm",
 		"attack",
 		"attack_hit",
 		"jump",
@@ -32,6 +42,16 @@ namespace Sound {
 		"text_all_draw",
 		"select",
 		"select_cursor",
-		"onstage",
+		"boss_nearAttack_sword",
+		"bullet1",
+		"bullet1_start",
+		"sword_fly",
+		"bullet2_start",
+		"screen_break1",
+		"screen_break2",
+		"half_attack",
+		"near_attack",
+		"boss_slash",
+		"onstage"
 	};
 }

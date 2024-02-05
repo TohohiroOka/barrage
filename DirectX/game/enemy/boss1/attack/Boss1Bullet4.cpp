@@ -4,6 +4,7 @@
 #include "../game/enemy/BaseBoss.h"
 #include "Math/Easing/Easing.h"
 #include "../game/effect/AllHitEffect.h"
+#include "Audio/Audio.h"
 
 const float bulletSpeed = 5.0f;
 
@@ -108,6 +109,8 @@ void Boss1Bullet4::Start()
 		}
 		object[i].rota.y += 90;
 	}
+
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::sword_fly, false, 0.1f);
 
 	state = State::attack;
 	timer->Reset();

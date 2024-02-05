@@ -4,6 +4,7 @@
 #include "../game/enemy/BaseBoss.h"
 #include "Math/Easing/Easing.h"
 #include <iterator>
+#include "Audio/Audio.h"
 
 //xzé≤ÅAyé≤ÇÃãóó£
 const std::array<Vector3, Boss1Bullet2::outPosNum> Boss1Bullet2::outPos = {
@@ -165,9 +166,15 @@ void Boss1Bullet2::Start()
 	const float rate = *timer.get() / maxTime;
 
 	const float oneTime = maxTime / outPosNum;
+
+	bool isSound=false;
 	for (int i = 0; i < outPosNum; i++) {
 		if (*timer.get() < oneTime * i) { break; }
 		outPosInfo[i].isAlive = true;
+		if (!isSound) {
+			Audio::Instance()->SoundPlayWava(Sound::SoundName::bullet2_start, false, 0.05f);
+			isSound = true;
+		}
 	}
 
 	if (rate < 1.0f) { return; }
@@ -191,6 +198,8 @@ void Boss1Bullet2::Attack()
 	const float rate = *timer.get() / maxTime;
 
 	if ((rate * 10.0f) < nowNum) { return; }
+
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::sword_fly, false, 0.05f);
 
 	Vector3 pos = boss->GetBaseModel()->GetPosition();
 	for (int i = 0; i < outPosNum; i++) {

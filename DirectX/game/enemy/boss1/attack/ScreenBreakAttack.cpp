@@ -4,6 +4,7 @@
 #include "../game/enemy/BaseBoss.h"
 #include "../Math/Easing/Easing.h"
 #include "../game/effect/ScreenCut.h"
+#include "Audio/Audio.h"
 
 ScreenBreakAttack::ScreenBreakAttack()
 {

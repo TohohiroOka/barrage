@@ -5,7 +5,7 @@
 #include "../game/effect/BulletAttack2Effect.h"
 
 /// <summary>
-/// 外側に出てからプレイヤーに追従する
+/// 剣をまっすぐ飛ばす
 /// </summary>
 class Boss1Bullet2 : public BaseAction
 {

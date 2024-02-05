@@ -14,6 +14,7 @@
 
 TitleScene::~TitleScene()
 {
+	Audio::Instance()->StopSound(Sound::SoundName::bgm);
 }
 
 void TitleScene::Initialize()
@@ -27,8 +28,6 @@ void TitleScene::Initialize()
 	titleLogoSprite->Update();
 
 	pressSelectButtonUI = std::make_unique<PressSelectButtonUI>();
-
-	//Audio::Instance()->SoundPlayWava(Sound::SoundName::msp_bgm, true, 0.1f);
 
 	//地形生成
 	field = std::make_unique<Field>();
@@ -80,6 +79,8 @@ void TitleScene::Initialize()
 
 	pauseScene = std::make_unique<PauseScene>();
 	pauseScene->Init(true);
+
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::bgm, true, 0.02f);
 }
 
 void TitleScene::Update()

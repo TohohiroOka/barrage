@@ -3,6 +3,7 @@
 #include "../Boss1Model.h"
 #include "../game/enemy/BaseBoss.h"
 #include "../Math/Easing/Easing.h"
+#include "Audio/Audio.h"
 
 using namespace DirectX;
 
@@ -99,6 +100,9 @@ void Boss1NearAttack1::Attack()
 	oldtime = timer->GetTime();
 
 	if (*timer.get() % 5 != 0) { return; }
+
+	Audio::Instance()->SoundPlayWava(Sound::SoundName::near_attack, false, 0.2f);
+
 	//oŒ»”
 	XMFLOAT3 pos = boss->GetBaseModel()->GetPosition();
 	float inNum = timer->GetTime();

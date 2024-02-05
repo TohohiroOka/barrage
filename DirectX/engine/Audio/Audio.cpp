@@ -121,11 +121,11 @@ bool Audio::SoundPlayWava(const Sound::SoundName _number, const bool _roop, cons
 	XAUDIO2_VOICE_STATE xa3state;
 	soundData[number]->pSourceVoice->GetState(&xa3state);
 
-	//0でないなら音楽が再生中になるためスルーする
-	if (_roop && xa3state.BuffersQueued != 0)
-	{
-		return false;
-	}
+	////0でないなら音楽が再生中になるためスルーする
+	//if (_roop && xa3state.BuffersQueued != 0)
+	//{
+	//	return false;
+	//}
 
 	//データ生成
 	CreateSoundData(*soundData[number]);

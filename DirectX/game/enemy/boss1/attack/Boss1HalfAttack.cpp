@@ -3,6 +3,7 @@
 #include "../Boss1Model.h"
 #include "../game/enemy/BaseBoss.h"
 #include "Math/Easing/Easing.h"
+#include "Audio/Audio.h"
 
 Boss1HalfAttack::Boss1HalfAttack()
 {
@@ -142,6 +143,10 @@ void Boss1HalfAttack::Small()
 
 void Boss1HalfAttack::Start()
 {
+	if (*timer.get() % 10 == 0) {
+		Audio::Instance()->SoundPlayWava(Sound::SoundName::half_attack, false, 0.1f);
+	}
+
 	const float maxTime = 80.0f;
 	const float rate = *timer.get() / maxTime;
 	const Vector3 bossPos = boss->GetBaseModel()->GetPosition();
@@ -172,6 +177,10 @@ void Boss1HalfAttack::Start()
 
 void Boss1HalfAttack::Attack()
 {
+	if (*timer.get() % 10 == 0) {
+		Audio::Instance()->SoundPlayWava(Sound::SoundName::half_attack, false, 0.1f);
+	}
+
 	const float maxTime = 80.0f;
 	const Vector3 bossPos = boss->GetBaseModel()->GetPosition();
 
